@@ -1,0 +1,14 @@
+{
+  "name": "orioles-magic",
+  "version": "1.0.0",
+  "description": "Orioles and MLB news site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "rss-parser": "^3.13.0"
+  }
+}
