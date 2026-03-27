@@ -4,16 +4,6 @@ const MLB = 'https://statsapi.mlb.com/api/v1';
 const ORIOLES_ID = 110;
 const SEASON = new Date().getFullYear();
 
-const FEEDS = [
-  { id: 'orioles',    name: 'Baltimore Orioles', url: 'https://www.mlb.com/orioles/feeds/news/rss.xml',              color: '#df4601', category: 'orioles' },
-  { id: 'bbn',        name: 'Baltimore Baseball', url: 'https://www.baltimorebaseball.com/feed/',                     color: '#f97316', category: 'orioles' },
-  { id: 'banner',     name: 'The Banner',          url: 'https://www.thebanner.com/author/andy-kostka/feed/',          color: '#a855f7', category: 'orioles' },
-  { id: 'mlb',        name: 'MLB.com',             url: 'https://www.mlb.com/feeds/news/rss.xml',                     color: '#002d72', category: 'mlb'     },
-  { id: 'mlbtr',      name: 'MLB Trade Rumors',    url: 'https://www.mlbtraderumors.com/baltimore-orioles/feed',      color: '#eab308', category: 'mlb'     },
-  { id: 'espn',       name: 'ESPN MLB',            url: 'https://www.espn.com/espn/rss/mlb/news',                     color: '#cc0000', category: 'mlb'     },
-  { id: 'fangraphs',  name: 'FanGraphs',           url: 'https://blogs.fangraphs.com/tag/baltimore-orioles/feed/',    color: '#22c55e', category: 'mlb'     },
-];
-
 // ── State ─────────────────────────────────────────────────────────
 const state = {
   articles: [],
@@ -236,6 +226,13 @@ async function fetchFeed(source) {
 
 async function loadFeeds() {
   $('articleList').innerHTML = '<div class="feed-msg">Loading news…</div>';
+  let FEEDS;
+  try {
+    FEEDS = await fetch('/feeds.json').then(r => r.json());
+  } catch {
+    $('articleList').innerHTML = '<div class="feed-msg">Could not load feeds.json</div>';
+    return [];
+  }
   const results = await Promise.allSettled(FEEDS.map(fetchFeed));
 
   state.articles = [];
