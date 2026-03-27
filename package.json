@@ -1,14 +1,14 @@
 {
   "name": "orioles-magic",
   "version": "1.0.0",
-  "description": "Orioles and MLB news site",
-  "main": "server.js",
+  "description": "Baltimore Orioles and MLB news site",
+  "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "rss-parser": "^3.13.0"
+    "astro": "^4.16.0"
   }
 }
