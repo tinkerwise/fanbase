@@ -18,6 +18,17 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Check FTP root directory
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ./
+          dry-run: true
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -26,6 +37,6 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./dist/
-          server-dir: /home/briancsm/public_html/yardreport/
+          server-dir: ./public_html/yardreport/
           exclude: |
             .DS_Store
