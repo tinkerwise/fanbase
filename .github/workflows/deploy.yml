@@ -25,3 +25,8 @@ jobs:
           git add dist/
           git diff --staged --quiet || git commit -m "Build dist"
           git push
+
+      - name: Trigger cPanel deploy
+        run: |
+          curl -s -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
+            "https://briancsmith.org:2083/execute/VersionControl/update?repository_root=/home/briancsm/repositories/yardreport&branch=main"
