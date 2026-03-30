@@ -516,6 +516,115 @@ function renderCard(a, i) {
   </div>`;
 }
 
+// ── "Hot Stove" story bundling ────────────────────────────────
+// Groups articles about the same story across sources.
+// Extracts key proper nouns / phrases from titles and clusters by overlap.
+
+function tokenize(title) {
+  // Remove common filler words, keep meaningful terms
+  const stop = new Set(['a','an','the','of','in','on','to','for','and','is','are','was','at','by','with','from','vs','after','how','what','why','who','this','that','it','its','has','have','had','be','do','does','not','but','or','can','will','may','about','into','over','up','out','no','so','all','just','than','then','also','new','more','first','last','one','two','three','game','games','mlb','baseball','season','team','teams','series']);
+  return title.toLowerCase()
+    .replace(/[^a-z0-9\s'-]/g, '')
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !stop.has(w));
+}
+
+function findStoryBundles(articles, minArticles = 3) {
+  if (articles.length < minArticles) return [];
+
+  // Build token index
+  const artTokens = articles.map((a, i) => ({ idx: i, tokens: new Set(tokenize(a.title)) }));
+
+  // Find pairs with significant overlap
+  const clusters = []; // each cluster = Set of article indices + shared tokens
+  const assigned = new Set();
+
+  for (let i = 0; i < artTokens.length; i++) {
+    if (assigned.has(i)) continue;
+    const cluster = new Set([i]);
+    const sharedTokens = new Set(artTokens[i].tokens);
+
+    for (let j = i + 1; j < artTokens.length; j++) {
+      if (assigned.has(j)) continue;
+      const overlap = [...artTokens[j].tokens].filter(t => sharedTokens.has(t));
+      // Need at least 2 meaningful words in common
+      if (overlap.length >= 2) {
+        cluster.add(j);
+        // Narrow shared tokens to the intersection
+        for (const t of sharedTokens) {
+          if (!artTokens[j].tokens.has(t)) sharedTokens.delete(t);
+        }
+      }
+    }
+
+    if (cluster.size >= minArticles) {
+      // Also check articles against the refined shared tokens
+      const refined = new Set();
+      for (const idx of cluster) refined.add(idx);
+      for (let j = 0; j < artTokens.length; j++) {
+        if (refined.has(j)) continue;
+        const overlap = [...artTokens[j].tokens].filter(t => sharedTokens.has(t));
+        if (overlap.length >= 2) refined.add(j);
+      }
+
+      const clusterArticles = [...refined].map(idx => articles[idx]);
+      // Pick the most descriptive title (longest) as the bundle label
+      const bestTitle = clusterArticles
+        .slice()
+        .sort((a, b) => b.title.length - a.title.length)[0].title;
+      const label = bestTitle.length > 60 ? bestTitle.slice(0, 57) + '…' : bestTitle;
+
+      clusters.push({
+        label,
+        tokens: [...sharedTokens],
+        articles: clusterArticles,
+        sourceCount: new Set(clusterArticles.map(a => a.source.id)).size,
+      });
+      for (const idx of refined) assigned.add(idx);
+    }
+  }
+
+  // Sort bundles by number of sources covering it (most coverage first)
+  clusters.sort((a, b) => b.sourceCount - a.sourceCount || b.articles.length - a.articles.length);
+  return clusters;
+}
+
+function renderBundle(bundle, allArticles) {
+  const thumb = bundle.articles.map(a => extractThumbnail(a)).find(Boolean);
+  const thumbHtml = thumb
+    ? `<img class="bundle-thumb" src="${esc(thumb)}" alt="" loading="lazy">`
+    : `<div class="bundle-thumb-placeholder"><img class="placeholder-logo" src="${PLACEHOLDER_IMG}" alt=""></div>`;
+
+  const sourceIcons = [...new Set(bundle.articles.map(a => a.source.name))].slice(0, 5)
+    .map(name => {
+      const a = bundle.articles.find(x => x.source.name === name);
+      return `<img class="source-ico" src="${esc(faviconUrl(a.link))}" alt="" title="${esc(name)}" onerror="this.style.display='none'">`;
+    }).join('');
+
+  const cards = bundle.articles
+    .map(a => {
+      const idx = allArticles.indexOf(a);
+      return renderCard(a, idx);
+    }).join('');
+
+  return `<div class="hot-stove-bundle">
+    <div class="bundle-header" role="button" tabindex="0">
+      ${thumbHtml}
+      <div class="bundle-info">
+        <span class="bundle-tag">🔥 Hot Stove</span>
+        <div class="bundle-title">${esc(bundle.label)}</div>
+        <div class="bundle-meta">
+          <span class="bundle-sources">${sourceIcons} <span class="bundle-count">${bundle.sourceCount} source${bundle.sourceCount !== 1 ? 's' : ''} · ${bundle.articles.length} articles</span></span>
+        </div>
+      </div>
+      <svg class="bundle-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+    <div class="bundle-articles hidden">
+      <div class="article-grid list-layout">${cards}</div>
+    </div>
+  </div>`;
+}
+
 function groupArticles(arts, keyFn) {
   const groups = new Map();
   arts.forEach((a, i) => {
@@ -544,6 +653,19 @@ function renderArticles() {
     ? 'article-grid list-layout' : 'article-grid';
 
   let html = '';
+
+  // Hot Stove bundles (only in default date sort, no search)
+  const bundles = (!state.searchQuery && state.sortBy === 'date')
+    ? findStoryBundles(arts, 3) : [];
+  const bundledSet = new Set(bundles.flatMap(b => b.articles));
+  const unbundled = arts.filter(a => !bundledSet.has(a));
+
+  if (bundles.length) {
+    html += bundles.map(b => renderBundle(b, arts)).join('');
+  }
+
+  const displayArts = bundles.length ? unbundled : arts;
+
   const useGroups = state.sortBy === 'dateGroup' || state.sortBy === 'source';
 
   if (useGroups) {
@@ -551,7 +673,7 @@ function renderArticles() {
       ? a => articleDateGroup(a.pubDate)
       : a => a.source.name;
 
-    const groups = groupArticles(arts, keyFn);
+    const groups = groupArticles(displayArts, keyFn);
 
     for (const [label, items] of groups) {
       html += `<div class="article-group-header">${esc(label)}<span class="group-count">${items.length}</span></div>`;
@@ -561,11 +683,22 @@ function renderArticles() {
     }
   } else {
     html += `<div class="${gridClass}">`;
-    html += arts.map((a, i) => renderCard(a, i)).join('');
+    html += displayArts.map((a, i) => renderCard(a, arts.indexOf(a))).join('');
     html += `</div>`;
   }
 
   list.innerHTML = html;
+
+  // Bundle expand/collapse
+  list.querySelectorAll('.bundle-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const bundle = header.closest('.hot-stove-bundle');
+      const articles = bundle.querySelector('.bundle-articles');
+      const chevron = header.querySelector('.bundle-chevron');
+      articles.classList.toggle('hidden');
+      chevron.classList.toggle('expanded');
+    });
+  });
 
   list.querySelectorAll('.article-card').forEach(el => {
     el.addEventListener('click', e => {
