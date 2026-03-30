@@ -75,6 +75,13 @@ const FILLER_PATTERNS = [
   /no[-_]?image/i,
 ];
 
+// Filter out non-baseball articles that leak in from general sports feeds
+const OFF_TOPIC = /\b(NHL|hockey|NBA|basketball|NFL|football|soccer|MLS|tennis|golf|NASCAR|F1|UFC|MMA|boxing)\b/i;
+function isOffTopic(article) {
+  const text = `${article.title || ''} ${article.description || ''}`;
+  return OFF_TOPIC.test(text);
+}
+
 function isFillerImage(url) {
   if (!url) return true;
   return FILLER_PATTERNS.some(p => p.test(url));
@@ -378,6 +385,7 @@ async function loadFeeds() {
     const { source, articles } = r.value;
     successfulSources.push(source);
     for (const article of articles) {
+      if (isOffTopic(article)) continue;
       state.articles.push({ ...article, source });
     }
   }
