@@ -25,7 +25,6 @@ $allowed_domains = [
     'blogs.fangraphs.com',
     'fangraphs.com',
     'tht.fangraphs.com',
-    'thebanner.com',
     'mlbtraderumors.com',
     'baseballprospectus.com',
     'camdenchat.com',
