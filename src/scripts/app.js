@@ -53,7 +53,7 @@ const state = {
 // ── Utilities ─────────────────────────────────────────────────────
 function $(id) { return document.getElementById(id); }
 
-const PLACEHOLDER_IMG = `${import.meta.env.BASE_URL}logo.png`;
+const PLACEHOLDER_IMG = `${import.meta.env.BASE_URL}favicon.jpg`;
 
 function faviconUrl(link) {
   try {
