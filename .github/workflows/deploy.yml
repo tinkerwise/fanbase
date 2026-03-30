@@ -3,6 +3,8 @@ name: Build and Deploy
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'dist/**'
 
 permissions:
   contents: write
@@ -29,7 +31,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes"
           else
-            git commit -m "Build dist"
+            git commit -m "Build dist [skip ci]"
             git push
           fi
 
