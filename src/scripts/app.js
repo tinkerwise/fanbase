@@ -516,7 +516,7 @@ function renderCard(a, i) {
   </div>`;
 }
 
-// ── "Hot Stove" story bundling ────────────────────────────────
+// ── "Around the Horn" story bundling ──────────────────────────
 // Groups articles about the same story across sources.
 // Extracts key proper nouns / phrases from titles and clusters by overlap.
 
@@ -607,11 +607,11 @@ function renderBundle(bundle, allArticles) {
       return renderCard(a, idx);
     }).join('');
 
-  return `<div class="hot-stove-bundle">
+  return `<div class="ath-bundle">
     <div class="bundle-header" role="button" tabindex="0">
       ${thumbHtml}
       <div class="bundle-info">
-        <span class="bundle-tag">🔥 Hot Stove</span>
+        <span class="bundle-tag">🔥 Around the Horn</span>
         <div class="bundle-title">${esc(bundle.label)}</div>
         <div class="bundle-meta">
           <span class="bundle-sources">${sourceIcons} <span class="bundle-count">${bundle.sourceCount} source${bundle.sourceCount !== 1 ? 's' : ''} · ${bundle.articles.length} articles</span></span>
@@ -692,7 +692,7 @@ function renderArticles() {
   // Bundle expand/collapse
   list.querySelectorAll('.bundle-header').forEach(header => {
     header.addEventListener('click', () => {
-      const bundle = header.closest('.hot-stove-bundle');
+      const bundle = header.closest('.ath-bundle');
       const articles = bundle.querySelector('.bundle-articles');
       const chevron = header.querySelector('.bundle-chevron');
       articles.classList.toggle('hidden');

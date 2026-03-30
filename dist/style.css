@@ -435,8 +435,8 @@ img { display: block; }
   font-size: 0.9rem;
 }
 
-/* ── Hot Stove Bundles ─────────────────────────────────────────── */
-.hot-stove-bundle {
+/* ── Around the Horn Bundles ───────────────────────────────────── */
+.ath-bundle {
   background: var(--card);
   border: 1px solid var(--border);
   border-left: 3px solid #f59e0b;
