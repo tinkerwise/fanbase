@@ -139,7 +139,8 @@ function renderGameChip(g) {
   const awaySlug = TEAM_SLUG[away.team.id] ?? away.team.name.split(' ').pop().toLowerCase();
   const homeSlug = TEAM_SLUG[home.team.id] ?? home.team.name.split(' ').pop().toLowerCase();
   const gameDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
-  const gamedayUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/final`;
+  const gamedaySuffix = isPre ? 'preview' : 'final';
+  const gamedayUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/${gamedaySuffix}`;
 
   return `<a class="score-chip${hasOrioles ? ' orioles' : ''}"
       href="${gamedayUrl}"
