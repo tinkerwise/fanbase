@@ -361,26 +361,33 @@ img { display: block; }
   justify-content: center;
 }
 .placeholder-logo {
-  width: 64px; height: 64px; opacity: 0.6;
-  filter: grayscale(0.2);
+  width: 56px; height: 56px; opacity: 0.4;
 }
 
-.article-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding: 14px; }
-.article-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.source-badge {
-  font-size: 0.67rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 4px;
-  color: #fff;
-  flex-shrink: 0;
-  letter-spacing: 0.02em;
+/* Source line */
+.source-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-3);
 }
+.source-ico {
+  width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0;
+}
+.source-name { color: var(--text-2); font-weight: 600; }
 .article-date { font-size: 0.71rem; color: var(--text-3); }
+.full-badge {
+  font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: 3px;
+  background: rgba(34,197,94,0.15); color: #22c55e; text-transform: uppercase;
+}
+
+/* Article body */
+.article-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px 14px; }
 .article-title {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  line-height: 1.45;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -388,77 +395,36 @@ img { display: block; }
 }
 .article-card:hover .article-title { color: var(--orange); }
 .article-desc {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--text-2);
-  line-height: 1.55;
+  line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.article-actions { display: flex; gap: 7px; margin-top: auto; padding-top: 6px; }
-.btn-read {
-  font-size: 0.73rem;
-  padding: 3px 10px;
-  background: var(--orange-dim);
-  border: 1px solid rgba(223,70,1,0.3);
-  border-radius: 4px;
-  color: var(--orange);
-  transition: all 0.15s;
-}
-.btn-read:hover { background: var(--orange); color: #fff; }
-.btn-original {
-  font-size: 0.73rem;
-  padding: 3px 10px;
-  background: transparent;
-  border: 1px solid var(--border-light);
-  border-radius: 4px;
-  color: var(--text-2);
-  transition: all 0.15s;
-}
-.btn-original:hover { border-color: var(--text-2); color: var(--text); }
 
-/* Badge favicon */
-.badge-favicon {
-  width: 14px; height: 14px; border-radius: 2px; vertical-align: middle;
-  margin-right: 3px; margin-top: -1px;
-}
 /* Reader favicon */
 .source-favicon {
   width: 18px; height: 18px; border-radius: 3px; vertical-align: middle;
   margin-right: 5px;
 }
 
-/* Full article badge */
-.full-article-badge {
-  font-size: 0.6rem;
-  font-weight: 600;
-  padding: 1px 6px;
-  border-radius: 3px;
-  background: rgba(34,197,94,0.15);
-  color: #22c55e;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-/* List view cards */
+/* List view */
 .article-card.list-view {
   flex-direction: row;
 }
 .article-card.list-view .article-thumb,
 .article-card.list-view .article-thumb-placeholder {
-  width: 200px; height: auto; min-height: 140px; border-radius: 0;
+  width: 180px; height: auto; min-height: 120px; border-radius: 0;
 }
-.article-card.list-view .placeholder-logo {
-  width: 48px; height: 48px;
-}
+.article-card.list-view .placeholder-logo { width: 40px; height: 40px; }
 
-/* Compact view cards */
+/* Compact view */
 .article-card.compact {
   padding: 10px 14px;
   border-radius: 6px;
 }
-.article-card.compact .article-body { gap: 3px; }
 .article-card.compact .article-title { font-size: 0.88rem; -webkit-line-clamp: 1; }
 
 .feed-msg {
@@ -585,8 +551,8 @@ img { display: block; }
   .article-grid { grid-template-columns: 1fr; }
   .article-thumb, .article-thumb-placeholder { height: 140px; }
   .article-card.list-view .article-thumb,
-  .article-card.list-view .article-thumb-placeholder { width: 120px; min-height: 100px; }
-  .placeholder-logo { width: 40px; height: 40px; }
+  .article-card.list-view .article-thumb-placeholder { width: 100px; min-height: 80px; }
+  .placeholder-logo { width: 36px; height: 36px; }
   .cache-label { display: none; }
   .header-inner { padding: 0 14px; }
 }

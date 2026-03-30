@@ -53,13 +53,12 @@ const state = {
 // ── Utilities ─────────────────────────────────────────────────────
 function $(id) { return document.getElementById(id); }
 
-const ORIOLES_LOGO = 'https://www.mlbstatic.com/team-logos/110.svg';
-const MLB_LOGO = 'https://www.mlbstatic.com/team-logos/league-on-dark.svg';
+const PLACEHOLDER_IMG = `${import.meta.env.BASE_URL}logo.png`;
 
-function faviconUrl(link, size = 64) {
+function faviconUrl(link) {
   try {
     const { hostname } = new URL(link);
-    return `https://www.google.com/s2/favicons?domain=${hostname}&sz=${size}`;
+    return `https://www.google.com/s2/favicons?domain=${hostname}&sz=32`;
   } catch { return ''; }
 }
 
@@ -71,14 +70,6 @@ function extractThumbnail(article) {
   const descMatch = (article.description || '').match(/<img[^>]+src=["']([^"']+)["']/i);
   if (descMatch) return descMatch[1];
   return null;
-}
-
-function placeholderThumb(article) {
-  const isOrioles = article.source.category === 'orioles';
-  const logo = isOrioles ? ORIOLES_LOGO : MLB_LOGO;
-  return `<div class="article-thumb-placeholder" style="background:${esc(article.source.color)}22">
-    <img class="placeholder-logo" src="${esc(logo)}" alt="" loading="lazy">
-  </div>`;
 }
 
 function esc(str) {
@@ -445,69 +436,45 @@ function renderCard(a, i) {
   const imgSrc = extractThumbnail(a);
   const hasFullContent = (a.content || '').length > 400;
   const mode = state.viewMode;
+  const favicon = faviconUrl(a.link);
 
-  const thumb = imgSrc
+  const thumbImg = imgSrc
     ? `<img class="article-thumb" src="${esc(imgSrc)}" alt="" loading="lazy"
-         onerror="this.parentNode.querySelector('.article-thumb')?.remove();this.outerHTML='${placeholderThumb(a).replace(/'/g, "\\'").replace(/\n/g, '')}';">`
-    : placeholderThumb(a);
+         onerror="this.outerHTML='<div class=\\'article-thumb-placeholder\\'><img class=\\'placeholder-logo\\' src=\\'${PLACEHOLDER_IMG}\\' alt=\\'\\'></div>'">`
+    : `<div class="article-thumb-placeholder"><img class="placeholder-logo" src="${PLACEHOLDER_IMG}" alt=""></div>`;
 
-  const sourceBadge = `<span class="source-badge" style="background:${esc(a.source.color)}">
-    <img class="badge-favicon" src="${esc(faviconUrl(a.link, 32))}" alt="" onerror="this.style.display='none'">
-    ${esc(a.source.name)}
+  const source = `<span class="source-line">
+    <img class="source-ico" src="${esc(favicon)}" alt="" onerror="this.style.display='none'">
+    <span class="source-name">${esc(a.source.name)}</span>
+    <span class="article-date">${relativeDate(a.pubDate)}</span>
+    ${hasFullContent ? '<span class="full-badge">Full</span>' : ''}
   </span>`;
-
-  const readLabel = hasFullContent ? 'Read' : 'Preview';
-  const contentBadge = hasFullContent ? '<span class="full-article-badge">Full article</span>' : '';
 
   if (mode === 'compact') {
     return `<div class="article-card compact" data-idx="${i}" role="button" tabindex="0">
-      <div class="article-body">
-        <div class="article-meta">
-          ${sourceBadge}
-          <span class="article-date">${relativeDate(a.pubDate)}</span>
-          ${contentBadge}
-        </div>
-        <div class="article-title">${esc(a.title)}</div>
-      </div>
+      ${source}
+      <div class="article-title">${esc(a.title)}</div>
     </div>`;
   }
 
   if (mode === 'list') {
     return `<div class="article-card list-view" data-idx="${i}" role="button" tabindex="0">
-      ${thumb}
+      ${thumbImg}
       <div class="article-body">
-        <div class="article-meta">
-          ${sourceBadge}
-          <span class="article-date">${relativeDate(a.pubDate)}</span>
-          ${contentBadge}
-        </div>
+        ${source}
         <div class="article-title">${esc(a.title)}</div>
         ${a.description ? `<div class="article-desc">${esc(a.description)}</div>` : ''}
-        <div class="article-actions">
-          <button class="btn-read" data-idx="${i}">${readLabel}</button>
-          <a class="btn-original" href="${esc(a.link)}" target="_blank" rel="noopener"
-             onclick="event.stopPropagation()">Open original ↗</a>
-        </div>
       </div>
     </div>`;
   }
 
   // Grid mode (default)
   return `<div class="article-card" data-idx="${i}" role="button" tabindex="0">
-    ${thumb}
+    ${thumbImg}
     <div class="article-body">
-      <div class="article-meta">
-        ${sourceBadge}
-        <span class="article-date">${relativeDate(a.pubDate)}</span>
-        ${contentBadge}
-      </div>
+      ${source}
       <div class="article-title">${esc(a.title)}</div>
       ${a.description ? `<div class="article-desc">${esc(a.description)}</div>` : ''}
-      <div class="article-actions">
-        <button class="btn-read" data-idx="${i}">${readLabel}</button>
-        <a class="btn-original" href="${esc(a.link)}" target="_blank" rel="noopener"
-           onclick="event.stopPropagation()">Open original ↗</a>
-      </div>
     </div>
   </div>`;
 }
