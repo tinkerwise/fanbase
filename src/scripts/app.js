@@ -390,6 +390,15 @@ function renderSourceFilters(sources) {
 
 function getFilteredArticles() {
   let arts = state.articles;
+  const thirtyDaysAgo = Date.now() - 30 * 864e5;
+
+  // Only show last 30 days unless searching
+  if (!state.searchQuery) {
+    arts = arts.filter(a => {
+      const d = new Date(a.pubDate);
+      return !isNaN(d) && d.getTime() > thirtyDaysAgo;
+    });
+  }
 
   if (state.activeCategory !== 'all') {
     arts = arts.filter(a => a.source.category === state.activeCategory);
@@ -493,7 +502,10 @@ function renderArticles() {
   const list = $('articleList');
   const arts = getFilteredArticles();
 
-  $('resultCount').textContent = `${arts.length} article${arts.length !== 1 ? 's' : ''}`;
+  const countText = `${arts.length} article${arts.length !== 1 ? 's' : ''}`;
+  $('resultCount').innerHTML = state.searchQuery
+    ? countText
+    : `${countText} <span class="date-hint">· Last 30 days · Search for older</span>`;
 
   if (!arts.length) {
     list.innerHTML = '<div class="feed-msg">No articles match your filters.</div>';

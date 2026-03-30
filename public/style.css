@@ -282,6 +282,7 @@ img { display: block; }
   gap: 12px;
 }
 .result-count { font-size: 0.78rem; color: var(--text-3); }
+.date-hint { color: var(--text-3); opacity: 0.6; font-size: 0.72rem; }
 .toolbar-controls { display: flex; align-items: center; gap: 10px; }
 .view-toggle { display: flex; gap: 2px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
 .view-btn {
@@ -361,7 +362,7 @@ img { display: block; }
   justify-content: center;
 }
 .placeholder-logo {
-  width: 56px; height: 56px; opacity: 0.4;
+  width: 72px; height: 72px; opacity: 0.7;
 }
 
 /* Source line */

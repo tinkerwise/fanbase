@@ -15,12 +15,7 @@
   { "id": "yahoo",        "name": "Yahoo Sports MLB",    "url": "https://sports.yahoo.com/mlb/rss.xml",                           "color": "#7c3aed", "category": "mlb"     },
   { "id": "nbc",          "name": "NBC Sports MLB",      "url": "https://mlb.nbcsports.com/feed/",                                "color": "#0284c7", "category": "mlb"     },
   { "id": "ba",           "name": "Baseball America",    "url": "https://www.baseballamerica.com/feed/",                          "color": "#b91c1c", "category": "mlb"     },
-  { "id": "justbb",       "name": "Just Baseball",       "url": "https://justbaseball.com/feed/",                                 "color": "#059669", "category": "mlb"     },
   { "id": "nyt",          "name": "NY Times Baseball",   "url": "https://rss.nytimes.com/services/xml/rss/nyt/Baseball.xml",      "color": "#1a1a1a", "category": "mlb"     },
-  { "id": "pitcherlist",  "name": "Pitcher List",        "url": "https://www.pitcherlist.com/feed/",                              "color": "#2563eb", "category": "mlb"     },
   { "id": "tht",          "name": "Hardball Times",      "url": "https://tht.fangraphs.com/feed/",                                "color": "#16a34a", "category": "mlb"     },
-  { "id": "calcaterra",   "name": "Cup of Coffee",       "url": "https://craigcalcaterra.substack.com/feed",                      "color": "#92400e", "category": "mlb"     },
-  { "id": "knight",       "name": "The Long Game",       "url": "https://mollyknight.substack.com/feed",                          "color": "#be185d", "category": "mlb"     },
-  { "id": "baccellieri",  "name": "The Cycle",           "url": "https://cyclenewsletter.substack.com/feed",                      "color": "#6d28d9", "category": "mlb"     },
-  { "id": "ibwaa",        "name": "Here's the Pitch",    "url": "https://ibwaa.substack.com/feed",                                "color": "#0f766e", "category": "mlb"     }
+  { "id": "knight",       "name": "The Long Game",       "url": "https://mollyknight.substack.com/feed",                          "color": "#be185d", "category": "mlb"     }
 ]

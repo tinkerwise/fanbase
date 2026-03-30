@@ -37,9 +37,7 @@ $allowed_domains = [
     'mlb.nbcsports.com',
     'nbcsports.com',
     'baseballamerica.com',
-    'justbaseball.com',
     'nytimes.com',
-    'pitcherlist.com',
     'substack.com',
 ];
 
