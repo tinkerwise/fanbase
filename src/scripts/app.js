@@ -397,6 +397,55 @@ function getFilteredArticles() {
   return arts;
 }
 
+function articleDateGroup(dateStr) {
+  if (!dateStr) return 'Older';
+  const d = new Date(dateStr);
+  if (isNaN(d)) return 'Older';
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const articleDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.floor((today - articleDay) / 864e5);
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays <= 7) return 'This Week';
+  if (diffDays <= 30) return 'This Month';
+  return 'Older';
+}
+
+function renderCard(a, i) {
+  const thumb = a.thumbnail
+    ? `<img class="article-thumb" src="${esc(a.thumbnail)}" alt="" loading="lazy"
+         onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'article-thumb-placeholder',textContent:'⚾'}))">`
+    : `<div class="article-thumb-placeholder">⚾</div>`;
+
+  return `<div class="article-card" data-idx="${i}" role="button" tabindex="0">
+    ${thumb}
+    <div class="article-body">
+      <div class="article-meta">
+        <span class="source-badge" style="background:${esc(a.source.color)}">${esc(a.source.name)}</span>
+        <span class="article-date">${relativeDate(a.pubDate)}</span>
+      </div>
+      <div class="article-title">${esc(a.title)}</div>
+      ${a.description ? `<div class="article-desc">${esc(a.description)}</div>` : ''}
+      <div class="article-actions">
+        <button class="btn-read" data-idx="${i}">Read</button>
+        <a class="btn-original" href="${esc(a.link)}" target="_blank" rel="noopener"
+           onclick="event.stopPropagation()">↗ Original</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function groupArticles(arts, keyFn) {
+  const groups = new Map();
+  arts.forEach((a, i) => {
+    const key = keyFn(a);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push({ article: a, idx: i });
+  });
+  return groups;
+}
+
 function renderArticles() {
   const list = $('articleList');
   const arts = getFilteredArticles();
@@ -408,29 +457,29 @@ function renderArticles() {
     return;
   }
 
-  list.innerHTML = arts.map((a, i) => {
-    const thumb = a.thumbnail
-      ? `<img class="article-thumb" src="${esc(a.thumbnail)}" alt="" loading="lazy"
-           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'article-thumb-placeholder',textContent:'⚾'}))">`
-      : `<div class="article-thumb-placeholder">⚾</div>`;
+  let html = '';
+  const useGroups = state.sortBy === 'dateGroup' || state.sortBy === 'source';
 
-    return `<div class="article-card" data-idx="${i}" role="button" tabindex="0">
-      ${thumb}
-      <div class="article-body">
-        <div class="article-meta">
-          <span class="source-badge" style="background:${esc(a.source.color)}">${esc(a.source.name)}</span>
-          <span class="article-date">${relativeDate(a.pubDate)}</span>
-        </div>
-        <div class="article-title">${esc(a.title)}</div>
-        ${a.description ? `<div class="article-desc">${esc(a.description)}</div>` : ''}
-        <div class="article-actions">
-          <button class="btn-read" data-idx="${i}">Read</button>
-          <a class="btn-original" href="${esc(a.link)}" target="_blank" rel="noopener"
-             onclick="event.stopPropagation()">↗ Original</a>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+  if (useGroups) {
+    const keyFn = state.sortBy === 'dateGroup'
+      ? a => articleDateGroup(a.pubDate)
+      : a => a.source.name;
+
+    const groups = groupArticles(arts, keyFn);
+
+    for (const [label, items] of groups) {
+      html += `<div class="article-group-header">${esc(label)}<span class="group-count">${items.length}</span></div>`;
+      html += `<div class="article-grid">`;
+      html += items.map(({ article, idx }) => renderCard(article, idx)).join('');
+      html += `</div>`;
+    }
+  } else {
+    html += `<div class="article-grid">`;
+    html += arts.map((a, i) => renderCard(a, i)).join('');
+    html += `</div>`;
+  }
+
+  list.innerHTML = html;
 
   list.querySelectorAll('.article-card').forEach(el => {
     el.addEventListener('click', e => {
