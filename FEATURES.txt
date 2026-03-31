@@ -69,7 +69,7 @@ IDEAS & WISHLIST
 - make sections collapsible
 
 Stats
-- update STATS sidebar
+- update STATS sidebar (pull from baseballsavant.mlb.com)
   - link player name to baseballsavant.mlb.com player page
   - toggle batting/pitching
   - Batting: AVG, OBP, H, BB, SLG, HR, OPS
