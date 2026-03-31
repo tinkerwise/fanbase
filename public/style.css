@@ -188,6 +188,10 @@ img { display: block; }
   display: flex;
   flex-direction: column;
   gap: 22px;
+  max-height: calc(100vh - var(--header-h) - var(--scores-h) - 32px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
 .search-wrap { position: relative; }
@@ -272,6 +276,75 @@ img { display: block; }
 .team-abbrev a:hover { color: var(--orange); }
 
 .sidebar-msg { font-size: 0.8rem; color: var(--text-3); }
+
+/* ── On Deck ──────────────────────────────────────────────────── */
+.on-deck-card {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 12px; border-radius: var(--radius);
+  background: var(--card); border: 1px solid var(--border);
+  transition: border-color 0.15s;
+}
+.on-deck-card:hover { border-color: var(--orange); }
+.on-deck-matchup { display: flex; align-items: center; gap: 8px; }
+.on-deck-vs { font-size: 1rem; font-weight: 700; }
+.on-deck-logo { width: 28px; height: 28px; }
+.on-deck-details { display: flex; flex-direction: column; gap: 1px; }
+.on-deck-date { font-size: 0.75rem; color: var(--text-2); }
+.on-deck-venue { font-size: 0.68rem; color: var(--text-3); }
+.on-deck-pitchers { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 2px; }
+.on-deck-pitcher { font-size: 0.72rem; color: var(--text-2); }
+
+/* ── Yard Leaders ─────────────────────────────────────────────── */
+.leaders-list { display: flex; flex-direction: column; gap: 4px; }
+.leader-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.77rem; padding: 4px 0;
+  border-bottom: 1px solid #1e1e1e;
+}
+.leader-cat { font-weight: 700; color: var(--orange); width: 32px; flex-shrink: 0; font-size: 0.7rem; }
+.leader-name { flex: 1; color: var(--text); }
+.leader-val { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text-2); }
+
+/* ── Transactions ─────────────────────────────────────────────── */
+.txn-list { display: flex; flex-direction: column; gap: 2px; max-height: 220px; overflow-y: auto; }
+.txn-item { display: flex; gap: 8px; font-size: 0.73rem; padding: 5px 0; border-bottom: 1px solid #1e1e1e; }
+.txn-date { flex-shrink: 0; color: var(--text-3); font-size: 0.68rem; width: 42px; }
+.txn-desc { color: var(--text-2); line-height: 1.4; }
+
+/* ── Injury Report ────────────────────────────────────────────── */
+.il-list { display: flex; flex-direction: column; gap: 2px; }
+.il-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; padding: 4px 0; border-bottom: 1px solid #1e1e1e; }
+.il-name { flex: 1; color: var(--text); font-weight: 500; }
+.il-pos { color: var(--text-3); font-size: 0.68rem; }
+.il-status { font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; background: rgba(239,68,68,0.15); color: #ef4444; white-space: nowrap; }
+
+/* ── Weather in Score Chips ───────────────────────────────────── */
+.chip-weather {
+  font-size: 0.6rem;
+  text-align: center;
+  color: var(--text-3);
+  padding-top: 2px;
+}
+
+/* ── Source Filter Popover ────────────────────────────────────── */
+.source-filter-wrap { position: relative; }
+.btn-source-filter {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text-2); padding: 5px 10px;
+  border-radius: 6px; font-size: 0.78rem; cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-source-filter:hover { border-color: var(--orange); color: var(--orange); }
+.source-popover {
+  position: absolute; top: calc(100% + 6px); right: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px;
+  z-index: 30; min-width: 240px; max-width: 360px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.source-popover.hidden { display: none; }
+.source-popover .pill-group { max-height: 260px; overflow-y: auto; }
 
 /* ── Feed Area ─────────────────────────────────────────────────── */
 .feed-area { display: flex; flex-direction: column; gap: 14px; min-width: 0; }

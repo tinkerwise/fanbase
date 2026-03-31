@@ -153,6 +153,22 @@ function buildReaderDoc(article, htmlContent) {
   </head><body>${htmlContent}</body></html>`;
 }
 
+// ── Weather condition → emoji mapping ─────────────────────────────
+function weatherEmoji(condition) {
+  if (!condition) return '';
+  const c = condition.toLowerCase();
+  if (c.includes('clear') || c.includes('sunny')) return '☀️';
+  if (c.includes('partly cloudy')) return '⛅';
+  if (c.includes('cloud') || c.includes('overcast')) return '☁️';
+  if (c.includes('rain') || c.includes('drizzle') || c.includes('shower')) return '🌧️';
+  if (c.includes('snow')) return '❄️';
+  if (c.includes('thunder') || c.includes('storm')) return '⛈️';
+  if (c.includes('fog') || c.includes('mist') || c.includes('haze')) return '🌫️';
+  if (c.includes('wind')) return '💨';
+  if (c.includes('dome') || c.includes('roof closed')) return '🏟️';
+  return '🌤️';
+}
+
 // ── Scores ────────────────────────────────────────────────────────
 function teamAbbr(team) {
   return TEAM_ABBREV[team.id] ?? team.abbreviation ?? team.name.slice(0, 3).toUpperCase();
@@ -201,6 +217,12 @@ function renderGameChip(g) {
   const gamedaySuffix = isPre ? 'preview' : 'final';
   const gamedayUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/${gamedaySuffix}`;
 
+  const weather = g.weather;
+  const wxEmoji = weather?.condition ? weatherEmoji(weather.condition) : '';
+  const wxTemp = weather?.temp ? `${weather.temp}°` : '';
+  const wxTitle = weather?.condition ? `${weather.condition}${wxTemp ? ', ' + wxTemp : ''}` : '';
+  const wxHtml = wxEmoji ? `<span class="chip-weather" title="${esc(wxTitle)}">${wxEmoji}${wxTemp ? ' ' + wxTemp : ''}</span>` : '';
+
   return `<a class="score-chip ${stateClass}${hasOrioles ? ' orioles' : ''}"
       href="${gamedayUrl}"
       target="_blank" rel="noopener" title="${esc(away.team.name)} @ ${esc(home.team.name)}">
@@ -213,6 +235,7 @@ function renderGameChip(g) {
       <span class="chip-score">${homeScore}</span>
     </div>
     ${statusHtml}
+    ${wxHtml}
   </a>`;
 }
 
@@ -243,9 +266,9 @@ async function loadScores() {
     const tomorrow = localDateStr(1);
 
     const [ydData, todayData, tmData] = await Promise.all([
-      fetch(`${MLB}/schedule?sportId=1&date=${yesterday}&hydrate=linescore,team`).then(r => r.json()),
-      fetch(`${MLB}/schedule?sportId=1&date=${today}&hydrate=linescore,team`).then(r => r.json()),
-      fetch(`${MLB}/schedule?sportId=1&date=${tomorrow}&hydrate=linescore,team`).then(r => r.json()),
+      fetch(`${MLB}/schedule?sportId=1&date=${yesterday}&hydrate=linescore,team,weather`).then(r => r.json()),
+      fetch(`${MLB}/schedule?sportId=1&date=${today}&hydrate=linescore,team,weather`).then(r => r.json()),
+      fetch(`${MLB}/schedule?sportId=1&date=${tomorrow}&hydrate=linescore,team,weather`).then(r => r.json()),
     ]);
 
     const days = [
@@ -756,12 +779,166 @@ function closeReader() {
   $('readerFrame').srcdoc = '';
 }
 
+// ── On Deck (next Orioles game) ──────────────────────────────────
+async function loadOnDeck() {
+  const wrap = $('onDeckWrap');
+  try {
+    const today = localDateStr(0);
+    const endDate = localDateStr(14);
+    const data = await fetch(
+      `${MLB}/schedule?sportId=1&teamId=${ORIOLES_ID}&startDate=${today}&endDate=${endDate}&hydrate=probablePitcher,venue`
+    ).then(r => r.json());
+
+    const games = (data.dates ?? []).flatMap(d => d.games);
+    // Find next game that hasn't finished
+    const next = games.find(g => g.status.abstractGameState !== 'Final');
+    if (!next) {
+      wrap.innerHTML = '<span class="sidebar-msg">No upcoming games</span>';
+      return;
+    }
+
+    const away = next.teams.away;
+    const home = next.teams.home;
+    const isHome = home.team.id === ORIOLES_ID;
+    const opponent = isHome ? away : home;
+    const oppAbbr = TEAM_ABBREV[opponent.team.id] ?? opponent.team.name.slice(0, 3);
+
+    const gameDate = new Date(next.gameDate);
+    const dateStr = gameDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const timeStr = gameDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    const awayPitcher = away.probablePitcher?.fullName ?? 'TBD';
+    const homePitcher = home.probablePitcher?.fullName ?? 'TBD';
+    const venue = next.venue?.name ?? '';
+
+    const awaySlug = TEAM_SLUG[away.team.id] ?? '';
+    const homeSlug = TEAM_SLUG[home.team.id] ?? '';
+    const gdDate = next.gameDate.slice(0, 10).replace(/-/g, '/');
+    const gdUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gdDate}/${next.gamePk}/preview`;
+
+    wrap.innerHTML = `
+      <a class="on-deck-card" href="${gdUrl}" target="_blank" rel="noopener">
+        <div class="on-deck-matchup">
+          <span class="on-deck-vs">${isHome ? 'vs' : '@'} ${esc(oppAbbr)}</span>
+          <img class="on-deck-logo" src="https://www.mlbstatic.com/team-logos/${opponent.team.id}.svg" alt="" width="32" height="32">
+        </div>
+        <div class="on-deck-details">
+          <span class="on-deck-date">${esc(dateStr)} · ${esc(timeStr)}</span>
+          <span class="on-deck-venue">${esc(venue)}</span>
+        </div>
+        <div class="on-deck-pitchers">
+          <span class="on-deck-pitcher">${esc(TEAM_ABBREV[away.team.id])}: ${esc(awayPitcher)}</span>
+          <span class="on-deck-pitcher">${esc(TEAM_ABBREV[home.team.id])}: ${esc(homePitcher)}</span>
+        </div>
+      </a>`;
+  } catch {
+    wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
+  }
+}
+
+// ── Transactions ─────────────────────────────────────────────────
+async function loadTransactions() {
+  const wrap = $('transactionsWrap');
+  try {
+    const end = localDateStr(0);
+    const startD = new Date();
+    startD.setDate(startD.getDate() - 30);
+    const start = startD.toISOString().slice(0, 10);
+
+    const data = await fetch(
+      `${MLB}/transactions?teamId=${ORIOLES_ID}&startDate=${start}&endDate=${end}`
+    ).then(r => r.json());
+
+    const txns = (data.transactions ?? []).slice(0, 8);
+    if (!txns.length) {
+      wrap.innerHTML = '<span class="sidebar-msg">No recent transactions</span>';
+      return;
+    }
+
+    wrap.innerHTML = `<div class="txn-list">${txns.map(t => {
+      const date = new Date(t.date || t.effectiveDate);
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return `<div class="txn-item">
+        <span class="txn-date">${esc(dateStr)}</span>
+        <span class="txn-desc">${esc(t.description || `${t.person?.fullName ?? 'Unknown'} - ${t.typeDesc ?? t.typeCode}`)}</span>
+      </div>`;
+    }).join('')}</div>`;
+  } catch {
+    wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
+  }
+}
+
+// ── Injury Report ────────────────────────────────────────────────
+async function loadInjuryReport() {
+  const wrap = $('ilWrap');
+  try {
+    const data = await fetch(
+      `${MLB}/teams/${ORIOLES_ID}/roster?rosterType=40Man`
+    ).then(r => r.json());
+
+    const injured = (data.roster ?? []).filter(p =>
+      p.status?.description?.toLowerCase().includes('injured')
+    );
+
+    if (!injured.length) {
+      wrap.innerHTML = '<span class="sidebar-msg">No players on IL</span>';
+      return;
+    }
+
+    wrap.innerHTML = `<div class="il-list">${injured.map(p => {
+      const status = p.status.description.replace('Injured ', '');
+      return `<div class="il-item">
+        <span class="il-name">${esc(p.person.fullName)}</span>
+        <span class="il-pos">${esc(p.position?.abbreviation ?? '')}</span>
+        <span class="il-status">${esc(status)}</span>
+      </div>`;
+    }).join('')}</div>`;
+  } catch {
+    wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
+  }
+}
+
+// ── Yard Leaders ─────────────────────────────────────────────────
+async function loadLeaders() {
+  const wrap = $('leadersWrap');
+  try {
+    const data = await fetch(
+      `${MLB}/teams/${ORIOLES_ID}/leaders?leaderCategories=battingAverage,homeRuns,runsBattedIn,earnedRunAverage,strikeouts&season=${SEASON}&leaderGameTypes=R`
+    ).then(r => r.json());
+
+    const categories = data.teamLeaders ?? [];
+    if (!categories.length) {
+      wrap.innerHTML = '<span class="sidebar-msg">No stats available yet</span>';
+      return;
+    }
+
+    const labelMap = {
+      battingAverage: 'AVG', homeRuns: 'HR', runsBattedIn: 'RBI',
+      earnedRunAverage: 'ERA', strikeouts: 'K',
+    };
+
+    wrap.innerHTML = `<div class="leaders-list">${categories.map(cat => {
+      const label = labelMap[cat.leaderCategory] ?? cat.leaderCategory;
+      const top = cat.leaders?.[0];
+      if (!top) return '';
+      const name = top.person?.fullName?.split(' ').pop() ?? '';
+      return `<div class="leader-item">
+        <span class="leader-cat">${esc(label)}</span>
+        <span class="leader-name">${esc(name)}</span>
+        <span class="leader-val">${esc(top.value)}</span>
+      </div>`;
+    }).join('')}</div>`;
+  } catch {
+    wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
+  }
+}
+
 // ── Refresh ───────────────────────────────────────────────────────
 async function refresh() {
   const btn = $('refreshBtn');
   btn.disabled = true;
   btn.classList.add('spinning');
-  await Promise.allSettled([loadFeeds(), loadScores(), loadStandings()]);
+  await Promise.allSettled([loadFeeds(), loadScores(), loadStandings(), loadOnDeck(), loadTransactions(), loadInjuryReport(), loadLeaders()]);
   btn.disabled = false;
   btn.classList.remove('spinning');
   const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
@@ -813,6 +990,16 @@ function setupEvents() {
     renderArticles();
   });
 
+  // Source filter popover
+  $('sourceFilterBtn').addEventListener('click', () => {
+    $('sourcePopover').classList.toggle('hidden');
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.source-filter-wrap')) {
+      $('sourcePopover').classList.add('hidden');
+    }
+  });
+
   // Reader close
   $('readerClose').addEventListener('click', closeReader);
   $('readerOverlay').addEventListener('click', e => {
@@ -830,10 +1017,14 @@ async function init() {
   setupEvents();
 
   // Load all data in parallel
-  const [, , sources] = await Promise.allSettled([
+  await Promise.allSettled([
     loadScores(),
     loadStandings(),
     loadFeeds(),
+    loadOnDeck(),
+    loadTransactions(),
+    loadInjuryReport(),
+    loadLeaders(),
   ]);
 
   const now = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });

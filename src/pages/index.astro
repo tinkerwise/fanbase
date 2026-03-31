@@ -55,11 +55,11 @@ import Layout from '../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- Source Filter -->
+      <!-- On Deck -->
       <div class="filter-section">
-        <h3 class="section-label">Sources</h3>
-        <div class="pill-group" id="sourceFilters">
-          <button class="pill active" data-source="all">All</button>
+        <h3 class="section-label">On Deck</h3>
+        <div id="onDeckWrap">
+          <span class="sidebar-msg">Loading…</span>
         </div>
       </div>
 
@@ -68,6 +68,30 @@ import Layout from '../layouts/Layout.astro';
         <h3 class="section-label">Standings</h3>
         <div class="div-tabs" id="divTabs"></div>
         <div id="standingsWrap">
+          <span class="sidebar-msg">Loading…</span>
+        </div>
+      </div>
+
+      <!-- Yard Leaders -->
+      <div class="filter-section">
+        <h3 class="section-label">Yard Leaders</h3>
+        <div id="leadersWrap">
+          <span class="sidebar-msg">Loading…</span>
+        </div>
+      </div>
+
+      <!-- Transactions -->
+      <div class="filter-section">
+        <h3 class="section-label">Transactions</h3>
+        <div id="transactionsWrap">
+          <span class="sidebar-msg">Loading…</span>
+        </div>
+      </div>
+
+      <!-- Injury Report -->
+      <div class="filter-section">
+        <h3 class="section-label">Injury Report</h3>
+        <div id="ilWrap">
           <span class="sidebar-msg">Loading…</span>
         </div>
       </div>
@@ -88,6 +112,17 @@ import Layout from '../layouts/Layout.astro';
             <button class="view-btn" data-view="compact" title="Compact view">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="2" rx="0.5"/><rect x="1" y="7" width="14" height="2" rx="0.5"/><rect x="1" y="12" width="14" height="2" rx="0.5"/></svg>
             </button>
+          </div>
+          <div class="source-filter-wrap">
+            <button class="btn-source-filter" id="sourceFilterBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Sources
+            </button>
+            <div class="source-popover hidden" id="sourcePopover">
+              <div class="pill-group" id="sourceFilters">
+                <button class="pill active" data-source="all">All</button>
+              </div>
+            </div>
           </div>
           <select class="sort-select" id="sortSelect">
             <option value="date">Newest first</option>
