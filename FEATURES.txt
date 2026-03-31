@@ -58,10 +58,11 @@ IDEAS & WISHLIST
 
 ** Articles **
 - improve "Around the Horn" highlights
-  - limit to Top 3 stories
+  - limit number of "Around the Horn" stories
   - differentiate the card from single articles
 - add share button to articles
 - standardize thumbnails to 16:9, including Yard Report logo
+- add a read/unread feature, somehow sort articles (shuffle below?)
 
 ** Sidebars **
 - add inline icons leading title of sections
