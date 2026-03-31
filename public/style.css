@@ -320,14 +320,6 @@ img { display: block; }
 .il-pos { color: var(--text-3); font-size: 0.68rem; }
 .il-status { font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; background: rgba(239,68,68,0.15); color: #ef4444; white-space: nowrap; }
 
-/* ── Weather in Score Chips ───────────────────────────────────── */
-.chip-weather {
-  font-size: 0.6rem;
-  text-align: center;
-  color: var(--text-3);
-  padding-top: 2px;
-}
-
 /* ── Source Filter Popover ────────────────────────────────────── */
 .source-filter-wrap { position: relative; }
 .btn-source-filter {

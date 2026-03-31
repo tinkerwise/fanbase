@@ -295,15 +295,15 @@ function renderGameChip(g) {
 
   let stateClass = isDone ? 'final' : isLive ? 'live' : 'preview';
 
-  let statusHtml = '';
+  let statusInner = '';
   if (isLive) {
     const half = g.linescore?.inningHalf === 'Top' ? '▲' : '▼';
     const inn = g.linescore?.currentInning ?? '';
-    statusHtml = `<span class="chip-status live"><span class="live-dot"></span> ${half}${inn}</span>`;
+    statusInner = `<span class="live-dot"></span> ${half}${inn}`;
   } else if (isDone) {
-    statusHtml = `<span class="chip-status final">Final</span>`;
+    statusInner = 'Final';
   } else {
-    statusHtml = `<span class="chip-status preview">${formatGameTime(g.gameDate)}</span>`;
+    statusInner = formatGameTime(g.gameDate);
   }
 
   const awayScore = (!isPre && away.score != null) ? away.score : '';
@@ -318,11 +318,11 @@ function renderGameChip(g) {
   const gamedayUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/${gamedaySuffix}`;
 
   const wx = getGameWeather(g);
-  const wxHtml = wx ? `<span class="chip-weather" title="${esc(wx.condition + ', ' + wx.temp + '°F')}">${wx.emoji} ${wx.temp}°</span>` : '';
+  const wxInline = wx ? ` ${wx.emoji}${wx.temp}°` : '';
 
   return `<a class="score-chip ${stateClass}${hasOrioles ? ' orioles' : ''}"
       href="${gamedayUrl}"
-      target="_blank" rel="noopener" title="${esc(away.team.name)} @ ${esc(home.team.name)}">
+      target="_blank" rel="noopener" title="${esc(away.team.name)} @ ${esc(home.team.name)}${wx ? ' · ' + wx.condition + ', ' + wx.temp + '°F' : ''}">
     <div class="chip-row${awayWin ? ' winner' : ''}">
       <span class="chip-team">${esc(teamAbbr(away.team))}</span>
       <span class="chip-score">${awayScore}</span>
@@ -331,8 +331,7 @@ function renderGameChip(g) {
       <span class="chip-team">${esc(teamAbbr(home.team))}</span>
       <span class="chip-score">${homeScore}</span>
     </div>
-    ${statusHtml}
-    ${wxHtml}
+    <span class="chip-status ${stateClass}">${statusInner}${wxInline}</span>
   </a>`;
 }
 
