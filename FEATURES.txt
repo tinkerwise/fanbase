@@ -54,9 +54,27 @@ Infrastructure
 
 IDEAS & WISHLIST
 ----------------
-
 (Add new ideas below — edit this file from GitHub.com on mobile or desktop)
-- move transactions and IL to right sidebar
-- update Leaders (filter batting/pitching), incl. OPS, OBP,WHIP,???
-- add share button
--
+
+** Articles **
+- improve "Around the Horn" highlights
+  - limit to Top 3 stories
+  - differentiate the card from single articles
+- add share button to articles
+
+** Sidebars **
+Transactions
+- move transactions to right sidebar
+- link player names to MLB.com player bio news tab
+
+IL
+- move IL to right sidebar
+- link player names to MLB.com player bio news tab
+
+Stats
+- update STATS sidebar
+  - link player name to baseballsavant.mlb.com player page
+  - toggle batting/pitching
+  - Batting: AVG, OBP, H, BB, SLG, HR, OPS
+  - Pitching: GS, QS, W, ERA, SO, K%, BB, BB% 
+
