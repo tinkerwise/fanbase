@@ -62,9 +62,18 @@ IDEAS & WISHLIST
   - differentiate the card from single articles
 - add share button to articles
 - standardize thumbnails to 16:9, including Yard Report logo
-- 
 
 ** Sidebars **
+- add inline icons leading title of sections
+- make sections collapsible
+
+Stats
+- update STATS sidebar
+  - link player name to baseballsavant.mlb.com player page
+  - toggle batting/pitching
+  - Batting: AVG, OBP, H, BB, SLG, HR, OPS
+  - Pitching: GS, QS, W, ERA, SO, K%, BB, BB% 
+
 Transactions
 - move transactions to right sidebar
 - link player names to MLB.com player bio news tab
@@ -73,11 +82,6 @@ IL
 - move IL to right sidebar
 - link player names to MLB.com player bio news tab
 
-Stats
-- update STATS sidebar
-  - link player name to baseballsavant.mlb.com player page
-  - toggle batting/pitching
-  - Batting: AVG, OBP, H, BB, SLG, HR, OPS
-  - Pitching: GS, QS, W, ERA, SO, K%, BB, BB% 
+
 
 
