@@ -61,6 +61,8 @@ IDEAS & WISHLIST
   - limit to Top 3 stories
   - differentiate the card from single articles
 - add share button to articles
+- standardize thumbnails to 16:9, including Yard Report logo
+- 
 
 ** Sidebars **
 Transactions
@@ -77,4 +79,5 @@ Stats
   - toggle batting/pitching
   - Batting: AVG, OBP, H, BB, SLG, HR, OPS
   - Pitching: GS, QS, W, ERA, SO, K%, BB, BB% 
+
 
