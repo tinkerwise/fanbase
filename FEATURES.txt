@@ -74,5 +74,8 @@
 
 # UPDATES
 // New ideas below — edit this file from GitHub.com on mobile or desktop
-
-- 
+- On Deck: reduce height of On Deck widget, perhaps remove starting pitchers
+- Schedule: update to a small calendar, next 5 games for upcoming games, no times, links to mlb preview
+- Transactions: ensure the latest transactions are posted. 
+- Roster: create a collapsible widget, default collapsed
+- Widgets: make titles more prominent, as they appear small and greyed out
