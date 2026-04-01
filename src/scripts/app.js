@@ -349,7 +349,8 @@ function renderGameChip(g) {
     const bases = `<span class="bases-diamond"><span class="base b2${b2}"></span><span class="base b3${b3}"></span><span class="base b1${b1}"></span></span>`;
     statusInner = `<span class="live-dot"></span> ${half}${inn} ${bases}`;
   } else if (isDone) {
-    statusInner = 'Final';
+    const storyUrl = `https://www.mlb.com/stories/game/${g.gamePk}?storylocal=gameday-postgame-wrap-game-embed`;
+    statusInner = `<span class="final-row"><span>Final</span><a class="reel-link" href="${storyUrl}" target="_blank" rel="noopener" title="Game recap" onclick="event.stopPropagation()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></a></span>`;
   } else {
     statusInner = formatGameTime(g.gameDate);
   }
@@ -368,9 +369,6 @@ function renderGameChip(g) {
   const wx = getGameWeather(g);
   // Weather only for preview games; finals get a recap reel icon
   const wxInline = (isPre && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
-  const storyUrl = `https://www.mlb.com/stories/game/${g.gamePk}?storylocal=gameday-postgame-wrap-game-embed`;
-  const reelIcon = isDone ? ` <a class="reel-link" href="${storyUrl}" target="_blank" rel="noopener" title="Game recap" onclick="event.stopPropagation()">🎬</a>` : '';
-
   return `<a class="score-chip ${stateClass}${hasOrioles ? ' orioles' : ''}"
       href="${gamedayUrl}"
       target="_blank" rel="noopener" title="${esc(away.team.name)} @ ${esc(home.team.name)}${wx ? ' · ' + wx.condition + ', ' + wx.temp + '°F' : ''}">
@@ -382,7 +380,7 @@ function renderGameChip(g) {
       <span class="chip-team">${esc(teamAbbr(home.team))}</span>
       <span class="chip-score">${homeScore}</span>
     </div>
-    <span class="chip-status ${stateClass}">${statusInner}${wxInline}${reelIcon}</span>
+    <span class="chip-status ${stateClass}">${statusInner}${wxInline}</span>
   </a>`;
 }
 
@@ -1010,6 +1008,36 @@ async function loadOnDeck() {
     const gdDate = next.gameDate.slice(0, 10).replace(/-/g, '/');
     const gdUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gdDate}/${next.gamePk}/preview`;
 
+    // Build schedule rows for remaining upcoming games (skip the "next" game)
+    const upcoming = games.filter(g => g.gamePk !== next.gamePk && g.status.abstractGameState !== 'Final');
+    const scheduleRows = upcoming.slice(0, 10).map(g => {
+      const gAway = g.teams.away;
+      const gHome = g.teams.home;
+      const gIsHome = gHome.team.id === ORIOLES_ID;
+      const gOpp = gIsHome ? gAway : gHome;
+      const gOppAbbr = TEAM_ABBREV[gOpp.team.id] ?? gOpp.team.name.slice(0, 3);
+      const gDate = new Date(g.gameDate);
+      const gDateStr = gDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      const gTimeStr = gDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const gAwaySlug = TEAM_SLUG[gAway.team.id] ?? '';
+      const gHomeSlug = TEAM_SLUG[gHome.team.id] ?? '';
+      const gGdDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
+      const gUrl = `https://www.mlb.com/gameday/${gAwaySlug}-vs-${gHomeSlug}/${gGdDate}/${g.gamePk}/preview`;
+      return `<a class="sched-row" href="${gUrl}" target="_blank" rel="noopener">
+        <img class="sched-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="" width="20" height="20">
+        <span class="sched-opp">${gIsHome ? 'vs' : '@'} ${esc(gOppAbbr)}</span>
+        <span class="sched-date">${esc(gDateStr)}</span>
+        <span class="sched-time">${esc(gTimeStr)}</span>
+      </a>`;
+    }).join('');
+
+    const scheduleHtml = scheduleRows
+      ? `<div class="sched-section">
+          <div class="sched-header">Schedule</div>
+          <div class="sched-list">${scheduleRows}</div>
+        </div>`
+      : '';
+
     wrap.innerHTML = `
       <a class="on-deck-card" href="${gdUrl}" target="_blank" rel="noopener">
         <div class="on-deck-matchup">
@@ -1025,7 +1053,8 @@ async function loadOnDeck() {
           <span class="on-deck-pitcher">${esc(TEAM_ABBREV[away.team.id])}: ${esc(awayPitcher)}</span>
           <span class="on-deck-pitcher">${esc(TEAM_ABBREV[home.team.id])}: ${esc(homePitcher)}</span>
         </div>
-      </a>`;
+      </a>
+      ${scheduleHtml}`;
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }
