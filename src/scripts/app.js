@@ -1562,6 +1562,14 @@ function setupEvents() {
     });
   });
 
+  // On mobile, collapse all sidebar sections except search and On Deck
+  if (window.innerWidth <= 600) {
+    document.querySelectorAll('.sidebar-section').forEach(section => {
+      const key = section.dataset.section;
+      if (key !== 'ondeck') section.classList.add('collapsed');
+    });
+  }
+
   // Source filter popover
   $('sourceFilterBtn').addEventListener('click', () => {
     $('sourcePopover').classList.toggle('hidden');
