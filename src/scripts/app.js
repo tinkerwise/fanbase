@@ -523,30 +523,38 @@ async function loadScores() {
       document.body.appendChild(boxPopover);
     }
     let boxTimer = null;
+    function showBoxScore(chip) {
+      const pk = chip.dataset.gamepk;
+      const g = state.gamesMap[pk];
+      if (!g || g.status.abstractGameState === 'Preview') return;
+      clearTimeout(boxTimer);
+      boxPopover.innerHTML = renderBoxScore(g);
+      // Make visible off-screen first to measure
+      boxPopover.style.left = '-9999px';
+      boxPopover.style.top = '0';
+      boxPopover.classList.remove('hidden');
+      // Now position relative to chip
+      const r = chip.getBoundingClientRect();
+      const pw = boxPopover.offsetWidth;
+      const ph = boxPopover.offsetHeight;
+      let left = r.left + r.width / 2 - pw / 2;
+      if (left < 4) left = 4;
+      if (left + pw > window.innerWidth - 4) left = window.innerWidth - pw - 4;
+      let top = r.bottom + 6;
+      // If it would go below viewport, show above the chip
+      if (top + ph > window.innerHeight - 4) top = r.top - ph - 6;
+      boxPopover.style.left = left + 'px';
+      boxPopover.style.top = top + 'px';
+    }
+    function hideBoxScore() {
+      boxTimer = setTimeout(() => boxPopover.classList.add('hidden'), 250);
+    }
     track.querySelectorAll('.score-chip').forEach(chip => {
-      chip.addEventListener('mouseenter', () => {
-        const pk = chip.dataset.gamepk;
-        const g = state.gamesMap[pk];
-        if (!g || g.status.abstractGameState === 'Preview') return;
-        clearTimeout(boxTimer);
-        boxPopover.innerHTML = renderBoxScore(g);
-        boxPopover.classList.remove('hidden');
-        const r = chip.getBoundingClientRect();
-        const pw = boxPopover.offsetWidth;
-        let left = r.left + r.width / 2 - pw / 2;
-        if (left < 4) left = 4;
-        if (left + pw > window.innerWidth - 4) left = window.innerWidth - pw - 4;
-        boxPopover.style.left = left + 'px';
-        boxPopover.style.top = (r.bottom + 6) + 'px';
-      });
-      chip.addEventListener('mouseleave', () => {
-        boxTimer = setTimeout(() => boxPopover.classList.add('hidden'), 200);
-      });
+      chip.addEventListener('mouseenter', () => showBoxScore(chip));
+      chip.addEventListener('mouseleave', hideBoxScore);
     });
     boxPopover.addEventListener('mouseenter', () => clearTimeout(boxTimer));
-    boxPopover.addEventListener('mouseleave', () => {
-      boxTimer = setTimeout(() => boxPopover.classList.add('hidden'), 200);
-    });
+    boxPopover.addEventListener('mouseleave', hideBoxScore);
 
     // Before noon EDT, keep yesterday's scores front-and-center
     const nowUTC = new Date();

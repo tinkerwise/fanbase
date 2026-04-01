@@ -246,7 +246,7 @@ img { display: block; }
   pointer-events: auto;
   max-width: 95vw; overflow-x: auto;
 }
-.box-score-popover.hidden { display: none; }
+.box-score-popover.hidden { visibility: hidden; pointer-events: none; }
 .box-score-table {
   border-collapse: collapse; font-size: 0.72rem;
   font-variant-numeric: tabular-nums; white-space: nowrap;
