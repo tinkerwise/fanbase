@@ -60,7 +60,7 @@
 
 
 #Ideas
-New ideas below — edit this file from GitHub.com on mobile or desktop)
+//New ideas below — edit this file from GitHub.com on mobile or desktop)
 
 #Mobile
 - fix source, roster, stats, transaction list 
@@ -69,7 +69,8 @@ New ideas below — edit this file from GitHub.com on mobile or desktop)
 - when game starts, change weather icon to game situation (bases icon) 
 
 #Articles
-- add a read/unread feature, somehow sort articles (shuffle below?)
+- add a read/unread feature, somehow sort articles or hide them? shuffle 
+- default to list view on load
 
 #Stats
 update to a popout or new page?
