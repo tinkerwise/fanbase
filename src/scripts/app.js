@@ -72,14 +72,50 @@ const VENUE_COORDS = {
   5325: { lat: 32.747, lon: -97.082 },   // Globe Life Field (TEX)
 };
 
+// ── Settings (persisted to localStorage) ─────────────────────────
+const PREFS_KEY = 'yr_prefs';
+function loadPrefs() {
+  try { return JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; } catch { return {}; }
+}
+function savePrefs(updates) {
+  const prefs = { ...loadPrefs(), ...updates };
+  localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+  return prefs;
+}
+const prefs = loadPrefs();
+
+// ── Theme ────────────────────────────────────────────────────────
+function applyTheme(theme) {
+  const resolved = theme === 'system'
+    ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+    : theme;
+  document.documentElement.setAttribute('data-theme', resolved);
+  savePrefs({ theme });
+}
+applyTheme(prefs.theme || 'dark');
+
+// ── Read/unread tracking ─────────────────────────────────────────
+const READ_KEY = 'yr_read';
+function getReadArticles() {
+  try { return new Set(JSON.parse(localStorage.getItem(READ_KEY)) || []); } catch { return new Set(); }
+}
+function markRead(url) {
+  const read = getReadArticles();
+  read.add(url);
+  // Keep only last 500 to avoid bloating localStorage
+  const arr = [...read].slice(-500);
+  localStorage.setItem(READ_KEY, JSON.stringify(arr));
+}
+
 // ── State ─────────────────────────────────────────────────────────
+const defaultView = prefs.defaultView || 'list';
 const state = {
   articles: [],
   activeCategory: 'all',
   activeSource: 'all',
   searchQuery: '',
   sortBy: 'date',
-  viewMode: window.innerWidth <= 600 ? 'list' : 'grid',  // grid | list | compact
+  viewMode: window.innerWidth <= 600 ? 'list' : defaultView,
   standings: [],
   activeDiv: null,
 };
@@ -299,7 +335,12 @@ function renderGameChip(g) {
   if (isLive) {
     const half = g.linescore?.inningHalf === 'Top' ? '▲' : '▼';
     const inn = g.linescore?.currentInning ?? '';
-    statusInner = `<span class="live-dot"></span> ${half}${inn}`;
+    const offense = g.linescore?.offense ?? {};
+    const b1 = offense.first ? ' on' : '';
+    const b2 = offense.second ? ' on' : '';
+    const b3 = offense.third ? ' on' : '';
+    const bases = `<span class="bases-diamond"><span class="base b2${b2}"></span><span class="base b3${b3}"></span><span class="base b1${b1}"></span></span>`;
+    statusInner = `<span class="live-dot"></span> ${half}${inn} ${bases}`;
   } else if (isDone) {
     statusInner = 'Final';
   } else {
@@ -318,7 +359,7 @@ function renderGameChip(g) {
   const gamedayUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/${gamedaySuffix}`;
 
   const wx = getGameWeather(g);
-  const wxInline = wx ? ` ${wx.emoji}${wx.temp}°` : '';
+  const wxInline = (!isLive && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
 
   return `<a class="score-chip ${stateClass}${hasOrioles ? ' orioles' : ''}"
       href="${gamedayUrl}"
@@ -599,6 +640,8 @@ function renderCard(a, i) {
   const hasFullContent = (a.content || '').length > 400;
   const mode = state.viewMode;
   const favicon = faviconUrl(a.link);
+  const isRead = getReadArticles().has(a.link);
+  const readClass = isRead ? ' read' : '';
 
   const fallback = `<div class=\\'article-thumb-placeholder\\'><img class=\\'placeholder-logo\\' src=\\'${PLACEHOLDER_IMG}\\' alt=\\'\\'></div>`;
   const thumbImg = imgSrc
@@ -618,14 +661,14 @@ function renderCard(a, i) {
   </span>`;
 
   if (mode === 'compact') {
-    return `<div class="article-card compact" data-idx="${i}" role="button" tabindex="0">
+    return `<div class="article-card compact${readClass}" data-idx="${i}" role="button" tabindex="0">
       ${source}
       <div class="article-title">${esc(a.title)}</div>
     </div>`;
   }
 
   if (mode === 'list') {
-    return `<div class="article-card list-view" data-idx="${i}" role="button" tabindex="0">
+    return `<div class="article-card list-view${readClass}" data-idx="${i}" role="button" tabindex="0">
       ${thumbImg}
       <div class="article-body">
         ${source}
@@ -636,7 +679,7 @@ function renderCard(a, i) {
   }
 
   // Grid mode (default)
-  return `<div class="article-card" data-idx="${i}" role="button" tabindex="0">
+  return `<div class="article-card${readClass}" data-idx="${i}" role="button" tabindex="0">
     ${thumbImg}
     <div class="article-body">
       ${source}
@@ -844,6 +887,14 @@ function renderArticles() {
 
 // ── Reader View ───────────────────────────────────────────────────
 function openReader(article) {
+  markRead(article.link);
+  // Update the card visually
+  document.querySelectorAll('.article-card').forEach(el => {
+    const idx = Number(el.dataset.idx);
+    const a = getFilteredArticles()[idx];
+    if (a && a.link === article.link) el.classList.add('read');
+  });
+
   $('readerTitle').textContent = article.title;
   $('readerDate').textContent = relativeDate(article.pubDate);
 
@@ -1085,7 +1136,7 @@ async function loadLeaders() {
   const wrap = $('leadersWrap');
   try {
     const data = await fetch(
-      `${MLB}/teams/${ORIOLES_ID}/leaders?leaderCategories=battingAverage,onBasePlusSlugging,homeRuns,hits,baseOnBalls,sluggingPercentage,runsBattedIn,earnedRunAverage,strikeouts,gamesStarted,walksAndHitsPerInningPitched,wins&season=${SEASON}&leaderGameTypes=R`
+      `${MLB}/teams/${ORIOLES_ID}/leaders?leaderCategories=battingAverage,onBasePercentage,onBasePlusSlugging,homeRuns,hits,baseOnBalls,sluggingPercentage,runsBattedIn,earnedRunAverage,strikeouts,gamesStarted,walksAndHitsPerInningPitched,wins,strikeoutsPer9Inn,walksPer9Inn,qualityStarts&season=${SEASON}&leaderGameTypes=R`
     ).then(r => r.json());
 
     const categories = data.teamLeaders ?? [];
@@ -1094,8 +1145,8 @@ async function loadLeaders() {
       return;
     }
 
-    const battingLabels = { battingAverage: 'AVG', onBasePlusSlugging: 'OPS', homeRuns: 'HR', hits: 'H', baseOnBalls: 'BB', sluggingPercentage: 'SLG', runsBattedIn: 'RBI' };
-    const pitchingLabels = { earnedRunAverage: 'ERA', strikeouts: 'K', gamesStarted: 'GS', walksAndHitsPerInningPitched: 'WHIP', wins: 'W' };
+    const battingLabels = { battingAverage: 'AVG', onBasePercentage: 'OBP', onBasePlusSlugging: 'OPS', homeRuns: 'HR', hits: 'H', baseOnBalls: 'BB', sluggingPercentage: 'SLG', runsBattedIn: 'RBI' };
+    const pitchingLabels = { earnedRunAverage: 'ERA', strikeouts: 'K', gamesStarted: 'GS', qualityStarts: 'QS', walksAndHitsPerInningPitched: 'WHIP', wins: 'W', strikeoutsPer9Inn: 'K/9', walksPer9Inn: 'BB/9' };
 
     leadersData.batting = categories
       .filter(c => battingLabels[c.leaderCategory] && c.statGroup === 'hitting')
@@ -1195,6 +1246,44 @@ function setupEvents() {
     $('categoryFilters').querySelectorAll('.pill').forEach(p =>
       p.classList.toggle('active', p.dataset.category === state.activeCategory));
     renderArticles();
+  });
+
+  // Settings
+  $('settingsBtn').addEventListener('click', () => {
+    $('settingsOverlay').classList.toggle('hidden');
+    // Set active states
+    const p = loadPrefs();
+    $('themeToggle').querySelectorAll('.theme-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.theme === (p.theme || 'dark')));
+    $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.defview === (p.defaultView || 'list')));
+  });
+  $('settingsClose').addEventListener('click', () => $('settingsOverlay').classList.add('hidden'));
+  $('settingsOverlay').addEventListener('click', e => {
+    if (e.target === $('settingsOverlay')) $('settingsOverlay').classList.add('hidden');
+  });
+  $('themeToggle').addEventListener('click', e => {
+    const btn = e.target.closest('[data-theme]');
+    if (!btn) return;
+    applyTheme(btn.dataset.theme);
+    $('themeToggle').querySelectorAll('.theme-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.theme === btn.dataset.theme));
+  });
+  $('defaultViewToggle').addEventListener('click', e => {
+    const btn = e.target.closest('[data-defview]');
+    if (!btn) return;
+    savePrefs({ defaultView: btn.dataset.defview });
+    state.viewMode = btn.dataset.defview;
+    $('viewToggle').querySelectorAll('.view-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.view === state.viewMode));
+    $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.defview === btn.dataset.defview));
+    renderArticles();
+  });
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+    const p = loadPrefs();
+    if (p.theme === 'system') applyTheme('system');
   });
 
   // Collapsible sidebar sections
