@@ -408,7 +408,84 @@ function dayLabel(dateStr) {
   return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
-function renderBoxScore(g) {
+// Cache for boxscore API responses
+const boxscoreCache = {};
+
+async function fetchBoxscore(gamePk) {
+  if (boxscoreCache[gamePk]) return boxscoreCache[gamePk];
+  try {
+    const data = await fetch(`${MLB}/game/${gamePk}/boxscore`).then(r => r.json());
+    boxscoreCache[gamePk] = data;
+    return data;
+  } catch { return null; }
+}
+
+function topPerformers(boxData) {
+  if (!boxData) return '';
+  const sides = ['away', 'home'];
+  const allBatters = [];
+  const allPitchers = [];
+
+  for (const side of sides) {
+    const team = boxData.teams?.[side];
+    if (!team) continue;
+    const abbr = TEAM_ABBREV[team.team?.id] ?? team.team?.abbreviation ?? '';
+    const players = team.players ?? {};
+    for (const [, p] of Object.entries(players)) {
+      const bs = p.stats?.batting;
+      const ps = p.stats?.pitching;
+      if (bs && (bs.atBats > 0 || bs.baseOnBalls > 0)) {
+        const hits = bs.hits ?? 0;
+        const ab = bs.atBats ?? 0;
+        const hr = bs.homeRuns ?? 0;
+        const rbi = bs.rbi ?? 0;
+        const bb = bs.baseOnBalls ?? 0;
+        // Score: weight HRs and multi-hit games
+        const score = hits * 2 + hr * 5 + rbi * 2 + bb;
+        allBatters.push({ name: p.person?.fullName ?? '', abbr, hits, ab, hr, rbi, bb, score });
+      }
+      if (ps && (ps.inningsPitched != null)) {
+        const ip = parseFloat(ps.inningsPitched) || 0;
+        const k = ps.strikeOuts ?? 0;
+        const er = ps.earnedRuns ?? 0;
+        const h = ps.hits ?? 0;
+        allPitchers.push({ name: p.person?.fullName ?? '', abbr, ip, k, er, h });
+      }
+    }
+  }
+
+  // Top 3 hitters by score
+  allBatters.sort((a, b) => b.score - a.score);
+  const topHit = allBatters.slice(0, 3);
+
+  // Top pitchers: sort by IP desc (starters first), then show up to 3
+  allPitchers.sort((a, b) => b.ip - a.ip || a.er - b.er);
+  const topPitch = allPitchers.slice(0, 3);
+
+  let html = '';
+  if (topHit.length) {
+    html += '<div class="box-performers"><span class="box-perf-label">Top Hitters</span>';
+    html += topHit.map(b => {
+      const line = `${b.hits}-${b.ab}`;
+      const extras = [];
+      if (b.hr) extras.push(`${b.hr} HR`);
+      if (b.rbi) extras.push(`${b.rbi} RBI`);
+      if (b.bb) extras.push(`${b.bb} BB`);
+      return `<span class="box-perf-row"><span class="box-perf-name">${esc(b.name)}</span> <span class="box-perf-team">${esc(b.abbr)}</span> <span class="box-perf-stat">${line}${extras.length ? ', ' + extras.join(', ') : ''}</span></span>`;
+    }).join('');
+    html += '</div>';
+  }
+  if (topPitch.length) {
+    html += '<div class="box-performers"><span class="box-perf-label">Top Pitchers</span>';
+    html += topPitch.map(p => {
+      return `<span class="box-perf-row"><span class="box-perf-name">${esc(p.name)}</span> <span class="box-perf-team">${esc(p.abbr)}</span> <span class="box-perf-stat">${p.ip} IP, ${p.k} K, ${p.er} ER</span></span>`;
+    }).join('');
+    html += '</div>';
+  }
+  return html;
+}
+
+function renderBoxScore(g, boxData) {
   const ls = g.linescore;
   const away = g.teams.away;
   const home = g.teams.home;
@@ -457,13 +534,15 @@ function renderBoxScore(g) {
     decisions = `<div class="box-decisions">${parts.join(' ')}</div>`;
   }
 
+  const performers = topPerformers(boxData);
+
   return `<table class="box-score-table">
     <thead><tr>${hdr}</tr></thead>
     <tbody>
       <tr>${awayRow}</tr>
       <tr>${homeRow}</tr>
     </tbody>
-  </table>${decisions}`;
+  </table>${decisions}${performers}`;
 }
 
 async function loadScores() {
@@ -523,17 +602,7 @@ async function loadScores() {
       document.body.appendChild(boxPopover);
     }
     let boxTimer = null;
-    function showBoxScore(chip) {
-      const pk = chip.dataset.gamepk;
-      const g = state.gamesMap[pk];
-      if (!g || g.status.abstractGameState === 'Preview') return;
-      clearTimeout(boxTimer);
-      boxPopover.innerHTML = renderBoxScore(g);
-      // Make visible off-screen first to measure
-      boxPopover.style.left = '-9999px';
-      boxPopover.style.top = '0';
-      boxPopover.classList.remove('hidden');
-      // Now position relative to chip
+    function positionPopover(chip) {
       const r = chip.getBoundingClientRect();
       const pw = boxPopover.offsetWidth;
       const ph = boxPopover.offsetHeight;
@@ -541,10 +610,30 @@ async function loadScores() {
       if (left < 4) left = 4;
       if (left + pw > window.innerWidth - 4) left = window.innerWidth - pw - 4;
       let top = r.bottom + 6;
-      // If it would go below viewport, show above the chip
       if (top + ph > window.innerHeight - 4) top = r.top - ph - 6;
       boxPopover.style.left = left + 'px';
       boxPopover.style.top = top + 'px';
+    }
+    function showBoxScore(chip) {
+      const pk = chip.dataset.gamepk;
+      const g = state.gamesMap[pk];
+      if (!g || g.status.abstractGameState === 'Preview') return;
+      clearTimeout(boxTimer);
+      // Show linescore immediately
+      boxPopover.innerHTML = renderBoxScore(g, boxscoreCache[pk] || null);
+      boxPopover.style.left = '-9999px';
+      boxPopover.style.top = '0';
+      boxPopover.classList.remove('hidden');
+      positionPopover(chip);
+      // Fetch full boxscore for performers (async, cached)
+      if (!boxscoreCache[pk] && g.status.abstractGameState !== 'Preview') {
+        fetchBoxscore(pk).then(data => {
+          if (data && !boxPopover.classList.contains('hidden')) {
+            boxPopover.innerHTML = renderBoxScore(g, data);
+            positionPopover(chip);
+          }
+        });
+      }
     }
     function hideBoxScore() {
       boxTimer = setTimeout(() => boxPopover.classList.add('hidden'), 250);
