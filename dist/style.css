@@ -472,25 +472,21 @@ img { display: block; max-width: 100%; }
 .on-deck-lineup { margin-top: 4px; font-size: 0.7rem; }
 
 /* Schedule within On Deck */
-.sched-section { margin-top: 6px; }
-.sched-header {
-  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.04em; color: var(--text); padding: 4px 0 2px;
-  border-top: 1px solid var(--border);
+/* Schedule boxes (inline with On Deck) */
+.sched-row-wrap {
+  display: flex; gap: 4px; margin-top: 6px;
+  border-top: 1px solid var(--border); padding-top: 6px;
 }
-.sched-list { display: flex; flex-direction: column; }
-.sched-row {
-  display: flex; align-items: center; gap: 6px;
-  padding: 3px 4px; border-radius: 4px; text-decoration: none; color: var(--text);
-  font-size: 0.72rem; transition: background 0.15s;
-  border-bottom: 1px solid var(--border);
+.sched-box {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 5px 2px; border-radius: 6px; text-decoration: none; color: var(--text);
+  background: var(--card); border: 1px solid var(--border);
+  transition: background 0.15s, border-color 0.15s;
 }
-.sched-row:last-child { border-bottom: none; }
-.sched-row:hover { background: var(--orange-dim); }
-.sched-day { font-weight: 600; color: var(--text-2); width: 28px; flex-shrink: 0; font-size: 0.68rem; }
-.sched-date-num { color: var(--text-3); width: 32px; flex-shrink: 0; font-size: 0.68rem; }
-.sched-logo { width: 18px; height: 18px; flex-shrink: 0; }
-.sched-opp { font-weight: 600; }
+.sched-box:hover { background: var(--orange-dim); border-color: var(--accent); }
+.sched-box-day { font-size: 0.6rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.03em; }
+.sched-box-logo { width: 22px; height: 22px; }
+.sched-box-opp { font-size: 0.62rem; font-weight: 600; white-space: nowrap; }
 
 /* ── Yard Leaders ─────────────────────────────────────────────── */
 .leaders-list { display: flex; flex-direction: column; gap: 4px; }
@@ -624,17 +620,13 @@ a.il-name:hover { color: var(--orange); }
 .feed-area { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .feed-toolbar {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
 }
-.toolbar-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+.toolbar-divider {
+  width: 1px; height: 20px; background: var(--border); flex-shrink: 0;
 }
-.toolbar-top-row .pill-group { flex-wrap: wrap; }
-.result-count { font-size: 0.78rem; color: var(--text-3); white-space: nowrap; }
+.result-count { font-size: 0.78rem; color: var(--text-3); white-space: nowrap; margin-left: auto; }
 .date-hint { color: var(--text-3); opacity: 0.6; font-size: 0.72rem; }
 .toolbar-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .view-toggle { display: flex; gap: 2px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
@@ -1127,8 +1119,8 @@ a.il-name:hover { color: var(--orange); }
   .roster-list { max-height: 180px; }
   .txn-list { max-height: 140px; }
   .leaders-list { font-size: 0.72rem; }
-  .sched-row { font-size: 0.68rem; padding: 3px 4px; }
-  .sched-logo { width: 16px; height: 16px; }
+  .sched-box { padding: 4px 1px; }
+  .sched-box-logo { width: 18px; height: 18px; }
 
   /* Around the Horn – compact */
   .ath-bundle { padding: 10px; }

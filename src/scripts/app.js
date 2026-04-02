@@ -1298,9 +1298,9 @@ async function loadOnDeck() {
     const gdDate = next.gameDate.slice(0, 10).replace(/-/g, '/');
     const gdUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gdDate}/${next.gamePk}/preview`;
 
-    // Build schedule rows for remaining upcoming games (skip the "next" game)
+    // Build upcoming game boxes (skip the "next" game)
     const upcoming = games.filter(g => g.gamePk !== next.gamePk && g.status.abstractGameState !== 'Final');
-    const scheduleRows = upcoming.slice(0, 5).map(g => {
+    const scheduleBoxes = upcoming.slice(0, 5).map(g => {
       const gAway = g.teams.away;
       const gHome = g.teams.home;
       const gIsHome = gHome.team.id === ORIOLES_ID;
@@ -1308,24 +1308,19 @@ async function loadOnDeck() {
       const gOppAbbr = TEAM_ABBREV[gOpp.team.id] ?? gOpp.team.name.slice(0, 3);
       const gDate = new Date(g.gameDate);
       const gDay = gDate.toLocaleDateString('en-US', { weekday: 'short' });
-      const gDateNum = gDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
       const gAwaySlug = TEAM_SLUG[gAway.team.id] ?? '';
       const gHomeSlug = TEAM_SLUG[gHome.team.id] ?? '';
       const gGdDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
       const gUrl = `https://www.mlb.com/gameday/${gAwaySlug}-vs-${gHomeSlug}/${gGdDate}/${g.gamePk}/preview`;
-      return `<a class="sched-row" href="${gUrl}" target="_blank" rel="noopener">
-        <span class="sched-day">${esc(gDay)}</span>
-        <span class="sched-date-num">${esc(gDateNum)}</span>
-        <img class="sched-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="" width="18" height="18">
-        <span class="sched-opp">${gIsHome ? 'vs' : '@'} ${esc(gOppAbbr)}</span>
+      return `<a class="sched-box" href="${gUrl}" target="_blank" rel="noopener">
+        <span class="sched-box-day">${esc(gDay)}</span>
+        <img class="sched-box-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="${esc(gOppAbbr)}" width="22" height="22">
+        <span class="sched-box-opp">${gIsHome ? 'vs' : '@'} ${esc(gOppAbbr)}</span>
       </a>`;
     }).join('');
 
-    const scheduleHtml = scheduleRows
-      ? `<div class="sched-section">
-          <div class="sched-header">Schedule</div>
-          <div class="sched-list">${scheduleRows}</div>
-        </div>`
+    const scheduleHtml = scheduleBoxes
+      ? `<div class="sched-row-wrap">${scheduleBoxes}</div>`
       : '';
 
     // Show lineup link if game is today or live
