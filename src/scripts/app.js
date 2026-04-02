@@ -1618,8 +1618,9 @@ const leadersCache = {};
 let leadersMode = 'batting';
 let leadersScope = 'orioles'; // orioles | al | nl | mlb
 
-const LEADERS_CATS = 'battingAverage,onBasePercentage,onBasePlusSlugging,homeRuns,hits,baseOnBalls,sluggingPercentage,runsBattedIn,earnedRunAverage,strikeouts,gamesStarted,walksAndHitsPerInningPitched,wins,strikeoutsPer9Inn,walksPer9Inn,qualityStarts';
-const BATTING_LABELS = { battingAverage: 'AVG', onBasePercentage: 'OBP', onBasePlusSlugging: 'OPS', homeRuns: 'HR', hits: 'H', baseOnBalls: 'BB', sluggingPercentage: 'SLG', runsBattedIn: 'RBI' };
+const TEAM_LEADERS_CATS = 'battingAverage,onBasePercentage,onBasePlusSlugging,homeRuns,hits,baseOnBalls,sluggingPercentage,runsBattedIn,earnedRunAverage,strikeouts,gamesStarted,walksAndHitsPerInningPitched,wins,strikeoutsPer9Inn,walksPer9Inn,qualityStarts';
+const LEAGUE_LEADERS_CATS = 'battingAverage,onBasePercentage,onBasePlusSlugging,homeRuns,hits,walks,sluggingPercentage,runsBattedIn,earnedRunAverage,strikeouts,gamesStarted,walksAndHitsPerInningPitched,wins,strikeoutsPer9Inn,walksPer9Inn';
+const BATTING_LABELS = { battingAverage: 'AVG', onBasePercentage: 'OBP', onBasePlusSlugging: 'OPS', homeRuns: 'HR', hits: 'H', baseOnBalls: 'BB', walks: 'BB', sluggingPercentage: 'SLG', runsBattedIn: 'RBI' };
 const PITCHING_LABELS = { earnedRunAverage: 'ERA', strikeouts: 'K', gamesStarted: 'GS', qualityStarts: 'QS', walksAndHitsPerInningPitched: 'WHIP', wins: 'W', strikeoutsPer9Inn: 'K/9', walksPer9Inn: 'BB/9' };
 
 function savantUrl(playerId) {
@@ -1628,11 +1629,11 @@ function savantUrl(playerId) {
 
 function leadersFetchUrl(scope) {
   if (scope === 'orioles') {
-    return `${MLB}/teams/${ORIOLES_ID}/leaders?leaderCategories=${LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R`;
+    return `${MLB}/teams/${ORIOLES_ID}/leaders?leaderCategories=${TEAM_LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R`;
   }
   // MLB Stats API league IDs: AL=103, NL=104
-  const leagueMap = { al: '103', nl: '104', mlb: '103,104' };
-  return `${MLB}/stats/leaders?leaderCategories=${LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R&leagueId=${leagueMap[scope]}&limit=1&statGroup=hitting,pitching`;
+  const leagueParam = scope === 'al' ? '&leagueId=103' : scope === 'nl' ? '&leagueId=104' : '';
+  return `${MLB}/stats/leaders?leaderCategories=${LEAGUE_LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R${leagueParam}&limit=1`;
 }
 
 function parseLeadersTeam(data) {
