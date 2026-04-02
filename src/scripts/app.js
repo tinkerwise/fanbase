@@ -1514,18 +1514,64 @@ async function loadVideos() {
       return;
     }
 
-    wrap.innerHTML = `<div class="video-list">${videos.map(v =>
-      `<a class="video-item" href="${esc(v.url)}" target="_blank" rel="noopener">
-        <img class="video-thumb" src="${esc(v.thumb)}" alt="" loading="lazy">
+    wrap.innerHTML = `<div class="video-list">${videos.map(v => {
+      const vidId = (v.url || '').match(/v=([^&]+)/)?.[1] || '';
+      return `<div class="video-item" data-video-id="${esc(vidId)}" data-video-url="${esc(v.url)}">
+        <div class="video-thumb-wrap">
+          <img class="video-thumb" src="${esc(v.thumb)}" alt="" loading="lazy">
+          <svg class="video-play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </div>
         <div class="video-info">
           <span class="video-channel">${esc(v.label)}</span>
           <span class="video-title">${esc(v.title)}</span>
         </div>
-      </a>`
-    ).join('')}</div>`;
+      </div>`;
+    }).join('')}</div>`;
+
+    wrap.querySelectorAll('.video-item').forEach(el => {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', () => {
+        const id = el.dataset.videoId;
+        if (id) openVideoTheater(id);
+        else window.open(el.dataset.videoUrl, '_blank');
+      });
+    });
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }
+}
+
+// ── Video Theater Overlay ────────────────────────────────────────
+function openVideoTheater(videoId) {
+  let overlay = document.getElementById('videoTheater');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'videoTheater';
+    overlay.className = 'video-theater';
+    overlay.innerHTML = `
+      <div class="video-theater-backdrop"></div>
+      <div class="video-theater-content">
+        <button class="video-theater-close" aria-label="Close">&times;</button>
+        <div class="video-theater-player"></div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('.video-theater-backdrop').addEventListener('click', closeVideoTheater);
+    overlay.querySelector('.video-theater-close').addEventListener('click', closeVideoTheater);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideoTheater(); });
+  }
+  const player = overlay.querySelector('.video-theater-player');
+  player.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+    frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeVideoTheater() {
+  const overlay = document.getElementById('videoTheater');
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  overlay.querySelector('.video-theater-player').innerHTML = '';
+  document.body.style.overflow = '';
 }
 
 // ── Yard Leaders ─────────────────────────────────────────────────
