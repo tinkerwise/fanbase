@@ -1315,7 +1315,7 @@ async function loadOnDeck() {
       return `<a class="sched-box" href="${gUrl}" target="_blank" rel="noopener">
         <span class="sched-box-day">${esc(gDay)}</span>
         <img class="sched-box-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="${esc(gOppAbbr)}" width="22" height="22">
-        <span class="sched-box-opp">${gIsHome ? 'vs' : '@'} ${esc(gOppAbbr)}</span>
+        ${gIsHome ? '' : '<span class="sched-box-at">@</span>'}
       </a>`;
     }).join('');
 
@@ -1323,27 +1323,61 @@ async function loadOnDeck() {
       ? `<div class="sched-row-wrap">${scheduleBoxes}</div>`
       : '';
 
-    // Show lineup link if game is today or live
+    // Show lineup on hover if game is today
     const isToday = next.gameDate.slice(0, 10) === today;
-    const lineupUrl = `https://www.mlb.com/gameday/${next.gamePk}`;
-    const lineupLink = isToday
-      ? `<a class="widget-link on-deck-lineup" href="${lineupUrl}" target="_blank" rel="noopener">View lineup ↗</a>`
-      : '';
 
     wrap.innerHTML = `
-      <a class="on-deck-card" href="${gdUrl}" target="_blank" rel="noopener">
-        <div class="on-deck-matchup">
-          <span class="on-deck-vs">${isHome ? 'vs' : '@'} ${esc(oppAbbr)}</span>
-          <img class="on-deck-logo" src="https://www.mlbstatic.com/team-logos/${opponent.team.id}.svg" alt="" width="28" height="28">
-          ${wxHtml}
-        </div>
-        <div class="on-deck-details">
-          <span class="on-deck-date">${esc(dateStr)} · ${esc(timeStr)}</span>
-          <span class="on-deck-venue">${esc(venue)}</span>
-        </div>
-      </a>
-      ${lineupLink}
+      <div class="on-deck-card-wrap">
+        <a class="on-deck-card" href="${gdUrl}" target="_blank" rel="noopener">
+          <div class="on-deck-matchup">
+            <span class="on-deck-vs">${isHome ? 'vs' : '@'} ${esc(oppAbbr)}</span>
+            <img class="on-deck-logo" src="https://www.mlbstatic.com/team-logos/${opponent.team.id}.svg" alt="" width="28" height="28">
+            ${wxHtml}
+          </div>
+          <div class="on-deck-details">
+            <span class="on-deck-date">${esc(dateStr)} · ${esc(timeStr)}</span>
+            <span class="on-deck-venue">${esc(venue)}</span>
+          </div>
+        </a>
+        ${isToday ? '<div class="lineup-popover hidden" id="lineupPopover"><span class="sidebar-msg">Loading lineup…</span></div>' : ''}
+      </div>
       ${scheduleHtml}`;
+
+    // Fetch and show lineup on hover for today's game
+    if (isToday) {
+      const cardWrap = wrap.querySelector('.on-deck-card-wrap');
+      const popover = wrap.querySelector('#lineupPopover');
+      let lineupLoaded = false;
+      cardWrap.addEventListener('mouseenter', async () => {
+        popover.classList.remove('hidden');
+        if (lineupLoaded) return;
+        lineupLoaded = true;
+        try {
+          const box = await fetch(`${MLB}/game/${next.gamePk}/boxscore`).then(r => r.json());
+          const renderSide = (side, label) => {
+            const players = box.teams?.[side]?.battingOrder ?? [];
+            const roster = box.teams?.[side]?.players ?? {};
+            if (!players.length) return '';
+            const rows = players.map(id => {
+              const p = roster[`ID${id}`] ?? {};
+              const name = p.person?.fullName ?? 'TBD';
+              const pos = p.position?.abbreviation ?? '';
+              return `<div class="lineup-row"><span class="lineup-pos">${esc(pos)}</span><span class="lineup-name">${esc(name)}</span></div>`;
+            }).join('');
+            return `<div class="lineup-side"><div class="lineup-label">${esc(label)}</div>${rows}</div>`;
+          };
+          const awayLabel = TEAM_ABBREV[away.team.id] ?? 'Away';
+          const homeLabel = TEAM_ABBREV[home.team.id] ?? 'Home';
+          const html = renderSide('away', awayLabel) + renderSide('home', homeLabel);
+          popover.innerHTML = html || '<span class="sidebar-msg">Lineups not yet available</span>';
+        } catch {
+          popover.innerHTML = '<span class="sidebar-msg">Lineups unavailable</span>';
+        }
+      });
+      cardWrap.addEventListener('mouseleave', () => {
+        popover.classList.add('hidden');
+      });
+    }
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }

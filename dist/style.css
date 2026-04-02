@@ -469,7 +469,22 @@ img { display: block; max-width: 100%; }
 .on-deck-wx-desc { display: block; font-size: 0.65rem; color: var(--text-3); }
 .on-deck-pitchers { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 2px; }
 .on-deck-card { padding: 10px 12px; gap: 6px; }
-.on-deck-lineup { margin-top: 4px; font-size: 0.7rem; }
+.on-deck-card-wrap { position: relative; }
+
+/* Lineup popover on hover */
+.lineup-popover {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 8px 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  display: flex; gap: 12px; margin-top: 4px;
+}
+.lineup-popover.hidden { display: none; }
+.lineup-side { flex: 1; min-width: 0; }
+.lineup-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-3); letter-spacing: 0.03em; margin-bottom: 4px; }
+.lineup-row { display: flex; gap: 6px; font-size: 0.68rem; padding: 1px 0; }
+.lineup-pos { width: 22px; flex-shrink: 0; font-weight: 600; color: var(--text-3); }
+.lineup-name { color: var(--text); }
 
 /* Schedule within On Deck */
 /* Schedule boxes (inline with On Deck) */
@@ -486,7 +501,7 @@ img { display: block; max-width: 100%; }
 .sched-box:hover { background: var(--orange-dim); border-color: var(--accent); }
 .sched-box-day { font-size: 0.6rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.03em; }
 .sched-box-logo { width: 22px; height: 22px; }
-.sched-box-opp { font-size: 0.62rem; font-weight: 600; white-space: nowrap; }
+.sched-box-at { font-size: 0.58rem; font-weight: 700; color: var(--text-3); }
 
 /* ── Yard Leaders ─────────────────────────────────────────────── */
 .leaders-list { display: flex; flex-direction: column; gap: 4px; }
