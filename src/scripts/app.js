@@ -102,9 +102,13 @@ function getReadArticles() {
 function markRead(url) {
   const read = getReadArticles();
   read.add(url);
-  // Keep only last 500 to avoid bloating localStorage
-  const arr = [...read].slice(-500);
+  const arr = [...read].slice(-200);
   localStorage.setItem(READ_KEY, JSON.stringify(arr));
+}
+function unmarkRead(url) {
+  const read = getReadArticles();
+  read.delete(url);
+  localStorage.setItem(READ_KEY, JSON.stringify([...read]));
 }
 
 // ── State ─────────────────────────────────────────────────────────
@@ -115,10 +119,11 @@ const state = {
   activeSource: 'all',
   searchQuery: '',
   sortBy: 'date',
+  dateRange: 3,
   viewMode: window.innerWidth <= 600 ? 'list' : defaultView,
   standings: [],
   activeDiv: null,
-  gamesMap: {},  // gamePk → game object for box score popover
+  gamesMap: {},
 };
 
 // ── Utilities ─────────────────────────────────────────────────────
@@ -805,13 +810,14 @@ function renderSourceFilters(sources) {
 
 function getFilteredArticles() {
   let arts = state.articles;
-  const thirtyDaysAgo = Date.now() - 30 * 864e5;
+  const rangeDays = state.dateRange || 3;
+  const cutoff = Date.now() - rangeDays * 864e5;
 
-  // Only show last 30 days unless searching
+  // Filter by selected date range unless searching
   if (!state.searchQuery) {
     arts = arts.filter(a => {
       const d = new Date(a.pubDate);
-      return !isNaN(d) && d.getTime() > thirtyDaysAgo;
+      return !isNaN(d) && d.getTime() > cutoff;
     });
   }
 
@@ -929,17 +935,43 @@ function tokenize(title) {
 }
 
 function buildTopicLabel(sharedTokens, articles) {
-  // Capitalize shared keywords into a readable topic phrase
-  // Find the article title that best represents the cluster (most shared tokens in order)
   if (!sharedTokens.length) {
-    // Fallback: shortest title
     return articles.slice().sort((a, b) => a.title.length - b.title.length)[0].title;
   }
-  // Title-case the shared tokens
-  const topic = sharedTokens
+
+  // Try to extract a person name from the shared tokens
+  // Check if any article title starts with a proper name that contains shared tokens
+  const nameRe = /^([A-Z][a-z]+ [A-Z][a-z]+)/;
+  let playerName = '';
+  for (const a of articles) {
+    const m = a.title.match(nameRe);
+    if (m) {
+      const nameParts = m[1].toLowerCase().split(' ');
+      if (nameParts.some(p => sharedTokens.includes(p))) {
+        playerName = m[1];
+        break;
+      }
+    }
+  }
+
+  // Build a descriptive phrase from shared tokens
+  const phrase = sharedTokens
     .map(t => t.charAt(0).toUpperCase() + t.slice(1))
     .join(' ');
-  return topic.length > 60 ? topic.slice(0, 57) + '…' : topic;
+
+  // If we found a player name, lead with "Name: topic"
+  let label;
+  if (playerName) {
+    const remaining = sharedTokens
+      .filter(t => !playerName.toLowerCase().includes(t))
+      .map(t => t.charAt(0).toUpperCase() + t.slice(1))
+      .join(' ');
+    label = remaining ? `${playerName}: ${remaining}` : playerName;
+  } else {
+    label = phrase;
+  }
+
+  return label.length > 70 ? label.slice(0, 67) + '…' : label;
 }
 
 function findStoryBundles(articles, minArticles = 3) {
@@ -1052,7 +1084,7 @@ function renderArticles() {
   const countText = `${arts.length} article${arts.length !== 1 ? 's' : ''}`;
   $('resultCount').innerHTML = state.searchQuery
     ? countText
-    : `${countText} <span class="date-hint">· Last 30 days · Search for older</span>`;
+    : `${countText} <span class="date-hint">· Last ${state.dateRange} days</span>`;
 
   if (!arts.length) {
     list.innerHTML = '<div class="feed-msg">No articles match your filters.</div>';
@@ -1119,6 +1151,56 @@ function renderArticles() {
     el.addEventListener('keydown', e => {
       if (e.key === 'Enter') el.click();
     });
+
+    // Swipe left to mark read, right to unmark
+    let touchStartX = 0;
+    el.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    el.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const idx = Number(el.dataset.idx);
+      const a = arts[idx];
+      if (!a) return;
+      if (dx < -60) {
+        // Swipe left → mark read
+        markRead(a.link);
+        el.classList.add('read');
+        el.style.transition = 'opacity 0.3s, transform 0.3s';
+        el.style.transform = 'translateX(-30px)';
+        setTimeout(() => { el.style.transform = ''; }, 300);
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.maxHeight = '0';
+          el.style.overflow = 'hidden';
+          el.style.margin = '0';
+          el.style.padding = '0';
+          el.style.border = 'none';
+          el.style.transition = 'all 0.4s ease-out';
+        }, 5000);
+      } else if (dx > 60) {
+        // Swipe right → unmark read
+        unmarkRead(a.link);
+        el.classList.remove('read');
+        el.style.transition = 'transform 0.3s';
+        el.style.transform = 'translateX(30px)';
+        setTimeout(() => { el.style.transform = ''; }, 300);
+      }
+    }, { passive: true });
+
+    // Auto-hide already-read articles after 5 seconds
+    if (el.classList.contains('read')) {
+      setTimeout(() => {
+        if (!el.matches(':hover')) {
+          el.style.opacity = '0';
+          el.style.maxHeight = '0';
+          el.style.overflow = 'hidden';
+          el.style.margin = '0';
+          el.style.padding = '0';
+          el.style.border = 'none';
+          el.style.transition = 'all 0.4s ease-out';
+        }
+      }, 5000);
+    }
   });
 }
 
@@ -1218,24 +1300,24 @@ async function loadOnDeck() {
 
     // Build schedule rows for remaining upcoming games (skip the "next" game)
     const upcoming = games.filter(g => g.gamePk !== next.gamePk && g.status.abstractGameState !== 'Final');
-    const scheduleRows = upcoming.slice(0, 10).map(g => {
+    const scheduleRows = upcoming.slice(0, 5).map(g => {
       const gAway = g.teams.away;
       const gHome = g.teams.home;
       const gIsHome = gHome.team.id === ORIOLES_ID;
       const gOpp = gIsHome ? gAway : gHome;
       const gOppAbbr = TEAM_ABBREV[gOpp.team.id] ?? gOpp.team.name.slice(0, 3);
       const gDate = new Date(g.gameDate);
-      const gDateStr = gDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-      const gTimeStr = gDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const gDay = gDate.toLocaleDateString('en-US', { weekday: 'short' });
+      const gDateNum = gDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
       const gAwaySlug = TEAM_SLUG[gAway.team.id] ?? '';
       const gHomeSlug = TEAM_SLUG[gHome.team.id] ?? '';
       const gGdDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
       const gUrl = `https://www.mlb.com/gameday/${gAwaySlug}-vs-${gHomeSlug}/${gGdDate}/${g.gamePk}/preview`;
       return `<a class="sched-row" href="${gUrl}" target="_blank" rel="noopener">
-        <img class="sched-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="" width="20" height="20">
+        <span class="sched-day">${esc(gDay)}</span>
+        <span class="sched-date-num">${esc(gDateNum)}</span>
+        <img class="sched-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="" width="18" height="18">
         <span class="sched-opp">${gIsHome ? 'vs' : '@'} ${esc(gOppAbbr)}</span>
-        <span class="sched-date">${esc(gDateStr)}</span>
-        <span class="sched-time">${esc(gTimeStr)}</span>
       </a>`;
     }).join('');
 
@@ -1244,6 +1326,13 @@ async function loadOnDeck() {
           <div class="sched-header">Schedule</div>
           <div class="sched-list">${scheduleRows}</div>
         </div>`
+      : '';
+
+    // Show lineup link if game is today or live
+    const isToday = next.gameDate.slice(0, 10) === today;
+    const lineupUrl = `https://www.mlb.com/gameday/${next.gamePk}`;
+    const lineupLink = isToday
+      ? `<a class="widget-link on-deck-lineup" href="${lineupUrl}" target="_blank" rel="noopener">View lineup ↗</a>`
       : '';
 
     wrap.innerHTML = `
@@ -1258,6 +1347,7 @@ async function loadOnDeck() {
           <span class="on-deck-venue">${esc(venue)}</span>
         </div>
       </a>
+      ${lineupLink}
       ${scheduleHtml}`;
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
@@ -1319,16 +1409,19 @@ async function loadTransactions() {
   try {
     const end = localDateStr(0);
     const startD = new Date();
-    startD.setDate(startD.getDate() - 7);
+    startD.setDate(startD.getDate() - 14);
     const start = startD.toISOString().slice(0, 10);
 
     const data = await fetch(
       `${MLB}/transactions?teamId=${ORIOLES_ID}&startDate=${start}&endDate=${end}`
     ).then(r => r.json());
 
-    const txns = (data.transactions ?? []).slice(0, 10);
+    // Sort newest first and take top 12
+    const txns = (data.transactions ?? [])
+      .sort((a, b) => new Date(b.date || b.effectiveDate) - new Date(a.date || a.effectiveDate))
+      .slice(0, 12);
     if (!txns.length) {
-      wrap.innerHTML = '<span class="sidebar-msg">No transactions this week</span>';
+      wrap.innerHTML = '<span class="sidebar-msg">No recent transactions</span>';
       return;
     }
 
@@ -1381,6 +1474,55 @@ async function loadInjuryReport() {
         <span class="il-status">${esc(status)}</span>
       </div>`;
     }).join('')}</div>`;
+  } catch {
+    wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
+  }
+}
+
+// ── Video Widget ─────────────────────────────────────────────────
+const YT_PLAYLISTS = [
+  { id: 'PLL-lmlkrmJakABrOT6FmV0mU-5oIF8nGu', label: 'MLB Fastcast' },
+  { id: 'PLL-lmlkrmJalPg-EgiZ92Eyg9YodLbQsE', label: 'MLB Top Plays' },
+  { id: 'PLCvqKltYUg-L4bKc-F_y-2idxHrARegPY', label: 'Jomboy Breakdowns' },
+];
+
+async function loadVideos() {
+  const wrap = $('videoWrap');
+  try {
+    const results = await Promise.allSettled(
+      YT_PLAYLISTS.map(async pl => {
+        const url = `${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${pl.id}`)}`;
+        const data = await fetch(url).then(r => r.json());
+        const item = (data.items ?? [])[0];
+        if (!item) return null;
+        const videoId = (item.link || '').match(/v=([^&]+)/)?.[1] || '';
+        return {
+          title: item.title ?? '',
+          label: pl.label,
+          thumb: videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : '',
+          url: item.link ?? '',
+        };
+      })
+    );
+
+    const videos = results
+      .filter(r => r.status === 'fulfilled' && r.value)
+      .map(r => r.value);
+
+    if (!videos.length) {
+      wrap.innerHTML = '<span class="sidebar-msg">No videos available</span>';
+      return;
+    }
+
+    wrap.innerHTML = `<div class="video-list">${videos.map(v =>
+      `<a class="video-item" href="${esc(v.url)}" target="_blank" rel="noopener">
+        <img class="video-thumb" src="${esc(v.thumb)}" alt="" loading="lazy">
+        <div class="video-info">
+          <span class="video-channel">${esc(v.label)}</span>
+          <span class="video-title">${esc(v.title)}</span>
+        </div>
+      </a>`
+    ).join('')}</div>`;
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }
@@ -1486,6 +1628,12 @@ function setupEvents() {
     renderArticles();
   });
 
+  // Date range filter
+  $('dateRangeSelect').addEventListener('change', e => {
+    state.dateRange = Number(e.target.value);
+    renderArticles();
+  });
+
   // Set initial active view button
   $('viewToggle').querySelectorAll('.view-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.view === state.viewMode));
@@ -1583,8 +1731,106 @@ function setupEvents() {
     if (e.key === 'Escape') closeReader();
   });
 
-  // Auto-refresh scores every 5 minutes
-  setInterval(loadScores, 5 * 60 * 1000);
+  // Auto-refresh scores and transactions every 5 minutes
+  setInterval(() => {
+    loadScores();
+    loadTransactions();
+  }, 5 * 60 * 1000);
+
+  // ── Easter Eggs ──────────────────────────────────────────────────
+
+  // 1. "magic" in search → Orioles Magic confetti
+  $('searchInput').addEventListener('input', e => {
+    if (e.target.value.trim().toLowerCase() === 'magic') {
+      triggerOriolesMagic();
+    }
+  });
+
+  // 2. Konami Code → Seven Nation Army chant
+  const konamiSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let konamiIdx = 0;
+  document.addEventListener('keydown', e => {
+    if (e.key === konamiSeq[konamiIdx] || e.key.toLowerCase() === konamiSeq[konamiIdx]) {
+      konamiIdx++;
+      if (konamiIdx === konamiSeq.length) {
+        konamiIdx = 0;
+        triggerSevenNationArmy();
+      }
+    } else {
+      konamiIdx = 0;
+    }
+  });
+
+  // 3. Secret OPACY theme — triple-click any theme button
+  let themeClickCount = 0;
+  let themeClickTimer = null;
+  $('themeToggle').addEventListener('click', () => {
+    themeClickCount++;
+    clearTimeout(themeClickTimer);
+    themeClickTimer = setTimeout(() => { themeClickCount = 0; }, 500);
+    if (themeClickCount >= 3) {
+      themeClickCount = 0;
+      toggleOpacyTheme();
+    }
+  });
+}
+
+// ── Easter Egg Functions ───────────────────────────────────────────
+
+function triggerOriolesMagic() {
+  // Create confetti container
+  const container = document.createElement('div');
+  container.className = 'magic-confetti';
+  container.innerHTML = '<div class="magic-banner">✨ Orioles Magic ✨</div>';
+  document.body.appendChild(container);
+
+  // Spawn confetti pieces
+  const colors = ['#df4601', '#000', '#fff', '#f59e0b', '#ff6b1a'];
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.animationDelay = Math.random() * 2 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.width = (4 + Math.random() * 6) + 'px';
+    piece.style.height = (4 + Math.random() * 6) + 'px';
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => container.remove(), 5000);
+}
+
+function triggerSevenNationArmy() {
+  // Visual chant animation on the logo
+  const logo = document.querySelector('.logo');
+  if (!logo) return;
+  logo.classList.add('sna-chant');
+
+  // Create the chant overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'sna-overlay';
+  overlay.innerHTML = `
+    <div class="sna-text">
+      <span>OH</span><span>OH</span><span>OH</span>
+      <span>OH</span><span>OH</span>
+      <span class="sna-big">OH-OH</span>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.remove();
+    logo.classList.remove('sna-chant');
+  }, 4000);
+}
+
+function toggleOpacyTheme() {
+  const html = document.documentElement;
+  if (html.getAttribute('data-theme') === 'opacy') {
+    applyTheme(loadPrefs().theme || 'dark');
+  } else {
+    html.setAttribute('data-theme', 'opacy');
+  }
 }
 
 async function init() {
@@ -1607,6 +1853,7 @@ async function init() {
     loadTransactions(),
     loadInjuryReport(),
     loadLeaders(),
+    loadVideos(),
   ]);
 }
 

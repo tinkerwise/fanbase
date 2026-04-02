@@ -39,6 +39,7 @@ $allowed_domains = [
     'baseballamerica.com',
     'nytimes.com',
     'substack.com',
+    'youtube.com',
 ];
 
 $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');

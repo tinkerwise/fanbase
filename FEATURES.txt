@@ -7,6 +7,7 @@
 - Prioritize visual design and readability
 - be aware of content overload, always suggest condensing content in some way
 - anticipate visual cues for visitors to types of media content (text, audio, video, graphics)
+- minimze load on browser cache, memory, etc. 
 
 
 #News Feed
@@ -81,19 +82,31 @@
 
 #UPDATES
 // New ideas below — edit this file from GitHub.com on mobile or desktop
-- On Deck: reduce height of On Deck widget, perhaps remove starting pitchers
-- Schedule: update to a small calendar, next 5 games for upcoming games, no times, links to mlb preview
-- Transactions: ensure the latest transactions are posted. 
-- Roster: create a collapsible widget, default collapsed
+**Always follow the Rules of Engagement above**
+
+- check and minimze load on browser cache, memory, etc. 
 - Widgets: make titles more prominent, as they appear small and greyed out
-- YouTube widget: Top latest videos list (3 small thumbnails default)
+
 - Around the Horn description title: update to a phrase rather than just two words, if a player lead with 'First Last Name:' structure
-- add selection for articles from past 7 days, 14 days, or 30 days
-- swipe to mark read/unread, ignore
+- Update to only feed articles from past 3 days
+- swipe to mark read/unread, persistent session to session
+- after reading read articles hide after 5 seconds
 
+- On Deck: reduce height of On Deck widget, perhaps remove starting pitchers
+  - When daily lineup is released, post an linke to lineup in On Deck
+- Schedule: update to a small calendar, next 5 games for upcoming games, no times, links to mlb preview
 
-#Fun Features
-- Easter Egg: What might be some fun easter eggs for the site? (wait for confirmation)
+- Roster: create a collapsible widget, default collapsed
+- Transactions: ensure the latest transactions are posted, they seem about a week off, update as they happen (on 5 min refresh)
+
+Video:
+Add an embedded video feature onsite
+- YouTube widget: latest videos list, latest from each of the following
+  - MLB Fastcast - https://www.youtube.com/playlist?list=PLL-lmlkrmJakABrOT6FmV0mU-5oIF8nGu
+  - MLB Top plays - https://www.youtube.com/playlist?list=PLL-lmlkrmJalPg-EgiZ92Eyg9YodLbQsE
+  - Jomboy Media Breakdowns - https://www.youtube.com/playlist?list=PLCvqKltYUg-L4bKc-F_y-2idxHrARegPY
+ 
+- Easter Egg: What might be some fun easter eggs for the site? (ask for confirmation)
 
 
 
