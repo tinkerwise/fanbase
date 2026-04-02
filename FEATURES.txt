@@ -2,60 +2,66 @@
 
 ##Features & Ideas
 
-**Rules of engagement:** 
+**Rules of engagement:**
 - Don't break the site
 - Prioritize visual design and readability
 - be aware of content overload, always suggest condensing content in some way
 - anticipate visual cues for visitors to types of media content (text, audio, video, graphics)
-- minimze load on browser cache, memory, etc. 
+- minimze load on browser cache, memory, etc.
 
 
 #News Feed
   - RSS aggregation from 14 baseball sources (Orioles + MLB)
-  - 30-day article filter (search bypasses for older articles)
+  - 3-day default article feed with selectable range (3 / 7 / 14 / 30 days)
   - Full article reader (iframe for full RSS content, excerpt + link for others)
   - Off-topic article filter (rejects non-baseball content from general feeds)
   - Filler image detection (replaces generic thumbnails with YR favicon)
-  - Around the Horn story bundling (max 3, gradient glow, generalized topic title, expandable to individual articles)
+  - Around the Horn story bundling (max 3, gradient glow, descriptive phrase titles with "Player Name:" prefix when detected, expandable)
   - Source favicon + text on each card
   - Share button on articles (native share on mobile, clipboard on desktop)
   - Thumbnails standardized to 16:9 aspect ratio
-  - Read/unread tracking (read articles dimmed, persisted to localStorage, green ✓ tick on read cards)
+  - Read/unread tracking (green ✓ tick, dimmed cards, persisted to localStorage, cap 200)
+  - Swipe left to mark read, swipe right to unmark (mobile touch)
+  - Read articles auto-hide after 5 seconds
   - Default view: list
 
 #Views & Filters
   - Grid, list, and compact view modes
   - Mobile defaults to list view (grid hidden on small screens)
   - Sort by newest, by date group, or by source
+  - Date range selector (3 / 7 / 14 / 30 days)
   - Category filter (All / Orioles / MLB / MiLB)
   - MiLB auto-detection (prospect, minor league, farm system articles tagged and filtered)
-  - Source filter (popover in toolbar)
+  - Source filter (popover in toolbar, bottom-sheet on mobile)
   - Search across all articles
 
 #Score Bugs
   - Yesterday / Today / Tomorrow games
-  - Auto-scrolls to today's games
+  - Yesterday's scores stay prominent until noon EDT
   - Orioles games highlighted with orange accent
   - Live game indicator with pulsing dot + inning
   - Base runner diamond during live games (correctly oriented 1st/2nd/3rd, amber bases when occupied)
   - Weather emoji + temperature inline for preview games (Open-Meteo forecasts)
-  - Game recap reel icon (🎬) on final scores linking to MLB game story
+  - "Story" link on final scores linking to MLB game story
+  - Box score popover on hover (inning-by-inning linescore, R/H/E, W/L/SV, top 3 hitters & pitchers)
   - Links to MLB Gameday (preview or final)
   - Auto-refresh every 5 minutes
 
 #Left Sidebar
   - Search
   - Category filter (All / Orioles / MLB / MiLB)
-  - On Deck: next Orioles game with opponent, date/time, venue, probable pitchers, weather forecast
+  - On Deck: next Orioles game with opponent, date/time, venue, weather forecast, lineup link on game day
+  - Schedule: compact 5-game calendar (day, date, logo, opponent), links to MLB preview
   - Standings: all 6 divisions with division tabs, Orioles highlighted, team abbreviations link to MLB.com
   - Yard Leaders: batting/pitching toggle, player names link to Baseball Savant
     - Batting: AVG, OBP, OPS, HR, H, BB, SLG, RBI
     - Pitching: ERA, K, GS, QS, WHIP, W, K/9, BB/9
 
 #Right Sidebar
-  - Roster: active Orioles roster grouped by position, jersey numbers, links to Baseball Savant
-  - Transactions: last 7 days of Orioles moves, player names link to MLB.com, link to full transactions page
+  - Roster: active Orioles roster grouped by position, jersey numbers, links to Baseball Savant (default collapsed)
+  - Transactions: last 14 days of Orioles moves, sorted newest-first, player names link to MLB.com, auto-refreshes every 5 minutes
   - Injury Report: current IL players with position and IL type (10/15/60-day), player names link to MLB.com
+  - Video: latest video from MLB Fastcast, MLB Top Plays, Jomboy Breakdowns (YouTube RSS)
 
 #Settings
   - Settings gear icon in header opens overlay panel
@@ -65,50 +71,30 @@
 #Design
   - Dark theme (default), light theme available
   - 3-column layout (left sidebar / feed / right sidebar)
+  - Widget titles prominent (0.78rem, white, uppercase)
   - All sidebar sections have inline icons and are collapsible
   - Sticky header with Yard Report logo
   - Responsive: 3-col > 2-col at 1100px > 1-col at 600px (mobile)
-  - Mobile: right sidebar widgets show below feed
+  - Mobile: compact header, right sidebar below feed, sidebar sections auto-collapsed, safe area support
+  - Cross-browser optimized (Chrome, Safari, Firefox), iOS momentum scroll, webkit prefixes
   - Scrollable sidebars
+
+#Easter Eggs
+  - Type "magic" in search: Orioles Magic confetti animation
+  - Konami Code (↑↑↓↓←→←→BA): Seven Nation Army chant with logo animation
+  - Triple-click theme toggle: secret OPACY theme (all-orange dark mode)
 
 #Infrastructure
   - Astro static site deployed to cPanel via Git Version Control
   - GitHub Actions CI/CD (build + lftp deploy)
-  - PHP RSS proxy with domain allowlist
-  - MLB Stats API for scores, standings, schedule, roster, transactions, leaders
+  - PHP RSS proxy with domain allowlist (includes youtube.com)
+  - MLB Stats API for scores, standings, schedule, roster, transactions, leaders, boxscore
   - Open-Meteo API for weather forecasts (all 30 MLB venues)
   - Google Favicon API for source icons
+  - YouTube RSS feeds for video widget
 
 
 #UPDATES
 // New ideas below — edit this file from GitHub.com on mobile or desktop
 **Always follow the Rules of Engagement above**
-
-- check and minimze load on browser cache, memory, etc. 
-- Widgets: make titles more prominent, as they appear small and greyed out
-
-- Around the Horn description title: update to a phrase rather than just two words, if a player lead with 'First Last Name:' structure
-- Update to only feed articles from past 3 days
-- swipe to mark read/unread, persistent session to session
-- after reading read articles hide after 5 seconds
-
-- On Deck: reduce height of On Deck widget, perhaps remove starting pitchers
-  - When daily lineup is released, post an linke to lineup in On Deck
-- Schedule: update to a small calendar, next 5 games for upcoming games, no times, links to mlb preview
-
-- Roster: create a collapsible widget, default collapsed
-- Transactions: ensure the latest transactions are posted, they seem about a week off, update as they happen (on 5 min refresh)
-
-Video:
-Add an embedded video feature onsite
-- YouTube widget: latest videos list, latest from each of the following
-  - MLB Fastcast - https://www.youtube.com/playlist?list=PLL-lmlkrmJakABrOT6FmV0mU-5oIF8nGu
-  - MLB Top plays - https://www.youtube.com/playlist?list=PLL-lmlkrmJalPg-EgiZ92Eyg9YodLbQsE
-  - Jomboy Media Breakdowns - https://www.youtube.com/playlist?list=PLCvqKltYUg-L4bKc-F_y-2idxHrARegPY
- 
-- Easter Egg: What might be some fun easter eggs for the site? (ask for confirmation)
-
-
-
-
 
