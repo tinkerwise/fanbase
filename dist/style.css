@@ -517,6 +517,14 @@ img { display: block; max-width: 100%; }
   font-size: 0.77rem; padding: 4px 0;
   border-bottom: 1px solid #1e1e1e;
 }
+.leaders-scope { display: flex; gap: 3px; margin-bottom: 4px; }
+.leaders-scope-btn {
+  flex: 1; padding: 2px 0; border: 1px solid var(--border); border-radius: 4px;
+  background: transparent; color: var(--text-3); font-size: 0.62rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s; text-align: center;
+}
+.leaders-scope-btn:hover { border-color: var(--orange); color: var(--orange); }
+.leaders-scope-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
 .leaders-toggle { display: flex; gap: 4px; margin-bottom: 6px; }
 .leaders-tab {
   padding: 3px 8px; border: 1px solid var(--border); border-radius: 4px;
