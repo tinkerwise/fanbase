@@ -1827,7 +1827,8 @@ function triggerOriolesMagic() {
   // Create confetti container
   const container = document.createElement('div');
   container.className = 'magic-confetti';
-  container.innerHTML = '<div class="magic-banner">✨ Orioles Magic ✨</div>';
+  const birdNum = Math.floor(Math.random() * 10) + 1;
+  container.innerHTML = `<div class="magic-banner"><img src="/yardreport/img/randBird${birdNum}.png" alt="Oriole Bird" class="magic-bird"></div>`;
   document.body.appendChild(container);
 
   // Spawn confetti pieces

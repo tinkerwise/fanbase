@@ -958,10 +958,11 @@ a.il-name:hover { color: var(--orange); }
 }
 .magic-banner {
   position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
-  font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; color: #df4601;
-  text-shadow: 0 0 30px rgba(223,70,1,0.6), 0 0 60px rgba(223,70,1,0.3);
   animation: bannerPop 0.6s ease-out, bannerFade 5s ease-in forwards;
-  white-space: nowrap;
+}
+.magic-bird {
+  width: clamp(120px, 30vw, 280px); height: auto;
+  filter: drop-shadow(0 0 30px rgba(223,70,1,0.6)) drop-shadow(0 0 60px rgba(223,70,1,0.3));
 }
 @keyframes bannerPop { from { transform: translate(-50%, -50%) scale(0.3); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
 @keyframes bannerFade { 0%, 60% { opacity: 1; } 100% { opacity: 0; } }
