@@ -102,7 +102,6 @@
 ##Active
 - Add items here for immediate implementation
 
-
 ##Queued
 - Add items here for the likely next batch of work
 - Review entirety of site for legal issues and concerns

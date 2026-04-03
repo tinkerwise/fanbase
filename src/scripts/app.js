@@ -623,7 +623,7 @@ function renderLineupPopover(boxData) {
     return `<div class="score-lineup-side">
       <div class="score-lineup-head">
         <span class="score-lineup-label">${esc(label)}</span>
-        <span class="score-lineup-state ${available ? 'available' : 'unavailable'}">${available ? 'Posted' : 'Not posted'}</span>
+        ${available ? '' : '<span class="score-lineup-state unavailable">Unavailable</span>'}
       </div>
       ${rows}
     </div>`;

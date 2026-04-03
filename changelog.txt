@@ -21,6 +21,7 @@ Lineups
 - Fixed the score bug schedule fetch so probable pitchers are actually available to lineup popovers.
 - Converted the On Deck stadium hover into a true popover below the card instead of an in-place overlay.
 - Replaced the generic stadium art with venue-specific field-dimensions data from the MLB venue API.
+- Simplified score bug lineup popovers so lineup states only show `Unavailable` when nothing is posted, instead of showing `Posted`.
 
 Light Theme
 - Improved light-mode masthead contrast so the header wordmark and banner treatment stand apart more clearly from the page background.
