@@ -659,12 +659,25 @@ a.il-name:hover { color: var(--orange); }
 .feed-toolbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
+}
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 .toolbar-divider {
   width: 1px; height: 20px; background: var(--border); flex-shrink: 0;
 }
-.toolbar-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
 .view-toggle {
   display: flex;
   gap: 2px;
@@ -672,7 +685,6 @@ a.il-name:hover { color: var(--orange); }
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 2px;
-  margin-left: auto;
 }
 .view-btn {
   background: none; border: none; color: var(--text-3); padding: 5px 7px;
@@ -1125,8 +1137,9 @@ a.il-name:hover { color: var(--orange); }
 
   /* Feed toolbar – stack on mobile */
   .feed-toolbar { flex-wrap: wrap; gap: 6px; }
+  .toolbar-left { width: 100%; }
+  .toolbar-controls { width: 100%; margin-left: 0; justify-content: flex-start; }
   .toolbar-controls { gap: 6px; flex-wrap: wrap; }
-  .view-toggle { margin-left: 0; }
   .view-btn { min-width: 36px; min-height: 36px; }
   .btn-source-filter { padding: 6px 10px; min-height: 36px; }
   .sort-select { min-height: 36px; font-size: 0.75rem; }

@@ -93,14 +93,15 @@ import Layout from '../layouts/Layout.astro';
     <!-- Feed -->
     <main class="feed-area">
       <div class="feed-toolbar">
-        <div class="toolbar-controls">
+        <div class="toolbar-left">
           <div class="pill-group" id="categoryFilters">
             <button class="pill active" data-category="all">All</button>
             <button class="pill" data-category="orioles">🟠 Orioles</button>
             <button class="pill" data-category="mlb">⚾ MLB</button>
             <button class="pill" data-category="milb">🔻 MiLB</button>
           </div>
-          <span class="toolbar-divider"></span>
+        </div>
+        <div class="toolbar-controls">
           <div class="source-filter-wrap">
             <button class="btn-source-filter" id="sourceFilterBtn">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
