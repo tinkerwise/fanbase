@@ -26,14 +26,14 @@
   - Default view: list
 
 #Views & Filters
-  - Category filter pills (All / Orioles / MLB / MiLB) left-aligned in feed toolbar
+  - Category filter pills (All / Orioles / MLB / MiLB) left-justified in feed toolbar
   - Grid, list, and compact view modes
-  - View mode icons right-aligned in feed toolbar
+  - Source filter and view mode icons right-justified in feed toolbar
   - Mobile defaults to list view (grid hidden on small screens)
   - Sort by newest, by date group, or by source
   - Date range selector (3 / 7 / 14 / 30 days)
   - MiLB auto-detection (prospect, minor league, farm system articles tagged and filtered)
-  - Source filter right-aligned with view controls (popover in toolbar, bottom-sheet on mobile)
+  - Source filter aligned with view controls (popover in toolbar, bottom-sheet on mobile)
   - Search across all articles
 
 #Score Bugs
@@ -51,7 +51,7 @@
 
 #Left Sidebar
   - Search
-  - Video: latest video from MLB Fastcast, MLB Top Plays, Jomboy Breakdowns (YouTube RSS), play icon overlay on thumbnails, theater mode overlay with YouTube embed on click
+  - Video: latest video from MLB Fastcast, MLB Top Plays, Orioles Game Recaps, and The Chill plus a random Orioles Moments video on each page load (YouTube RSS), play icon overlay on thumbnails, theater mode overlay with YouTube embed on click
   - On Deck: next Orioles game with opponent, date/time, venue, weather forecast, lineup popover on hover (game day)
   - Schedule: horizontal row of game boxes (day, opponent logo, @ indicator for away), links to MLB preview (merged into On Deck widget)
   - Standings: all 6 divisions with division tabs, Orioles highlighted, team abbreviations link to MLB.com

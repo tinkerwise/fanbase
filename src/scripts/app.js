@@ -1627,7 +1627,9 @@ async function loadInjuryReport() {
 const YT_PLAYLISTS = [
   { id: 'PLL-lmlkrmJakABrOT6FmV0mU-5oIF8nGu', label: 'MLB Fastcast' },
   { id: 'PLL-lmlkrmJalPg-EgiZ92Eyg9YodLbQsE', label: 'MLB Top Plays' },
-  { id: 'PLCvqKltYUg-L4bKc-F_y-2idxHrARegPY', label: 'Jomboy Breakdowns' },
+  { id: 'PLoeYQM_iUEVyoMu-AIZFXs9ja6GMzF1Ce', label: 'Orioles Game Recaps' },
+  { id: 'PLoeYQM_iUEVy440XCy6hNLnQf8OBBsdSl', label: 'The Chill' },
+  { id: 'PLoeYQM_iUEVwNa9HwsFfS0aWvshxoYnhy', label: 'Orioles Moments', random: true },
 ];
 
 async function loadVideos() {
@@ -1637,7 +1639,11 @@ async function loadVideos() {
       YT_PLAYLISTS.map(async pl => {
         const url = `${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${pl.id}`)}`;
         const data = await fetch(url).then(r => r.json());
-        const item = (data.items ?? [])[0];
+        const items = data.items ?? [];
+        if (!items.length) return null;
+        const item = pl.random
+          ? items[Math.floor(Math.random() * items.length)]
+          : items[0];
         if (!item) return null;
         const link = item.link || '';
         const videoId = link.match(/v=([^&]+)/)?.[1] || link.match(/youtu\.be\/([^?&]+)/)?.[1] || '';

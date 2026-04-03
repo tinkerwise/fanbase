@@ -9,7 +9,7 @@ The biggest risk is the “all roads lead to one file” setup in [app.js](/User
 - `getFilteredArticles()` is the source of truth for what appears; filter bugs will ripple everywhere.
 - `setupEvents()` is large and centralized; new controls should be added carefully to avoid duplicated listeners or state drift.
 - Score/on-deck/transactions/leaders all depend on third-party APIs with no formal abstraction layer, so breakage from upstream response changes is a real risk.
-- There is both a dev-time JS proxy in [astro.config.mjs](/Users/briancsmith/Documents/GitHub/yardreport/astro.config.mjs) and a production PHP proxy in [rss-proxy.php](/Users/briancsmith/Documents/GitHub/yardreport/public/rss-proxy.php); feed issues may differ between local and deployed environments.
+- There is both a dev-time JS proxy in [astro.config.mjs](/Users/briancsmith/Documents/GitHub/yardreport/astro.config.mjs) and a production PHP proxy in [rss-proxy.php](/Users/briancsmith/Documents/GitHub/yardreport/public/rss-proxy.php); feed issues may differ between local and deployed environments, especially now that the proxy also supports trusted raw HTML/text passthrough for widget enrichment.
 
 **How I’d Approach Future Prompts**
 
@@ -22,6 +22,7 @@ For safety, I’d usually preserve:
 - existing filters, reader behavior, and localStorage prefs
 - mobile-first constraints and content density rules
 - Orioles-first prioritization in scores, schedule, and sidebar widgets
+- the current feed-toolbar alignment pattern: category pills left, source/view controls right
 
 **Best Next Refactors**
 
@@ -35,6 +36,7 @@ If we want the repo easier to maintain without changing behavior, the highest-va
 
 The prompts that will work best with this repo are specific and scoped, like:
 - “Add X to the feed toolbar without changing current mobile behavior”
+- “Update the video widget playlists or rotation logic without changing theater-mode behavior”
 - “Refine the On Deck card to show Y and keep the current visual style”
 - “Implement the next unchecked item from `updates.txt`”
 - “Refactor just the leaders widget into a separate module without changing output”

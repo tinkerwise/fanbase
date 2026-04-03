@@ -24,6 +24,12 @@ Right Sidebar
 - Injury return dates are enriched from the live Orioles injuries and roster moves page.
 - Injury notes from the roster feed are now displayed under each injured player when available.
 
+Video Widget
+- Removed Jomboy Breakdowns from the video rotation.
+- Added Orioles Game Recaps.
+- Added The Chill.
+- Added Orioles Moments as a random-per-load playlist entry so a different Orioles highlight can appear on each page refresh.
+
 Easter Eggs
 - Improved the "magic" Easter egg:
   - the bird now appears centered in the viewport
@@ -40,4 +46,4 @@ Infrastructure
 - Added dev/prod support for using that proxy path to enrich client widgets with trusted page content.
 
 Documentation
-- Updated `updates.txt` to reflect the current shipped behavior, including toolbar alignment changes, score-bug delay states, Yard Leaders updates, the enhanced IL widget, and the new Heritage Easter egg.
+- Updated `README.md`, `brief.txt`, `updates.txt`, and `changelog.txt` to reflect the current shipped behavior, including toolbar alignment changes, score-bug delay states, Yard Leaders updates, the enhanced IL widget, the revised video widget, and the new Heritage Easter egg.
