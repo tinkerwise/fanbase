@@ -1990,8 +1990,44 @@ function triggerOriolesMagic() {
 
   const audio = new Audio('/yardreport/audio/orioles_magic_short.mp3');
   audio.volume = 0.7;
+  let confettiInterval = null;
+  let confettiKickoff = null;
+  let fallbackDismissTimer = null;
+  let isDismissing = false;
+
+  function emitConfettiBurst() {
+    if (!container.isConnected) return;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const colors = ['#df4601', '#000', '#fff', '#f59e0b', '#ff6b1a'];
+
+    for (let i = 0; i < 48; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-burst';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 160 + Math.random() * 420;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      piece.style.left = cx + 'px';
+      piece.style.top = cy + 'px';
+      piece.style.setProperty('--dx', dx + 'px');
+      piece.style.setProperty('--dy', dy + 'px');
+      piece.style.animationDelay = Math.random() * 0.18 + 's';
+      piece.style.animationDuration = (0.9 + Math.random() * 1.2) + 's';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.width = (4 + Math.random() * 8) + 'px';
+      piece.style.height = (4 + Math.random() * 8) + 'px';
+      piece.addEventListener('animationend', () => piece.remove(), { once: true });
+      container.appendChild(piece);
+    }
+  }
 
   const dismiss = () => {
+    if (isDismissing) return;
+    isDismissing = true;
+    clearTimeout(confettiKickoff);
+    clearInterval(confettiInterval);
+    clearTimeout(fallbackDismissTimer);
     audio.pause();
     audio.currentTime = 0;
     container.classList.add('magic-fade-out');
@@ -2004,33 +2040,13 @@ function triggerOriolesMagic() {
 
   audio.addEventListener('ended', dismiss);
   audio.play().catch(() => {
-    setTimeout(dismiss, 5000);
+    fallbackDismissTimer = setTimeout(dismiss, 5000);
   });
 
-  // Confetti explodes from center after bird grows
-  setTimeout(() => {
-    if (!container.parentNode) return;
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight * 0.35;
-    const colors = ['#df4601', '#000', '#fff', '#f59e0b', '#ff6b1a'];
-    for (let i = 0; i < 120; i++) {
-      const piece = document.createElement('div');
-      piece.className = 'confetti-burst';
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 200 + Math.random() * 500;
-      const dx = Math.cos(angle) * dist;
-      const dy = Math.sin(angle) * dist;
-      piece.style.left = cx + 'px';
-      piece.style.top = cy + 'px';
-      piece.style.setProperty('--dx', dx + 'px');
-      piece.style.setProperty('--dy', dy + 'px');
-      piece.style.animationDelay = Math.random() * 0.3 + 's';
-      piece.style.animationDuration = (1 + Math.random() * 1.5) + 's';
-      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-      piece.style.width = (4 + Math.random() * 8) + 'px';
-      piece.style.height = (4 + Math.random() * 8) + 'px';
-      container.appendChild(piece);
-    }
+  // Keep the confetti active for the entire time the magic banner is visible.
+  confettiKickoff = setTimeout(() => {
+    emitConfettiBurst();
+    confettiInterval = setInterval(emitConfettiBurst, 650);
   }, 600);
 }
 

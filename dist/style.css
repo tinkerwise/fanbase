@@ -993,7 +993,7 @@ a.il-name:hover { color: var(--orange); }
   pointer-events: none; overflow: hidden;
 }
 .magic-banner {
-  position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%) scale(0.0625);
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.0625);
   animation: birdGrow 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   z-index: 2;
 }
