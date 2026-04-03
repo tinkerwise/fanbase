@@ -1,6 +1,6 @@
 **Maintainer Brief**
 
-Yard Report is a single-page Astro site with a thin static shell and a very thick client script. The core implementation lives in [app.js](/Users/briancsmith/Documents/GitHub/yardreport/src/scripts/app.js), which owns state, data fetching, rendering, event wiring, settings, and Easter eggs. The page markup in [index.astro](/Users/briancsmith/Documents/GitHub/yardreport/src/pages/index.astro) is mostly stable scaffolding, and [style.css](/Users/briancsmith/Documents/GitHub/yardreport/public/style.css) carries nearly all layout and component styling. `FEATURES.txt` is effectively the product backlog and prompt contract.
+Yard Report is a single-page Astro site with a thin static shell and a very thick client script. The core implementation lives in [app.js](/Users/briancsmith/Documents/GitHub/yardreport/src/scripts/app.js), which owns state, data fetching, rendering, event wiring, settings, and Easter eggs. The page markup in [index.astro](/Users/briancsmith/Documents/GitHub/yardreport/src/pages/index.astro) is mostly stable scaffolding, and [style.css](/Users/briancsmith/Documents/GitHub/yardreport/public/style.css) carries nearly all layout and component styling. `updates.txt` is effectively the product backlog and prompt contract.
 
 **What’s Fragile**
 
@@ -13,7 +13,7 @@ The biggest risk is the “all roads lead to one file” setup in [app.js](/User
 
 **How I’d Approach Future Prompts**
 
-For feature work, I’d first check whether it’s already described in [FEATURES.txt](/Users/briancsmith/Documents/GitHub/yardreport/FEATURES.txt), then map it to one of three surfaces:
+For feature work, I’d first check whether it’s already described in [updates.txt](/Users/briancsmith/Documents/GitHub/yardreport/updates.txt), then map it to one of three surfaces:
 - structure change: [index.astro](/Users/briancsmith/Documents/GitHub/yardreport/src/pages/index.astro)
 - behavior/data change: [app.js](/Users/briancsmith/Documents/GitHub/yardreport/src/scripts/app.js)
 - visual/responsive change: [style.css](/Users/briancsmith/Documents/GitHub/yardreport/public/style.css)
@@ -36,7 +36,7 @@ If we want the repo easier to maintain without changing behavior, the highest-va
 The prompts that will work best with this repo are specific and scoped, like:
 - “Add X to the feed toolbar without changing current mobile behavior”
 - “Refine the On Deck card to show Y and keep the current visual style”
-- “Implement the next unchecked item from `FEATURES.txt`”
+- “Implement the next unchecked item from `updates.txt`”
 - “Refactor just the leaders widget into a separate module without changing output”
 
 The prompts most likely to cause churn are broad redesigns or “clean this all up” requests, because the codebase is functional but tightly intertwined.

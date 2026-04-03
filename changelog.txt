@@ -40,4 +40,4 @@ Infrastructure
 - Added dev/prod support for using that proxy path to enrich client widgets with trusted page content.
 
 Documentation
-- Updated FEATURES.txt to reflect the current shipped behavior, including toolbar alignment changes, score-bug delay states, Yard Leaders updates, the enhanced IL widget, and the new Heritage Easter egg.
+- Updated `updates.txt` to reflect the current shipped behavior, including toolbar alignment changes, score-bug delay states, Yard Leaders updates, the enhanced IL widget, and the new Heritage Easter egg.

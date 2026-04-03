@@ -10,5 +10,4 @@ The Yard Report is a personal baseball news aggregator site primarily covering t
 - IL widget
 
 ##Updates
-Updates to site are added to the FEATURES.md file, when prompted Claude reads, develops and executes a plan to implement the updates on site. 
-
+Updates to site are added to the `updates.txt` file, when prompted Claude reads, develops and executes a plan to implement the updates on site. 
