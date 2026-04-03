@@ -1430,41 +1430,80 @@ async function loadOnDeck() {
             <span class="on-deck-date">${esc(dateStr)} · ${esc(timeStr)}</span>
             <span class="on-deck-venue">${esc(venue)}</span>
           </div>
+          ${isToday ? `
+            <div class="on-deck-lineup-status" id="lineupStatus">
+              <span class="lineup-status-label">Lineups</span>
+              <span class="lineup-status-summary">Checking availability…</span>
+            </div>
+          ` : ''}
         </a>
         ${isToday ? '<div class="lineup-popover hidden" id="lineupPopover"><span class="sidebar-msg">Loading lineup…</span></div>' : ''}
       </div>
       ${scheduleHtml}`;
 
-    // Fetch and show lineup on hover for today's game
+    // Fetch and show lineup status/details for today's game
     if (isToday) {
       const cardWrap = wrap.querySelector('.on-deck-card-wrap');
       const popover = wrap.querySelector('#lineupPopover');
-      let lineupLoaded = false;
-      cardWrap.addEventListener('mouseenter', async () => {
-        popover.classList.remove('hidden');
-        if (lineupLoaded) return;
-        lineupLoaded = true;
-        try {
-          const box = await fetch(`${MLB}/game/${next.gamePk}/boxscore`).then(r => r.json());
-          const renderSide = (side, label) => {
-            const players = box.teams?.[side]?.battingOrder ?? [];
-            const roster = box.teams?.[side]?.players ?? {};
-            if (!players.length) return '';
-            const rows = players.map(id => {
+      const statusWrap = wrap.querySelector('#lineupStatus');
+      let lineupHtml = '<span class="sidebar-msg">Lineups unavailable</span>';
+
+      const buildLineupSide = (box, side, label) => {
+        const players = box.teams?.[side]?.battingOrder ?? [];
+        const roster = box.teams?.[side]?.players ?? {};
+        const available = players.length > 0;
+        const status = available ? 'Available' : 'Not posted';
+        const rows = available
+          ? players.map(id => {
               const p = roster[`ID${id}`] ?? {};
               const name = p.person?.fullName ?? 'TBD';
               const pos = p.position?.abbreviation ?? '';
               return `<div class="lineup-row"><span class="lineup-pos">${esc(pos)}</span><span class="lineup-name">${esc(name)}</span></div>`;
-            }).join('');
-            return `<div class="lineup-side"><div class="lineup-label">${esc(label)}</div>${rows}</div>`;
-          };
-          const awayLabel = TEAM_ABBREV[away.team.id] ?? 'Away';
-          const homeLabel = TEAM_ABBREV[home.team.id] ?? 'Home';
-          const html = renderSide('away', awayLabel) + renderSide('home', homeLabel);
-          popover.innerHTML = html || '<span class="sidebar-msg">Lineups not yet available</span>';
-        } catch {
-          popover.innerHTML = '<span class="sidebar-msg">Lineups unavailable</span>';
+            }).join('')
+          : '<div class="lineup-empty">Lineup not yet posted</div>';
+
+        return {
+          available,
+          html: `
+            <div class="lineup-side">
+              <div class="lineup-head">
+                <div class="lineup-label">${esc(label)}</div>
+                <div class="lineup-state ${available ? 'available' : 'unavailable'}">${status}</div>
+              </div>
+              ${rows}
+            </div>`,
+        };
+      };
+
+      try {
+        const box = await fetch(`${MLB}/game/${next.gamePk}/boxscore`).then(r => r.json());
+        const awayLabel = TEAM_ABBREV[away.team.id] ?? 'Away';
+        const homeLabel = TEAM_ABBREV[home.team.id] ?? 'Home';
+        const awayLineup = buildLineupSide(box, 'away', awayLabel);
+        const homeLineup = buildLineupSide(box, 'home', homeLabel);
+
+        lineupHtml = awayLineup.html + homeLineup.html;
+        popover.innerHTML = lineupHtml;
+
+        if (statusWrap) {
+          statusWrap.innerHTML = `
+            <span class="lineup-status-label">Lineups</span>
+            <span class="lineup-status-summary">
+              <span class="lineup-status-chip ${awayLineup.available ? 'available' : 'unavailable'}">${esc(awayLabel)} ${awayLineup.available ? 'posted' : 'not posted'}</span>
+              <span class="lineup-status-chip ${homeLineup.available ? 'available' : 'unavailable'}">${esc(homeLabel)} ${homeLineup.available ? 'posted' : 'not posted'}</span>
+            </span>`;
         }
+      } catch {
+        if (statusWrap) {
+          statusWrap.innerHTML = `
+            <span class="lineup-status-label">Lineups</span>
+            <span class="lineup-status-summary">Status unavailable</span>`;
+        }
+      }
+
+      cardWrap.addEventListener('mouseenter', () => {
+        popover.innerHTML = lineupHtml;
+        popover.classList.remove('hidden');
       });
       cardWrap.addEventListener('mouseleave', () => {
         popover.classList.add('hidden');

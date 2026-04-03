@@ -540,6 +540,49 @@ img { display: block; max-width: 100%; }
 .on-deck-pitchers { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 2px; }
 .on-deck-card { padding: 10px 12px; gap: 6px; }
 .on-deck-card-wrap { position: relative; }
+.on-deck-lineup-status {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 7px;
+  margin-top: 2px;
+  border-top: 1px solid var(--border);
+}
+.lineup-status-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+.lineup-status-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.lineup-status-chip,
+.lineup-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.lineup-status-chip {
+  padding: 3px 7px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+.lineup-status-chip.available,
+.lineup-state.available {
+  color: #22c55e;
+}
+.lineup-status-chip.unavailable,
+.lineup-state.unavailable {
+  color: #f59e0b;
+}
 
 /* Lineup popover on hover */
 .lineup-popover {
@@ -551,10 +594,18 @@ img { display: block; max-width: 100%; }
 }
 .lineup-popover.hidden { display: none; }
 .lineup-side { flex: 1; min-width: 0; }
+.lineup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
 .lineup-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-3); letter-spacing: 0.03em; margin-bottom: 4px; }
 .lineup-row { display: flex; gap: 6px; font-size: 0.68rem; padding: 1px 0; }
 .lineup-pos { width: 22px; flex-shrink: 0; font-weight: 600; color: var(--text-3); }
 .lineup-name { color: var(--text); }
+.lineup-empty { font-size: 0.68rem; color: var(--text-2); }
 
 /* Schedule within On Deck */
 /* Schedule boxes (inline with On Deck) */
