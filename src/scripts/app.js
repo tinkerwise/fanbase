@@ -1695,15 +1695,18 @@ function renderLeaders() {
   const cats = leadersMode === 'batting' ? cached.batting : cached.pitching;
 
   wrap.innerHTML = `
-    <div class="leaders-scope">
-      <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles">O's</button>
-      <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al">AL</button>
-      <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl">NL</button>
-      <button class="leaders-scope-btn${leadersScope === 'mlb' ? ' active' : ''}" data-scope="mlb">MLB</button>
-    </div>
-    <div class="leaders-toggle">
-      <button class="leaders-tab${leadersMode === 'batting' ? ' active' : ''}" data-lmode="batting">Batting</button>
-      <button class="leaders-tab${leadersMode === 'pitching' ? ' active' : ''}" data-lmode="pitching">Pitching</button>
+    <div class="leaders-controls">
+      <div class="leaders-scope">
+        <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles">O's</button>
+        <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al">AL</button>
+        <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl">NL</button>
+        <button class="leaders-scope-btn${leadersScope === 'mlb' ? ' active' : ''}" data-scope="mlb">MLB</button>
+      </div>
+      <span class="leaders-divider"></span>
+      <div class="leaders-toggle">
+        <button class="leaders-tab${leadersMode === 'batting' ? ' active' : ''}" data-lmode="batting">Bat</button>
+        <button class="leaders-tab${leadersMode === 'pitching' ? ' active' : ''}" data-lmode="pitching">Pitch</button>
+      </div>
     </div>
     <div class="leaders-list">${cats.map(cat => {
       const top = cat.leaders?.[0];
