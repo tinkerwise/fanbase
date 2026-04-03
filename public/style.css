@@ -666,10 +666,12 @@ a.il-name:hover { color: var(--orange); }
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  width: 100%;
 }
 .toolbar-left {
   display: flex;
   align-items: center;
+  flex: 1 1 auto;
   min-width: 0;
 }
 .toolbar-divider {
@@ -679,9 +681,10 @@ a.il-name:hover { color: var(--orange); }
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex: 1 1 auto;
   gap: 10px;
   flex-wrap: wrap;
-  margin-left: auto;
+  min-width: 0;
 }
 .view-toggle {
   display: flex;

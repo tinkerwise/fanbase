@@ -1,0 +1,43 @@
+Yard Report Changelog
+Week of March 28 - April 3, 2026
+
+Feed and Toolbar
+- Tightened the main feed toolbar layout.
+- Left-justified the category pills (All / Orioles / MLB / MiLB).
+- Right-justified the source filter and view controls.
+- Removed the article count and "Last X days" helper text above the feed for a cleaner top-of-feed presentation.
+
+Score Bugs
+- Added dedicated score-chip states for Rain Delay and Postponed games.
+- Delay/postponement states now get their own labels and visual accents instead of falling back to generic preview/live/final handling.
+
+Yard Leaders
+- Updated stat-label links so batting stats open the corresponding Baseball Savant leaderboard/custom stat view.
+- Reworked pitching stat links against the live Baseball Savant site.
+- Exact Savant custom-column links now support ERA, SO, W, QS, and GS.
+- WHIP, K/9, and BB/9 now route to the closest valid Savant custom views built from the live available pitcher fields.
+- Changed the pitching label from K to SO.
+
+Right Sidebar
+- Reordered the right sidebar so Injury Report now appears above Transactions.
+- Expanded the Injury Report widget to include projected return dates.
+- Injury return dates are enriched from the live Orioles injuries and roster moves page.
+- Injury notes from the roster feed are now displayed under each injured player when available.
+
+Easter Eggs
+- Improved the "magic" Easter egg:
+  - the bird now appears centered in the viewport
+  - confetti repeats for the full visible/audio duration instead of firing once
+- Added a new "heritage" Easter egg trigger.
+- Typing "heritage" in search now launches a temporary Heritage Edition mode:
+  - forces grid view during the effect
+  - transforms feed cards into vintage baseball-card-inspired designs
+  - shows a Heritage Edition badge
+  - restores the user's previous view after the effect ends
+
+Infrastructure
+- Extended the RSS proxy to optionally return raw text/HTML for trusted pages, not just feed XML.
+- Added dev/prod support for using that proxy path to enrich client widgets with trusted page content.
+
+Documentation
+- Updated FEATURES.txt to reflect the current shipped behavior, including toolbar alignment changes, score-bug delay states, Yard Leaders updates, the enhanced IL widget, and the new Heritage Easter egg.
