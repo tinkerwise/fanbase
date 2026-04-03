@@ -585,7 +585,52 @@ function topPerformers(boxData) {
   return html;
 }
 
+function renderLineupPopover(boxData) {
+  if (!boxData?.teams) {
+    return '<div class="score-lineups-empty">Lineups unavailable</div>';
+  }
+
+  const renderSide = side => {
+    const team = boxData.teams?.[side];
+    if (!team) return '';
+    const label = TEAM_ABBREV[team.team?.id] ?? team.team?.abbreviation ?? (side === 'away' ? 'Away' : 'Home');
+    const players = team.battingOrder ?? [];
+    const roster = team.players ?? {};
+    const available = players.length > 0;
+    const rows = available
+      ? players.map(id => {
+          const p = roster[`ID${id}`] ?? {};
+          const name = p.person?.fullName ?? 'TBD';
+          const pos = p.position?.abbreviation ?? '';
+          return `<div class="score-lineup-row"><span class="score-lineup-pos">${esc(pos)}</span><span class="score-lineup-name">${esc(name)}</span></div>`;
+        }).join('')
+      : '<div class="score-lineups-empty">Lineup not yet posted</div>';
+
+    return `<div class="score-lineup-side">
+      <div class="score-lineup-head">
+        <span class="score-lineup-label">${esc(label)}</span>
+        <span class="score-lineup-state ${available ? 'available' : 'unavailable'}">${available ? 'Posted' : 'Not posted'}</span>
+      </div>
+      ${rows}
+    </div>`;
+  };
+
+  const awayHtml = renderSide('away');
+  const homeHtml = renderSide('home');
+  return `<div class="score-lineups">
+    <div class="score-lineups-title">Lineups</div>
+    <div class="score-lineups-grid">${awayHtml}${homeHtml}</div>
+  </div>`;
+}
+
 function renderBoxScore(g, boxData) {
+  const isPreview = g.status.abstractGameState === 'Preview';
+  if (isPreview) {
+    return boxData
+      ? renderLineupPopover(boxData)
+      : '<div class="score-lineups"><div class="score-lineups-title">Lineups</div><div class="score-lineups-empty">Loading lineup status…</div></div>';
+  }
+
   const ls = g.linescore;
   const away = g.teams.away;
   const home = g.teams.home;
@@ -642,7 +687,7 @@ function renderBoxScore(g, boxData) {
       <tr>${awayRow}</tr>
       <tr>${homeRow}</tr>
     </tbody>
-  </table>${decisions}${performers}`;
+  </table>${decisions}${performers}${renderLineupPopover(boxData)}`;
 }
 
 async function loadScores() {
@@ -717,7 +762,7 @@ async function loadScores() {
     function showBoxScore(chip) {
       const pk = chip.dataset.gamepk;
       const g = state.gamesMap[pk];
-      if (!g || g.status.abstractGameState === 'Preview') return;
+      if (!g) return;
       clearTimeout(boxTimer);
       // Show linescore immediately
       boxPopover.innerHTML = renderBoxScore(g, boxscoreCache[pk] || null);
@@ -726,7 +771,7 @@ async function loadScores() {
       boxPopover.classList.remove('hidden');
       positionPopover(chip);
       // Fetch full boxscore for performers (async, cached)
-      if (!boxscoreCache[pk] && g.status.abstractGameState !== 'Preview') {
+      if (!boxscoreCache[pk]) {
         fetchBoxscore(pk).then(data => {
           if (data && !boxPopover.classList.contains('hidden')) {
             boxPopover.innerHTML = renderBoxScore(g, data);
@@ -1482,18 +1527,28 @@ async function loadOnDeck() {
         popover.innerHTML = lineupHtml;
 
         if (indicatorWrap) {
-          indicatorWrap.innerHTML = availableCount
-            ? `<span class="lineup-indicator-badge" title="${availableCount === 2 ? 'Both lineups posted' : 'One lineup posted'}">
+          indicatorWrap.innerHTML = `<span class="lineup-indicator-badge ${availableCount ? 'available' : 'unavailable'}" title="${
+            availableCount === 2 ? 'Both lineups posted'
+            : availableCount === 1 ? 'One lineup posted'
+            : 'Lineups not yet posted'
+          }">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <rect x="5" y="3" width="14" height="18" rx="2"></rect>
                   <path d="M9 7h6M9 11h6M9 15h4"></path>
                 </svg>
                 <span>${availableCount}/2</span>
-              </span>`
-            : '';
+              </span>`;
         }
       } catch {
-        if (indicatorWrap) indicatorWrap.innerHTML = '';
+        if (indicatorWrap) {
+          indicatorWrap.innerHTML = `<span class="lineup-indicator-badge unavailable" title="Lineup status unavailable">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="5" y="3" width="14" height="18" rx="2"></rect>
+              <path d="M9 7h6M9 11h6M9 15h4"></path>
+            </svg>
+            <span>0/2</span>
+          </span>`;
+        }
       }
 
       cardWrap.addEventListener('mouseenter', () => {

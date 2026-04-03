@@ -1,6 +1,18 @@
 Yard Report Changelog
 Week of March 28 - April 3, 2026
 
+April 3, 2026
+
+Masthead
+- Reworked the Yard Report masthead to sit more cleanly inline with the full-width header instead of crowding the score bar.
+- Kept the logo visually larger while slimming its horizontal footprint.
+- Replaced the previous Yard wordmark font with a cleaner athletic display face and refined the Camden-inspired banner treatment.
+
+Lineups
+- Added lineup-card content to the score bug hover popover so each game chip can surface posted/not-posted lineup state.
+- Updated the On Deck lineup indicator to always show the lineup-card icon, grey when unavailable and green when at least one lineup is posted.
+- Tightened lineup popover rows so player names stay on one line with smaller type and truncation instead of wrapping.
+
 Feed and Toolbar
 - Tightened the main feed toolbar layout.
 - Left-justified the category pills (All / Orioles / MLB / MiLB).
