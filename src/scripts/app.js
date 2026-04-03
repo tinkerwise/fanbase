@@ -126,8 +126,21 @@ const state = {
   gamesMap: {},
 };
 
+let heritageTimer = null;
+let heritagePreviousView = null;
+
 // ── Utilities ─────────────────────────────────────────────────────
 function $(id) { return document.getElementById(id); }
+
+function setViewMode(view, { render = true } = {}) {
+  state.viewMode = view;
+  const toggle = $('viewToggle');
+  if (toggle) {
+    toggle.querySelectorAll('.view-btn').forEach(btn =>
+      btn.classList.toggle('active', btn.dataset.view === state.viewMode));
+  }
+  if (render) renderArticles();
+}
 
 const PLACEHOLDER_IMG = `${import.meta.env.BASE_URL}favicon.jpg`;
 
@@ -1865,10 +1878,7 @@ function setupEvents() {
   $('viewToggle').addEventListener('click', e => {
     const btn = e.target.closest('[data-view]');
     if (!btn) return;
-    state.viewMode = btn.dataset.view;
-    $('viewToggle').querySelectorAll('.view-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.view === state.viewMode));
-    renderArticles();
+    setViewMode(btn.dataset.view);
   });
 
   // Category filters
@@ -1906,9 +1916,7 @@ function setupEvents() {
     const btn = e.target.closest('[data-defview]');
     if (!btn) return;
     savePrefs({ defaultView: btn.dataset.defview });
-    state.viewMode = btn.dataset.defview;
-    $('viewToggle').querySelectorAll('.view-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.view === state.viewMode));
+    setViewMode(btn.dataset.defview, { render: false });
     $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.defview === btn.dataset.defview));
     renderArticles();
@@ -1964,9 +1972,14 @@ function setupEvents() {
 
   // 1. "magic" in search → Orioles Magic confetti (Enter key = trusted gesture for audio)
   $('searchInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter' && e.target.value.trim().toLowerCase() === 'magic') {
+    if (e.key !== 'Enter') return;
+    const trigger = e.target.value.trim().toLowerCase();
+    if (trigger === 'magic') {
       e.preventDefault();
       triggerOriolesMagic();
+    } else if (trigger === 'heritage') {
+      e.preventDefault();
+      triggerHeritageMode();
     }
   });
 
@@ -2100,6 +2113,54 @@ function toggleOpacyTheme() {
   } else {
     html.setAttribute('data-theme', 'opacy');
   }
+}
+
+function dismissHeritageMode() {
+  clearTimeout(heritageTimer);
+  heritageTimer = null;
+
+  const html = document.documentElement;
+  html.classList.remove('heritage-mode');
+
+  const badge = document.getElementById('heritageBadge');
+  if (badge) {
+    badge.classList.add('heritage-badge-exit');
+    setTimeout(() => badge.remove(), 350);
+  }
+
+  if (heritagePreviousView) {
+    setViewMode(heritagePreviousView);
+    heritagePreviousView = null;
+  }
+}
+
+function triggerHeritageMode() {
+  const html = document.documentElement;
+  const alreadyActive = html.classList.contains('heritage-mode');
+
+  if (!alreadyActive) {
+    heritagePreviousView = state.viewMode;
+  }
+
+  html.classList.add('heritage-mode');
+  setViewMode('grid');
+
+  let badge = document.getElementById('heritageBadge');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'heritageBadge';
+    badge.className = 'heritage-badge';
+    badge.innerHTML = `
+      <span class="heritage-badge-top">Yard Report</span>
+      <span class="heritage-badge-main">Heritage Edition</span>
+      <span class="heritage-badge-sub">Baseball card mode</span>`;
+    document.body.appendChild(badge);
+  } else {
+    badge.classList.remove('heritage-badge-exit');
+  }
+
+  clearTimeout(heritageTimer);
+  heritageTimer = setTimeout(dismissHeritageMode, 15000);
 }
 
 async function init() {
