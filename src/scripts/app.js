@@ -1508,34 +1508,8 @@ async function loadOnDeck() {
             <span class="on-deck-venue">${esc(venue)}</span>
           </div>
         </a>
-        <div class="on-deck-park-popover hidden" id="onDeckOverlay" aria-hidden="true">
-          <div class="park-overlay-card">
-            <div class="park-overlay-info">
-              <span class="park-overlay-kicker">${esc(venue || 'Ballpark')}</span>
-              <span class="park-overlay-title">${isHome ? 'Orioles vs.' : 'Orioles at'} ${esc(oppAbbr)}</span>
-              <span class="park-overlay-meta">${esc(dateStr)} · ${esc(timeStr)}</span>
-            </div>
-            <div class="park-dimensions-diagram">
-              <div class="park-dimensions-arc"></div>
-              <div class="park-dimensions-infield"></div>
-              <div class="park-dimensions-home"></div>
-              <span class="park-dimension park-dimension-left-line">${fieldInfo?.leftLine ?? '—'}'</span>
-              <span class="park-dimension park-dimension-left">${fieldInfo?.left ?? '—'}'</span>
-              <span class="park-dimension park-dimension-left-center">${fieldInfo?.leftCenter ?? '—'}'</span>
-              <span class="park-dimension park-dimension-center">${fieldInfo?.center ?? '—'}'</span>
-              <span class="park-dimension park-dimension-right-center">${fieldInfo?.rightCenter ?? '—'}'</span>
-              <span class="park-dimension park-dimension-right-line">${fieldInfo?.rightLine ?? '—'}'</span>
-            </div>
-            <div class="park-overlay-footnote">${fieldInfo ? 'Outfield dimensions' : 'Dimensions unavailable'}</div>
-          </div>
-        </div>
       </div>
       ${scheduleHtml}`;
-
-    const cardWrap = wrap.querySelector('.on-deck-card-wrap');
-    const overlay = wrap.querySelector('#onDeckOverlay');
-    cardWrap.addEventListener('mouseenter', () => overlay.classList.remove('hidden'));
-    cardWrap.addEventListener('mouseleave', () => overlay.classList.add('hidden'));
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }
