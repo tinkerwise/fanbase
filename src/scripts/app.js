@@ -253,6 +253,45 @@ function normalizeText(str) {
   return String(str ?? '').replace(/\s+/g, ' ').trim();
 }
 
+function decodeHtmlEntities(str) {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = str;
+  return textarea.value;
+}
+
+function cleanFeedText(str) {
+  let text = String(str ?? '');
+
+  for (let i = 0; i < 2; i += 1) {
+    if (!/%[0-9A-Fa-f]{2}/.test(text)) break;
+    try {
+      const decoded = decodeURIComponent(text);
+      if (decoded === text) break;
+      text = decoded;
+    } catch {
+      break;
+    }
+  }
+
+  text = text
+    .replace(/%&(?:#0*39|apos);?/gi, '\'')
+    .replace(/%&#0*39;?/gi, '\'')
+    .replace(/&(?:#0*39|apos);?/gi, '\'')
+    .replace(/&(?:#0*34|quot);?/gi, '"')
+    .replace(/&(?:#0*8211|ndash);?/gi, '-')
+    .replace(/&(?:#0*8212|mdash);?/gi, '--')
+    .replace(/&(?:#0*8230|hellip);?/gi, '...')
+    .replace(/&amp;/gi, '&');
+
+  for (let i = 0; i < 2; i += 1) {
+    const decoded = decodeHtmlEntities(text);
+    if (decoded === text) break;
+    text = decoded;
+  }
+
+  return normalizeText(text);
+}
+
 // ── Weather condition → emoji mapping ─────────────────────────────
 function weatherEmoji(condition) {
   if (!condition) return '';
@@ -800,10 +839,10 @@ async function fetchFeed(source) {
     return {
       source,
       articles: (data.items ?? []).map(item => ({
-        title: item.title ?? '',
+        title: cleanFeedText(item.title),
         link: item.link ?? '',
         pubDate: item.pubDate ?? '',
-        description: item.description ?? '',
+        description: cleanFeedText(item.description),
         content: item.content ?? '',
         thumbnail: item.thumbnail ?? null,
       })),
@@ -1597,7 +1636,7 @@ async function loadVideos() {
         const link = item.link || '';
         const videoId = link.match(/v=([^&]+)/)?.[1] || link.match(/youtu\.be\/([^?&]+)/)?.[1] || '';
         return {
-          title: item.title ?? '',
+          title: cleanFeedText(item.title),
           label: pl.label,
           thumb: item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : ''),
           url: link,
