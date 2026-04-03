@@ -1704,8 +1704,8 @@ function renderLeaders() {
       </div>
       <span class="leaders-divider"></span>
       <div class="leaders-toggle">
-        <button class="leaders-tab${leadersMode === 'batting' ? ' active' : ''}" data-lmode="batting">Bat</button>
-        <button class="leaders-tab${leadersMode === 'pitching' ? ' active' : ''}" data-lmode="pitching">Pitch</button>
+        <button class="leaders-tab${leadersMode === 'batting' ? ' active' : ''}" data-lmode="batting">Batting</button>
+        <button class="leaders-tab${leadersMode === 'pitching' ? ' active' : ''}" data-lmode="pitching">Pitching</button>
       </div>
     </div>
     <div class="leaders-list">${cats.map(cat => {

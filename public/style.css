@@ -527,8 +527,8 @@ img { display: block; max-width: 100%; }
   background: transparent; color: var(--text-3); font-size: 0.58rem; font-weight: 600;
   cursor: pointer; transition: all 0.15s;
 }
-.leaders-tab:hover { border-color: var(--orange); color: var(--orange); }
-.leaders-tab.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+.leaders-tab:hover { border-color: #3b82f6; color: #3b82f6; }
+.leaders-tab.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
 .leaders-list { display: flex; flex-direction: column; }
 .leader-item {
   display: flex; align-items: center; gap: 4px;
