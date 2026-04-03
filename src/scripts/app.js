@@ -1927,20 +1927,28 @@ function triggerOriolesMagic() {
   container.innerHTML = `<div class="magic-banner"><img src="/yardreport/img/randBird${birdNum}.png" alt="Oriole Bird" class="magic-bird"></div>`;
   document.body.appendChild(container);
 
-  // Play Orioles Magic audio — display lasts for audio duration
   const audio = new Audio('/yardreport/audio/orioles_magic_short.mp3');
   audio.volume = 0.7;
-  const removeDisplay = () => {
+
+  const dismiss = () => {
+    audio.pause();
+    audio.currentTime = 0;
     container.classList.add('magic-fade-out');
     setTimeout(() => container.remove(), 600);
+    document.removeEventListener('keydown', onKey);
   };
-  audio.addEventListener('ended', removeDisplay);
+  const onKey = e => { if (e.key === 'Escape') dismiss(); };
+  document.addEventListener('keydown', onKey);
+  container.addEventListener('click', dismiss);
+
+  audio.addEventListener('ended', dismiss);
   audio.play().catch(() => {
-    setTimeout(removeDisplay, 5000);
+    setTimeout(dismiss, 5000);
   });
 
-  // Confetti explodes from center after bird grows (matches animation duration)
+  // Confetti explodes from center after bird grows
   setTimeout(() => {
+    if (!container.parentNode) return;
     const cx = window.innerWidth / 2;
     const cy = window.innerHeight * 0.35;
     const colors = ['#df4601', '#000', '#fff', '#f59e0b', '#ff6b1a'];
