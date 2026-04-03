@@ -1618,10 +1618,33 @@ const leadersCache = {};
 let leadersMode = 'batting';
 let leadersScope = 'orioles'; // orioles | al | nl | mlb
 
-const TEAM_LEADERS_CATS = 'battingAverage,onBasePercentage,onBasePlusSlugging,homeRuns,hits,baseOnBalls,sluggingPercentage,runsBattedIn,earnedRunAverage,strikeouts,gamesStarted,walksAndHitsPerInningPitched,wins,strikeoutsPer9Inn,walksPer9Inn,qualityStarts';
-const LEAGUE_LEADERS_CATS = 'battingAverage,onBasePercentage,onBasePlusSlugging,homeRuns,hits,walks,sluggingPercentage,runsBattedIn,earnedRunAverage,strikeouts,gamesStarted,walksAndHitsPerInningPitched,wins,strikeoutsPer9Inn,walksPer9Inn';
+// Ordered by scouting priority
+const BATTING_ORDER = ['onBasePlusSlugging', 'sluggingPercentage', 'onBasePercentage', 'battingAverage', 'homeRuns', 'runsBattedIn', 'hits', 'baseOnBalls', 'walks'];
+const PITCHING_ORDER = ['earnedRunAverage', 'walksAndHitsPerInningPitched', 'strikeoutsPer9Inn', 'strikeouts', 'walksPer9Inn', 'qualityStarts', 'wins', 'gamesStarted'];
+const TEAM_LEADERS_CATS = 'onBasePlusSlugging,sluggingPercentage,onBasePercentage,battingAverage,homeRuns,runsBattedIn,hits,baseOnBalls,earnedRunAverage,walksAndHitsPerInningPitched,strikeoutsPer9Inn,strikeouts,walksPer9Inn,qualityStarts,wins,gamesStarted';
+const LEAGUE_LEADERS_CATS = 'onBasePlusSlugging,sluggingPercentage,onBasePercentage,battingAverage,homeRuns,runsBattedIn,hits,walks,earnedRunAverage,walksAndHitsPerInningPitched,strikeoutsPer9Inn,strikeouts,walksPer9Inn,wins,gamesStarted';
 const BATTING_LABELS = { battingAverage: 'AVG', onBasePercentage: 'OBP', onBasePlusSlugging: 'OPS', homeRuns: 'HR', hits: 'H', baseOnBalls: 'BB', walks: 'BB', sluggingPercentage: 'SLG', runsBattedIn: 'RBI' };
 const PITCHING_LABELS = { earnedRunAverage: 'ERA', strikeouts: 'K', gamesStarted: 'GS', qualityStarts: 'QS', walksAndHitsPerInningPitched: 'WHIP', wins: 'W', strikeoutsPer9Inn: 'K/9', walksPer9Inn: 'BB/9' };
+// Baseball Savant leaderboard URLs per stat
+const SAVANT_STAT_URL = {
+  onBasePlusSlugging: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=ops',
+  sluggingPercentage: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=slg',
+  onBasePercentage: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=obp',
+  battingAverage: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=ba',
+  homeRuns: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=hr',
+  runsBattedIn: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=rbi',
+  hits: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=h',
+  baseOnBalls: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=bb',
+  walks: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=bb',
+  earnedRunAverage: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=era&type=pitcher',
+  walksAndHitsPerInningPitched: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=whip&type=pitcher',
+  strikeoutsPer9Inn: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=k_percent&type=pitcher',
+  strikeouts: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=k&type=pitcher',
+  walksPer9Inn: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=bb_percent&type=pitcher',
+  qualityStarts: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=qs&type=pitcher',
+  wins: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=w&type=pitcher',
+  gamesStarted: 'https://baseballsavant.mlb.com/leaderboard/custom?n=qualified&stat=gs&type=pitcher',
+};
 
 function savantUrl(playerId) {
   return `https://baseballsavant.mlb.com/savant-player/${playerId}`;
@@ -1636,24 +1659,18 @@ function leadersFetchUrl(scope) {
   return `${MLB}/stats/leaders?leaderCategories=${LEAGUE_LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R${leagueParam}&limit=1`;
 }
 
-function parseLeadersTeam(data) {
-  const categories = data.teamLeaders ?? [];
-  return {
-    batting: categories.filter(c => BATTING_LABELS[c.leaderCategory] && c.statGroup === 'hitting')
-      .map(c => ({ label: BATTING_LABELS[c.leaderCategory], leaders: c.leaders })),
-    pitching: categories.filter(c => PITCHING_LABELS[c.leaderCategory] && c.statGroup === 'pitching')
-      .map(c => ({ label: PITCHING_LABELS[c.leaderCategory], leaders: c.leaders })),
-  };
-}
-
-function parseLeadersLeague(data) {
-  const categories = data.leagueLeaders ?? [];
-  return {
-    batting: categories.filter(c => BATTING_LABELS[c.leaderCategory] && c.statGroup === 'hitting')
-      .map(c => ({ label: BATTING_LABELS[c.leaderCategory], leaders: c.leaders })),
-    pitching: categories.filter(c => PITCHING_LABELS[c.leaderCategory] && c.statGroup === 'pitching')
-      .map(c => ({ label: PITCHING_LABELS[c.leaderCategory], leaders: c.leaders })),
-  };
+function parseLeadersData(categories) {
+  const sortBy = (items, order) => items.sort((a, b) =>
+    (order.indexOf(a.key) === -1 ? 99 : order.indexOf(a.key)) - (order.indexOf(b.key) === -1 ? 99 : order.indexOf(b.key)));
+  const batting = sortBy(
+    categories.filter(c => BATTING_LABELS[c.leaderCategory] && c.statGroup === 'hitting')
+      .map(c => ({ key: c.leaderCategory, label: BATTING_LABELS[c.leaderCategory], leaders: c.leaders })),
+    BATTING_ORDER);
+  const pitching = sortBy(
+    categories.filter(c => PITCHING_LABELS[c.leaderCategory] && c.statGroup === 'pitching')
+      .map(c => ({ key: c.leaderCategory, label: PITCHING_LABELS[c.leaderCategory], leaders: c.leaders })),
+    PITCHING_ORDER);
+  return { batting, pitching };
 }
 
 async function loadLeaders() {
@@ -1662,7 +1679,8 @@ async function loadLeaders() {
     const url = leadersFetchUrl(leadersScope);
     if (!leadersCache[leadersScope]) {
       const data = await fetch(url).then(r => r.json());
-      leadersCache[leadersScope] = leadersScope === 'orioles' ? parseLeadersTeam(data) : parseLeadersLeague(data);
+      const categories = leadersScope === 'orioles' ? (data.teamLeaders ?? []) : (data.leagueLeaders ?? []);
+      leadersCache[leadersScope] = parseLeadersData(categories);
     }
     renderLeaders();
   } catch {
@@ -1692,20 +1710,12 @@ function renderLeaders() {
       if (!top) return '';
       const fullName = top.person?.fullName ?? '';
       const name = fullName.split(' ').pop() ?? '';
-      const statType = leadersMode === 'batting' ? 'batting' : 'pitching';
-      let link = '#';
-      if (leadersScope === 'orioles') {
-        link = `https://www.mlb.com/orioles/stats/${statType}`;
-      } else if (leadersScope === 'al') {
-        link = `https://www.mlb.com/stats/${statType}?league=al`;
-      } else if (leadersScope === 'nl') {
-        link = `https://www.mlb.com/stats/${statType}?league=nl`;
-      } else {
-        link = `https://www.mlb.com/stats/${statType}`;
-      }
+      const pid = top.person?.id;
+      const playerLink = pid ? savantUrl(pid) : '#';
+      const statLink = SAVANT_STAT_URL[cat.key] ?? '#';
       return `<div class="leader-item">
-        <span class="leader-cat">${esc(cat.label)}</span>
-        <a class="leader-name" href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(name)}</a>
+        <a class="leader-cat" href="${statLink}" target="_blank" rel="noopener">${esc(cat.label)}</a>
+        <a class="leader-name" href="${playerLink}" target="_blank" rel="noopener">${esc(name)}</a>
         <span class="leader-val">${esc(top.value)}</span>
       </div>`;
     }).join('')}</div>`;
