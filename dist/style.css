@@ -578,9 +578,6 @@ a.roster-name:hover { color: var(--orange); }
 a.il-name:hover { color: var(--orange); }
 .il-pos { color: var(--text-3); font-size: 0.68rem; }
 .il-status { font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; background: rgba(239,68,68,0.15); color: #ef4444; white-space: nowrap; }
-.il-meta { display: flex; align-items: baseline; gap: 8px; font-size: 0.67rem; color: var(--text-3); }
-.il-return-label { text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
-.il-return-date { color: var(--text-2); font-weight: 600; }
 .il-note { font-size: 0.69rem; line-height: 1.45; color: var(--text-3); }
 
 /* ── Video Widget ────────────────────────────────────────────── */

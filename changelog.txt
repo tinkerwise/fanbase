@@ -20,8 +20,7 @@ Yard Leaders
 
 Right Sidebar
 - Reordered the right sidebar so Injury Report now appears above Transactions.
-- Expanded the Injury Report widget to include projected return dates.
-- Injury return dates are enriched from the live Orioles injuries and roster moves page.
+- Expanded the Injury Report widget to include injury notes in a more compact layout.
 - Injury notes from the roster feed are now displayed under each injured player when available.
 
 Video Widget

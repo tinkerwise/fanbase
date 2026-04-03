@@ -61,7 +61,7 @@
     - Batting: AVG, OBP, OPS, HR, H, BB, SLG, RBI
     - Pitching: ERA, SO, GS, QS, WHIP, W, K/9, BB/9
   - Roster: active Orioles roster grouped by position, jersey numbers, links to Baseball Savant (default collapsed)
-  - Injury Report: current IL players with position, IL type (10/15/60-day), projected return date, and injury note; player names link to MLB.com
+  - Injury Report: current IL players with position, IL type (10/15/60-day), and injury note; player names link to MLB.com
   - Transactions: last 14 days of Orioles moves, sorted newest-first, player names link to MLB.com, auto-refreshes every 5 minutes (positioned below Injury Report)
 
 #Settings

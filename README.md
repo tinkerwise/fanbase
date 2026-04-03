@@ -19,7 +19,7 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 - On Deck widget with schedule strip, weather, and game-day lineup popover
 - Standings widget with division tabs
 - Yard Leaders widget with Baseball Savant player/stat links
-- Injury Report with IL type, projected return date, and injury note
+- Injury Report with IL type and injury note
 - Transactions widget covering the last 14 days
 - Video widget with MLB Fastcast, MLB Top Plays, Orioles Game Recaps, The Chill, and a random Orioles Moments video on each page load
 - Easter eggs including `magic`, `heritage`, Konami Code, and the hidden OPACY theme
