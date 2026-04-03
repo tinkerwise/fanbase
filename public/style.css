@@ -210,6 +210,8 @@ img { display: block; max-width: 100%; }
 .score-chip:hover { border-color: var(--orange); transform: translateY(-1px); }
 .score-chip.orioles { border-left: 3px solid var(--orange); background: var(--orange-dim); }
 .score-chip.live { border-left: 3px solid #22c55e; }
+.score-chip.delay { border-left: 3px solid #eab308; }
+.score-chip.postponed { border-left: 3px solid #ef4444; }
 .chip-row {
   display: flex;
   justify-content: space-between;
@@ -238,6 +240,8 @@ img { display: block; max-width: 100%; }
   justify-content: center;
   gap: 4px;
 }
+.chip-status.delay { color: #facc15; }
+.chip-status.postponed { color: #f87171; }
 .live-dot {
   width: 6px; height: 6px;
   background: #22c55e;

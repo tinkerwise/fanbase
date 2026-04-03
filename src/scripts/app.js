@@ -333,19 +333,34 @@ function sortGamesOrioles(games) {
   });
 }
 
-function renderGameChip(g) {
-  const away = g.teams.away;
-  const home = g.teams.home;
-  const hasOrioles = away.team.id === ORIOLES_ID || home.team.id === ORIOLES_ID;
-  const gameState = g.status.abstractGameState; // Preview | Live | Final
-  const isLive = gameState === 'Live';
-  const isDone = gameState === 'Final';
-  const isPre  = gameState === 'Preview';
+function getScoreChipStatus(g) {
+  const abstractState = g.status?.abstractGameState ?? '';
+  const detailedState = g.status?.detailedState ?? '';
+  const reason = g.status?.reason ?? '';
+  const statusText = `${detailedState} ${reason}`.toLowerCase();
+  const isPostponed = /postponed/.test(statusText);
+  const isDelayed = /delay|delayed/.test(statusText);
+  const isWeatherRelated = /rain|weather/.test(statusText);
 
-  let stateClass = isDone ? 'final' : isLive ? 'live' : 'preview';
+  if (isPostponed) {
+    return {
+      stateClass: 'postponed',
+      statusInner: 'Postponed',
+      isPreviewLike: true,
+      isFinal: false,
+    };
+  }
 
-  let statusInner = '';
-  if (isLive) {
+  if (isDelayed) {
+    return {
+      stateClass: 'delay',
+      statusInner: isWeatherRelated ? 'Rain Delay' : detailedState || 'Delayed',
+      isPreviewLike: abstractState === 'Preview',
+      isFinal: false,
+    };
+  }
+
+  if (abstractState === 'Live') {
     const half = g.linescore?.inningHalf === 'Top' ? '▲' : '▼';
     const inn = g.linescore?.currentInning ?? '';
     const offense = g.linescore?.offense ?? {};
@@ -353,27 +368,51 @@ function renderGameChip(g) {
     const b2 = offense.second ? ' on' : '';
     const b3 = offense.third ? ' on' : '';
     const bases = `<span class="bases-diamond"><span class="base b2${b2}"></span><span class="base b3${b3}"></span><span class="base b1${b1}"></span></span>`;
-    statusInner = `<span class="live-dot"></span> ${half}${inn} ${bases}`;
-  } else if (isDone) {
-    statusInner = 'Final';
-  } else {
-    statusInner = formatGameTime(g.gameDate);
+    return {
+      stateClass: 'live',
+      statusInner: `<span class="live-dot"></span> ${half}${inn} ${bases}`,
+      isPreviewLike: false,
+      isFinal: false,
+    };
   }
 
-  const awayScore = (!isPre && away.score != null) ? away.score : '';
-  const homeScore = (!isPre && home.score != null) ? home.score : '';
-  const awayWin = isDone && Number(awayScore) > Number(homeScore);
-  const homeWin = isDone && Number(homeScore) > Number(awayScore);
+  if (abstractState === 'Final') {
+    return {
+      stateClass: 'final',
+      statusInner: 'Final',
+      isPreviewLike: false,
+      isFinal: true,
+    };
+  }
+
+  return {
+    stateClass: 'preview',
+    statusInner: formatGameTime(g.gameDate),
+    isPreviewLike: true,
+    isFinal: false,
+  };
+}
+
+function renderGameChip(g) {
+  const away = g.teams.away;
+  const home = g.teams.home;
+  const hasOrioles = away.team.id === ORIOLES_ID || home.team.id === ORIOLES_ID;
+  const { stateClass, statusInner, isPreviewLike, isFinal } = getScoreChipStatus(g);
+
+  const awayScore = (!isPreviewLike && away.score != null) ? away.score : '';
+  const homeScore = (!isPreviewLike && home.score != null) ? home.score : '';
+  const awayWin = isFinal && Number(awayScore) > Number(homeScore);
+  const homeWin = isFinal && Number(homeScore) > Number(awayScore);
 
   const awaySlug = TEAM_SLUG[away.team.id] ?? away.team.name.split(' ').pop().toLowerCase();
   const homeSlug = TEAM_SLUG[home.team.id] ?? home.team.name.split(' ').pop().toLowerCase();
   const gameDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
-  const gamedaySuffix = isPre ? 'preview' : 'final';
+  const gamedaySuffix = isPreviewLike ? 'preview' : 'final';
   const gamedayUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/${gamedaySuffix}`;
 
   const wx = getGameWeather(g);
-  const wxInline = (isPre && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
-  const storyRow = isDone
+  const wxInline = (stateClass === 'preview' && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
+  const storyRow = isFinal
     ? `<span class="chip-story" data-story="https://www.mlb.com/stories/game/${g.gamePk}?storylocal=gameday-postgame-wrap-game-embed">Story</span>`
     : '';
 
