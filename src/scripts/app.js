@@ -538,7 +538,6 @@ function topPerformers(boxData) {
   if (!boxData) return '';
   const sides = ['away', 'home'];
   const allBatters = [];
-  const allPitchers = [];
 
   for (const side of sides) {
     const team = boxData.teams?.[side];
@@ -547,7 +546,6 @@ function topPerformers(boxData) {
     const players = team.players ?? {};
     for (const [, p] of Object.entries(players)) {
       const bs = p.stats?.batting;
-      const ps = p.stats?.pitching;
       if (bs && (bs.atBats > 0 || bs.baseOnBalls > 0)) {
         const hits = bs.hits ?? 0;
         const ab = bs.atBats ?? 0;
@@ -558,23 +556,12 @@ function topPerformers(boxData) {
         const score = hits * 2 + hr * 5 + rbi * 2 + bb;
         allBatters.push({ name: p.person?.fullName ?? '', abbr, hits, ab, hr, rbi, bb, score });
       }
-      if (ps && (ps.inningsPitched != null)) {
-        const ip = parseFloat(ps.inningsPitched) || 0;
-        const k = ps.strikeOuts ?? 0;
-        const er = ps.earnedRuns ?? 0;
-        const h = ps.hits ?? 0;
-        allPitchers.push({ name: p.person?.fullName ?? '', abbr, ip, k, er, h });
-      }
     }
   }
 
   // Top 3 hitters by score
   allBatters.sort((a, b) => b.score - a.score);
   const topHit = allBatters.slice(0, 3);
-
-  // Top pitchers: sort by IP desc (starters first), then show up to 3
-  allPitchers.sort((a, b) => b.ip - a.ip || a.er - b.er);
-  const topPitch = allPitchers.slice(0, 3);
 
   let html = '';
   if (topHit.length) {
@@ -589,19 +576,12 @@ function topPerformers(boxData) {
     }).join('');
     html += '</div>';
   }
-  if (topPitch.length) {
-    html += '<div class="box-performers"><span class="box-perf-label">Top Pitchers</span>';
-    html += topPitch.map(p => {
-      return `<span class="box-perf-row"><span class="box-perf-name">${esc(p.name)}</span> <span class="box-perf-team">${esc(p.abbr)}</span> <span class="box-perf-stat">${p.ip} IP, ${p.k} K, ${p.er} ER</span></span>`;
-    }).join('');
-    html += '</div>';
-  }
   return html;
 }
 
 function renderLineupPopover(boxData) {
   if (!boxData?.teams) {
-    return '<div class="score-lineups-empty">Lineups unavailable</div>';
+    return '<div class="score-lineups-empty">Lineup not yet posted</div>';
   }
 
   const renderSide = side => {
@@ -623,7 +603,6 @@ function renderLineupPopover(boxData) {
     return `<div class="score-lineup-side">
       <div class="score-lineup-head">
         <span class="score-lineup-label">${esc(label)}</span>
-        ${available ? '' : '<span class="score-lineup-state unavailable">Unavailable</span>'}
       </div>
       ${rows}
     </div>`;
@@ -832,7 +811,7 @@ async function loadScores() {
       if (left < 4) left = 4;
       if (left + pw > window.innerWidth - 4) left = window.innerWidth - pw - 4;
       let top = r.bottom + 6;
-      if (top + ph > window.innerHeight - 4) top = r.top - ph - 6;
+      if (top + ph > window.innerHeight - 4) top = Math.max(r.bottom + 6, window.innerHeight - ph - 4);
       boxPopover.style.left = left + 'px';
       boxPopover.style.top = top + 'px';
     }
