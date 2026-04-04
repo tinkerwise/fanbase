@@ -22,7 +22,7 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 - Injury Report with IL type and injury note
 - Transactions widget covering the last 14 days
 - Podcast widget with a small native audio player for the latest `Baseball Tonight with Buster Olney` episode plus episode/archive links
-- Video widget with MLB Fastcast, MLB Top Plays, Orioles Game Recaps, The Chill, and a random Orioles Moments video on each page load
+- Video widget with MLB Fastcast, MLB Top Plays, Orioles Game Recaps, and a random Orioles Moments video on each page load, with Orioles recap fallback to MLB game media when the team playlist is stale
 - Easter eggs including `magic`, `heritage`, Konami Code, and the hidden OPACY theme
 
 ## Stack
@@ -70,8 +70,8 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 - MLB Fastcast playlist ID: `PLL-lmlkrmJakABrOT6FmV0mU-5oIF8nGu`
 - MLB Top Plays playlist ID: `PLL-lmlkrmJalPg-EgiZ92Eyg9YodLbQsE`
 - Orioles Game Recaps playlist ID: `PLoeYQM_iUEVyoMu-AIZFXs9ja6GMzF1Ce`
-- The Chill playlist ID: `PLoeYQM_iUEVy440XCy6hNLnQf8OBBsdSl`
 - Orioles Moments playlist ID: `PLoeYQM_iUEVwNa9HwsFfS0aWvshxoYnhy`
+- MLB game-content media fallback for Orioles recap freshness: `https://statsapi.mlb.com/api/v1/schedule?...&hydrate=game(content(media(epg)))`
 
 ### Data And Asset Services
 

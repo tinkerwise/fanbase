@@ -46,8 +46,9 @@
   - Podcast: compact audio player for the latest Baseball Tonight with Buster Olney episode, placed above Video with episode/detail/archive links
     - RSS feed: https://feeds.megaphone.fm/ESP1723897648
     - Archive/details page: https://www.espn.com/espnradio/podcast/archive?id=2386164
-  - Video: latest video from MLB Fastcast, MLB Top Plays, Orioles Game Recaps, and The Chill plus a random Orioles Moments video on each page load (YouTube RSS), play icon overlay on thumbnails, theater mode overlay with YouTube embed on click
-    - YouTube playlist feeds: MLB Fastcast, MLB Top Plays, Orioles Game Recaps, The Chill, Orioles Moments
+  - Video: latest video from MLB Fastcast, MLB Top Plays, Orioles Game Recaps, and a random Orioles Moments video on each page load, play icon overlay on thumbnails, theater mode overlay with YouTube embed on click
+    - YouTube playlist feeds: MLB Fastcast, MLB Top Plays, Orioles Game Recaps, Orioles Moments
+    - Orioles Game Recaps fall back to MLB game media for the latest completed Orioles game when the Orioles YouTube playlist is stale
   - On Deck: next Orioles game with opponent, date/time, venue, weather forecast, lineup popover on hover (game day)
   - Schedule: horizontal row of game boxes (day, opponent logo, @ indicator for away), links to MLB preview (merged into On Deck widget)
   - Standings: all 6 divisions with division tabs, Orioles highlighted, team abbreviations link to MLB.com
@@ -113,8 +114,8 @@
 
 ##Queued
 - Add items here for the likely next batch of work
+- any ideas on how to use this https://www.mlb.com/schedule/gameday/scout on site?
+
+##Parking lot 
 - Simplify deployment to one official path, likely GitHub Actions FTP deploy with an explicit remote target so cPanel Git Version Control is no longer part of the normal release flow
-
-
-##Ideas
 - Create a companion mobile app (iOS, Android) based on BIG IDEA #1

@@ -569,12 +569,14 @@ function topPerformers(boxData) {
   if (topHit.length) {
     html += '<div class="box-performers"><span class="box-perf-label">Top Hitters</span>';
     html += topHit.map(b => {
-      const line = `${b.hits}-${b.ab}`;
       const extras = [];
+      if (b.hits > 0 && b.ab > 0) extras.push(`${b.hits}-${b.ab}`);
+      else if (b.ab > 0) extras.push(`${b.ab} AB`);
       if (b.hr) extras.push(`${b.hr} HR`);
       if (b.rbi) extras.push(`${b.rbi} RBI`);
       if (b.bb) extras.push(`${b.bb} BB`);
-      return `<span class="box-perf-row"><span class="box-perf-name">${esc(b.name)}</span> <span class="box-perf-team">${esc(b.abbr)}</span> <span class="box-perf-stat">${line}${extras.length ? ', ' + extras.join(', ') : ''}</span></span>`;
+      const statLine = extras.join(', ') || 'No notable line';
+      return `<span class="box-perf-row"><span class="box-perf-name">${esc(b.name)}</span> <span class="box-perf-team">${esc(b.abbr)}</span> <span class="box-perf-stat">${statLine}</span></span>`;
     }).join('');
     html += '</div>';
   }
@@ -668,9 +670,14 @@ function renderPitchingLines(boxData) {
     return `<div class="box-performers">
       <span class="box-perf-label">${esc(label)} Pitching</span>
       ${pitchers.map(p => {
-        const extras = [`${p.ip} IP`, `${p.h} H`, `${p.er} ER`, `${p.bb} BB`, `${p.k} K`];
-        if (p.pitches != null) extras.push(`${p.pitches} P`);
-        return `<span class="box-perf-row"><span class="box-perf-name">${esc(p.name)}</span><span class="box-perf-stat">${extras.join(', ')}</span></span>`;
+        const extras = [];
+        if (parseFloat(p.ip) > 0) extras.push(`${p.ip} IP`);
+        if (p.h > 0) extras.push(`${p.h} H`);
+        if (p.er > 0) extras.push(`${p.er} ER`);
+        if (p.bb > 0) extras.push(`${p.bb} BB`);
+        if (p.k > 0) extras.push(`${p.k} K`);
+        if ((p.pitches ?? 0) > 0) extras.push(`${p.pitches} P`);
+        return `<span class="box-perf-row"><span class="box-perf-name">${esc(p.name)}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
       }).join('')}
     </div>`;
   };
@@ -1680,34 +1687,109 @@ async function loadInjuryReport() {
 const YT_PLAYLISTS = [
   { id: 'PLL-lmlkrmJakABrOT6FmV0mU-5oIF8nGu', label: 'MLB Fastcast' },
   { id: 'PLL-lmlkrmJalPg-EgiZ92Eyg9YodLbQsE', label: 'MLB Top Plays' },
-  { id: 'PLoeYQM_iUEVyoMu-AIZFXs9ja6GMzF1Ce', label: 'Orioles Game Recaps' },
-  { id: 'PLoeYQM_iUEVy440XCy6hNLnQf8OBBsdSl', label: 'The Chill' },
   { id: 'PLoeYQM_iUEVwNa9HwsFfS0aWvshxoYnhy', label: 'Orioles Moments', random: true },
 ];
+const ORIOLES_RECAP_PLAYLIST = 'PLoeYQM_iUEVyoMu-AIZFXs9ja6GMzF1Ce';
+
+function extractVideoId(link) {
+  return link.match(/v=([^&]+)/)?.[1] || link.match(/youtu\.be\/([^?&]+)/)?.[1] || '';
+}
+
+async function fetchPlaylistVideo(pl) {
+  const url = `${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${pl.id}`)}`;
+  const data = await fetch(url).then(r => r.json());
+  const items = data.items ?? [];
+  if (!items.length) return null;
+  const item = pl.random
+    ? items[Math.floor(Math.random() * items.length)]
+    : items[0];
+  if (!item) return null;
+  const link = item.link || '';
+  const videoId = extractVideoId(link);
+  return {
+    title: cleanFeedText(item.title),
+    label: pl.label,
+    thumb: item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : ''),
+    url: link,
+    videoId,
+  };
+}
+
+function shortGameDate(dateStr) {
+  const d = new Date(`${dateStr}T12:00:00`);
+  if (isNaN(d)) return '';
+  const yy = String(d.getFullYear()).slice(-2);
+  return `${d.getMonth() + 1}/${d.getDate()}/${yy}`;
+}
+
+function pickMlbRecapItem(game) {
+  const groups = game?.content?.media?.epgAlternate ?? [];
+  const items = groups.flatMap(group => group.items ?? []);
+  const preferred = items.find(item =>
+    item.keywordsAll?.some(keyword => keyword.value === 'mlb_recap' || keyword.value === 'game-recap')
+  );
+  return preferred || items.find(item =>
+    item.keywordsAll?.some(keyword => keyword.value === 'condensed_game' || keyword.value === 'condensed-game')
+  ) || null;
+}
+
+function thumbnailForMlbItem(item) {
+  const cuts = item?.image?.cuts ?? [];
+  return cuts.find(cut => cut.width === 640)?.src
+    || cuts.find(cut => cut.aspectRatio === '16:9')?.src
+    || '';
+}
+
+async function fetchOriolesRecapVideo() {
+  const endDate = localDateStr(0);
+  const startDate = localDateStr(-4);
+
+  const [playlistData, gameData] = await Promise.all([
+    fetch(`${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${ORIOLES_RECAP_PLAYLIST}`)}`).then(r => r.json()),
+    fetch(`${MLB}/schedule?sportId=1&teamId=${ORIOLES_ID}&startDate=${startDate}&endDate=${endDate}&hydrate=game(content(media(epg)))`).then(r => r.json()),
+  ]);
+
+  const recapItems = playlistData.items ?? [];
+  const completedGames = (gameData.dates ?? [])
+    .flatMap(date => date.games ?? [])
+    .filter(game => game.status?.abstractGameState === 'Final')
+    .sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
+  const latestGame = completedGames[0] ?? null;
+  const targetDate = latestGame?.officialDate ? shortGameDate(latestGame.officialDate) : '';
+
+  const matchingPlaylistItem = targetDate
+    ? recapItems.find(item => (item.title || '').includes(`(${targetDate})`))
+    : recapItems[0];
+
+  if (matchingPlaylistItem) {
+    const link = matchingPlaylistItem.link || '';
+    const videoId = extractVideoId(link);
+    return {
+      title: cleanFeedText(matchingPlaylistItem.title),
+      label: 'Orioles Game Recaps',
+      thumb: matchingPlaylistItem.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : ''),
+      url: link,
+      videoId,
+    };
+  }
+
+  const mlbItem = latestGame ? pickMlbRecapItem(latestGame) : null;
+  if (!mlbItem) return null;
+
+  return {
+    title: cleanFeedText(mlbItem.headline || mlbItem.title || mlbItem.blurb || 'Orioles Recap'),
+    label: 'Orioles Recap',
+    thumb: thumbnailForMlbItem(mlbItem),
+    url: `https://www.mlb.com/video/${mlbItem.slug || mlbItem.id}`,
+    videoId: '',
+  };
+}
 
 async function loadVideos() {
   const wrap = $('videoWrap');
   try {
     const results = await Promise.allSettled(
-      YT_PLAYLISTS.map(async pl => {
-        const url = `${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${pl.id}`)}`;
-        const data = await fetch(url).then(r => r.json());
-        const items = data.items ?? [];
-        if (!items.length) return null;
-        const item = pl.random
-          ? items[Math.floor(Math.random() * items.length)]
-          : items[0];
-        if (!item) return null;
-        const link = item.link || '';
-        const videoId = link.match(/v=([^&]+)/)?.[1] || link.match(/youtu\.be\/([^?&]+)/)?.[1] || '';
-        return {
-          title: cleanFeedText(item.title),
-          label: pl.label,
-          thumb: item.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : ''),
-          url: link,
-          videoId,
-        };
-      })
+      [fetchOriolesRecapVideo(), ...YT_PLAYLISTS.map(fetchPlaylistVideo)]
     );
 
     const videos = results

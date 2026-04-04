@@ -16,6 +16,10 @@ Documentation
 - Updated `README.md`, `brief.txt`, `updates.txt`, and `changelog.txt` to reflect the shipped podcast player and proxy support.
 - Added a fuller documentation inventory of the site's external RSS feeds, podcast sources, video playlists, APIs, and asset providers.
 
+Video Widget
+- Removed The Chill from the video rotation.
+- Kept Orioles Game Recaps in the widget, but now fall back to MLB game media for the latest completed Orioles game when the Orioles YouTube recap playlist is stale.
+
 April 3, 2026
 
 Masthead
