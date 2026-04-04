@@ -112,6 +112,8 @@
 ##Active
 - Add items here for immediate implementation
 - update On Deck to switch to next day's game when today's game starts
+- Make Scout Notes prioritize and surface the single most interesting note first
+- Add batter/pitcher handedness or batting-order pocket notes for more matchup context
 - add team logo inline leading to player names in Score Bug popover
 - list pitchers based on appearance in game starters first, relievers as they enter game
 - 

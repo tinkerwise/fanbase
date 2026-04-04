@@ -859,6 +859,7 @@ function renderBoxScore(g, boxData) {
   const scoutNotes = renderScoutNotes(g);
 
   return `<div class="box-popover-stack">
+    ${scoutNotes}
     <div class="box-section box-linescore">
       <table class="box-score-table">
         <thead><tr>${hdr}</tr></thead>
@@ -869,7 +870,6 @@ function renderBoxScore(g, boxData) {
       </table>
       ${decisions}
     </div>
-    ${scoutNotes}
     ${performers}
     ${pitchingLines}
     ${renderLineupPopover(boxData)}
