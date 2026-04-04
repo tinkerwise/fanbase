@@ -1,6 +1,6 @@
 **Maintainer Brief**
 
-Yard Report is a single-page Astro site with a thin static shell and a very thick client script. The core implementation lives in [app.js](/Users/briancsmith/Documents/GitHub/yardreport/src/scripts/app.js), which owns state, data fetching, rendering, event wiring, settings, and Easter eggs. The page markup in [index.astro](/Users/briancsmith/Documents/GitHub/yardreport/src/pages/index.astro) is mostly stable scaffolding, and [style.css](/Users/briancsmith/Documents/GitHub/yardreport/public/style.css) carries nearly all layout and component styling. `updates.txt` is effectively the product backlog and prompt contract.
+Yard Report is a single-page Astro site with a thin static shell and a very thick client script. The core implementation lives in [app.js](/Users/briancsmith/Documents/GitHub/yardreport/src/scripts/app.js), which owns state, data fetching, rendering, event wiring, settings, Easter eggs, and sidebar widgets like video and the new podcast player. The page markup in [index.astro](/Users/briancsmith/Documents/GitHub/yardreport/src/pages/index.astro) is mostly stable scaffolding, and [style.css](/Users/briancsmith/Documents/GitHub/yardreport/public/style.css) carries nearly all layout and component styling. `updates.txt` is effectively the product backlog and prompt contract.
 
 **What’s Fragile**
 
@@ -8,8 +8,8 @@ The biggest risk is the “all roads lead to one file” setup in [app.js](/User
 - `renderArticles()` and `renderCard()` drive most feed UX; changes here can break reader opening, read/unread state, bundles, or swipe behavior.
 - `getFilteredArticles()` is the source of truth for what appears; filter bugs will ripple everywhere.
 - `setupEvents()` is large and centralized; new controls should be added carefully to avoid duplicated listeners or state drift.
-- Score/on-deck/transactions/leaders all depend on third-party APIs with no formal abstraction layer, so breakage from upstream response changes is a real risk.
-- There is both a dev-time JS proxy in [astro.config.mjs](/Users/briancsmith/Documents/GitHub/yardreport/astro.config.mjs) and a production PHP proxy in [rss-proxy.php](/Users/briancsmith/Documents/GitHub/yardreport/public/rss-proxy.php); feed issues may differ between local and deployed environments, especially now that the proxy also supports trusted raw HTML/text passthrough for widget enrichment.
+- Score/on-deck/transactions/leaders/video/podcast all depend on third-party APIs or feeds with no formal abstraction layer, so breakage from upstream response changes is a real risk.
+- There is both a dev-time JS proxy in [astro.config.mjs](/Users/briancsmith/Documents/GitHub/yardreport/astro.config.mjs) and a production PHP proxy in [rss-proxy.php](/Users/briancsmith/Documents/GitHub/yardreport/public/rss-proxy.php); feed issues may differ between local and deployed environments, especially now that the proxy also supports trusted raw HTML/text passthrough for widget enrichment and audio-enclosure extraction for the podcast widget.
 
 **How I’d Approach Future Prompts**
 
@@ -22,6 +22,7 @@ For safety, I’d usually preserve:
 - existing filters, reader behavior, and localStorage prefs
 - mobile-first constraints and content density rules
 - Orioles-first prioritization in scores, schedule, and sidebar widgets
+- the lightweight sidebar pattern: a single compact podcast card above the video stack, rather than a dense multi-episode media rail
 - the current feed-toolbar alignment pattern: category pills left, source/view controls right
 
 **Best Next Refactors**
@@ -37,6 +38,7 @@ If we want the repo easier to maintain without changing behavior, the highest-va
 The prompts that will work best with this repo are specific and scoped, like:
 - “Add X to the feed toolbar without changing current mobile behavior”
 - “Update the video widget playlists or rotation logic without changing theater-mode behavior”
+- “Adjust the podcast card placement or feed source without turning it into a heavy media experience”
 - “Refine the On Deck card to show Y and keep the current visual style”
 - “Implement the next unchecked item from `updates.txt`”
 - “Refactor just the leaders widget into a separate module without changing output”

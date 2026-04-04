@@ -43,6 +43,7 @@
 
 #Left Sidebar
   - Search
+  - Podcast: compact audio player for the latest Baseball Tonight with Buster Olney episode, placed above Video with episode/detail/archive links
   - Video: latest video from MLB Fastcast, MLB Top Plays, Orioles Game Recaps, and The Chill plus a random Orioles Moments video on each page load (YouTube RSS), play icon overlay on thumbnails, theater mode overlay with YouTube embed on click
   - On Deck: next Orioles game with opponent, date/time, venue, weather forecast, lineup popover on hover (game day)
   - Schedule: horizontal row of game boxes (day, opponent logo, @ indicator for away), links to MLB preview (merged into On Deck widget)
@@ -81,11 +82,12 @@
 #Infrastructure
   - Astro static site deployed to cPanel via Git Version Control
   - GitHub Actions CI/CD (build + lftp deploy)
-  - PHP RSS proxy with domain allowlist (includes youtube.com) and optional raw text/HTML passthrough for trusted pages
+  - PHP RSS proxy with domain allowlist (includes youtube.com and megaphone.fm), audio-enclosure extraction, and optional raw text/HTML passthrough for trusted pages
   - MLB Stats API for scores, standings, schedule, roster, transactions, leaders, boxscore
   - Open-Meteo API for weather forecasts (all 30 MLB venues)
   - Google Favicon API for source icons
   - YouTube RSS feeds for video widget
+  - Megaphone RSS feed for podcast widget
 
 
 #PROMPT UPDATES
@@ -101,7 +103,6 @@
 
 ##Active
 - Add items here for immediate implementation
-- Add an audio player for my favorite podcast... BBTN (Baseball Tonight podcast)
 
 ##Queued
 - Add items here for the likely next batch of work

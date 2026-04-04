@@ -1,6 +1,20 @@
 Yard Report Changelog
 Week of March 28 - April 3, 2026
 
+April 4, 2026
+
+Podcast Widget
+- Added a compact `Baseball Tonight with Buster Olney` player above the Video widget in the left sidebar.
+- The podcast card now loads the latest playable episode from the public feed and renders a small native audio player with `preload="none"` to keep browser load down.
+- Added direct links to the episode details page and the show archive as lightweight fallbacks.
+
+Infrastructure
+- Extended the RSS proxy allowlist to include Megaphone so the podcast feed can be fetched safely in production.
+- Updated the proxy JSON payload to expose audio enclosure URLs and MIME types in addition to images and text content.
+
+Documentation
+- Updated `README.md`, `brief.txt`, `updates.txt`, and `changelog.txt` to reflect the shipped podcast player and proxy support.
+
 April 3, 2026
 
 Masthead

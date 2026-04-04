@@ -9,7 +9,7 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 - Includes category, source, search, sort, and date-range filtering
 - Bundles major cross-source stories into "Around the Horn" groups
 - Shows score bugs for yesterday, today, and tomorrow, including live state, delays/postponements, weather, and box score hover details
-- Surfaces Orioles-focused sidebar widgets for On Deck, standings, Yard Leaders, roster, injury report, transactions, and video
+- Surfaces Orioles-focused sidebar widgets for On Deck, standings, Yard Leaders, roster, injury report, transactions, a compact podcast player, and video
 - Persists theme, default view, and read/unread state in localStorage
 
 ## Current Highlights
@@ -21,6 +21,7 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 - Yard Leaders widget with Baseball Savant player/stat links
 - Injury Report with IL type and injury note
 - Transactions widget covering the last 14 days
+- Podcast widget with a small native audio player for the latest `Baseball Tonight with Buster Olney` episode plus episode/archive links
 - Video widget with MLB Fastcast, MLB Top Plays, Orioles Game Recaps, The Chill, and a random Orioles Moments video on each page load
 - Easter eggs including `magic`, `heritage`, Konami Code, and the hidden OPACY theme
 
@@ -32,6 +33,7 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 - Open-Meteo for ballpark forecasts
 - Google Favicon API for source icons
 - PHP RSS proxy for production feed/text fetching
+- Megaphone RSS feed for the podcast widget
 - Dev-only Astro middleware proxy for local development
 
 ## Local Development
