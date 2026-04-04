@@ -148,7 +148,7 @@ const oe="/yardreport/rss-proxy.php",We={200:"AL West",201:"AL East",202:"AL Cen
           <span class="video-channel">${d(s.label)}</span>
           <span class="video-title">${d(s.title)}</span>
         </div>
-      </div>`).join("")}</div>`,e.querySelectorAll(".video-item").forEach(s=>{s.style.cursor="pointer",s.addEventListener("click",()=>{const r=s.dataset.videoId;r?St(r):window.open(s.dataset.videoUrl,"_blank")})})}catch{e.innerHTML='<span class="sidebar-msg">Unavailable</span>'}}const Lt="https://feeds.megaphone.fm/ESP1723897648",R="https://www.espn.com/espnradio/podcast/archive/_/id/10528553";async function kt(){const e=p("podcastWrap");try{const t=`${oe}?url=${encodeURIComponent(Lt)}`,s=((await fetch(t).then(c=>c.json())).items??[]).find(c=>c.audioUrl);if(!s?.audioUrl){e.innerHTML=`<div class="podcast-card">
+      </div>`).join("")}</div>`,e.querySelectorAll(".video-item").forEach(s=>{s.style.cursor="pointer",s.addEventListener("click",()=>{const r=s.dataset.videoId;r?St(r):window.open(s.dataset.videoUrl,"_blank")})})}catch{e.innerHTML='<span class="sidebar-msg">Unavailable</span>'}}const Lt="https://feeds.megaphone.fm/ESP1723897648",R="https://www.espn.com/espnradio/podcast/archive?id=2386164";async function kt(){const e=p("podcastWrap");try{const t=`${oe}?url=${encodeURIComponent(Lt)}`,s=((await fetch(t).then(c=>c.json())).items??[]).find(c=>c.audioUrl);if(!s?.audioUrl){e.innerHTML=`<div class="podcast-card">
         <span class="podcast-kicker">Baseball Tonight</span>
         <div class="podcast-title">Podcast feed is temporarily unavailable.</div>
         <div class="podcast-links">

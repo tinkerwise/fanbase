@@ -109,5 +109,4 @@
 
 
 ##Ideas
-- BIG IDEA #1: fork to create similar site where users can customize site based on their favorite teams, news sources
-- BIG IDEA #2: Create a companion mobile app (iOS, Android) based on BIG IDEA #1
+- Create a companion mobile app (iOS, Android) based on BIG IDEA #1

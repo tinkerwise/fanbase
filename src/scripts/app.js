@@ -1722,7 +1722,7 @@ async function loadVideos() {
 
 // ── Podcast Widget ───────────────────────────────────────────────
 const PODCAST_FEED = 'https://feeds.megaphone.fm/ESP1723897648';
-const PODCAST_SHOW_URL = 'https://www.espn.com/espnradio/podcast/archive/_/id/10528553';
+const PODCAST_SHOW_URL = 'https://www.espn.com/espnradio/podcast/archive?id=2386164';
 
 async function loadPodcast() {
   const wrap = $('podcastWrap');
