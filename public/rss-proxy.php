@@ -41,6 +41,7 @@ $allowed_domains = [
     'nytimes.com',
     'substack.com',
     'youtube.com',
+    'megaphone.fm',
 ];
 
 $host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
@@ -208,6 +209,17 @@ foreach ($entries as $entry) {
         }
     }
 
+    $audio_url = null;
+    $audio_type = null;
+    if (!empty($entry->enclosure)) {
+        $enc = $entry->enclosure->attributes();
+        $enc_type = strtolower((string)($enc['type'] ?? ''));
+        if (strpos($enc_type, 'audio/') === 0) {
+            $audio_url = (string)($enc['url'] ?? '');
+            $audio_type = $enc_type ?: null;
+        }
+    }
+
     // Extract first <img> from content
     if (!$thumbnail && $content) {
         if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $m)) {
@@ -222,6 +234,8 @@ foreach ($entries as $entry) {
         'description' => $description,
         'content'     => $content,
         'thumbnail'   => $thumbnail ?: null,
+        'audioUrl'    => $audio_url,
+        'audioType'   => $audio_type,
     ];
 
     if (count($items) >= 20) break;

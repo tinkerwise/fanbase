@@ -101,11 +101,10 @@
 
 ##Active
 - Add items here for immediate implementation
+- Add an audio player for my favorite podcast... BBTN (Baseball Tonight podcast)
 
 ##Queued
 - Add items here for the likely next batch of work
-- Review entirety of site for legal issues and concerns
-- Ponder ability to place ads on site to generate some income
 
 
 ##Ideas

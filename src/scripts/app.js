@@ -1720,6 +1720,60 @@ async function loadVideos() {
   }
 }
 
+// ── Podcast Widget ───────────────────────────────────────────────
+const PODCAST_FEED = 'https://feeds.megaphone.fm/ESP1723897648';
+const PODCAST_SHOW_URL = 'https://www.espn.com/espnradio/podcast/archive/_/id/10528553';
+
+async function loadPodcast() {
+  const wrap = $('podcastWrap');
+  try {
+    const url = `${PROXY}?url=${encodeURIComponent(PODCAST_FEED)}`;
+    const data = await fetch(url).then(r => r.json());
+    const episode = (data.items ?? []).find(item => item.audioUrl);
+
+    if (!episode?.audioUrl) {
+      wrap.innerHTML = `<div class="podcast-card">
+        <span class="podcast-kicker">Baseball Tonight</span>
+        <div class="podcast-title">Podcast feed is temporarily unavailable.</div>
+        <div class="podcast-links">
+          <a class="podcast-link" href="${PODCAST_SHOW_URL}" target="_blank" rel="noopener">Open show page ↗</a>
+        </div>
+      </div>`;
+      return;
+    }
+
+    const title = cleanFeedText(episode.title || 'Latest episode');
+    const description = cleanFeedText(episode.description || '');
+    const dateLabel = relativeDate(episode.pubDate);
+    const descHtml = description ? `<div class="podcast-desc">${esc(description)}</div>` : '';
+
+    wrap.innerHTML = `<div class="podcast-card">
+      <span class="podcast-kicker">Baseball Tonight</span>
+      <div class="podcast-title">${esc(title)}</div>
+      <div class="podcast-meta">
+        <span>${esc(dateLabel || 'Latest episode')}</span>
+        <span>Buster Olney</span>
+      </div>
+      <audio class="podcast-player" controls preload="none">
+        <source src="${esc(episode.audioUrl)}" type="${esc(episode.audioType || 'audio/mpeg')}">
+      </audio>
+      ${descHtml}
+      <div class="podcast-links">
+        <a class="podcast-link" href="${esc(episode.link || PODCAST_SHOW_URL)}" target="_blank" rel="noopener">Episode details ↗</a>
+        <a class="podcast-link" href="${PODCAST_SHOW_URL}" target="_blank" rel="noopener">Show archive ↗</a>
+      </div>
+    </div>`;
+  } catch {
+    wrap.innerHTML = `<div class="podcast-card">
+      <span class="podcast-kicker">Baseball Tonight</span>
+      <div class="podcast-title">Podcast feed is temporarily unavailable.</div>
+      <div class="podcast-links">
+        <a class="podcast-link" href="${PODCAST_SHOW_URL}" target="_blank" rel="noopener">Open show page ↗</a>
+      </div>
+    </div>`;
+  }
+}
+
 // ── Video Theater Overlay ────────────────────────────────────────
 function openVideoTheater(videoId) {
   let overlay = document.getElementById('videoTheater');
@@ -2292,6 +2346,7 @@ async function init() {
     loadTransactions(),
     loadInjuryReport(),
     loadLeaders(),
+    loadPodcast(),
     loadVideos(),
   ]);
 }
