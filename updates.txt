@@ -111,41 +111,11 @@
 
 ##Active
 - Add items here for immediate implementation
+- update On Deck to switch to next day's game when today's game starts
 
 ##Queued
 - Add items here for the likely next batch of work
-- Create Orioles-only Scout Notes for live games
 - any ideas on how to use this https://www.mlb.com/schedule/gameday/scout on site?
-  - Best fit: add a lightweight "Scout Notes" layer to Orioles live-game surfaces, not a full separate page
-  - Candidate placement #1: inside the live Score Bug popover as 1-3 short bullets
-  - Candidate placement #2: inside On Deck / live game card as one rotating insight chip
-  - Candidate placement #3: article/feed context card during Orioles live games
-  - Good insight types:
-    - hitter hot/cold note over last few ABs
-    - pitcher pitch-mix or whiff-rate note
-    - matchup edge note (batter vs pitch type / handedness)
-    - leverage note (RISP, high-leverage PA, save situation)
-    - defense/baserunning note only when visually obvious and high value
-  - Keep it compact:
-    - max 1 insight in collapsed view
-    - max 3 insights in popover
-    - no giant AI paragraph blocks
-  - Preferred visual treatment:
-    - small "Scout" badge
-    - muted panel with one accent color
-    - timestamp or inning context so it feels live
-  - Safety/UX rules:
-    - Orioles-only at first
-    - live games only at first
-    - never let it push scores or core game state below the fold
-    - if data is weak/unavailable, hide the module entirely
-  - Easiest first version:
-    - manual/templated "Scout-style" notes generated from existing MLB Stats API game state
-    - examples: "Bautista entering save situation", "Lefty-heavy pocket due up", "Runner on second with one out"
-  - Higher-upside version later:
-    - pull MLB game-content media/editorial if Scout-like summaries become available via a stable feed/API path
-  - Best MVP:
-    - Orioles live Score Bug popover gets a tiny Scout Notes section below boxscore/lineups
 
 ##Parking lot 
 - Create a companion mobile app (iOS, Android) based on BIG IDEA #1
