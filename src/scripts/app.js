@@ -685,6 +685,99 @@ function renderPitchingLines(boxData) {
   return renderSide('away') + renderSide('home');
 }
 
+function renderScoutNotes(game) {
+  const isLive = game.status?.abstractGameState === 'Live';
+  const awayId = game.teams?.away?.team?.id;
+  const homeId = game.teams?.home?.team?.id;
+  const isOriolesGame = awayId === ORIOLES_ID || homeId === ORIOLES_ID;
+  if (!isLive || !isOriolesGame) return '';
+
+  const ls = game.linescore ?? {};
+  const offense = ls.offense ?? {};
+  const defense = ls.defense ?? {};
+  const inning = ls.currentInning ?? '';
+  const half = ls.inningHalf === 'Top' ? 'top' : 'bottom';
+  const outs = ls.outs ?? 0;
+  const balls = ls.balls ?? null;
+  const strikes = ls.strikes ?? null;
+  const runnersOn = [offense.first, offense.second, offense.third].filter(Boolean).length;
+  const risp = [offense.second, offense.third].filter(Boolean).length;
+  const basesLoaded = Boolean(offense.first && offense.second && offense.third);
+  const oriolesBatting = offense.team?.id === ORIOLES_ID;
+  const oriolesPitching = defense.team?.id === ORIOLES_ID;
+  const oriolesScore = awayId === ORIOLES_ID ? (game.teams?.away?.score ?? 0) : (game.teams?.home?.score ?? 0);
+  const oppScore = awayId === ORIOLES_ID ? (game.teams?.home?.score ?? 0) : (game.teams?.away?.score ?? 0);
+  const diff = oriolesScore - oppScore;
+  const notes = [];
+
+  if (oriolesBatting) {
+    if (basesLoaded) {
+      notes.push(`Bases loaded for Baltimore in the ${half} of the ${inning}${ordinalSuffix(inning)}.`);
+    } else if (risp > 0) {
+      notes.push(`Orioles have ${risp} runner${risp === 1 ? '' : 's'} in scoring position with ${outs} out${outs === 1 ? '' : 's'}.`);
+    } else if (offense.first && outs === 0) {
+      notes.push('Leadoff traffic for Baltimore with a runner aboard and nobody out.');
+    }
+
+    if (diff < 0) {
+      if (diff === -1) notes.push('The tying run is at the plate for Baltimore.');
+      else if (diff === -2 && runnersOn >= 1) notes.push('Baltimore has the tying run aboard.');
+      else if (diff === -3 && runnersOn >= 2) notes.push('Baltimore has the tying rally brewing with multiple runners on.');
+    } else if (diff >= 0 && inning >= 7 && runnersOn > 0) {
+      notes.push('Baltimore has a chance to tack on late with traffic on the bases.');
+    }
+
+    if (balls === 3 && strikes !== 2) {
+      notes.push('Hitter-friendly count for the Orioles in this plate appearance.');
+    }
+  }
+
+  if (oriolesPitching) {
+    if (diff > 0 && inning >= 8 && diff <= 3) {
+      notes.push('Save-pressure spot for Orioles pitching.');
+    }
+    if (offense.first && outs < 2) {
+      notes.push('Potential double-play chance for the Orioles infield.');
+    }
+    if (risp > 0) {
+      notes.push(`Baltimore is pitching through traffic with ${risp} in scoring position.`);
+    }
+    if (strikes === 2 && balls != null && balls <= 1) {
+      notes.push('Orioles pitcher is ahead in the count.');
+    }
+  }
+
+  if (Math.abs(diff) <= 2 && inning >= 7) {
+    notes.push(`Late leverage spot: this game is still within ${Math.abs(diff)} run${Math.abs(diff) === 1 ? '' : 's'}.`);
+  }
+
+  const uniqueNotes = [...new Set(notes)].slice(0, 3);
+  if (!uniqueNotes.length) return '';
+
+  return `<div class="scout-notes">
+    <div class="scout-notes-head">
+      <span class="scout-badge">Scout</span>
+      <span class="scout-context">${esc(ls.inningHalf || '')} ${esc(String(inning || ''))}</span>
+    </div>
+    <div class="scout-notes-list">
+      ${uniqueNotes.map(note => `<div class="scout-note-row">${esc(note)}</div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function ordinalSuffix(num) {
+  const n = Number(num);
+  if (!Number.isFinite(n)) return '';
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 13) return 'th';
+  switch (n % 10) {
+    case 1: return 'st';
+    case 2: return 'nd';
+    case 3: return 'rd';
+    default: return 'th';
+  }
+}
+
 function renderBoxScore(g, boxData) {
   const isPreview = g.status.abstractGameState === 'Preview';
   if (isPreview) {
@@ -745,6 +838,7 @@ function renderBoxScore(g, boxData) {
 
   const performers = topPerformers(boxData);
   const pitchingLines = renderPitchingLines(boxData);
+  const scoutNotes = renderScoutNotes(g);
 
   return `<table class="box-score-table">
     <thead><tr>${hdr}</tr></thead>
@@ -752,7 +846,7 @@ function renderBoxScore(g, boxData) {
       <tr>${awayRow}</tr>
       <tr>${homeRow}</tr>
     </tbody>
-  </table>${decisions}${performers}${pitchingLines}${renderLineupPopover(boxData)}`;
+  </table>${decisions}${performers}${pitchingLines}${scoutNotes}${renderLineupPopover(boxData)}`;
 }
 
 async function loadScores() {

@@ -115,6 +115,7 @@
 
 ##Queued
 - Add items here for the likely next batch of work
+- remove the Story link at the bottom of the final Score Bug
 - any ideas on how to use this https://www.mlb.com/schedule/gameday/scout on site?
 
 ##Parking lot 

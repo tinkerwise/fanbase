@@ -430,6 +430,51 @@ img { display: block; max-width: 100%; }
 .box-perf-name { font-weight: 600; color: var(--text-1); }
 .box-perf-team { color: var(--text-3); font-size: 0.6rem; }
 .box-perf-stat { color: var(--text-2); margin-left: auto; white-space: nowrap; }
+.scout-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px 9px;
+  border: 1px solid color-mix(in srgb, var(--orange) 22%, var(--border) 78%);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--orange) 8%, transparent);
+}
+.scout-notes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.scout-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(223, 70, 1, 0.18);
+  color: var(--orange);
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.scout-context {
+  font-size: 0.58rem;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.scout-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.scout-note-row {
+  font-size: 0.67rem;
+  line-height: 1.35;
+  color: var(--text-2);
+}
 .probable-pitchers {
   display: flex;
   flex-direction: column;
