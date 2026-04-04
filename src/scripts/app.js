@@ -544,7 +544,8 @@ function topPerformers(boxData) {
   for (const side of sides) {
     const team = boxData.teams?.[side];
     if (!team) continue;
-    const abbr = TEAM_ABBREV[team.team?.id] ?? team.team?.abbreviation ?? '';
+    const teamId = team.team?.id;
+    const abbr = TEAM_ABBREV[teamId] ?? team.team?.abbreviation ?? '';
     const players = team.players ?? {};
     for (const [, p] of Object.entries(players)) {
       const bs = p.stats?.batting;
@@ -556,7 +557,7 @@ function topPerformers(boxData) {
         const bb = bs.baseOnBalls ?? 0;
         // Score: weight HRs and multi-hit games
         const score = hits * 2 + hr * 5 + rbi * 2 + bb;
-        allBatters.push({ name: p.person?.fullName ?? '', abbr, hits, ab, hr, rbi, bb, score });
+        allBatters.push({ name: p.person?.fullName ?? '', abbr, teamId, hits, ab, hr, rbi, bb, score });
       }
     }
   }
@@ -576,7 +577,8 @@ function topPerformers(boxData) {
       if (b.rbi) extras.push(`${b.rbi} RBI`);
       if (b.bb) extras.push(`${b.bb} BB`);
         const statLine = extras.join(', ') || 'No notable line';
-      return `<span class="box-perf-row"><span class="box-perf-name">${esc(b.name)}</span> <span class="box-perf-team">${esc(b.abbr)}</span> <span class="box-perf-stat">${statLine}</span></span>`;
+      const logoHtml = b.teamId ? `<img class="box-perf-logo" src="https://www.mlbstatic.com/team-logos/${b.teamId}.svg" alt="${esc(b.abbr)}" width="18" height="18">` : '';
+      return `<span class="box-perf-row">${logoHtml}<span class="box-perf-name">${esc(b.name)}</span> <span class="box-perf-stat">${statLine}</span></span>`;
     }).join('');
     html += '</div>';
   }
