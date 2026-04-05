@@ -628,7 +628,7 @@ function resolvePitchName(pitchType = {}) {
     EP: 'Eephus',
   };
 
-  return pitchMap[raw] ?? raw ?? 'Pitch';
+  return pitchMap[raw] || raw || 'Pitch';
 }
 
 function renderPitcherArsenal(arsenalData, { limit = 5, showVelo = true } = {}) {
