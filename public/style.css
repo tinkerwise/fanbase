@@ -384,7 +384,7 @@ img { display: block; max-width: 100%; }
 /* Box score popover */
 .box-score-popover {
   --popover-name-size: 0.71rem;
-  --popover-stat-size: 0.69rem;
+  --popover-stat-size: 0.71rem;
   --popover-meta-size: 0.6rem;
   position: fixed; z-index: 100;
   background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 84%, #f5f7fb 16%), color-mix(in srgb, var(--surface) 92%, #d9e1ec 8%));
