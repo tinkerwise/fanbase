@@ -15,7 +15,6 @@
 
 ##Queued
 // Add items here for the likely next batch of work
-- Scout Notes: surface team tendencies and historical matchup stats for preview games, add to game preview below lineups
 
 ##Parking lot
 - Create a companion mobile app (iOS)
@@ -24,6 +23,17 @@
 ---
 
 ##Recently Completed (April 5, 2026)
+
+# ON DECK
+- ✓ featured game now appears in schedule boxes with orange highlight; previously it was excluded
+
+# SCORE BUG POPOVER
+- ✓ slashline font size bumped 0.66 → 0.72rem
+
+# SCOUT NOTES: PREVIEW MATCHUP CONTEXT
+- ✓ Orioles probable pitcher career line vs opponent (G, opp BA, K) — from /stats?stats=vsTeamTotal
+- ✓ Orioles season batting line (AVG/OBP, R/G) — from /teams/{id}/stats?stats=season
+- ✓ Both follow two-phase async pattern; notes cap raised 3→4 for preview state
 
 # PODCAST AUDIO
 - ✓ show podcast title and description on hover (hover panel with title + description)
