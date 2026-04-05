@@ -812,9 +812,7 @@ function renderPitchingLines(boxData, gameState = 'final') {
           ip: stats.inningsPitched ?? '0.0',
           h: stats.hits ?? 0,
           er: stats.earnedRuns ?? 0,
-          bb: stats.baseOnBalls ?? 0,
           k: stats.strikeOuts ?? 0,
-          hr: stats.homeRuns ?? 0,
           pitches: stats.numberOfPitches ?? null,
           ipNum: parseFloat(stats.inningsPitched ?? 0),
           pitchHand: player.person?.pitchHand?.code ?? '',
@@ -835,23 +833,16 @@ function renderPitchingLines(boxData, gameState = 'final') {
       <span class="score-lineup-box-cols score-lineup-box-cols--pitch">
         <span>IP</span><span>H</span><span>ER</span><span>K</span>
       </span>
-      <span class="score-lineup-notes"></span>
     </div>`;
 
     const rows = pitchers.map((p, i) => {
       const pitchHandDisplay = p.pitchHand ? `<span class="box-perf-hand">${p.pitchHand}</span>` : '';
       const spBadge = i === spIndex ? '<span class="pitcher-role-badge">SP</span>' : '';
       const cols = [p.ip, p.h, p.er, p.k].map(v => `<span>${v}</span>`).join('');
-      const noteTags = [];
-      if (p.bb > 0) noteTags.push(`${p.bb}BB`);
-      if (p.hr > 0) noteTags.push(`${p.hr}HR`);
-      if ((p.pitches ?? 0) > 0) noteTags.push(`${p.pitches}P`);
-      const notes = noteTags.map(t => `<span class="box-notable box-notable--pitch">${t}</span>`).join('');
       return `<div class="score-lineup-row">
         <span class="score-lineup-pos"></span>
         <span class="score-lineup-name">${renderPlayerNameLink(compactBoxName(p.name), p.playerId)}${pitchHandDisplay}${spBadge}</span>
         <span class="score-lineup-box-cols score-lineup-box-cols--pitch">${cols}</span>
-        <span class="score-lineup-notes">${notes}</span>
       </div>`;
     }).join('');
 
