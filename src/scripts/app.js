@@ -1158,10 +1158,10 @@ async function loadScores() {
     boxPopover.addEventListener('mouseenter', () => clearTimeout(boxTimer));
     boxPopover.addEventListener('mouseleave', hideBoxScore);
 
-    // Before noon EDT, keep yesterday's scores front-and-center
+    // Before 09:00 EDT, keep yesterday's scores front-and-center
     const nowUTC = new Date();
     const edtHour = (nowUTC.getUTCHours() - 4 + 24) % 24;
-    const beforeNoonEDT = edtHour < 12;
+    const beforeNoonEDT = edtHour < 9;
     const scrollTarget = beforeNoonEDT
       ? document.getElementById('yesterdayLabel') || document.getElementById('todayLabel')
       : document.getElementById('todayLabel');

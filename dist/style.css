@@ -308,7 +308,7 @@ img { display: block; max-width: 100%; }
 .score-chip:hover { border-color: var(--orange); transform: translateY(-1px); }
 .score-chip.orioles { border-left: 3px solid var(--orange); background: var(--orange-dim); }
 .score-chip.live { border-left: 3px solid #22c55e; }
-.score-chip.delay { border-left: 3px solid #eab308; }
+.score-chip.delay { border-left: 3px solid #3b82f6; }
 .score-chip.postponed { border-left: 3px solid #ef4444; }
 .chip-row {
   display: flex;
@@ -2296,10 +2296,14 @@ a.il-name:hover { color: var(--orange); }
   .ath-section { gap: 10px; margin-bottom: 16px; }
   .ath-section-title { font-size: 1.3rem; }
   .ath-section-desc { font-size: 0.86rem; }
-  .ath-bundle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-  .ath-card-link { max-width: none; aspect-ratio: 4 / 5; }
-  .bundle-card-copy { padding: 14px; }
-  .bundle-title { font-size: 0.98rem; }
+  .ath-bundle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ath-card-link { max-width: none; aspect-ratio: 3 / 4; }
+  .bundle-card-copy { padding: 10px 10px 38px; }
+  .bundle-title { font-size: 0.82rem; min-height: auto; padding: 6px 8px 8px; }
+  .bundle-logo-mark { width: 32px; height: 32px; top: 10px; right: 10px; }
+  .bundle-logo-mark--mlb { width: 32px; height: 32px; border-radius: 7px; }
+  .bundle-card-footer { padding: 7px 10px 9px; }
+  .bundle-sources .source-ico { width: 13px; height: 13px; }
   .ath-page { padding: 28px 14px 48px; }
 
   /* Source popover – full width bottom sheet style */
@@ -2313,4 +2317,10 @@ a.il-name:hover { color: var(--orange); }
   /* Safe areas for notched phones */
   .site-header { padding-top: env(safe-area-inset-top, 0); }
   .page-layout { padding-bottom: calc(48px + env(safe-area-inset-bottom, 0)); }
+}
+
+/* Extra-narrow phones: single-column ATH grid */
+@media (max-width: 400px) {
+  .ath-bundle-grid { grid-template-columns: 1fr; gap: 10px; }
+  .ath-card-link { aspect-ratio: 5 / 3; }
 }
