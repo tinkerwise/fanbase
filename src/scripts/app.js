@@ -2076,7 +2076,7 @@ async function loadOnDeck() {
       await fetchWeatherForGames([next]);
       const wx = getGameWeather(next);
       wxHtml = wx
-        ? `<div class="on-deck-weather"><span>${wx.emoji} ${wx.temp}°F</span><span class="on-deck-wx-desc">${esc(wx.condition)}</span></div>`
+        ? `<div class="on-deck-weather"><span class="on-deck-weather-main">${wx.emoji} ${wx.temp}°F</span><span class="on-deck-wx-desc">${esc(wx.condition)}</span></div>`
         : '';
     }
 
@@ -2100,10 +2100,11 @@ async function loadOnDeck() {
       const gGdDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
       const gUrl = `https://www.mlb.com/gameday/${gAwaySlug}-vs-${gHomeSlug}/${gGdDate}/${g.gamePk}/preview`;
       const isNext = g.gamePk === next.gamePk;
-      return `<a class="sched-box${isNext ? ' sched-box--next' : ''}" href="${gUrl}" target="_blank" rel="noopener">
+      const isLive = g.status?.abstractGameState === 'Live';
+      return `<a class="sched-box${isNext ? ' sched-box--next' : ''}${isLive ? ' sched-box--live' : ''}" href="${gUrl}" target="_blank" rel="noopener">
         <span class="sched-box-day">${esc(gDay)}</span>
         <div class="sched-box-logo-wrap">
-          ${gIsHome ? '' : '<span class="sched-box-at">@</span>'}
+          <span class="sched-box-at">${gIsHome ? 'vs' : '@'}</span>
           <img class="sched-box-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="${esc(gOppAbbr)}" width="22" height="22">
         </div>
       </a>`;
@@ -2116,10 +2117,11 @@ async function loadOnDeck() {
     wrap.innerHTML = `
       <div class="on-deck-card-wrap">
         <a class="on-deck-card" href="${gdUrl}" target="_blank" rel="noopener">
+          ${wxHtml}
           <div class="on-deck-matchup">
-            <span class="on-deck-vs">${isHome ? 'vs' : '@'} ${esc(oppAbbr)}</span>
+            <span class="on-deck-at">${isHome ? 'vs' : '@'}</span>
             <img class="on-deck-logo" src="https://www.mlbstatic.com/team-logos/${opponent.team.id}.svg" alt="" width="28" height="28">
-            ${wxHtml}
+            <span class="on-deck-opp">${esc(oppAbbr)}</span>
           </div>
           <div class="on-deck-details">
             <span class="on-deck-date">${esc(dateStr)} · ${esc(timeStr)}</span>
