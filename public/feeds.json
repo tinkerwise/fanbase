@@ -5,13 +5,11 @@
   { "id": "birdswatcher", "name": "Birds Watcher",       "url": "https://birdswatcher.com/feed/",                                 "color": "#fb923c", "category": "orioles" },
   { "id": "eutaw",        "name": "Eutaw St Report",     "url": "https://www.eutawstreetreport.com/feed/",                        "color": "#d97706", "category": "orioles" },
   { "id": "masn",         "name": "MASN Sports",         "url": "https://www.masnsports.com/feed",                                "color": "#dc2626", "category": "orioles" },
-  { "id": "ohangout",     "name": "Orioles Hangout",     "url": "https://www.orioleshangout.com/feed/",                           "color": "#ea580c", "category": "orioles" },
   { "id": "mlb",          "name": "MLB.com",             "url": "https://www.mlb.com/feeds/news/rss.xml",                         "color": "#002d72", "category": "mlb"     },
   { "id": "mlbtr",        "name": "MLB Trade Rumors",    "url": "https://www.mlbtraderumors.com/baltimore-orioles/feed",           "color": "#eab308", "category": "mlb"     },
   { "id": "espn",         "name": "ESPN MLB",            "url": "https://www.espn.com/espn/rss/mlb/news",                         "color": "#cc0000", "category": "mlb"     },
   { "id": "fangraphs",    "name": "FanGraphs",           "url": "https://blogs.fangraphs.com/feed/",                              "color": "#22c55e", "category": "mlb"     },
   { "id": "bp",           "name": "Baseball Prospectus",  "url": "https://www.baseballprospectus.com/tag/baltimore-orioles/feed/", "color": "#1e40af", "category": "mlb"     },
   { "id": "ba",           "name": "Baseball America",    "url": "https://www.baseballamerica.com/feed/",                          "color": "#b91c1c", "category": "mlb"     },
-  { "id": "nyt",          "name": "NY Times Baseball",   "url": "https://rss.nytimes.com/services/xml/rss/nyt/Baseball.xml",      "color": "#1a1a1a", "category": "mlb"     },
-  { "id": "knight",       "name": "The Long Game",       "url": "https://mollyknight.substack.com/feed",                          "color": "#be185d", "category": "mlb"     }
+  { "id": "nyt",          "name": "NY Times Baseball",   "url": "https://rss.nytimes.com/services/xml/rss/nyt/Baseball.xml",      "color": "#1a1a1a", "category": "mlb"     }
 ]

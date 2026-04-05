@@ -115,7 +115,6 @@ News RSS sources:
 - Birds Watcher: `https://birdswatcher.com/feed/`
 - Eutaw Street Report: `https://www.eutawstreetreport.com/feed/`
 - MASN Sports: `https://www.masnsports.com/feed`
-- Orioles Hangout: `https://www.orioleshangout.com/feed/`
 - MLB.com: `https://www.mlb.com/feeds/news/rss.xml`
 - MLB Trade Rumors: `https://www.mlbtraderumors.com/baltimore-orioles/feed`
 - ESPN MLB: `https://www.espn.com/espn/rss/mlb/news`
@@ -123,7 +122,6 @@ News RSS sources:
 - Baseball Prospectus: `https://www.baseballprospectus.com/tag/baltimore-orioles/feed/`
 - Baseball America: `https://www.baseballamerica.com/feed/`
 - New York Times Baseball: `https://rss.nytimes.com/services/xml/rss/nyt/Baseball.xml`
-- The Long Game: `https://mollyknight.substack.com/feed`
 
 Podcast sources:
 - Baseball Tonight with Buster Olney RSS: `https://feeds.megaphone.fm/ESP1723897648`

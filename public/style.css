@@ -945,7 +945,7 @@ img { display: block; max-width: 100%; }
   transition: border-color 0.15s;
 }
 .on-deck-card:hover { border-color: var(--orange); }
-.on-deck-matchup { display: flex; align-items: center; gap: 8px; min-height: 28px; }
+.on-deck-matchup { display: flex; align-items: center; gap: 8px; min-height: 28px; padding-right: 68px; }
 .on-deck-at {
   font-size: 0.74rem;
   font-weight: 800;
@@ -954,7 +954,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.05em;
 }
 .on-deck-logo { width: 28px; height: 28px; }
-.on-deck-opp { font-size: 1rem; font-weight: 700; }
+.on-deck-opp { font-size: 1rem; font-weight: 700; min-width: 0; }
 .on-deck-details { display: flex; flex-direction: column; gap: 1px; }
 .on-deck-date { font-size: 0.75rem; color: var(--text-2); }
 .on-deck-venue { font-size: 0.68rem; color: var(--text-3); }
@@ -962,12 +962,14 @@ img { display: block; max-width: 100%; }
   position: absolute;
   top: 10px;
   right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   text-align: right;
-  font-size: 0.78rem;
-  line-height: 1.2;
+  line-height: 1;
 }
-.on-deck-weather-main { display: block; font-weight: 600; color: var(--text-2); }
-.on-deck-wx-desc { display: block; font-size: 0.65rem; color: var(--text-3); }
+.on-deck-weather-icon { font-size: 1rem; }
+.on-deck-weather-temp { font-size: 0.72rem; font-weight: 700; color: var(--text-2); }
 .on-deck-pitchers { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 2px; }
 .on-deck-card { padding: 10px 12px; gap: 6px; }
 [data-theme="light"] .box-score-popover {
@@ -986,15 +988,12 @@ img { display: block; max-width: 100%; }
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
   padding: 5px 2px; border-radius: 6px; text-decoration: none; color: var(--text);
   background: var(--card); border: 1px solid var(--border);
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 .sched-box:hover { background: var(--orange-dim); border-color: var(--accent); }
-.sched-box--next { border-color: color-mix(in srgb, var(--orange) 32%, var(--border) 68%); background: color-mix(in srgb, var(--orange-dim) 72%, transparent); }
-.sched-box--next .sched-box-day { color: var(--orange); }
 .sched-box--live {
-  border-color: rgba(34, 197, 94, 0.45);
-  background: rgba(34, 197, 94, 0.12);
-  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.14);
+  border-color: rgba(34, 197, 94, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.16);
 }
 .sched-box--live .sched-box-day { color: #4ade80; }
 .sched-box-day { font-size: 0.6rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.03em; }

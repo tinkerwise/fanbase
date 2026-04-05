@@ -1450,6 +1450,19 @@ function getAthArticles(articles, windowDays = 3) {
   });
 }
 
+function getAthCandidateArticles() {
+  let arts = state.articles.filter(a => a.source.category !== 'milb');
+
+  if (state.activeCategory !== 'all') {
+    arts = arts.filter(a => a.source.category === state.activeCategory);
+  }
+  if (state.activeSource !== 'all') {
+    arts = arts.filter(a => a.source.id === state.activeSource);
+  }
+
+  return [...arts].sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+}
+
 function articleDateGroup(dateStr) {
   if (!dateStr) return 'Older';
   const d = new Date(dateStr);
@@ -1728,15 +1741,20 @@ function findStoryBundles(articles, minArticles = 3) {
       const clusterArticles = [...refined].map(idx => articles[idx]);
       // Build a generalized topic label from the shared tokens
       const label = buildTopicLabel([...sharedTokens], clusterArticles);
+      const selectedArticles = clusterArticles
+        .slice()
+        .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+        .slice(0, 3);
 
-      const sourceCount = new Set(clusterArticles.map(a => a.source.id)).size;
+      const sourceCount = new Set(selectedArticles.map(a => a.source.id)).size;
       if (sourceCount < 2) continue;
+      if (selectedArticles.length < 3) continue;
 
       clusters.push({
         label,
         slug: bundleSlug(label),
         tokens: [...sharedTokens],
-        articles: clusterArticles,
+        articles: selectedArticles,
         sourceCount,
       });
       for (const idx of refined) assigned.add(idx);
@@ -1782,19 +1800,9 @@ function selectAthBundles(articles) {
   const primaryBundles = findStoryBundles(articles, 3)
     .map(bundle => ({ ...bundle, photo: bundlePhoto(bundle) }))
     .filter(bundle => bundle.photo);
-  const secondaryBundles = findStoryBundles(articles, 2)
-    .map(bundle => ({ ...bundle, photo: bundlePhoto(bundle) }))
-    .filter(bundle => bundle.photo);
-  const allBundles = [...primaryBundles];
-  for (const bundle of secondaryBundles) {
-    if (allBundles.some(item => item.slug === bundle.slug)) continue;
-    allBundles.push(bundle);
-  }
-  const oriolesBundle = allBundles.find(bundle => bundleVariant(bundle) === 'orioles') || null;
+  const oriolesBundle = primaryBundles.find(bundle => bundleVariant(bundle) === 'orioles') || null;
   const nonOriolesPrimary = primaryBundles.filter(bundle => bundleVariant(bundle) !== 'orioles');
-  const nonOriolesSecondary = secondaryBundles.filter(bundle => bundleVariant(bundle) !== 'orioles');
   const oriolesPrimary = primaryBundles.filter(bundle => bundleVariant(bundle) === 'orioles');
-  const oriolesSecondary = secondaryBundles.filter(bundle => bundleVariant(bundle) === 'orioles');
   const picks = [];
   const usedLinks = new Set();
 
@@ -1816,14 +1824,6 @@ function selectAthBundles(articles) {
   }
 
   if (picks.length < 3) {
-    for (const bundle of nonOriolesSecondary) {
-      if (bundle.articles.every(article => article?.link && usedLinks.has(article.link))) continue;
-      addBundle(bundle);
-      if (picks.length === 3) break;
-    }
-  }
-
-  if (picks.length < 3) {
     for (const bundle of oriolesPrimary) {
       if (bundle.articles.every(article => article?.link && usedLinks.has(article.link))) continue;
       addBundle(bundle);
@@ -1831,15 +1831,20 @@ function selectAthBundles(articles) {
     }
   }
 
-  if (picks.length < 3) {
-    for (const bundle of oriolesSecondary) {
-      if (bundle.articles.every(article => article?.link && usedLinks.has(article.link))) continue;
-      addBundle(bundle);
-      if (picks.length === 3) break;
-    }
+  return picks.slice(0, 3);
+}
+
+function selectAdaptiveAthBundles(articles) {
+  const windows = [3, 7, 14, 30];
+  let best = [];
+
+  for (const days of windows) {
+    const bundles = selectAthBundles(getAthArticles(articles, days));
+    if (bundles.length > best.length) best = bundles;
+    if (bundles.length >= 3) return bundles;
   }
 
-  return picks.slice(0, 3);
+  return best;
 }
 
 function groupArticles(arts, keyFn) {
@@ -1868,7 +1873,7 @@ function renderArticles() {
 
   // Hot Stove bundles (only in default date sort, no search)
   const bundles = (!state.searchQuery && state.sortBy === 'date')
-    ? selectAthBundles(getAthArticles(arts, 3)) : [];
+    ? selectAdaptiveAthBundles(getAthCandidateArticles()) : [];
   const bundledSet = new Set(bundles.flatMap(b => b.articles));
   const unbundled = arts.filter(a => !bundledSet.has(a));
 
@@ -2060,6 +2065,7 @@ async function loadOnDeck() {
     const isHome = home.team.id === ORIOLES_ID;
     const opponent = isHome ? away : home;
     const oppAbbr = TEAM_ABBREV[opponent.team.id] ?? opponent.team.name.slice(0, 3);
+    const onDeckOpponentLabel = isHome ? oppAbbr : opponent.team.name;
 
     const gameDate = new Date(next.gameDate);
     const dateStr = gameDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
@@ -2076,7 +2082,10 @@ async function loadOnDeck() {
       await fetchWeatherForGames([next]);
       const wx = getGameWeather(next);
       wxHtml = wx
-        ? `<div class="on-deck-weather"><span class="on-deck-weather-main">${wx.emoji} ${wx.temp}°F</span><span class="on-deck-wx-desc">${esc(wx.condition)}</span></div>`
+        ? `<div class="on-deck-weather" aria-label="${esc(wx.condition)} ${wx.temp} degrees">
+            <span class="on-deck-weather-icon">${wx.emoji}</span>
+            <span class="on-deck-weather-temp">${wx.temp}°F</span>
+          </div>`
         : '';
     }
 
@@ -2099,9 +2108,8 @@ async function loadOnDeck() {
       const gHomeSlug = TEAM_SLUG[gHome.team.id] ?? '';
       const gGdDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
       const gUrl = `https://www.mlb.com/gameday/${gAwaySlug}-vs-${gHomeSlug}/${gGdDate}/${g.gamePk}/preview`;
-      const isNext = g.gamePk === next.gamePk;
       const isLive = g.status?.abstractGameState === 'Live';
-      return `<a class="sched-box${isNext ? ' sched-box--next' : ''}${isLive ? ' sched-box--live' : ''}" href="${gUrl}" target="_blank" rel="noopener">
+      return `<a class="sched-box${isLive ? ' sched-box--live' : ''}" href="${gUrl}" target="_blank" rel="noopener">
         <span class="sched-box-day">${esc(gDay)}</span>
         <div class="sched-box-logo-wrap">
           <span class="sched-box-at">${gIsHome ? 'vs' : '@'}</span>
@@ -2119,9 +2127,8 @@ async function loadOnDeck() {
         <a class="on-deck-card" href="${gdUrl}" target="_blank" rel="noopener">
           ${wxHtml}
           <div class="on-deck-matchup">
-            <span class="on-deck-at">${isHome ? 'vs' : '@'}</span>
             <img class="on-deck-logo" src="https://www.mlbstatic.com/team-logos/${opponent.team.id}.svg" alt="" width="28" height="28">
-            <span class="on-deck-opp">${esc(oppAbbr)}</span>
+            <span class="on-deck-opp"><span class="on-deck-at">${isHome ? 'vs' : '@'}</span> ${esc(onDeckOpponentLabel)}</span>
           </div>
           <div class="on-deck-details">
             <span class="on-deck-date">${esc(dateStr)} · ${esc(timeStr)}</span>

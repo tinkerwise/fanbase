@@ -24,6 +24,10 @@
 
 ##Recently Completed (April 5, 2026)
 
+# FEEDS
+- ✓ removed Orioles Hangout from the source mix
+- ✓ removed The Long Game from the source mix
+
 # ON DECK
 - ✓ featured game now appears in schedule boxes with orange highlight; previously it was excluded
 
