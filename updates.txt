@@ -145,12 +145,12 @@
 - ✓ fix audio widget to feed and play podcast audio
 - ✓ scroll left sidebar similar to right sidebar
 - ✓ Both sidebars independently scrollable with sticky positioning
+- ✓ extract shared config and localStorage helpers out of app.js into modules
+- ✓ improve content overload handling with smarter article description clamping and denser score-bug names
+- ✓ add Scout pitch-mix mini section for live Orioles games (top 3 pitches)
 
 ##Active
 // Add items here for immediate implementation
-- Clean up and organize app.js: consider splitting by domain (feeds, scores, sidebars, reader, settings)
-- Improve content overload detection: refactor feed/popover to be more space-efficient
-- Scout insights for Live games: add current pitcher's top 3 pitches as mini-section (optional)
 
 ##Queued
 // Add items here for the likely next batch of work

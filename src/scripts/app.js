@@ -1,93 +1,23 @@
-// ── Config ────────────────────────────────────────────────────────
-const PROXY = `${import.meta.env.BASE_URL}rss-proxy.php`;
+import {
+  DIVISION_NAMES,
+  MLB,
+  ORIOLES_ID,
+  PITCH_NAMES,
+  PROXY,
+  SEASON,
+  TEAM_ABBREV,
+  TEAM_PAGE,
+  TEAM_SLUG,
+  VENUE_COORDS,
+} from './config.js';
+import {
+  getReadArticles,
+  loadPrefs,
+  markRead,
+  savePrefs,
+  unmarkRead,
+} from './storage.js';
 
-const DIVISION_NAMES = {
-  200: 'AL West', 201: 'AL East', 202: 'AL Central',
-  203: 'NL West', 204: 'NL East', 205: 'NL Central',
-};
-
-const TEAM_ABBREV = {
-  108: 'LAA', 109: 'ARI', 110: 'BAL', 111: 'BOS', 112: 'CHC',
-  113: 'CIN', 114: 'CLE', 115: 'COL', 116: 'DET', 117: 'HOU',
-  118: 'KC',  119: 'LAD', 120: 'WSH', 121: 'NYM', 133: 'OAK',
-  134: 'PIT', 135: 'SD',  136: 'SEA', 137: 'SF',  138: 'STL',
-  139: 'TB',  140: 'TEX', 141: 'TOR', 142: 'MIN', 143: 'PHI',
-  144: 'ATL', 145: 'CWS', 146: 'MIA', 147: 'NYY', 158: 'MIL',
-};
-const TEAM_SLUG = {
-  108: 'angels',    109: 'd-backs',      110: 'orioles',   111: 'red-sox',
-  112: 'cubs',      113: 'reds',         114: 'guardians', 115: 'rockies',
-  116: 'tigers',    117: 'astros',       118: 'royals',    119: 'dodgers',
-  120: 'nationals', 121: 'mets',         133: 'athletics', 134: 'pirates',
-  135: 'padres',    136: 'mariners',     137: 'giants',    138: 'cardinals',
-  139: 'rays',      140: 'rangers',      141: 'blue-jays', 142: 'twins',
-  143: 'phillies',  144: 'braves',       145: 'white-sox', 146: 'marlins',
-  147: 'yankees',   158: 'brewers',
-};
-const TEAM_PAGE = {
-  108: 'angels',     109: 'dbacks',      110: 'orioles',    111: 'redsox',
-  112: 'cubs',       113: 'reds',        114: 'guardians',  115: 'rockies',
-  116: 'tigers',     117: 'astros',      118: 'royals',     119: 'dodgers',
-  120: 'nationals',  121: 'mets',        133: 'athletics',  134: 'pirates',
-  135: 'padres',     136: 'mariners',    137: 'giants',     138: 'cardinals',
-  139: 'rays',       140: 'rangers',     141: 'bluejays',   142: 'twins',
-  143: 'phillies',   144: 'braves',      145: 'whitesox',   146: 'marlins',
-  147: 'yankees',    158: 'brewers',
-};
-const MLB = 'https://statsapi.mlb.com/api/v1';
-const ORIOLES_ID = 110;
-const SEASON = new Date().getFullYear();
-const PITCH_NAMES = {
-  'Four-Seam Fastball': '4SF', 'Two-Seam Fastball': '2SF', 'Sinker': 'Sinker',
-  'Slider': 'Slider', 'Curveball': 'Curve', 'Changeup': 'Changeup', 'Cutter': 'Cutter',
-  'Splitter': 'Splitter', 'Sweeper': 'Sweeper', 'Knuckle Curve': 'K. Curve',
-  'Knuckleball': 'Knuckle', 'Forkball': 'Forkball', 'Eephus': 'Eephus',
-};
-
-// MLB venue coordinates for Open-Meteo weather lookups
-const VENUE_COORDS = {
-  1:    { lat: 33.800, lon: -117.882 },  // Angel Stadium (LAA)
-  2:    { lat: 39.284, lon: -76.622 },   // Camden Yards (BAL)
-  3:    { lat: 42.346, lon: -71.097 },   // Fenway Park (BOS)
-  4:    { lat: 41.830, lon: -87.634 },   // Rate Field (CWS)
-  5:    { lat: 41.496, lon: -81.685 },   // Progressive Field (CLE)
-  7:    { lat: 39.052, lon: -94.480 },   // Kauffman Stadium (KC)
-  12:   { lat: 27.768, lon: -82.653 },   // Tropicana Field (TB)
-  14:   { lat: 43.642, lon: -79.389 },   // Rogers Centre (TOR)
-  15:   { lat: 33.445, lon: -112.067 },  // Chase Field (ARI)
-  17:   { lat: 41.948, lon: -87.656 },   // Wrigley Field (CHC)
-  19:   { lat: 39.756, lon: -104.994 },  // Coors Field (COL)
-  22:   { lat: 34.074, lon: -118.241 },  // Dodger Stadium (LAD)
-  31:   { lat: 40.447, lon: -80.006 },   // PNC Park (PIT)
-  32:   { lat: 43.028, lon: -87.971 },   // American Family Field (MIL)
-  680:  { lat: 47.591, lon: -122.333 },  // T-Mobile Park (SEA)
-  2392: { lat: 29.757, lon: -95.356 },   // Daikin Park (HOU)
-  2394: { lat: 42.339, lon: -83.049 },   // Comerica Park (DET)
-  2395: { lat: 37.778, lon: -122.389 },  // Oracle Park (SF)
-  2529: { lat: 38.580, lon: -121.512 },  // Sutter Health Park (OAK)
-  2602: { lat: 39.097, lon: -84.507 },   // Great American (CIN)
-  2680: { lat: 32.708, lon: -117.157 },  // Petco Park (SD)
-  2681: { lat: 39.905, lon: -75.167 },   // Citizens Bank Park (PHI)
-  2889: { lat: 38.623, lon: -90.193 },   // Busch Stadium (STL)
-  3289: { lat: 40.758, lon: -73.846 },   // Citi Field (NYM)
-  3309: { lat: 38.873, lon: -77.008 },   // Nationals Park (WSH)
-  3312: { lat: 44.982, lon: -93.278 },   // Target Field (MIN)
-  3313: { lat: 40.829, lon: -73.927 },   // Yankee Stadium (NYY)
-  4169: { lat: 25.778, lon: -80.220 },   // loanDepot park (MIA)
-  4705: { lat: 33.891, lon: -84.468 },   // Truist Park (ATL)
-  5325: { lat: 32.747, lon: -97.082 },   // Globe Life Field (TEX)
-};
-
-// ── Settings (persisted to localStorage) ─────────────────────────
-const PREFS_KEY = 'yr_prefs';
-function loadPrefs() {
-  try { return JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; } catch { return {}; }
-}
-function savePrefs(updates) {
-  const prefs = { ...loadPrefs(), ...updates };
-  localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
-  return prefs;
-}
 const prefs = loadPrefs();
 
 // ── Theme ────────────────────────────────────────────────────────
@@ -99,23 +29,6 @@ function applyTheme(theme) {
   savePrefs({ theme });
 }
 applyTheme(prefs.theme || 'dark');
-
-// ── Read/unread tracking ─────────────────────────────────────────
-const READ_KEY = 'yr_read';
-function getReadArticles() {
-  try { return new Set(JSON.parse(localStorage.getItem(READ_KEY)) || []); } catch { return new Set(); }
-}
-function markRead(url) {
-  const read = getReadArticles();
-  read.add(url);
-  const arr = [...read].slice(-200);
-  localStorage.setItem(READ_KEY, JSON.stringify(arr));
-}
-function unmarkRead(url) {
-  const read = getReadArticles();
-  read.delete(url);
-  localStorage.setItem(READ_KEY, JSON.stringify([...read]));
-}
 
 // ── State ─────────────────────────────────────────────────────────
 const defaultView = prefs.defaultView || 'list';
@@ -597,7 +510,7 @@ function topPerformers(boxData) {
         const statLine = extras.join(', ') || 'No notable line';
       const logoHtml = b.teamId ? `<img class="box-perf-logo" src="https://www.mlbstatic.com/team-logos/${b.teamId}.svg" alt="${esc(b.abbr)}" width="18" height="18">` : '';
       const batSideDisplay = b.batSide ? `<span class="box-perf-hand">${b.batSide}</span>` : '';
-      return `<span class="box-perf-row">${logoHtml}<span class="box-perf-name">${esc(b.name)}${batSideDisplay}</span> <span class="box-perf-stat">${statLine}</span></span>`;
+      return `<span class="box-perf-row">${logoHtml}<span class="box-perf-name">${esc(compactBoxName(b.name))}${batSideDisplay}</span> <span class="box-perf-stat">${statLine}</span></span>`;
     }).join('');
     html += '</div>';
   }
@@ -620,7 +533,7 @@ function renderLineupPopover(boxData) {
     const rows = available
       ? players.map(id => {
           const p = roster[`ID${id}`] ?? {};
-          const name = p.person?.fullName ?? 'TBD';
+          const name = compactBoxName(p.person?.fullName ?? 'TBD');
           const pos = p.position?.abbreviation ?? '';
           const batSide = p.person?.batSide?.code ?? '';
           const batSideDisplay = batSide ? `<span class="score-lineup-hand">${batSide}</span>` : '';
@@ -748,7 +661,7 @@ function renderPitchingLines(boxData) {
         if (p.k > 0) extras.push(`${p.k} K`);
         if ((p.pitches ?? 0) > 0) extras.push(`${p.pitches} P`);
         const pitchHandDisplay = p.pitchHand ? `<span class="box-perf-hand">${p.pitchHand}</span>` : '';
-        return `<span class="box-perf-row"><span class="box-perf-name">${esc(p.name)}${pitchHandDisplay}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
+        return `<span class="box-perf-row"><span class="box-perf-name">${esc(compactBoxName(p.name))}${pitchHandDisplay}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
       }).join('')}
     </div>`;
   };
@@ -760,7 +673,41 @@ function playerLabel(person) {
   return person?.fullName ? person.fullName.split(' ').slice(-1)[0] : 'Baltimore';
 }
 
-function renderScoutNotes(game) {
+function compactBoxName(name) {
+  if (!name) return 'TBD';
+  const parts = String(name).trim().split(/\s+/);
+  if (parts.length <= 1) return parts[0];
+  const suffixes = new Set(['Jr.', 'Sr.', 'II', 'III', 'IV', 'V']);
+  const last = parts.at(-1);
+  if (suffixes.has(last) && parts.length >= 2) return `${parts.at(-2)} ${last}`;
+  return last;
+}
+
+function renderScoutPitchMix(arsenalData, pitcherName) {
+  const items = arsenalData?.stats?.[0]?.splits ?? [];
+  if (!items.length) return '';
+
+  const pills = [...items]
+    .sort((a, b) => (b.stat?.percentage ?? 0) - (a.stat?.percentage ?? 0))
+    .slice(0, 3)
+    .map(item => {
+      const desc = item.type?.description ?? '';
+      const pitchName = PITCH_NAMES[desc] ?? desc.slice(0, 2).toUpperCase();
+      const pct = item.stat?.percentage != null ? `${Math.round(item.stat.percentage * 100)}%` : '';
+      const velo = item.stat?.averageSpeed != null ? `${Math.round(item.stat.averageSpeed)} mph` : '';
+      return `<span class="scout-pitch-pill" title="${esc(desc)}">
+        <span class="scout-pitch-type">${esc(pitchName)}</span>
+        <span class="scout-pitch-meta">${esc([pct, velo].filter(Boolean).join(' | '))}</span>
+      </span>`;
+    }).join('');
+
+  return `<div class="scout-pitch-mix">
+    <div class="scout-pitch-head">${esc(compactBoxName(pitcherName))}'s mix</div>
+    <div class="scout-pitch-list">${pills}</div>
+  </div>`;
+}
+
+function renderScoutNotes(game, arsenals) {
   const isLive = game.status?.abstractGameState === 'Live';
   const isPreview = game.status?.abstractGameState === 'Preview';
   const isFinal = game.status?.abstractGameState === 'Final';
@@ -772,6 +719,7 @@ function renderScoutNotes(game) {
   const notes = [];
   let badge = 'Scout';
   let context = '';
+  let pitchMix = '';
 
   if (isLive) {
     const ls = game.linescore ?? {};
@@ -795,6 +743,7 @@ function renderScoutNotes(game) {
     const inHole = oriolesBatting ? offense.inHole : defense.inHole;
     const pitcher = oriolesBatting ? offense.pitcher : defense.pitcher;
     const opposingBatter = oriolesPitching ? defense.batter : offense.batter;
+    pitchMix = renderScoutPitchMix(arsenals?.current ?? null, pitcher?.fullName ?? pitcher?.lastInitName ?? '');
 
     if (oriolesBatting) {
       if (basesLoaded) {
@@ -876,6 +825,7 @@ function renderScoutNotes(game) {
       <span class="scout-badge">${badge}</span>
       ${context ? `<span class="scout-context">${esc(context)}</span>` : ''}
     </div>
+    ${pitchMix}
     <div class="scout-notes-list">
       ${uniqueNotes.map(note => `<div class="scout-note-row">${esc(note)}</div>`).join('')}
     </div>
@@ -900,9 +850,9 @@ function renderDecisionStrip(g) {
   const wp = g.decisions?.winner;
   const lp = g.decisions?.loser;
   const sv = g.decisions?.save;
-  if (wp) parts.push(`<span class="decision-pill win">W: ${esc(playerLabel(wp))}</span>`);
-  if (lp) parts.push(`<span class="decision-pill loss">L: ${esc(playerLabel(lp))}</span>`);
-  if (sv) parts.push(`<span class="decision-pill save">SV: ${esc(playerLabel(sv))}</span>`);
+  if (wp) parts.push(`<span class="decision-pill win">W: ${esc(compactBoxName(wp.fullName || wp.lastInitName || playerLabel(wp)))}</span>`);
+  if (lp) parts.push(`<span class="decision-pill loss">L: ${esc(compactBoxName(lp.fullName || lp.lastInitName || playerLabel(lp)))}</span>`);
+  if (sv) parts.push(`<span class="decision-pill save">SV: ${esc(compactBoxName(sv.fullName || sv.lastInitName || playerLabel(sv)))}</span>`);
   if (!parts.length) return '';
   return `<div class="box-decisions">${parts.join('')}</div>`;
 }
@@ -956,7 +906,7 @@ function renderBoxScore(g, boxData, arsenals) {
   const decisions = renderDecisionStrip(g);
   const performers = topPerformers(boxData);
   const pitchingLines = renderPitchingLines(boxData);
-  const scoutNotes = renderScoutNotes(g);
+  const scoutNotes = renderScoutNotes(g, arsenals);
 
   return `<div class="box-popover-stack">
     ${scoutNotes}
@@ -1043,13 +993,22 @@ async function loadScores() {
       clearTimeout(boxTimer);
 
       const isPreview = g.status?.abstractGameState === 'Preview';
+      const isLive = g.status?.abstractGameState === 'Live';
+      const isOriolesGame = g.teams?.away?.team?.id === ORIOLES_ID || g.teams?.home?.team?.id === ORIOLES_ID;
       const awayId = g.teams?.away?.probablePitcher?.id;
       const homeId = g.teams?.home?.probablePitcher?.id;
+      const livePitcherId = isLive && isOriolesGame
+        ? (g.linescore?.offense?.team?.id === ORIOLES_ID
+            ? g.linescore?.offense?.pitcher?.id
+            : g.linescore?.defense?.pitcher?.id)
+        : null;
 
       // Phase 1: render with cached data
       const currentArsenals = isPreview
         ? { away: arsenalCache[awayId] ?? null, home: arsenalCache[homeId] ?? null }
-        : null;
+        : isLive
+          ? { current: arsenalCache[livePitcherId] ?? null }
+          : null;
       boxPopover.innerHTML = renderBoxScore(g, boxscoreCache[pk] || null, currentArsenals);
       boxPopover.style.left = '-9999px';
       boxPopover.style.top = '0';
@@ -1061,6 +1020,7 @@ async function loadScores() {
         !boxscoreCache[pk]               && fetchBoxscore(pk),
         isPreview && !arsenalCache[awayId] && fetchArsenal(awayId),
         isPreview && !arsenalCache[homeId] && fetchArsenal(homeId),
+        isLive && livePitcherId && !arsenalCache[livePitcherId] && fetchArsenal(livePitcherId),
       ].filter(Boolean);
 
       if (missing.length) {
@@ -1068,7 +1028,9 @@ async function loadScores() {
           if (boxPopover.classList.contains('hidden')) return;
           const updatedArsenals = isPreview
             ? { away: arsenalCache[awayId] ?? null, home: arsenalCache[homeId] ?? null }
-            : null;
+            : isLive
+              ? { current: arsenalCache[livePitcherId] ?? null }
+              : null;
           boxPopover.innerHTML = renderBoxScore(g, boxscoreCache[pk] || null, updatedArsenals);
           positionPopover(chip);
         });
@@ -1299,6 +1261,28 @@ function articleDateGroup(dateStr) {
   return 'Older';
 }
 
+function cardDescriptionClamp(article, mode) {
+  if (!article.description || mode === 'compact') return 0;
+
+  const titleLen = (article.title || '').length;
+  const descLen = (article.description || '').length;
+  const loadScore =
+    (titleLen > 110 ? 2 : titleLen > 72 ? 1 : 0) +
+    (descLen > 180 ? 2 : descLen > 96 ? 1 : 0) +
+    (extractThumbnail(article) ? 1 : 0) +
+    ((article.content || '').length > 500 ? 1 : 0);
+
+  if (loadScore >= 5) return 0;
+  if (loadScore >= 3) return 1;
+  return 2;
+}
+
+function renderCardDescription(article, mode) {
+  const clamp = cardDescriptionClamp(article, mode);
+  if (!clamp) return '';
+  return `<div class="article-desc article-desc--clamp-${clamp}">${esc(article.description)}</div>`;
+}
+
 function renderCard(a, i) {
   const imgSrc = extractThumbnail(a);
   const hasFullContent = (a.content || '').length > 400;
@@ -1339,7 +1323,7 @@ function renderCard(a, i) {
       <div class="article-body">
         ${source}
         <div class="article-title">${esc(a.title)}</div>
-        ${a.description ? `<div class="article-desc">${esc(a.description)}</div>` : ''}
+        ${renderCardDescription(a, mode)}
       </div>
     </div>`;
   }
@@ -1350,7 +1334,7 @@ function renderCard(a, i) {
     <div class="article-body">
       ${source}
       <div class="article-title">${esc(a.title)}</div>
-      ${a.description ? `<div class="article-desc">${esc(a.description)}</div>` : ''}
+      ${renderCardDescription(a, mode)}
     </div>
   </div>`;
 }
