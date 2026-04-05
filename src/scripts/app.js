@@ -832,7 +832,7 @@ function renderPitchingLines(boxData) {
         if ((p.pitches ?? 0) > 0) extras.push(`${p.pitches} P`);
         const pitchHandDisplay = p.pitchHand ? `<span class="box-perf-hand">${p.pitchHand}</span>` : '';
         const spBadge = i === spIndex ? '<span class="pitcher-role-badge">SP</span>' : '';
-        return `<span class="box-perf-row"><span class="box-perf-name">${spBadge}${renderPlayerNameLink(compactBoxName(p.name), p.playerId)}${pitchHandDisplay}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
+        return `<span class="box-perf-row"><span class="box-perf-name">${renderPlayerNameLink(compactBoxName(p.name), p.playerId)}${pitchHandDisplay}${spBadge}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
       }).join('');
 
     if (!hiddenPitchers.length) return visibleRows;
