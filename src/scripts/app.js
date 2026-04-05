@@ -631,6 +631,22 @@ function resolvePitchName(pitchType = {}) {
   return pitchMap[raw] || raw || 'Pitch';
 }
 
+function pitchStyleToken(pitchName) {
+  const normalized = String(pitchName || '').toLowerCase();
+  if (normalized.includes('4-seam')) return 'four-seam';
+  if (normalized.includes('2-seam')) return 'two-seam';
+  if (normalized.includes('sinker')) return 'sinker';
+  if (normalized.includes('slider')) return 'slider';
+  if (normalized.includes('curve')) return 'curve';
+  if (normalized.includes('change')) return 'change';
+  if (normalized.includes('cutter')) return 'cutter';
+  if (normalized.includes('split')) return 'splitter';
+  if (normalized.includes('sweeper')) return 'sweeper';
+  if (normalized.includes('knuckle')) return 'knuckle';
+  if (normalized.includes('fork')) return 'forkball';
+  return 'default';
+}
+
 function renderPitcherArsenal(arsenalData, { limit = 5, showVelo = true } = {}) {
   if (!arsenalData) {
     return `<div class="pitcher-arsenal pitcher-arsenal--loading">
@@ -661,7 +677,8 @@ function renderPitcherArsenal(arsenalData, { limit = 5, showVelo = true } = {}) 
       ? Math.round(item.stat.averageSpeed) + ''
       : '';
     const label = [pitchName, pct, velo].filter(Boolean).join(' ');
-    return `<span class="arsenal-pill" title="${esc(desc)}">
+    const tone = pitchStyleToken(pitchName);
+    return `<span class="arsenal-pill arsenal-pill--${tone}" title="${esc(desc)}">
       <span class="arsenal-pill-label">${esc(label)}</span>
     </span>`;
   }).join('');
