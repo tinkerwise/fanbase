@@ -854,11 +854,11 @@ function renderScoutNotes(game, arsenals) {
     const oriolesScore = awayId === ORIOLES_ID ? (game.teams?.away?.score ?? 0) : (game.teams?.home?.score ?? 0);
     const oppScore = awayId === ORIOLES_ID ? (game.teams?.home?.score ?? 0) : (game.teams?.away?.score ?? 0);
     const diff = oriolesScore - oppScore;
-    const batter = oriolesBatting ? offense.batter : defense.pitcher;
-    const onDeck = oriolesBatting ? offense.onDeck : defense.onDeck;
-    const inHole = oriolesBatting ? offense.inHole : defense.inHole;
-    const pitcher = oriolesBatting ? offense.pitcher : defense.pitcher;
-    const opposingBatter = oriolesPitching ? defense.batter : offense.batter;
+    const batter = offense.batter;    // always on offensive side
+    const onDeck = offense.onDeck;
+    const inHole = offense.inHole;
+    const pitcher = defense.pitcher;  // always on defensive side
+    const opposingBatter = offense.batter;
     pitchMix = renderScoutPitchMix(arsenals?.current ?? null, pitcher?.fullName ?? pitcher?.lastInitName ?? '');
 
     if (oriolesBatting) {
