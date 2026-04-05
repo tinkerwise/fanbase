@@ -41,7 +41,7 @@ export const ORIOLES_ID = 110;
 export const SEASON = new Date().getFullYear();
 
 export const PITCH_NAMES = {
-  'Four-Seam Fastball': '4SF', 'Two-Seam Fastball': '2SF', 'Sinker': 'Sinker',
+  'Four-Seam Fastball': '4-Seam', 'Two-Seam Fastball': '2-Seam', 'Sinker': 'Sinker',
   'Slider': 'Slider', 'Curveball': 'Curve', 'Changeup': 'Changeup', 'Cutter': 'Cutter',
   'Splitter': 'Splitter', 'Sweeper': 'Sweeper', 'Knuckle Curve': 'K. Curve',
   'Knuckleball': 'Knuckle', 'Forkball': 'Forkball', 'Eephus': 'Eephus',

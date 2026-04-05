@@ -612,9 +612,9 @@ function resolvePitchName(pitchType = {}) {
 
   const pitchMap = {
     ...PITCH_NAMES,
-    FF: '4SF',
-    FA: '4SF',
-    FT: '2SF',
+    FF: '4-Seam',
+    FA: '4-Seam',
+    FT: '2-Seam',
     SI: 'Sinker',
     FC: 'Cutter',
     SL: 'Slider',
