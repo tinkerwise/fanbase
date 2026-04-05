@@ -137,6 +137,7 @@
 # SCOUT FEATURES (MLB Scout Integration)
 - ✓ Pitcher scouting notes: show pitch arsenal (type, %, velo) for Preview games
   - Displays as pill badges below each probable pitcher (top 5 by usage %)
+  - Pitch names use league abbreviations: 4SF, 2SF, Sinker, Slider, Curve, Changeup, Cutter, Splitter, Sweeper, etc.
   - Two-phase async load: "Loading…" → full arsenal once API responds
   - Live games: Scout Notes unchanged (content-dense, no arsenal display)
 
