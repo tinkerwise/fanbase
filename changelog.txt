@@ -1,4 +1,51 @@
 Yard Report Changelog
+Week of April 4 - April 10, 2026
+
+April 4, 2026 (afternoon)
+
+Score Bug Enhancements
+- Added pitch arsenal (pitch type, usage %, velocity) to probable pitcher scouting notes in preview-game popovers.
+- Fetches per-pitcher arsenal data from MLB Stats API `pitchArsenal` endpoint.
+- Displays pitches as pill badges sorted by usage %; shows top 5 pitches per pitcher.
+- Uses two-phase async loading: "Loading…" stub followed by populated arsenal pills once API responds.
+- Pitch type abbreviations: FF (Four-Seam), SI (Sinker), SL (Slider), CU (Curveball), CH (Changeup), FC (Cutter), FS (Splitter), SW (Sweeper), KC (Knuckle Curve), etc.
+- Live and final game popovers remain unchanged; scout notes focus on situational context.
+
+Popover Styling & Layout
+- Added team logos inline before player names in Key Hitters section (removed abbreviations, replaced with logos).
+- Added team logos to lineup popover titles followed by full team names (e.g., "Baltimore Orioles").
+- Added batter/pitcher handedness (L/R) as small inline indicators next to player names throughout popovers.
+
+Pitcher Organization & Matchup Context
+- Reordered pitchers in pitching lines by innings pitched (starters first, relievers by appearance).
+- Lineup display now includes batter handedness for better at-a-glance matchup context.
+
+On Deck Widget
+- On Deck now switches to the next upcoming game when today's Orioles game goes Live.
+- Weather display only shown for today's games; hidden when showing future games.
+
+Scout Notes Enhancement
+- Scout Notes now display for all game states (preview, live, final), not just live games.
+- Preview games show "Matchup" badge with probable pitcher names.
+- Final games show "Final" badge with result summary (win/loss/tie and score).
+
+Sidebar Improvements
+- Right sidebar (Yard Leaders, Roster, Injury Report, Transactions) now has scrollable behavior matching the left sidebar.
+- Both sidebars stick to the header and stay within viewport height with independent overflow.
+
+Podcast Widget
+- Fixed audio player to properly feed and play podcast audio from Megaphone RSS feed.
+- Changed preload from "none" to "metadata" for better UX (episode title and duration load immediately).
+- Removed incorrect HTML escaping on audio source URL.
+
+Removed Elements
+- Removed "Story" link from final score bug chips (no longer needed since users can click the chip itself to go to MLB Gameday).
+
+Documentation
+- Updated `README.md` to reflect pitcher arsenal feature and added MLB Stats API pitch arsenal endpoint documentation.
+- Updated `brief.txt` with guidance on prompt patterns and future refactoring priorities.
+- Updated `updates.txt` with completed feature summary.
+
 Week of March 28 - April 3, 2026
 
 April 4, 2026

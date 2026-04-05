@@ -16,7 +16,8 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 
 - News feed with full-reader modal, thumbnails, share actions, read tracking, and mobile swipe mark/unmark
 - Feed toolbar with left-aligned category pills and right-aligned source/view controls
-- On Deck widget with schedule strip, weather, and game-day lineup popover
+- Score bugs with probable pitcher scouting notes including pitch arsenal (type, usage %, velocity) for preview games
+- On Deck widget with schedule strip and game-day lineup popover
 - Standings widget with division tabs
 - Yard Leaders widget with Baseball Savant player/stat links
 - Injury Report with IL type and injury note
@@ -76,6 +77,8 @@ Yard Report is a personal Orioles- and MLB-focused news aggregator built as a st
 ### Data And Asset Services
 
 - MLB Stats API: `https://statsapi.mlb.com/api/v1`
+  - Schedule, standings, roster, boxscore, leaders, and probable pitchers hydration
+  - Pitch arsenal (pitch type, usage %, velocity) per pitcher: `/people/{playerId}/stats?stats=pitchArsenal&season=YYYY&group=pitching`
 - Open-Meteo forecast API: `https://api.open-meteo.com/v1/forecast`
 - Google Favicon API: `https://www.google.com/s2/favicons`
 - MLB Gameday and story links: `https://www.mlb.com/gameday/...` and `https://www.mlb.com/stories/game/...`

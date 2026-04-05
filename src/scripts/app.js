@@ -37,6 +37,12 @@ const TEAM_PAGE = {
 const MLB = 'https://statsapi.mlb.com/api/v1';
 const ORIOLES_ID = 110;
 const SEASON = new Date().getFullYear();
+const PITCH_ABBREV = {
+  'Four-Seam Fastball': 'FF', 'Two-Seam Fastball': 'FT', 'Sinker': 'SI',
+  'Slider': 'SL', 'Curveball': 'CU', 'Changeup': 'CH', 'Cutter': 'FC',
+  'Splitter': 'FS', 'Sweeper': 'SW', 'Knuckle Curve': 'KC',
+  'Knuckleball': 'KN', 'Forkball': 'FO', 'Eephus': 'EP',
+};
 
 // MLB venue coordinates for Open-Meteo weather lookups
 const VENUE_COORDS = {
@@ -484,9 +490,6 @@ function renderGameChip(g) {
 
   const wx = getGameWeather(g);
   const wxInline = (stateClass === 'preview' && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
-  const storyRow = isFinal
-    ? `<span class="chip-story" data-story="https://www.mlb.com/stories/game/${g.gamePk}?storylocal=gameday-postgame-wrap-game-embed">Story</span>`
-    : '';
 
   return `<a class="score-chip ${stateClass}${hasOrioles ? ' orioles' : ''}"
       data-gamepk="${g.gamePk}"
@@ -501,7 +504,6 @@ function renderGameChip(g) {
       <span class="chip-score">${homeScore}</span>
     </div>
     <span class="chip-status ${stateClass}">${statusInner}${wxInline}</span>
-    ${storyRow}
   </a>`;
 }
 
@@ -536,6 +538,21 @@ async function fetchBoxscore(gamePk) {
   } catch { return null; }
 }
 
+// Cache for pitcher pitch arsenal API responses (keyed by playerId)
+const arsenalCache = {};
+
+async function fetchArsenal(playerId) {
+  if (!playerId) return null;
+  if (arsenalCache[playerId]) return arsenalCache[playerId];
+  try {
+    const data = await fetch(
+      `${MLB}/people/${playerId}/stats?stats=pitchArsenal&season=${SEASON}&group=pitching`
+    ).then(r => r.json());
+    arsenalCache[playerId] = data;
+    return data;
+  } catch { return null; }
+}
+
 function topPerformers(boxData) {
   if (!boxData) return '';
   const sides = ['away', 'home'];
@@ -557,7 +574,8 @@ function topPerformers(boxData) {
         const bb = bs.baseOnBalls ?? 0;
         // Score: weight HRs and multi-hit games
         const score = hits * 2 + hr * 5 + rbi * 2 + bb;
-        allBatters.push({ name: p.person?.fullName ?? '', abbr, teamId, hits, ab, hr, rbi, bb, score });
+        const batSide = p.person?.batSide?.code ?? '';
+        allBatters.push({ name: p.person?.fullName ?? '', abbr, teamId, hits, ab, hr, rbi, bb, score, batSide });
       }
     }
   }
@@ -578,7 +596,8 @@ function topPerformers(boxData) {
       if (b.bb) extras.push(`${b.bb} BB`);
         const statLine = extras.join(', ') || 'No notable line';
       const logoHtml = b.teamId ? `<img class="box-perf-logo" src="https://www.mlbstatic.com/team-logos/${b.teamId}.svg" alt="${esc(b.abbr)}" width="18" height="18">` : '';
-      return `<span class="box-perf-row">${logoHtml}<span class="box-perf-name">${esc(b.name)}</span> <span class="box-perf-stat">${statLine}</span></span>`;
+      const batSideDisplay = b.batSide ? `<span class="box-perf-hand">${b.batSide}</span>` : '';
+      return `<span class="box-perf-row">${logoHtml}<span class="box-perf-name">${esc(b.name)}${batSideDisplay}</span> <span class="box-perf-stat">${statLine}</span></span>`;
     }).join('');
     html += '</div>';
   }
@@ -593,7 +612,8 @@ function renderLineupPopover(boxData) {
   const renderSide = side => {
     const team = boxData.teams?.[side];
     if (!team) return '';
-    const label = TEAM_ABBREV[team.team?.id] ?? team.team?.abbreviation ?? (side === 'away' ? 'Away' : 'Home');
+    const teamId = team.team?.id;
+    const teamName = team.team?.name ?? (side === 'away' ? 'Away Team' : 'Home Team');
     const players = team.battingOrder ?? [];
     const roster = team.players ?? {};
     const available = players.length > 0;
@@ -602,13 +622,16 @@ function renderLineupPopover(boxData) {
           const p = roster[`ID${id}`] ?? {};
           const name = p.person?.fullName ?? 'TBD';
           const pos = p.position?.abbreviation ?? '';
-          return `<div class="score-lineup-row"><span class="score-lineup-pos">${esc(pos)}</span><span class="score-lineup-name">${esc(name)}</span></div>`;
+          const batSide = p.person?.batSide?.code ?? '';
+          const batSideDisplay = batSide ? `<span class="score-lineup-hand">${batSide}</span>` : '';
+          return `<div class="score-lineup-row"><span class="score-lineup-pos">${esc(pos)}</span><span class="score-lineup-name">${esc(name)}${batSideDisplay}</span></div>`;
         }).join('')
       : '<div class="score-lineups-empty">Lineup not yet posted</div>';
 
+    const logoHtml = teamId ? `<img class="score-lineup-logo" src="https://www.mlbstatic.com/team-logos/${teamId}.svg" alt="${esc(teamName)}" width="20" height="20">` : '';
     return `<div class="score-lineup-side">
       <div class="score-lineup-head">
-        <span class="score-lineup-label">${esc(label)}</span>
+        ${logoHtml}<span class="score-lineup-label">${esc(teamName)}</span>
       </div>
       ${rows}
     </div>`;
@@ -622,7 +645,44 @@ function renderLineupPopover(boxData) {
   </div>`;
 }
 
-function renderProbablePitchers(game) {
+function renderPitcherArsenal(arsenalData) {
+  if (!arsenalData) {
+    return `<div class="pitcher-arsenal pitcher-arsenal--loading">
+      <span class="arsenal-loading">Loading…</span>
+    </div>`;
+  }
+
+  const items = arsenalData?.stats?.[0]?.splits ?? [];
+  if (!items.length) {
+    return `<div class="pitcher-arsenal pitcher-arsenal--empty">
+      <span class="arsenal-empty">No arsenal data</span>
+    </div>`;
+  }
+
+  // Sort by usage % descending, take up to 5 pitches
+  const sorted = [...items]
+    .sort((a, b) => (b.stat?.percentage ?? 0) - (a.stat?.percentage ?? 0))
+    .slice(0, 5);
+
+  const pills = sorted.map(item => {
+    const desc = item.type?.description ?? '';
+    const abbr = PITCH_ABBREV[desc] ?? desc.slice(0, 2).toUpperCase();
+    const pct  = item.stat?.percentage != null
+      ? Math.round(item.stat.percentage * 100) + '%'
+      : '';
+    const velo = item.stat?.averageSpeed != null
+      ? Math.round(item.stat.averageSpeed) + ''
+      : '';
+    return `<span class="arsenal-pill" title="${esc(desc)}">
+      <span class="arsenal-pill-type">${esc(abbr)}</span>
+      <span class="arsenal-pill-stats">${esc(pct)}${velo ? ` ${esc(velo)}` : ''}</span>
+    </span>`;
+  }).join('');
+
+  return `<div class="pitcher-arsenal">${pills}</div>`;
+}
+
+function renderProbablePitchers(game, arsenals) {
   const awayPitcher = game.teams?.away?.probablePitcher?.fullName;
   const homePitcher = game.teams?.home?.probablePitcher?.fullName;
   if (!awayPitcher && !homePitcher) return '';
@@ -630,11 +690,16 @@ function renderProbablePitchers(game) {
   const awayLabel = TEAM_ABBREV[game.teams?.away?.team?.id] ?? 'Away';
   const homeLabel = TEAM_ABBREV[game.teams?.home?.team?.id] ?? 'Home';
 
+  const awayArsenal = renderPitcherArsenal(arsenals?.away ?? null);
+  const homeArsenal = renderPitcherArsenal(arsenals?.home ?? null);
+
   return `<div class="probable-pitchers">
     <div class="probable-pitchers-title">Probable Pitchers</div>
     <div class="probable-pitchers-list">
       <div class="probable-pitcher-row"><span class="probable-pitcher-team">${esc(awayLabel)}</span><span class="probable-pitcher-name">${esc(awayPitcher || 'TBD')}</span></div>
+      ${awayArsenal}
       <div class="probable-pitcher-row"><span class="probable-pitcher-team">${esc(homeLabel)}</span><span class="probable-pitcher-name">${esc(homePitcher || 'TBD')}</span></div>
+      ${homeArsenal}
     </div>
   </div>`;
 }
@@ -659,8 +724,11 @@ function renderPitchingLines(boxData) {
           bb: stats.baseOnBalls ?? 0,
           k: stats.strikeOuts ?? 0,
           pitches: stats.numberOfPitches ?? null,
+          ipNum: parseFloat(stats.inningsPitched ?? 0),
+          pitchHand: player.person?.pitchHand?.code ?? '',
         };
-      });
+      })
+      .sort((a, b) => b.ipNum - a.ipNum);
 
     if (!pitchers.length) {
       return `<div class="box-section box-performers">
@@ -679,7 +747,8 @@ function renderPitchingLines(boxData) {
         if (p.bb > 0) extras.push(`${p.bb} BB`);
         if (p.k > 0) extras.push(`${p.k} K`);
         if ((p.pitches ?? 0) > 0) extras.push(`${p.pitches} P`);
-        return `<span class="box-perf-row"><span class="box-perf-name">${esc(p.name)}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
+        const pitchHandDisplay = p.pitchHand ? `<span class="box-perf-hand">${p.pitchHand}</span>` : '';
+        return `<span class="box-perf-row"><span class="box-perf-name">${esc(p.name)}${pitchHandDisplay}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
       }).join('')}
     </div>`;
   };
@@ -693,81 +762,110 @@ function playerLabel(person) {
 
 function renderScoutNotes(game) {
   const isLive = game.status?.abstractGameState === 'Live';
+  const isPreview = game.status?.abstractGameState === 'Preview';
+  const isFinal = game.status?.abstractGameState === 'Final';
   const awayId = game.teams?.away?.team?.id;
   const homeId = game.teams?.home?.team?.id;
   const isOriolesGame = awayId === ORIOLES_ID || homeId === ORIOLES_ID;
-  if (!isLive || !isOriolesGame) return '';
+  if (!isOriolesGame) return '';
 
-  const ls = game.linescore ?? {};
-  const offense = ls.offense ?? {};
-  const defense = ls.defense ?? {};
-  const inning = ls.currentInning ?? '';
-  const half = ls.inningHalf === 'Top' ? 'top' : 'bottom';
-  const outs = ls.outs ?? 0;
-  const balls = ls.balls ?? null;
-  const strikes = ls.strikes ?? null;
-  const runnersOn = [offense.first, offense.second, offense.third].filter(Boolean).length;
-  const risp = [offense.second, offense.third].filter(Boolean).length;
-  const basesLoaded = Boolean(offense.first && offense.second && offense.third);
-  const oriolesBatting = offense.team?.id === ORIOLES_ID;
-  const oriolesPitching = defense.team?.id === ORIOLES_ID;
-  const oriolesScore = awayId === ORIOLES_ID ? (game.teams?.away?.score ?? 0) : (game.teams?.home?.score ?? 0);
-  const oppScore = awayId === ORIOLES_ID ? (game.teams?.home?.score ?? 0) : (game.teams?.away?.score ?? 0);
-  const diff = oriolesScore - oppScore;
-  const batter = oriolesBatting ? offense.batter : defense.pitcher;
-  const onDeck = oriolesBatting ? offense.onDeck : defense.onDeck;
-  const inHole = oriolesBatting ? offense.inHole : defense.inHole;
-  const pitcher = oriolesBatting ? offense.pitcher : defense.pitcher;
-  const opposingBatter = oriolesPitching ? defense.batter : offense.batter;
   const notes = [];
+  let badge = 'Scout';
+  let context = '';
 
-  if (oriolesBatting) {
-    if (basesLoaded) {
-      notes.push(`${playerLabel(batter)} steps in with the bases loaded in the ${half} of the ${inning}${ordinalSuffix(inning)}.`);
-    } else if (risp > 0) {
-      notes.push(`${playerLabel(batter)} is up with ${risp} in scoring position and ${outs} out${outs === 1 ? '' : 's'}.`);
-    } else if (offense.first && outs === 0) {
-      notes.push(`${playerLabel(batter)} comes up with early traffic and nobody out.`);
+  if (isLive) {
+    const ls = game.linescore ?? {};
+    const offense = ls.offense ?? {};
+    const defense = ls.defense ?? {};
+    const inning = ls.currentInning ?? '';
+    const half = ls.inningHalf === 'Top' ? 'top' : 'bottom';
+    const outs = ls.outs ?? 0;
+    const balls = ls.balls ?? null;
+    const strikes = ls.strikes ?? null;
+    const runnersOn = [offense.first, offense.second, offense.third].filter(Boolean).length;
+    const risp = [offense.second, offense.third].filter(Boolean).length;
+    const basesLoaded = Boolean(offense.first && offense.second && offense.third);
+    const oriolesBatting = offense.team?.id === ORIOLES_ID;
+    const oriolesPitching = defense.team?.id === ORIOLES_ID;
+    const oriolesScore = awayId === ORIOLES_ID ? (game.teams?.away?.score ?? 0) : (game.teams?.home?.score ?? 0);
+    const oppScore = awayId === ORIOLES_ID ? (game.teams?.home?.score ?? 0) : (game.teams?.away?.score ?? 0);
+    const diff = oriolesScore - oppScore;
+    const batter = oriolesBatting ? offense.batter : defense.pitcher;
+    const onDeck = oriolesBatting ? offense.onDeck : defense.onDeck;
+    const inHole = oriolesBatting ? offense.inHole : defense.inHole;
+    const pitcher = oriolesBatting ? offense.pitcher : defense.pitcher;
+    const opposingBatter = oriolesPitching ? defense.batter : offense.batter;
+
+    if (oriolesBatting) {
+      if (basesLoaded) {
+        notes.push(`${playerLabel(batter)} steps in with the bases loaded in the ${half} of the ${inning}${ordinalSuffix(inning)}.`);
+      } else if (risp > 0) {
+        notes.push(`${playerLabel(batter)} is up with ${risp} in scoring position and ${outs} out${outs === 1 ? '' : 's'}.`);
+      } else if (offense.first && outs === 0) {
+        notes.push(`${playerLabel(batter)} comes up with early traffic and nobody out.`);
+      }
+
+      if (diff < 0) {
+        if (diff === -1) notes.push(`${playerLabel(batter)} is the tying run at the plate.`);
+        else if (diff === -2 && runnersOn >= 1) notes.push(`The tying run is aboard with ${playerLabel(batter)} up.`);
+        else if (diff === -3 && runnersOn >= 2) notes.push(`${playerLabel(batter)} hits with a real tying rally brewing.`);
+      } else if (diff >= 0 && inning >= 7 && runnersOn > 0) {
+        notes.push(`${playerLabel(batter)} has a late chance to add breathing room with traffic aboard.`);
+      }
+
+      if (balls === 3 && strikes !== 2) {
+        notes.push(`Count leans ${playerLabel(batter)} at ${balls}-${strikes} against ${playerLabel(pitcher)}.`);
+      } else if (strikes === 2 && balls != null && balls <= 1) {
+        notes.push(`${playerLabel(pitcher)} has ${playerLabel(batter)} in a two-strike spot.`);
+      }
+
+      if (onDeck?.fullName && inHole?.fullName) {
+        notes.push(`Next up: ${playerLabel(onDeck)}, then ${playerLabel(inHole)}.`);
+      }
     }
 
-    if (diff < 0) {
-      if (diff === -1) notes.push(`${playerLabel(batter)} is the tying run at the plate.`);
-      else if (diff === -2 && runnersOn >= 1) notes.push(`The tying run is aboard with ${playerLabel(batter)} up.`);
-      else if (diff === -3 && runnersOn >= 2) notes.push(`${playerLabel(batter)} hits with a real tying rally brewing.`);
-    } else if (diff >= 0 && inning >= 7 && runnersOn > 0) {
-      notes.push(`${playerLabel(batter)} has a late chance to add breathing room with traffic aboard.`);
+    if (oriolesPitching) {
+      if (diff > 0 && inning >= 8 && diff <= 3) {
+        notes.push(`${playerLabel(defense.pitcher)} is in a save-pressure spot.`);
+      }
+      if (offense.first && outs < 2) {
+        notes.push(`${playerLabel(defense.pitcher)} has a double-play chance with ${playerLabel(opposingBatter)} up.`);
+      }
+      if (risp > 0) {
+        notes.push(`${playerLabel(defense.pitcher)} is working through traffic with ${risp} in scoring position.`);
+      }
+      if (strikes === 2 && balls != null && balls <= 1) {
+        notes.push(`${playerLabel(defense.pitcher)} is ahead ${balls}-${strikes} to ${playerLabel(opposingBatter)}.`);
+      } else if (balls === 3 && strikes !== 2) {
+        notes.push(`${playerLabel(opposingBatter)} has the count edge at ${balls}-${strikes} against ${playerLabel(defense.pitcher)}.`);
+      }
     }
 
-    if (balls === 3 && strikes !== 2) {
-      notes.push(`Count leans ${playerLabel(batter)} at ${balls}-${strikes} against ${playerLabel(pitcher)}.`);
-    } else if (strikes === 2 && balls != null && balls <= 1) {
-      notes.push(`${playerLabel(pitcher)} has ${playerLabel(batter)} in a two-strike spot.`);
+    if (Math.abs(oriolesScore - oppScore) <= 2 && inning >= 7) {
+      notes.push(`Late leverage: a ${Math.abs(oriolesScore - oppScore)}-run game in the ${inning}${ordinalSuffix(inning)}.`);
     }
 
-    if (onDeck?.fullName && inHole?.fullName) {
-      notes.push(`Next up: ${playerLabel(onDeck)}, then ${playerLabel(inHole)}.`);
+    context = `${ls.inningHalf || ''} ${String(inning || '')}`;
+  } else if (isPreview) {
+    badge = 'Matchup';
+    const awayPitcher = game.teams?.away?.probablePitcher?.fullName;
+    const homePitcher = game.teams?.home?.probablePitcher?.fullName;
+    if (awayPitcher || homePitcher) {
+      notes.push(`${awayPitcher || 'TBD'} vs ${homePitcher || 'TBD'}`);
     }
-  }
-
-  if (oriolesPitching) {
-    if (diff > 0 && inning >= 8 && diff <= 3) {
-      notes.push(`${playerLabel(defense.pitcher)} is in a save-pressure spot.`);
+  } else if (isFinal) {
+    badge = 'Final';
+    const oriolesScore = awayId === ORIOLES_ID ? (game.teams?.away?.score ?? 0) : (game.teams?.home?.score ?? 0);
+    const oppScore = awayId === ORIOLES_ID ? (game.teams?.home?.score ?? 0) : (game.teams?.away?.score ?? 0);
+    const oppName = awayId === ORIOLES_ID ? game.teams?.home?.team?.name : game.teams?.away?.team?.name;
+    const oppAbbr = TEAM_ABBREV[awayId === ORIOLES_ID ? (game.teams?.home?.team?.id) : (game.teams?.away?.team?.id)] ?? '';
+    if (oriolesScore > oppScore) {
+      notes.push(`Orioles won ${oriolesScore}-${oppScore} vs ${oppAbbr}.`);
+    } else if (oriolesScore < oppScore) {
+      notes.push(`Orioles lost ${oriolesScore}-${oppScore} vs ${oppAbbr}.`);
+    } else {
+      notes.push(`Orioles tied ${oriolesScore}-${oppScore} vs ${oppAbbr}.`);
     }
-    if (offense.first && outs < 2) {
-      notes.push(`${playerLabel(defense.pitcher)} has a double-play chance with ${playerLabel(opposingBatter)} up.`);
-    }
-    if (risp > 0) {
-      notes.push(`${playerLabel(defense.pitcher)} is working through traffic with ${risp} in scoring position.`);
-    }
-    if (strikes === 2 && balls != null && balls <= 1) {
-      notes.push(`${playerLabel(defense.pitcher)} is ahead ${balls}-${strikes} to ${playerLabel(opposingBatter)}.`);
-    } else if (balls === 3 && strikes !== 2) {
-      notes.push(`${playerLabel(opposingBatter)} has the count edge at ${balls}-${strikes} against ${playerLabel(defense.pitcher)}.`);
-    }
-  }
-
-  if (Math.abs(diff) <= 2 && inning >= 7) {
-    notes.push(`Late leverage: a ${Math.abs(diff)}-run game in the ${inning}${ordinalSuffix(inning)}.`);
   }
 
   const uniqueNotes = [...new Set(notes)].slice(0, 3);
@@ -775,8 +873,8 @@ function renderScoutNotes(game) {
 
   return `<div class="box-section scout-notes">
     <div class="scout-notes-head">
-      <span class="scout-badge">Scout</span>
-      <span class="scout-context">${esc(ls.inningHalf || '')} ${esc(String(inning || ''))}</span>
+      <span class="scout-badge">${badge}</span>
+      ${context ? `<span class="scout-context">${esc(context)}</span>` : ''}
     </div>
     <div class="scout-notes-list">
       ${uniqueNotes.map(note => `<div class="scout-note-row">${esc(note)}</div>`).join('')}
@@ -809,10 +907,10 @@ function renderDecisionStrip(g) {
   return `<div class="box-decisions">${parts.join('')}</div>`;
 }
 
-function renderBoxScore(g, boxData) {
+function renderBoxScore(g, boxData, arsenals) {
   const isPreview = g.status.abstractGameState === 'Preview';
   if (isPreview) {
-    return `${renderProbablePitchers(g)}${
+    return `${renderProbablePitchers(g, arsenals)}${
       boxData
         ? renderLineupPopover(boxData)
         : '<div class="score-lineups"><div class="score-lineups-title">Lineups</div><div class="score-lineups-empty">Loading lineup status…</div></div>'
@@ -917,15 +1015,6 @@ async function loadScores() {
     }
     track.innerHTML = html || '<span class="scores-msg">No games scheduled</span>';
 
-    // Story link click handler — redirect to story URL instead of Gameday
-    track.querySelectorAll('.chip-story').forEach(el => {
-      el.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        window.open(el.dataset.story, '_blank');
-      });
-    });
-
     // Box score popover on hover
     let boxPopover = document.getElementById('boxScorePopover');
     if (!boxPopover) {
@@ -952,19 +1041,36 @@ async function loadScores() {
       const g = state.gamesMap[pk];
       if (!g) return;
       clearTimeout(boxTimer);
-      // Show linescore immediately
-      boxPopover.innerHTML = renderBoxScore(g, boxscoreCache[pk] || null);
+
+      const isPreview = g.status?.abstractGameState === 'Preview';
+      const awayId = g.teams?.away?.probablePitcher?.id;
+      const homeId = g.teams?.home?.probablePitcher?.id;
+
+      // Phase 1: render with cached data
+      const currentArsenals = isPreview
+        ? { away: arsenalCache[awayId] ?? null, home: arsenalCache[homeId] ?? null }
+        : null;
+      boxPopover.innerHTML = renderBoxScore(g, boxscoreCache[pk] || null, currentArsenals);
       boxPopover.style.left = '-9999px';
       boxPopover.style.top = '0';
       boxPopover.classList.remove('hidden');
       positionPopover(chip);
-      // Fetch full boxscore for performers (async, cached)
-      if (!boxscoreCache[pk]) {
-        fetchBoxscore(pk).then(data => {
-          if (data && !boxPopover.classList.contains('hidden')) {
-            boxPopover.innerHTML = renderBoxScore(g, data);
-            positionPopover(chip);
-          }
+
+      // Phase 2: fetch missing data
+      const missing = [
+        !boxscoreCache[pk]               && fetchBoxscore(pk),
+        isPreview && !arsenalCache[awayId] && fetchArsenal(awayId),
+        isPreview && !arsenalCache[homeId] && fetchArsenal(homeId),
+      ].filter(Boolean);
+
+      if (missing.length) {
+        Promise.all(missing).then(() => {
+          if (boxPopover.classList.contains('hidden')) return;
+          const updatedArsenals = isPreview
+            ? { away: arsenalCache[awayId] ?? null, home: arsenalCache[homeId] ?? null }
+            : null;
+          boxPopover.innerHTML = renderBoxScore(g, boxscoreCache[pk] || null, updatedArsenals);
+          positionPopover(chip);
         });
       }
     }
@@ -1590,8 +1696,16 @@ async function loadOnDeck() {
     ).then(r => r.json());
 
     const games = (data.dates ?? []).flatMap(d => d.games);
-    // Find next game that hasn't finished
-    const next = games.find(g => g.status.abstractGameState !== 'Final');
+    // Find today's game to check if it's live
+    const todayStr = today;
+    const todayGame = games.find(g => g.gameDate.startsWith(todayStr));
+    const todayIsLive = todayGame?.status?.abstractGameState === 'Live';
+
+    // If today's game is live, show next upcoming game (not today's); otherwise show next upcoming game overall
+    const next = todayIsLive
+      ? games.find(g => !g.gameDate.startsWith(todayStr) && g.status.abstractGameState !== 'Final')
+      : games.find(g => g.status.abstractGameState !== 'Final');
+
     if (!next) {
       wrap.innerHTML = '<span class="sidebar-msg">No upcoming games</span>';
       return;
@@ -1611,12 +1725,16 @@ async function loadOnDeck() {
     const venueDetails = await fetchVenueDetails(next.venue?.id);
     const fieldInfo = venueDetails?.fieldInfo ?? null;
 
-    // Fetch weather for the game venue
-    await fetchWeatherForGames([next]);
-    const wx = getGameWeather(next);
-    const wxHtml = wx
-      ? `<div class="on-deck-weather"><span>${wx.emoji} ${wx.temp}°F</span><span class="on-deck-wx-desc">${esc(wx.condition)}</span></div>`
-      : '';
+    // Fetch weather for the game venue only if it's today's game
+    const nextIsToday = next.gameDate.startsWith(todayStr);
+    let wxHtml = '';
+    if (nextIsToday) {
+      await fetchWeatherForGames([next]);
+      const wx = getGameWeather(next);
+      wxHtml = wx
+        ? `<div class="on-deck-weather"><span>${wx.emoji} ${wx.temp}°F</span><span class="on-deck-wx-desc">${esc(wx.condition)}</span></div>`
+        : '';
+    }
 
     const awaySlug = TEAM_SLUG[away.team.id] ?? '';
     const homeSlug = TEAM_SLUG[home.team.id] ?? '';
@@ -1990,8 +2108,9 @@ async function loadPodcast() {
         <span>${esc(dateLabel || 'Latest episode')}</span>
         <span>Buster Olney</span>
       </div>
-      <audio class="podcast-player" controls preload="none">
-        <source src="${esc(episode.audioUrl)}" type="${esc(episode.audioType || 'audio/mpeg')}">
+      <audio class="podcast-player" controls preload="metadata">
+        <source src="${episode.audioUrl}" type="${episode.audioType || 'audio/mpeg'}">
+        Your browser does not support the audio element.
       </audio>
       ${descHtml}
       <div class="podcast-links">

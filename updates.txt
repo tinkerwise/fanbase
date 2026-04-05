@@ -108,19 +108,37 @@
 - anticipate visual cues for visitors to types of media content (text, audio, video, graphics)
 - minimze load on browser cache, memory, etc.
 - work through ##Active then prompt for ##Queued, prompt for help with ##Ideas
+- update this file after tasks are completed
 
 ##Active
-- Add items here for immediate implementation
-- update On Deck to switch to next day's game when today's game starts
-- Make Scout Notes prioritize and surface the single most interesting note first
-- Add batter/pitcher handedness or batting-order pocket notes for more matchup context
-- add team logo inline leading to player names in Score Bug popover
-- list pitchers based on appearance in game starters first, relievers as they enter game
-- 
-##Queued
-- Add items here for the likely next batch of work
-- remove the Story link at the bottom of the final Score Bug
-- any ideas on how to use this https://www.mlb.com/schedule/gameday/scout on site?
+//Add items here for immediate implementation
 
-##Parking lot 
+# TEAM LOGO WORK (Score Bug popover)
+- ✓ add team logo inline leading to Key Hitters names (remove abbr, replace with logo)
+- ✓ add logo to lineup title followed by full team name (Baltimore Orioles) in Score Bug popover
+
+# PITCHER WORK (Score Bug popover)
+- ✓ list pitchers based on appearance in game starters first, relievers as they enter game
+- ✓ Add batter/pitcher handedness or batting-order pocket notes for more matchup context
+
+# GAME STATE & CONTENT
+- ✓ update On Deck to switch to next day's game when today's game starts
+- ✓ Add Scout Notes to each game popover
+
+# WIDGETS
+- ✓ fix audio widget to feed and play podcast audio
+- ✓ scroll left sidebar similar to right sidebar
+
+##Queued
+//Add items here for the likely next batch of work
+- ✓ remove the Story link at the bottom of the final Score Bug
+
+# SCOUT FEATURES (MLB Scout Integration)
+- ✓ Pitcher scouting notes: show pitch arsenal (type, %, velo) for Preview games
+  - Displays as pill badges below each probable pitcher
+  - Two-phase async load: "Loading…" → full arsenal once API responds
+  - Live games: Scout Notes unchanged (content-dense, no arsenal display)
+- Future: Live game current pitcher arsenal, batter matchup context
+
+##Parking lot
 - Create a companion mobile app (iOS, Android) based on BIG IDEA #1

@@ -378,13 +378,6 @@ img { display: block; max-width: 100%; }
 .base.b2 { grid-column: 1; grid-row: 1; }
 .base.b1 { grid-column: 2; grid-row: 1; }
 .base.b3 { grid-column: 1; grid-row: 2; }
-.chip-story {
-  display: block; font-size: 0.6rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.05em; color: #22c55e; text-align: center;
-  cursor: pointer; opacity: 0.85; transition: opacity 0.15s;
-}
-.chip-story:hover { opacity: 1; text-decoration: underline; }
-
 /* Box score popover */
 .box-score-popover {
   position: fixed; z-index: 100;
@@ -457,7 +450,8 @@ img { display: block; max-width: 100%; }
 }
 .box-perf-row { display: flex; align-items: center; gap: 5px; font-size: 0.66rem; }
 .box-perf-logo { width: 18px; height: 18px; flex-shrink: 0; }
-.box-perf-name { font-weight: 600; color: var(--text-1); }
+.box-perf-name { font-weight: 600; color: var(--text-1); display: flex; align-items: baseline; gap: 4px; }
+.box-perf-hand { font-size: 0.55rem; color: var(--text-3); font-weight: 400; }
 .box-perf-team { color: var(--text-3); font-size: 0.6rem; }
 .box-perf-stat { color: var(--text-2); margin-left: auto; white-space: nowrap; text-align: right; }
 .scout-notes {
@@ -537,6 +531,36 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* ── Pitcher Arsenal Pills ───────────────────────────────────────── */
+.pitcher-arsenal {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  padding: 3px 0 4px 36px;
+  min-height: 20px;
+}
+.pitcher-arsenal--loading, .pitcher-arsenal--empty {
+  align-items: center;
+}
+.arsenal-loading, .arsenal-empty {
+  font-size: 0.58rem; color: var(--text-3); font-style: italic;
+}
+.arsenal-pill {
+  display: inline-flex; align-items: baseline; gap: 2px;
+  padding: 1px 5px; border-radius: 999px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  white-space: nowrap; cursor: default;
+}
+.arsenal-pill-type {
+  font-size: 0.6rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em;
+}
+.arsenal-pill-stats {
+  font-size: 0.58rem; color: var(--text-3); font-variant-numeric: tabular-nums;
+}
+[data-theme="light"] .arsenal-pill {
+  background: rgba(0,0,0,0.04);
+}
+[data-theme="opacy"] .arsenal-pill {
+  background: rgba(223,70,1,0.08); border-color: color-mix(in srgb, var(--orange) 30%, var(--border) 70%);
+}
 .score-lineups {
   display: flex;
   flex-direction: column;
@@ -561,9 +585,14 @@ img { display: block; max-width: 100%; }
 .score-lineup-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 6px;
   margin-bottom: 4px;
+}
+.score-lineup-logo {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 .score-lineup-label {
   font-size: 0.65rem;
@@ -596,9 +625,15 @@ img { display: block; max-width: 100%; }
 .score-lineup-name {
   color: var(--text);
   min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.score-lineup-hand {
+  font-size: 0.55rem;
+  color: var(--text-3);
+  font-weight: 400;
+  flex-shrink: 0;
 }
 .score-lineups-empty {
   font-size: 0.68rem;
@@ -648,10 +683,12 @@ img { display: block; max-width: 100%; }
   scrollbar-color: var(--border) transparent;
 }
 .sidebar-right {
-  position: static;
-  top: auto;
-  max-height: none;
-  overflow: visible;
+  position: sticky;
+  top: calc(var(--header-h) + var(--scores-h) + 16px);
+  max-height: calc(100vh - var(--header-h) - var(--scores-h) - 32px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
 .search-wrap {
