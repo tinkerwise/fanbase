@@ -66,11 +66,8 @@ jobs:
     steps:
       - name: Check production RSS proxy
         run: |
-          PROXY_URL="${SITE_URL}rss-proxy.php?url=$(python3 - <<'PY'
-import urllib.parse
-print(urllib.parse.quote('https://www.mlb.com/orioles/feeds/news/rss.xml', safe=''))
-PY
-)"
+          ENCODED_FEED_URL="$(python3 -c "import urllib.parse; print(urllib.parse.quote('${HEALTH_FEED_URL}', safe=''))")"
+          PROXY_URL="${SITE_URL}rss-proxy.php?url=${ENCODED_FEED_URL}"
           curl -fsSL "${PROXY_URL}" | tee /tmp/yardreport-proxy.json > /dev/null
           rg -q '"feedTitle"' /tmp/yardreport-proxy.json
           rg -q '"items"' /tmp/yardreport-proxy.json
