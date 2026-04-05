@@ -579,16 +579,17 @@ img { display: block; max-width: 100%; }
   font-size: 0.58rem; color: var(--text-3); font-style: italic;
 }
 .arsenal-pill {
-  display: inline-flex; align-items: baseline; gap: 2px;
+  display: inline-flex; align-items: center;
   padding: 1px 5px; border-radius: 999px;
   background: rgba(255,255,255,0.05); border: 1px solid var(--border);
   white-space: nowrap; cursor: default;
 }
-.arsenal-pill-type {
-  font-size: 0.6rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em;
-}
-.arsenal-pill-stats {
-  font-size: 0.58rem; color: var(--text-3); font-variant-numeric: tabular-nums;
+.arsenal-pill-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 [data-theme="light"] .arsenal-pill {
   background: rgba(0,0,0,0.04);

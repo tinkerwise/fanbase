@@ -624,16 +624,16 @@ function renderPitcherArsenal(arsenalData, { limit = 5, showVelo = true } = {}) 
 
   const pills = sorted.map(item => {
     const desc = item.type?.description ?? '';
-    const pitchName = PITCH_NAMES[desc] ?? desc.slice(0, 2).toUpperCase();
+    const pitchName = PITCH_NAMES[desc] ?? desc ?? 'Pitch';
     const pct  = item.stat?.percentage != null
       ? Math.round(item.stat.percentage * 100) + '%'
       : '';
     const velo = showVelo && item.stat?.averageSpeed != null
       ? Math.round(item.stat.averageSpeed) + ''
       : '';
+    const label = [pitchName, pct, velo].filter(Boolean).join(' ');
     return `<span class="arsenal-pill" title="${esc(desc)}">
-      <span class="arsenal-pill-type">${esc(pitchName)}</span>
-      <span class="arsenal-pill-stats">${esc(pct)}${velo ? ` ${esc(velo)}` : ''}</span>
+      <span class="arsenal-pill-label">${esc(label)}</span>
     </span>`;
   }).join('');
 
