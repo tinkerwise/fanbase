@@ -528,21 +528,29 @@ function getLineupBattingStats(player) {
   return player?.seasonStats?.batting ?? player?.stats?.batting ?? {};
 }
 
+function getBattingRate(stats, ...keys) {
+  for (const key of keys) {
+    const value = stats?.[key];
+    if (value != null && value !== '') return value;
+  }
+  return null;
+}
+
 function formatLineupSlashLine(player) {
   const stats = getLineupBattingStats(player);
   return [
-    formatSlashStat(stats.battingAverage),
-    formatSlashStat(stats.onBasePercentage),
-    formatSlashStat(stats.ops ?? stats.onBasePlusSlugging),
+    formatSlashStat(getBattingRate(stats, 'battingAverage', 'avg')),
+    formatSlashStat(getBattingRate(stats, 'onBasePercentage', 'obp')),
+    formatSlashStat(getBattingRate(stats, 'ops', 'onBasePlusSlugging')),
   ].join('/');
 }
 
 function lineupHotnessScore(player) {
   const stats = getLineupBattingStats(player);
-  const ops = Number.parseFloat(stats.ops ?? stats.onBasePlusSlugging ?? 0) || 0;
-  const avg = Number.parseFloat(stats.battingAverage ?? 0) || 0;
-  const obp = Number.parseFloat(stats.onBasePercentage ?? 0) || 0;
-  const slg = Number.parseFloat(stats.sluggingPercentage ?? 0) || 0;
+  const ops = Number.parseFloat(getBattingRate(stats, 'ops', 'onBasePlusSlugging') ?? 0) || 0;
+  const avg = Number.parseFloat(getBattingRate(stats, 'battingAverage', 'avg') ?? 0) || 0;
+  const obp = Number.parseFloat(getBattingRate(stats, 'onBasePercentage', 'obp') ?? 0) || 0;
+  const slg = Number.parseFloat(getBattingRate(stats, 'sluggingPercentage', 'slg') ?? 0) || 0;
   return (ops * 1000) + (obp * 100) + (slg * 10) + avg;
 }
 
