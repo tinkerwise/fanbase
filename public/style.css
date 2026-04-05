@@ -471,6 +471,14 @@ img { display: block; max-width: 100%; }
 .decision-pill.win { color: #4ade80; }
 .decision-pill.loss { color: #f87171; }
 .decision-pill.save { color: var(--text-2); }
+.box-top-performers {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid var(--border);
+}
 .box-performers {
   display: flex; flex-direction: column; gap: 2px;
 }
@@ -903,9 +911,6 @@ img { display: block; max-width: 100%; }
 }
 .score-lineup-rate--top-ten {
   color: var(--orange);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  font-size: var(--popover-meta-size);
 }
 .score-lineup-rate--leader {
   color: #ffffff;

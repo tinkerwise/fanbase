@@ -499,53 +499,46 @@ async function fetchPitcherVsTeam(pitcherId, oppTeamId) {
 
 function topPerformers(boxData) {
   if (!boxData) return '';
-  const sides = ['away', 'home'];
-  const allBatters = [];
 
-  for (const side of sides) {
+  const bestFromSide = side => {
     const team = boxData.teams?.[side];
-    if (!team) continue;
+    if (!team) return null;
     const teamId = team.team?.id;
     const abbr = TEAM_ABBREV[teamId] ?? team.team?.abbreviation ?? '';
-    const players = team.players ?? {};
-    for (const [, p] of Object.entries(players)) {
+    let best = null;
+    for (const [, p] of Object.entries(team.players ?? {})) {
       const bs = p.stats?.batting;
-      if (bs && (bs.atBats > 0 || bs.baseOnBalls > 0)) {
-        const hits = bs.hits ?? 0;
-        const ab = bs.atBats ?? 0;
-        const hr = bs.homeRuns ?? 0;
-        const rbi = bs.rbi ?? 0;
-        const bb = bs.baseOnBalls ?? 0;
-        // Score: weight HRs and multi-hit games
-        const score = hits * 2 + hr * 5 + rbi * 2 + bb;
-        const batSide = p.person?.batSide?.code ?? '';
-        allBatters.push({ name: p.person?.fullName ?? '', playerId: p.person?.id ?? null, abbr, teamId, hits, ab, hr, rbi, bb, score, batSide });
+      if (!bs || (bs.atBats === 0 && bs.baseOnBalls === 0)) continue;
+      const hits = bs.hits ?? 0;
+      const ab = bs.atBats ?? 0;
+      const hr = bs.homeRuns ?? 0;
+      const rbi = bs.rbi ?? 0;
+      const bb = bs.baseOnBalls ?? 0;
+      const score = hits * 2 + hr * 5 + rbi * 2 + bb;
+      if (!best || score > best.score) {
+        best = { name: p.person?.fullName ?? '', playerId: p.person?.id ?? null, abbr, teamId, hits, ab, hr, rbi, bb, score };
       }
     }
-  }
+    return best;
+  };
 
-  // Top 3 hitters by score
-  allBatters.sort((a, b) => b.score - a.score);
-  const topHit = allBatters.slice(0, 3);
+  const rows = ['away', 'home'].map(side => {
+    const b = bestFromSide(side);
+    if (!b || b.score === 0) return '';
+    const extras = [];
+    if (b.hits > 0 && b.ab > 0) extras.push(`${b.hits}-${b.ab}`);
+    else if (b.ab > 0) extras.push(`${b.ab} AB`);
+    if (b.hr) extras.push(`${b.hr} HR`);
+    if (b.rbi) extras.push(`${b.rbi} RBI`);
+    if (b.bb) extras.push(`${b.bb} BB`);
+    const statLine = extras.join(', ');
+    if (!statLine) return '';
+    const abbr = b.abbr ? `<span class="box-perf-team">${esc(b.abbr)}</span>` : '';
+    return `<span class="box-perf-row">${abbr}<span class="box-perf-name">${renderPlayerNameLink(compactBoxName(b.name), b.playerId)}</span><span class="box-perf-stat">${statLine}</span></span>`;
+  }).filter(Boolean);
 
-  let html = '';
-  if (topHit.length) {
-    html += '<div class="box-section box-performers"><span class="box-perf-label">Key Hitters</span>';
-    html += topHit.map(b => {
-      const extras = [];
-      if (b.hits > 0 && b.ab > 0) extras.push(`${b.hits}-${b.ab}`);
-      else if (b.ab > 0) extras.push(`${b.ab} AB`);
-      if (b.hr) extras.push(`${b.hr} HR`);
-      if (b.rbi) extras.push(`${b.rbi} RBI`);
-      if (b.bb) extras.push(`${b.bb} BB`);
-        const statLine = extras.join(', ') || 'No notable line';
-      const logoHtml = b.teamId ? `<img class="box-perf-logo" src="https://www.mlbstatic.com/team-logos/${b.teamId}.svg" alt="${esc(b.abbr)}" width="18" height="18">` : '';
-      const batSideDisplay = b.batSide ? `<span class="box-perf-hand">${b.batSide}</span>` : '';
-      return `<span class="box-perf-row">${logoHtml}<span class="box-perf-name">${renderPlayerNameLink(compactBoxName(b.name), b.playerId)}${batSideDisplay}</span> <span class="box-perf-stat">${statLine}</span></span>`;
-    }).join('');
-    html += '</div>';
-  }
-  return html;
+  if (!rows.length) return '';
+  return `<div class="box-top-performers">${rows.join('')}</div>`;
 }
 
 function formatSlashStat(value) {
@@ -1152,8 +1145,8 @@ function renderBoxScore(g, boxData, arsenals, matchupCtx = null) {
         </tbody>
       </table>
       ${decisions}
+      ${performers}
     </div>
-    ${performers}
     ${pitchingLines}
     ${renderPopoverLegend()}
   </div>`;
