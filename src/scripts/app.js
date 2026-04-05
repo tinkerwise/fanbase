@@ -651,8 +651,9 @@ function renderPitcherArsenal(arsenalData, { limit = 5, showVelo = true } = {}) 
     .slice(0, limit);
 
   const pills = sorted.map(item => {
-    const desc = item.type?.description ?? item.type?.code ?? '';
-    const pitchName = resolvePitchName(item.type);
+    const pitchType = item.stat?.type ?? item.type ?? {};
+    const desc = pitchType.description ?? pitchType.code ?? '';
+    const pitchName = resolvePitchName(pitchType);
     const pct  = item.stat?.percentage != null
       ? Math.round(item.stat.percentage * 100) + '%'
       : '';
@@ -777,8 +778,9 @@ function renderScoutPitchMix(arsenalData, pitcherName) {
     .sort((a, b) => (b.stat?.percentage ?? 0) - (a.stat?.percentage ?? 0))
     .slice(0, 3)
     .map(item => {
-      const desc = item.type?.description ?? '';
-      const pitchName = resolvePitchName(item.type);
+      const pitchType = item.stat?.type ?? item.type ?? {};
+      const desc = pitchType.description ?? pitchType.code ?? '';
+      const pitchName = resolvePitchName(pitchType);
       const pct = item.stat?.percentage != null ? `${Math.round(item.stat.percentage * 100)}%` : '';
       const velo = item.stat?.averageSpeed != null ? `${Math.round(item.stat.averageSpeed)} mph` : '';
       return `<span class="scout-pitch-pill" title="${esc(desc)}">
