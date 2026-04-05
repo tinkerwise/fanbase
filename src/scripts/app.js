@@ -2085,8 +2085,8 @@ async function loadOnDeck() {
     const gdDate = next.gameDate.slice(0, 10).replace(/-/g, '/');
     const gdUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gdDate}/${next.gamePk}/preview`;
 
-    // Build upcoming game boxes (skip the "next" game)
-    const upcoming = games.filter(g => g.gamePk !== next.gamePk && g.status.abstractGameState !== 'Final');
+    // Build upcoming game boxes (include all non-final games including the featured one)
+    const upcoming = games.filter(g => g.status.abstractGameState !== 'Final');
     const scheduleBoxes = upcoming.slice(0, 5).map(g => {
       const gAway = g.teams.away;
       const gHome = g.teams.home;
@@ -2099,7 +2099,8 @@ async function loadOnDeck() {
       const gHomeSlug = TEAM_SLUG[gHome.team.id] ?? '';
       const gGdDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
       const gUrl = `https://www.mlb.com/gameday/${gAwaySlug}-vs-${gHomeSlug}/${gGdDate}/${g.gamePk}/preview`;
-      return `<a class="sched-box" href="${gUrl}" target="_blank" rel="noopener">
+      const isNext = g.gamePk === next.gamePk;
+      return `<a class="sched-box${isNext ? ' sched-box--next' : ''}" href="${gUrl}" target="_blank" rel="noopener">
         <span class="sched-box-day">${esc(gDay)}</span>
         <div class="sched-box-logo-wrap">
           ${gIsHome ? '' : '<span class="sched-box-at">@</span>'}

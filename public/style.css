@@ -974,6 +974,8 @@ img { display: block; max-width: 100%; }
   transition: background 0.15s, border-color 0.15s;
 }
 .sched-box:hover { background: var(--orange-dim); border-color: var(--accent); }
+.sched-box--next { border-color: var(--accent); background: var(--orange-dim); }
+.sched-box--next .sched-box-day { color: var(--orange); }
 .sched-box-day { font-size: 0.6rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.03em; }
 .sched-box-logo-wrap { position: relative; width: 22px; height: 22px; }
 .sched-box-logo { width: 22px; height: 22px; }
