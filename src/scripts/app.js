@@ -787,8 +787,6 @@ function renderPreviewMatchup(game, boxData, arsenals, matchupCtx = null) {
 
 function renderPitchingLines(boxData) {
   if (!boxData?.teams) return '';
-  // Show SP + up to 3 relievers before collapsing to "+N more"
-  const MAX_VISIBLE_PITCHERS = 4;
 
   const renderPitchingRows = side => {
     const team = boxData.teams?.[side];
@@ -819,30 +817,24 @@ function renderPitchingLines(boxData) {
     // The top-IP pitcher is the SP if they threw at least 2 innings
     const spIndex = pitchers[0].ipNum >= 2 ? 0 : -1;
 
-    const visiblePitchers = pitchers.slice(0, MAX_VISIBLE_PITCHERS);
-    const hiddenPitchers = pitchers.slice(MAX_VISIBLE_PITCHERS);
+    const rows = pitchers.map((p, i) => {
+      const extras = [];
+      if (parseFloat(p.ip) > 0) extras.push(`${p.ip} IP`);
+      if (p.h > 0) extras.push(`${p.h} H`);
+      if (p.er > 0) extras.push(`${p.er} ER`);
+      if (p.bb > 0) extras.push(`${p.bb} BB`);
+      if (p.k > 0) extras.push(`${p.k} K`);
+      if ((p.pitches ?? 0) > 0) extras.push(`${p.pitches} P`);
+      const pitchHandDisplay = p.pitchHand ? `<span class="box-perf-hand">${p.pitchHand}</span>` : '';
+      const spBadge = i === spIndex ? '<span class="pitcher-role-badge">SP</span>' : '';
+      return `<span class="box-perf-row"><span class="box-perf-name">${renderPlayerNameLink(compactBoxName(p.name), p.playerId)}${pitchHandDisplay}${spBadge}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
+    }).join('');
 
-    const visibleRows = visiblePitchers.map((p, i) => {
-        const extras = [];
-        if (parseFloat(p.ip) > 0) extras.push(`${p.ip} IP`);
-        if (p.h > 0) extras.push(`${p.h} H`);
-        if (p.er > 0) extras.push(`${p.er} ER`);
-        if (p.bb > 0) extras.push(`${p.bb} BB`);
-        if (p.k > 0) extras.push(`${p.k} K`);
-        if ((p.pitches ?? 0) > 0) extras.push(`${p.pitches} P`);
-        const pitchHandDisplay = p.pitchHand ? `<span class="box-perf-hand">${p.pitchHand}</span>` : '';
-        const spBadge = i === spIndex ? '<span class="pitcher-role-badge">SP</span>' : '';
-        return `<span class="box-perf-row"><span class="box-perf-name">${renderPlayerNameLink(compactBoxName(p.name), p.playerId)}${pitchHandDisplay}${spBadge}</span><span class="box-perf-stat">${extras.join(', ') || 'No notable line'}</span></span>`;
-      }).join('');
-
-    if (!hiddenPitchers.length) return visibleRows;
-
-    const hiddenSummary = hiddenPitchers
-      .slice(0, 3)
-      .map(p => compactBoxName(p.name))
-      .join(', ');
-
-    return `${visibleRows}<div class="box-perf-more">+${hiddenPitchers.length} more pitcher${hiddenPitchers.length === 1 ? '' : 's'}${hiddenSummary ? `: ${esc(hiddenSummary)}` : ''}</div>`;
+    // Wrap in a scrollable container when there are more than 4 pitchers
+    if (pitchers.length > 4) {
+      return `<div class="pitching-scroll">${rows}</div>`;
+    }
+    return rows;
   };
 
   const renderSide = side => {
