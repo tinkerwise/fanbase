@@ -792,6 +792,7 @@ img { display: block; max-width: 100%; }
   gap: 24px;
   align-items: start;
 }
+.page-layout > * { min-width: 0; }
 
 /* ── Sidebar ───────────────────────────────────────────────────── */
 .sidebar {
@@ -864,8 +865,8 @@ img { display: block; max-width: 100%; }
 .search-input::placeholder { color: var(--text-3); }
 
 .filter-section { display: flex; flex-direction: column; gap: 8px; }
-.sidebar-section { display: flex; flex-direction: column; gap: 8px; }
-.section-body { position: relative; }
+.sidebar-section { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.section-body { position: relative; min-width: 0; }
 .section-label {
   font-size: 0.78rem;
   font-weight: 700;
@@ -1093,6 +1094,10 @@ a.il-name:hover { color: var(--orange); }
   flex-direction: column;
   gap: 8px;
   padding: 10px 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   border-radius: var(--radius);
   background:
     linear-gradient(180deg, rgba(223, 70, 1, 0.12), rgba(223, 70, 1, 0.03)),
@@ -1177,11 +1182,13 @@ a.il-name:hover { color: var(--orange); }
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  min-width: 0;
   font-size: 0.66rem;
   color: var(--text-3);
 }
 .podcast-player {
   width: 100%;
+  max-width: 100%;
   height: 32px;
 }
 .podcast-links {
@@ -1189,12 +1196,15 @@ a.il-name:hover { color: var(--orange); }
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+  min-width: 0;
 }
 .podcast-link {
   font-size: 0.68rem;
   font-weight: 600;
   color: var(--text-2);
   text-decoration: none;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .podcast-link:hover {
   color: var(--orange);
@@ -2248,12 +2258,39 @@ a.il-name:hover { color: var(--orange); }
   .sidebar-left, .sidebar-right {
     position: static; max-height: none; overflow: visible;
     display: flex; flex-direction: column; gap: 12px;
+    min-width: 0;
   }
   .sidebar-right { display: flex; }
 
   /* Collapse sidebar sections by default on mobile (JS adds .mobile-collapsed) */
   .sidebar-left .sidebar-section { gap: 6px; }
   .sidebar-right .sidebar-section { gap: 6px; }
+  .section-body,
+  .on-deck-card,
+  .podcast-card,
+  .video-card,
+  .standings-section,
+  .roster-list,
+  .txn-list,
+  .il-list,
+  .leaders-stack,
+  .sched-row-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .on-deck-matchup { padding-right: 52px; }
+  .on-deck-opp { font-size: 0.78rem; }
+  .on-deck-weather { right: 10px; top: 10px; gap: 4px; }
+  .on-deck-weather-icon { font-size: 0.9rem; }
+  .on-deck-weather-temp { font-size: 0.66rem; }
+  .podcast-card { padding: 10px; }
+  .podcast-title { font-size: 0.73rem; }
+  .podcast-meta { flex-wrap: wrap; gap: 4px 8px; }
+  .podcast-player { height: 30px; }
+  .podcast-links { gap: 6px 10px; }
+  .podcast-link { font-size: 0.64rem; }
 
   /* Feed toolbar – stack on mobile */
   .feed-toolbar { flex-wrap: wrap; gap: 6px; }

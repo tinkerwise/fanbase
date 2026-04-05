@@ -1413,10 +1413,7 @@ function getFilteredArticles() {
     });
   }
 
-  if (state.activeCategory === 'all') {
-    // Hide MiLB articles from "All" — they only show under the MiLB filter
-    arts = arts.filter(a => a.source.category !== 'milb');
-  } else {
+  if (state.activeCategory !== 'all') {
     arts = arts.filter(a => a.source.category === state.activeCategory);
   }
   if (state.activeSource !== 'all') {
