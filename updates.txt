@@ -161,10 +161,12 @@
 - troubleshoot and find solution to play audio on deployed site, plays in localStorage
 - fix ATH cards on mobile, smaller logo icon, smaller title text, don't overlap source icons; basically, scale down for mobile browsing (until I create a mobile app)
 - change score bug timing to switch to today's games by 09:00 EDT each day
+- change score bug rain delay indicator (yellow accent) to blue
 
 ##Queued
 // Add items here for the likely next batch of work
-- Scout Notes: surface team tendencies and historical matchup stats for preview games, add to game preview below lineups
+- move features above into a separate file, keep updates as Active, Queued, Parking lot
+-  Scout Notes: surface team tendencies and historical matchup stats for preview games, add to game preview below lineups
 
 
 ##Parking lot
