@@ -536,22 +536,32 @@ function getBattingRate(stats, ...keys) {
   return null;
 }
 
-function formatLineupSlashLine(player) {
+function lineupRateValues(player) {
   const stats = getLineupBattingStats(player);
-  return [
-    formatSlashStat(getBattingRate(stats, 'battingAverage', 'avg')),
-    formatSlashStat(getBattingRate(stats, 'onBasePercentage', 'obp')),
-    formatSlashStat(getBattingRate(stats, 'ops', 'onBasePlusSlugging')),
-  ].join('/');
+  return {
+    avg: getBattingRate(stats, 'battingAverage', 'avg'),
+    obp: getBattingRate(stats, 'onBasePercentage', 'obp'),
+    ops: getBattingRate(stats, 'ops', 'onBasePlusSlugging'),
+  };
 }
 
-function lineupHotnessScore(player) {
-  const stats = getLineupBattingStats(player);
-  const ops = Number.parseFloat(getBattingRate(stats, 'ops', 'onBasePlusSlugging') ?? 0) || 0;
-  const avg = Number.parseFloat(getBattingRate(stats, 'battingAverage', 'avg') ?? 0) || 0;
-  const obp = Number.parseFloat(getBattingRate(stats, 'onBasePercentage', 'obp') ?? 0) || 0;
-  const slg = Number.parseFloat(getBattingRate(stats, 'sluggingPercentage', 'slg') ?? 0) || 0;
-  return (ops * 1000) + (obp * 100) + (slg * 10) + avg;
+function lineupLeaders(players, roster) {
+  const leaders = { avg: 0, obp: 0, ops: 0 };
+
+  for (const id of players) {
+    const rates = lineupRateValues(roster[`ID${id}`] ?? {});
+    leaders.avg = Math.max(leaders.avg, Number.parseFloat(rates.avg ?? 0) || 0);
+    leaders.obp = Math.max(leaders.obp, Number.parseFloat(rates.obp ?? 0) || 0);
+    leaders.ops = Math.max(leaders.ops, Number.parseFloat(rates.ops ?? 0) || 0);
+  }
+
+  return leaders;
+}
+
+function renderSlashSegment(value, isLeader) {
+  const classes = ['score-lineup-rate'];
+  if (isLeader) classes.push('score-lineup-rate--leader');
+  return `<span class="${classes.join(' ')}">${esc(formatSlashStat(value))}</span>`;
 }
 
 function renderLineupRows(team) {
@@ -561,13 +571,7 @@ function renderLineupRows(team) {
     return '<div class="score-lineups-empty">Lineup not yet posted</div>';
   }
 
-  const hottestIds = new Set(
-    [...players]
-      .map(id => ({ id, player: roster[`ID${id}`] ?? {} }))
-      .sort((a, b) => lineupHotnessScore(b.player) - lineupHotnessScore(a.player))
-      .slice(0, 2)
-      .map(entry => entry.id)
-  );
+  const leaders = lineupLeaders(players, roster);
 
   return players.map(id => {
     const p = roster[`ID${id}`] ?? {};
@@ -575,12 +579,19 @@ function renderLineupRows(team) {
     const pos = p.position?.abbreviation ?? '';
     const batSide = p.person?.batSide?.code ?? '';
     const batSideDisplay = batSide ? `<span class="score-lineup-hand">${batSide}</span>` : '';
-    const slashLine = formatLineupSlashLine(p);
-    const hotClass = hottestIds.has(id) ? ' score-lineup-row--hot' : '';
-    return `<div class="score-lineup-row${hotClass}">
+    const rates = lineupRateValues(p);
+    const avgValue = Number.parseFloat(rates.avg ?? 0) || 0;
+    const obpValue = Number.parseFloat(rates.obp ?? 0) || 0;
+    const opsValue = Number.parseFloat(rates.ops ?? 0) || 0;
+    const slashLine = [
+      renderSlashSegment(rates.avg, avgValue > 0 && avgValue === leaders.avg),
+      renderSlashSegment(rates.obp, obpValue > 0 && obpValue === leaders.obp),
+      renderSlashSegment(rates.ops, opsValue > 0 && opsValue === leaders.ops),
+    ].join('<span class="score-lineup-rate-sep">/</span>');
+    return `<div class="score-lineup-row">
       <span class="score-lineup-pos">${esc(pos)}</span>
       <span class="score-lineup-name">${esc(name)}${batSideDisplay}</span>
-      <span class="score-lineup-slash">${esc(slashLine)}</span>
+      <span class="score-lineup-slash">${slashLine}</span>
     </div>`;
   }).join('');
 }

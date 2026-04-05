@@ -718,19 +718,6 @@ img { display: block; max-width: 100%; }
   min-width: 0;
   align-items: baseline;
 }
-.score-lineup-row--hot {
-  background: color-mix(in srgb, var(--orange) 10%, transparent);
-  border-radius: 4px;
-  padding: 2px 4px;
-  margin: 0 -4px;
-}
-.score-lineup-row--hot .score-lineup-name {
-  color: color-mix(in srgb, var(--orange) 40%, var(--text) 60%);
-  font-weight: 700;
-}
-.score-lineup-row--hot .score-lineup-slash {
-  color: var(--orange);
-}
 .score-lineup-pos {
   width: 18px;
   flex-shrink: 0;
@@ -757,6 +744,16 @@ img { display: block; max-width: 100%; }
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   margin-left: auto;
+}
+.score-lineup-rate {
+  color: var(--text-3);
+}
+.score-lineup-rate--leader {
+  color: var(--text-1);
+  font-weight: 700;
+}
+.score-lineup-rate-sep {
+  color: var(--text-3);
 }
 .score-lineups-empty {
   font-size: 0.68rem;
