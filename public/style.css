@@ -875,6 +875,7 @@ img { display: block; max-width: 100%; }
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
 }
 .score-lineup-label {
   font-size: var(--popover-name-size);
@@ -1202,10 +1203,11 @@ img { display: block; max-width: 100%; }
   object-fit: contain;
 }
 .pill-logo--orioles {
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18));
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.75));
 }
 .pill-logo--league {
   border-radius: 3px;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
 }
 .pill.active .pill-logo--league {
   background: rgba(255, 255, 255, 0.9);
@@ -1214,6 +1216,13 @@ img { display: block; max-width: 100%; }
 }
 
 /* ── Standings ─────────────────────────────────────────────────── */
+.standings-team-logo {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.75));
+}
 .standings-section { display: flex; flex-direction: column; gap: 10px; }
 .div-tabs { display: flex; flex-wrap: wrap; gap: 4px; }
 .div-tab {
@@ -1244,7 +1253,7 @@ img { display: block; max-width: 100%; }
 .standings-table tr.orioles-row td { color: var(--orange); font-weight: 700; }
 .standings-table tbody tr:hover td { background: rgba(255,255,255,0.025); }
 .team-abbrev { font-weight: 600; }
-.team-abbrev a { color: var(--text); transition: color 0.15s; }
+.team-abbrev a { display: inline-flex; align-items: center; gap: 5px; color: var(--text); transition: color 0.15s; }
 .team-abbrev a:hover { color: var(--orange); }
 
 .sidebar-msg { font-size: 0.8rem; color: var(--text-3); }
@@ -1266,7 +1275,7 @@ img { display: block; max-width: 100%; }
   padding-right: 74px;
   min-width: 0;
 }
-.on-deck-logo { width: 28px; height: 28px; }
+.on-deck-logo { width: 28px; height: 28px; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.8)); }
 .on-deck-opp {
   flex: 1;
   min-width: 0;
@@ -1320,7 +1329,7 @@ img { display: block; max-width: 100%; }
 .sched-box--live .sched-box-day { color: #4ade80; }
 .sched-box-day { font-size: 0.6rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.03em; }
 .sched-box-logo-wrap { position: relative; width: 22px; height: 22px; }
-.sched-box-logo { width: 22px; height: 22px; }
+.sched-box-logo { width: 22px; height: 22px; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8)); }
 .sched-box-at {
   position: absolute; top: -5px; left: -5px;
   font-size: 0.45rem; font-weight: 800; color: var(--text-2);
@@ -1333,12 +1342,26 @@ img { display: block; max-width: 100%; }
 .leaders-controls { display: flex; gap: 3px; align-items: center; margin-bottom: 6px; }
 .leaders-scope { display: flex; gap: 2px; }
 .leaders-scope-btn {
+  display: inline-flex; align-items: center; gap: 3px;
   padding: 1px 5px; border: 1px solid var(--border); border-radius: 3px;
   background: transparent; color: var(--text-3); font-size: 0.58rem; font-weight: 700;
   cursor: pointer; transition: all 0.15s;
 }
 .leaders-scope-btn:hover { border-color: var(--orange); color: var(--orange); }
 .leaders-scope-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+.leaders-scope-logo {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.7));
+}
+.leaders-scope-btn.active .leaders-scope-logo--league {
+  background: rgba(255,255,255,0.9);
+  border-radius: 2px;
+  padding: 1px;
+  box-sizing: border-box;
+}
 .leaders-stack { display: flex; flex-direction: column; gap: 10px; }
 .leaders-group { display: flex; flex-direction: column; gap: 4px; }
 .leaders-group-title {
@@ -1398,7 +1421,7 @@ a.il-name:hover { color: var(--orange); }
   justify-content: space-between;
   gap: 10px;
 }
-.il-note { flex: 1; min-width: 0; font-size: 0.69rem; line-height: 1.45; color: var(--text-3); }
+.il-note { flex: 1; min-width: 0; font-size: 0.69rem; line-height: 1.4; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .il-meta {
   flex-shrink: 0;
   text-align: right;

@@ -1496,7 +1496,7 @@ function renderStandings() {
       <tbody>${div.teams.map(t => {
         const teamUrl = TEAM_PAGE[t.id] ? `https://www.mlb.com/${TEAM_PAGE[t.id]}` : '#';
         return `<tr class="${t.isOrioles ? 'orioles-row' : ''}">
-          <td class="team-abbrev"><a href="${teamUrl}" target="_blank" rel="noopener">${esc(t.abbrev)}</a></td>
+          <td class="team-abbrev"><a href="${teamUrl}" target="_blank" rel="noopener"><img class="standings-team-logo" src="https://www.mlbstatic.com/team-logos/${t.id}.svg" alt="" width="14" height="14" loading="lazy" decoding="async">${esc(t.abbrev)}</a></td>
           <td>${t.wins}</td><td>${t.losses}</td>
           <td>${esc(t.gb)}</td><td>${esc(t.streak)}</td>
         </tr>`;
@@ -2965,10 +2965,10 @@ function renderLeaders() {
   wrap.innerHTML = `
     <div class="leaders-controls">
       <div class="leaders-scope">
-        <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles">O's</button>
-        <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al">AL</button>
-        <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl">NL</button>
-        <button class="leaders-scope-btn${leadersScope === 'mlb' ? ' active' : ''}" data-scope="mlb">MLB</button>
+        <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles"><img class="leaders-scope-logo" src="https://www.mlbstatic.com/team-logos/110.svg" alt="" width="12" height="12" loading="eager" decoding="async">O's</button>
+        <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/league-logos/103.svg" alt="" width="12" height="12" loading="eager" decoding="async">AL</button>
+        <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/league-logos/104.svg" alt="" width="12" height="12" loading="eager" decoding="async">NL</button>
+        <button class="leaders-scope-btn${leadersScope === 'mlb' ? ' active' : ''}" data-scope="mlb"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/apple-touch-icons-180x180/mlb.png" alt="" width="12" height="12" loading="eager" decoding="async">MLB</button>
       </div>
     </div>
     <div class="leaders-stack">

@@ -12,7 +12,6 @@
 
 ##Active
 
-
 ##Queued
 
 
@@ -24,6 +23,17 @@
 ---
 
 ##Recently Completed (April 5, 2026)
+
+# LOGOS & VISUAL POLISH
+- ✓ added drop-shadow filter to all team/MLB/MiLB logos (.score-lineup-logo, .sched-box-logo, .on-deck-logo, .pill-logo, .standings-team-logo, .leaders-scope-logo)
+- ✓ added team logo before abbrev in Standings rows
+- ✓ added logos to Yard Leaders scope pills (O's → Orioles, AL/NL → league logos, MLB → MLB logo)
+
+# INJURY CARDS
+- ✓ clamped injury note to single line with ellipsis — cards now always render as exactly two lines
+
+# PODCAST
+- ✓ confirmed feed logic is correct: findIndex on newest-first RSS = latest playable audio episode
 
 # SCORE BUG POPOVER LAYOUT
 - ✓ aligned pitching and lineup details by team in side-by-side columns for live/final popovers
