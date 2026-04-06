@@ -570,23 +570,32 @@ function getInGameLineupEntries(team) {
   const seen = new Set();
   const entries = [];
 
-  for (const id of order) {
+  const pushEntry = (id, fallbackOrder = null) => {
+    if (seen.has(id)) return;
     const player = roster[`ID${id}`];
-    if (!player || seen.has(id)) continue;
+    if (!player || player.position?.type === 'Pitcher') return;
     seen.add(id);
-    entries.push({ id, player, isSubstitution: false });
-  }
+    const rawOrder = String(player.battingOrder ?? fallbackOrder ?? '');
+    const orderNum = Number.parseInt(rawOrder, 10);
+    const slot = Number.isFinite(orderNum) && orderNum > 0
+      ? Math.floor(orderNum / 100)
+      : null;
+    const isSubstitution = Boolean(
+      player.gameStatus?.isSubstitute ||
+      (Number.isFinite(orderNum) && orderNum % 100 !== 0)
+    );
+    entries.push({ id, player, rawOrder, orderNum, slot, isSubstitution });
+  };
 
-  for (const id of batters) {
-    if (seen.has(id)) continue;
-    const player = roster[`ID${id}`];
-    if (!player) continue;
-    if (player.position?.type === 'Pitcher') continue;
-    seen.add(id);
-    entries.push({ id, player, isSubstitution: true });
-  }
+  order.forEach((id, index) => pushEntry(id, `${index + 1}00`));
+  batters.forEach(id => pushEntry(id));
 
-  return entries;
+  return entries.sort((a, b) => {
+    const aOrder = Number.isFinite(a.orderNum) ? a.orderNum : Number.MAX_SAFE_INTEGER;
+    const bOrder = Number.isFinite(b.orderNum) ? b.orderNum : Number.MAX_SAFE_INTEGER;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return a.id - b.id;
+  });
 }
 
 function renderLineupRows(team, gameState = 'preview') {

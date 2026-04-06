@@ -921,12 +921,8 @@ img { display: block; max-width: 100%; }
   color: var(--orange);
   font-weight: 700;
 }
-.score-lineup-row--sub .score-lineup-name::before {
-  content: '+';
-  color: var(--orange);
-  font-weight: 700;
-  opacity: 0.85;
-  margin-right: 2px;
+.score-lineup-row--sub .score-lineup-name {
+  padding-left: 10px;
 }
 .score-lineup-box-cols {
   display: grid;
