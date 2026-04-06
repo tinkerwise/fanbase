@@ -1411,13 +1411,15 @@ a.roster-name:hover { color: var(--orange); }
 /* ── Injury Report ────────────────────────────────────────────── */
 .il-list { display: flex; flex-direction: column; }
 .il-group { display: flex; flex-direction: column; }
-.il-group + .il-group { margin-top: 6px; }
+.il-group + .il-group { margin-top: 8px; }
 .il-group-label {
-  font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
-  color: var(--text-3); padding: 4px 0 3px;
-  border-top: 1px solid var(--border);
+  font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #ef4444; padding: 5px 6px 4px;
+  background: rgba(239,68,68,0.1);
+  border-radius: 4px;
+  margin-bottom: 2px;
 }
-.il-group:first-child .il-group-label { border-top: none; padding-top: 0; }
+.il-group:first-child .il-group-label { }
 .il-item { display: flex; flex-direction: column; gap: 2px; padding: 5px 0; border-bottom: 1px solid #1e1e1e; }
 .il-item:last-child { border-bottom: none; }
 .il-topline { display: flex; align-items: baseline; gap: 5px; min-width: 0; }
