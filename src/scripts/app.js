@@ -2966,8 +2966,8 @@ function renderLeaders() {
     <div class="leaders-controls">
       <div class="leaders-scope">
         <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles"><img class="leaders-scope-logo" src="https://www.mlbstatic.com/team-logos/110.svg" alt="" width="12" height="12" loading="eager" decoding="async">O's</button>
-        <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/league-logos/103.svg" alt="" width="12" height="12" loading="eager" decoding="async">AL</button>
-        <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/league-logos/104.svg" alt="" width="12" height="12" loading="eager" decoding="async">NL</button>
+        <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/103.svg" alt="" width="12" height="12" loading="eager" decoding="async">AL</button>
+        <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/104.svg" alt="" width="12" height="12" loading="eager" decoding="async">NL</button>
         <button class="leaders-scope-btn${leadersScope === 'mlb' ? ' active' : ''}" data-scope="mlb"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/apple-touch-icons-180x180/mlb.png" alt="" width="12" height="12" loading="eager" decoding="async">MLB</button>
       </div>
     </div>
