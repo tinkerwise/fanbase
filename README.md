@@ -1,29 +1,31 @@
 # Yard Report
 
-Yard Report is a personal Orioles- and MLB-focused news dashboard built with Astro. It combines a filtered baseball news feed with live score bugs and Orioles-first sidebar widgets in a single-page experience.
+Yard Report is a personal Orioles-first baseball dashboard built with Astro. It combines a filtered Orioles, MLB, and MiLB news feed with live score bugs, featured story cards, and compact Orioles-focused widgets in a single-page experience.
 
 ## The Site
 
-- Orioles- and MLB-focused news aggregation
+- Orioles-, MLB-, and MiLB-focused news aggregation
 - Grid, list, and compact article views
 - Category, source, search, sort, and date-range filtering
-- Score bugs for yesterday, today, and tomorrow with live game details
+- Around the Horn featured story cards for shared baseball topics
+- Score bugs for yesterday, today, and tomorrow with preview, live, and final popovers
 - Orioles-focused sidebar widgets for On Deck, standings, leaders, roster, injuries, transactions, podcast, and video
 - Reader modal with share actions and read/unread tracking
 - Theme and default-view preferences saved in localStorage
 
 ## Focus
 
-- Orioles-first coverage with broader MLB context
-- Fast scan of scores, news, and sidebar context in one place
+- Orioles-first coverage with broader MLB and MiLB context
+- Fast scan of scores, news, and Orioles context in one place
 - A personal dashboard rather than a general sports portal
 
 ## Current Surfaces
 
-- Main feed with Orioles and MLB reporting
-- Around the Horn featured story cards
-- Score bug rail with preview/live/final popovers
+- Main feed with category and source filtering across Orioles, MLB, and MiLB reporting
+- Around the Horn featured story cards with a dedicated story page
+- Score bug rail with preview, live, and final popovers for lineup, pitching, scouting, and box score context
 - Orioles-first widgets for On Deck, standings, leaders, roster, injuries, transactions, podcast, and video
+- Reader overlay for opening articles without leaving the dashboard
 
 ## Notes
 
