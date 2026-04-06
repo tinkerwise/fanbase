@@ -292,6 +292,7 @@ img { display: block; max-width: 100%; }
   min-width: max-content;
 }
 .score-chip {
+  appearance: none;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -304,12 +305,20 @@ img { display: block; max-width: 100%; }
   color: var(--text);
   transition: border-color 0.15s, background 0.15s, transform 0.15s;
   min-width: 100px;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
 }
 .score-chip:hover { border-color: var(--orange); transform: translateY(-1px); }
+.score-chip[aria-expanded="true"] { border-color: var(--orange); transform: translateY(-1px); }
 .score-chip.orioles { border-left: 3px solid var(--orange); background: var(--orange-dim); }
 .score-chip.live { border-left: 3px solid #22c55e; }
 .score-chip.delay { border-left: 3px solid #3b82f6; }
 .score-chip.postponed { border-left: 3px solid #ef4444; }
+.score-chip:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--orange) 70%, white 30%);
+  outline-offset: 2px;
+}
 .chip-row {
   display: flex;
   justify-content: space-between;
@@ -509,6 +518,34 @@ img { display: block; max-width: 100%; }
   font-size: var(--popover-meta-size);
   color: var(--text-3);
   font-style: italic;
+}
+.box-popover-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 2px;
+}
+.box-popover-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--orange) 34%, var(--border) 66%);
+  background: color-mix(in srgb, var(--card) 84%, #eef3f8 16%);
+  color: var(--orange);
+  font-size: var(--popover-meta-size);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.box-popover-link:hover,
+.box-popover-link:focus-visible {
+  border-color: var(--orange);
+  background: color-mix(in srgb, var(--orange) 14%, var(--card) 86%);
+  color: #fff0e6;
+  outline: none;
 }
 .pitching-scroll {
   max-height: 88px;

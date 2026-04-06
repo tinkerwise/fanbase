@@ -395,19 +395,14 @@ function renderGameChip(g) {
   const awayWin = isFinal && Number(awayScore) > Number(homeScore);
   const homeWin = isFinal && Number(homeScore) > Number(awayScore);
 
-  const awaySlug = TEAM_SLUG[away.team.id] ?? away.team.name.split(' ').pop().toLowerCase();
-  const homeSlug = TEAM_SLUG[home.team.id] ?? home.team.name.split(' ').pop().toLowerCase();
-  const gameDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
-  const gamedaySuffix = isPreviewLike ? 'preview' : 'final';
-  const gamedayUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/${gamedaySuffix}`;
-
   const wx = getGameWeather(g);
   const wxInline = (stateClass === 'preview' && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
 
-  return `<a class="score-chip ${stateClass}${hasOrioles ? ' orioles' : ''}"
+  return `<button class="score-chip ${stateClass}${hasOrioles ? ' orioles' : ''}"
       data-gamepk="${g.gamePk}"
-      href="${gamedayUrl}"
-      target="_blank" rel="noopener">
+      type="button"
+      aria-haspopup="dialog"
+      aria-expanded="false">
     <div class="chip-row${awayWin ? ' winner' : ''}">
       <span class="chip-team">${esc(teamAbbr(away.team))}</span>
       <span class="chip-score">${awayScore}</span>
@@ -417,7 +412,7 @@ function renderGameChip(g) {
       <span class="chip-score">${homeScore}</span>
     </div>
     <span class="chip-status ${stateClass}">${statusInner}${wxInline}</span>
-  </a>`;
+  </button>`;
 }
 
 function localDateStr(offset = 0) {
@@ -1124,10 +1119,29 @@ function renderPopoverLegend() {
   </div>`;
 }
 
+function getGamedayUrl(g) {
+  const away = g.teams.away;
+  const home = g.teams.home;
+  const { isPreviewLike } = getScoreChipStatus(g);
+  const awaySlug = TEAM_SLUG[away.team.id] ?? away.team.name.split(' ').pop().toLowerCase();
+  const homeSlug = TEAM_SLUG[home.team.id] ?? home.team.name.split(' ').pop().toLowerCase();
+  const gameDate = g.gameDate.slice(0, 10).replace(/-/g, '/');
+  const gamedaySuffix = isPreviewLike ? 'preview' : 'final';
+  return `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gameDate}/${g.gamePk}/${gamedaySuffix}`;
+}
+
+function renderPopoverGameLink(g) {
+  const isPreview = g.status?.abstractGameState === 'Preview';
+  const label = isPreview ? 'MLB Game Preview' : 'MLB Game Results';
+  return `<div class="box-popover-actions">
+    <a class="box-popover-link" href="${getGamedayUrl(g)}" target="_blank" rel="noopener">Open ${label}</a>
+  </div>`;
+}
+
 function renderBoxScore(g, boxData, arsenals, matchupCtx = null) {
   const isPreview = g.status.abstractGameState === 'Preview';
   if (isPreview) {
-    return renderPreviewMatchup(g, boxData, arsenals, matchupCtx);
+    return `${renderPreviewMatchup(g, boxData, arsenals, matchupCtx)}${renderPopoverGameLink(g)}`;
   }
 
   const ls = g.linescore;
@@ -1188,6 +1202,7 @@ function renderBoxScore(g, boxData, arsenals, matchupCtx = null) {
       ${decisions}
     </div>
     ${pitchingLines}
+    ${renderPopoverGameLink(g)}
   </div>`;
 }
 
@@ -1240,7 +1255,8 @@ async function loadScores() {
     }
     let boxShowTimer = null;
     let boxHideTimer = null;
-    const BOX_POPOVER_SHOW_DELAY = 400;
+    let pinnedChip = null;
+    const BOX_POPOVER_SHOW_DELAY = 1000;
     const BOX_POPOVER_HIDE_DELAY = 250;
     function positionPopover(chip) {
       const r = chip.getBoundingClientRect();
@@ -1254,12 +1270,25 @@ async function loadScores() {
       boxPopover.style.left = left + 'px';
       boxPopover.style.top = top + 'px';
     }
+    function setChipExpandedState(activeChip = null) {
+      track.querySelectorAll('.score-chip').forEach(ch => {
+        ch.setAttribute('aria-expanded', ch === activeChip ? 'true' : 'false');
+      });
+    }
+    function hideBoxScoreImmediate() {
+      clearTimeout(boxShowTimer);
+      clearTimeout(boxHideTimer);
+      pinnedChip = null;
+      setChipExpandedState(null);
+      boxPopover.classList.add('hidden');
+    }
     function showBoxScore(chip) {
       const pk = chip.dataset.gamepk;
       const g = state.gamesMap[pk];
       if (!g) return;
       clearTimeout(boxShowTimer);
       clearTimeout(boxHideTimer);
+      setChipExpandedState(chip);
 
       const isPreview = g.status?.abstractGameState === 'Preview';
       const isLive = g.status?.abstractGameState === 'Live';
@@ -1328,11 +1357,13 @@ async function loadScores() {
       }
     }
     function scheduleShowBoxScore(chip) {
+      if (pinnedChip) return;
       clearTimeout(boxShowTimer);
       clearTimeout(boxHideTimer);
       boxShowTimer = setTimeout(() => showBoxScore(chip), BOX_POPOVER_SHOW_DELAY);
     }
     function hideBoxScore() {
+      if (pinnedChip) return;
       clearTimeout(boxShowTimer);
       clearTimeout(boxHideTimer);
       boxHideTimer = setTimeout(() => boxPopover.classList.add('hidden'), BOX_POPOVER_HIDE_DELAY);
@@ -1340,12 +1371,34 @@ async function loadScores() {
     track.querySelectorAll('.score-chip').forEach(chip => {
       chip.addEventListener('mouseenter', () => scheduleShowBoxScore(chip));
       chip.addEventListener('mouseleave', hideBoxScore);
+      chip.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (pinnedChip === chip && !boxPopover.classList.contains('hidden')) {
+          hideBoxScoreImmediate();
+          return;
+        }
+        pinnedChip = chip;
+        showBoxScore(chip);
+      });
     });
     boxPopover.addEventListener('mouseenter', () => {
       clearTimeout(boxShowTimer);
       clearTimeout(boxHideTimer);
     });
     boxPopover.addEventListener('mouseleave', hideBoxScore);
+    if (!boxPopover.dataset.globalBound) {
+      document.addEventListener('click', e => {
+        if (boxPopover.classList.contains('hidden')) return;
+        if (boxPopover.contains(e.target)) return;
+        if (e.target.closest('.score-chip')) return;
+        hideBoxScoreImmediate();
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') hideBoxScoreImmediate();
+      });
+      boxPopover.dataset.globalBound = 'true';
+    }
 
     // Before 09:00 EDT, keep yesterday's scores front-and-center
     const nowUTC = new Date();
