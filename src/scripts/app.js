@@ -1135,7 +1135,7 @@ function renderPopoverGameLink(g) {
   const label = isPreview ? 'Open Game Preview' : 'Open Game Results';
   return `<div class="box-popover-actions">
     <a class="box-popover-link" href="${getGamedayUrl(g)}" target="_blank" rel="noopener">
-      <img class="box-popover-link-logo" src="https://www.mlbstatic.com/team-logos/apple-touch-icons-180x180/mlb.png" alt="" width="14" height="14" loading="lazy" decoding="async">
+      <img class="box-popover-link-logo" src="${import.meta.env.BASE_URL}mlb-logo.png" alt="" width="14" height="14" loading="eager" decoding="async">
       <span>${label}</span>
     </a>
   </div>`;
@@ -2242,6 +2242,7 @@ async function loadOnDeck() {
   const wrap = $('onDeckWrap');
   try {
     const today = localDateStr(0);
+    const tomorrowStr = localDateStr(1);
     const endDate = localDateStr(14);
     const data = await fetch(
       `${MLB}/schedule?sportId=1&teamId=${ORIOLES_ID}&startDate=${today}&endDate=${endDate}&hydrate=probablePitcher,venue`
