@@ -563,6 +563,32 @@ function renderSlashSegment(value, isLeader, isTopTenProxy = false) {
   return `<span class="${classes.join(' ')}">${esc(formatSlashStat(value))}</span>`;
 }
 
+function getInGameLineupEntries(team) {
+  const order = team?.battingOrder ?? [];
+  const batters = team?.batters ?? [];
+  const roster = team?.players ?? {};
+  const seen = new Set();
+  const entries = [];
+
+  for (const id of order) {
+    const player = roster[`ID${id}`];
+    if (!player || seen.has(id)) continue;
+    seen.add(id);
+    entries.push({ id, player, isSubstitution: false });
+  }
+
+  for (const id of batters) {
+    if (seen.has(id)) continue;
+    const player = roster[`ID${id}`];
+    if (!player) continue;
+    if (player.position?.type === 'Pitcher') continue;
+    seen.add(id);
+    entries.push({ id, player, isSubstitution: true });
+  }
+
+  return entries;
+}
+
 function renderLineupRows(team, gameState = 'preview') {
   const players = team?.battingOrder ?? [];
   const roster = team?.players ?? {};
@@ -572,6 +598,7 @@ function renderLineupRows(team, gameState = 'preview') {
 
   // ── Final: 6-column newspaper layout (AB R H HR RBI SB) ──────
   if (gameState === 'final') {
+    const entries = getInGameLineupEntries(team);
     const header = `<div class="score-lineup-row score-lineup-row--header">
       <span class="score-lineup-pos"></span>
       <span class="score-lineup-name"></span>
@@ -579,15 +606,14 @@ function renderLineupRows(team, gameState = 'preview') {
         <span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>SB</span>
       </span>
     </div>`;
-    const rows = players.map(id => {
-      const p = roster[`ID${id}`] ?? {};
+    const rows = entries.map(({ player: p, isSubstitution }) => {
       const name = compactBoxName(p.person?.fullName ?? 'TBD');
-      const pos = p.position?.abbreviation ?? '';
+      const pos = isSubstitution ? 'PH' : (p.position?.abbreviation ?? '');
       const bs = p.stats?.batting ?? {};
       const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.stolenBases ?? 0]
         .map(v => `<span>${v}</span>`).join('');
       const hasActivity = (bs.atBats ?? 0) > 0 || (bs.baseOnBalls ?? 0) > 0;
-      return `<div class="score-lineup-row${hasActivity ? '' : ' score-lineup-row--dnp'}">
+      return `<div class="score-lineup-row${hasActivity ? '' : ' score-lineup-row--dnp'}${isSubstitution ? ' score-lineup-row--sub' : ''}">
         <span class="score-lineup-pos">${esc(pos)}</span>
         <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null)}</span>
         <span class="score-lineup-box-cols">${cols}</span>
@@ -598,15 +624,15 @@ function renderLineupRows(team, gameState = 'preview') {
 
   // ── Live: 6-column in-progress (AB R H HR RBI SB) ─────────────
   if (gameState === 'live') {
-    return players.map(id => {
-      const p = roster[`ID${id}`] ?? {};
+    const entries = getInGameLineupEntries(team);
+    return entries.map(({ player: p, isSubstitution }) => {
       const name = compactBoxName(p.person?.fullName ?? 'TBD');
-      const pos = p.position?.abbreviation ?? '';
+      const pos = isSubstitution ? 'PH' : (p.position?.abbreviation ?? '');
       const bs = p.stats?.batting ?? {};
       const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.stolenBases ?? 0]
         .map(v => `<span>${v}</span>`).join('');
       const isCurrentBatter = p.gameStatus?.isCurrentBatter;
-      return `<div class="score-lineup-row${isCurrentBatter ? ' score-lineup-row--current' : ''}">
+      return `<div class="score-lineup-row${isCurrentBatter ? ' score-lineup-row--current' : ''}${isSubstitution ? ' score-lineup-row--sub' : ''}">
         <span class="score-lineup-pos">${esc(pos)}</span>
         <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null)}</span>
         <span class="score-lineup-box-cols">${cols}</span>
@@ -1153,7 +1179,6 @@ function renderBoxScore(g, boxData, arsenals, matchupCtx = null) {
       ${decisions}
     </div>
     ${pitchingLines}
-    ${renderPopoverLegend()}
   </div>`;
 }
 

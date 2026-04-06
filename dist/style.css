@@ -917,6 +917,17 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.04em;
 }
 .score-lineup-row--dnp { opacity: 0.4; }
+.score-lineup-row--sub .score-lineup-pos {
+  color: var(--orange);
+  font-weight: 700;
+}
+.score-lineup-row--sub .score-lineup-name::before {
+  content: '+';
+  color: var(--orange);
+  font-weight: 700;
+  opacity: 0.85;
+  margin-right: 2px;
+}
 .score-lineup-box-cols {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
