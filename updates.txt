@@ -12,6 +12,7 @@
 
 ##Active
 - in feed section, use the orioles logo, MLB logo, and MiLB logos in the pill
+- IL widget: add day IL stint started, some dates are retroactive, list under IL designation inline with injury, but right-justified ; move position to after name; as best as possible list players on expected return date
 
 ##Queued
 
