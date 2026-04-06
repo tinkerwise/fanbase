@@ -2222,10 +2222,11 @@ async function loadOnDeck() {
     const venueDetails = await fetchVenueDetails(next.venue?.id);
     const fieldInfo = venueDetails?.fieldInfo ?? null;
 
-    // Fetch weather for the game venue only if it's today's game
+    // Fetch weather for the featured upcoming game when forecast data is available
     const nextIsToday = next.gameDate.startsWith(todayStr);
+    const nextIsTomorrow = next.gameDate.startsWith(tomorrowStr);
     let wxHtml = '';
-    if (nextIsToday) {
+    if (nextIsToday || nextIsTomorrow) {
       await fetchWeatherForGames([next]);
       const wx = getGameWeather(next);
       wxHtml = wx
