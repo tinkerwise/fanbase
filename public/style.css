@@ -1316,6 +1316,54 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 8px 28px rgba(91,55,22,0.16);
 }
 
+/* Game Day media links (Watch / Listen) */
+.gameday-media-strip {
+  display: flex;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-top: 2px;
+}
+.gameday-media-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 6px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 88%, var(--orange) 12%);
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 0.71rem;
+  font-weight: 600;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.gameday-media-link:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: color-mix(in srgb, var(--orange) 12%, var(--card) 88%);
+}
+.gameday-media-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.gameday-media-label {
+  letter-spacing: 0.01em;
+}
+.gameday-media-network {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.gameday-media-link:hover .gameday-media-network {
+  color: inherit;
+}
+
 /* Schedule within On Deck */
 /* Schedule boxes (inline with On Deck) */
 .sched-row-wrap {

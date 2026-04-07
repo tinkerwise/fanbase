@@ -11,7 +11,6 @@
 - Update this file after tasks are completed, remove '-' and leave checkmark
 
 ##Active
-- add Game Day widget to mlb.tv video (MASN) and audio (BAL radio call) links; include with appropriate icons
 - in-game pitcher's pitches by inning stat line (somewhere)
 - Improve accuracy and quality of Scout Notes (see screenshot)
 - verify The Athletic feed URL works (added as https://theathletic.com/mlb/baltimore-orioles/feed/)
@@ -27,6 +26,11 @@
 ---
 
 ##Recently Completed (April 7, 2026)
+
+# GAME DAY WIDGET
+- ✓ added Watch (MASN) + Listen (WBAL · 98 Rock) media strip inside On Deck card; only visible when today's game is upcoming or live
+
+##Recently Completed (April 7, 2026 — earlier)
 
 # LAYOUT & DISPLAY
 - ✓ added widescreen breakpoints — sidebar widens to 290px at 1400px+, 310px at 1700px+; max layout expands to 1840px
