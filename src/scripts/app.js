@@ -990,53 +990,89 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
     const offTeamId = offense.team?.id;
     const offScore = awayId === offTeamId ? (game.teams?.away?.score ?? 0) : (game.teams?.home?.score ?? 0);
     const defScore = awayId === offTeamId ? (game.teams?.home?.score ?? 0) : (game.teams?.away?.score ?? 0);
-    const diff = offScore - defScore;
+    const diff = offScore - defScore;         // positive = offense leads
+    const absLead = Math.abs(diff);
+    const lateGame = Number.isFinite(Number(inning)) && Number(inning) >= 7;
+    const oriolesBatting = offense.team?.id === ORIOLES_ID;
+    const oriolesPitching = defense.team?.id === ORIOLES_ID;
     pitchMix = renderScoutPitchMix(arsenals?.current ?? null, pitcher?.fullName ?? pitcher?.lastInitName ?? '');
 
-    // Situation at the plate
+    // ── Category 1: Base/out situation ─────────────────────────────
+    // One note describing what's happening at the plate right now.
+    let situationNote = null;
     if (basesLoaded) {
-      notes.push(`${playerLabel(batter)} steps in with the bases loaded, ${half} of the ${inning}${ordinalSuffix(inning)}.`);
+      situationNote = `${playerLabel(batter)} up with the bases loaded — ${outs} out${outs === 1 ? '' : 's'}.`;
     } else if (risp > 0) {
-      notes.push(`${playerLabel(batter)} up with ${risp} in scoring position and ${outs} out${outs === 1 ? '' : 's'}.`);
+      const rPos = risp === 2 ? 'runners in scoring position' : 'a runner in scoring position';
+      situationNote = `${playerLabel(batter)} up with ${rPos}, ${outs} out${outs === 1 ? '' : 's'}.`;
     } else if (offense.first && outs === 0) {
-      notes.push(`${playerLabel(batter)} comes up with a runner on and nobody out.`);
+      situationNote = `${playerLabel(batter)} up, runner on first, nobody out.`;
+    } else if (offense.first && !offense.second && !offense.third && outs < 2) {
+      situationNote = `${playerLabel(pitcher)} with a double-play chance — ${playerLabel(batter)} at the plate.`;
     }
 
-    // Score leverage
-    if (diff === -1) {
-      notes.push(`${playerLabel(batter)} is the tying run at the plate.`);
+    // ── Category 2: Score leverage ──────────────────────────────────
+    // The most impactful note — what the deficit/lead means right now.
+    let leverageNote = null;
+    if (diff === 0 && lateGame && runnersOn >= 1) {
+      leverageNote = `Tied game, ${half} of the ${inning}${ordinalSuffix(inning)} — ${playerLabel(batter)} with a chance to take the lead.`;
+    } else if (diff === -1) {
+      if (basesLoaded) {
+        leverageNote = `Down one with the bases juiced — a sac fly ties it.`;
+      } else {
+        leverageNote = `${playerLabel(batter)} is the tying run at the plate.`;
+      }
     } else if (diff === -2 && runnersOn >= 1) {
-      notes.push(`The tying run is aboard with ${playerLabel(batter)} up.`);
+      leverageNote = `Tying run is on base with ${playerLabel(batter)} up.`;
     } else if (diff === -3 && runnersOn >= 2) {
-      notes.push(`${playerLabel(batter)} hits with a rally brewing — tying run in scoring position.`);
-    } else if (diff > 0 && diff <= 3 && inning >= 8) {
-      notes.push(`${playerLabel(pitcher)} is protecting a ${diff}-run lead in the ${inning}${ordinalSuffix(inning)}.`);
-    } else if (diff >= 0 && inning >= 7 && runnersOn > 0) {
-      notes.push(`${playerLabel(batter)} hits with a chance to add insurance.`);
+      leverageNote = `${playerLabel(batter)} at the plate with the tying run in scoring position.`;
+    } else if (diff > 0 && diff <= 3 && lateGame) {
+      if (isOriolesGame && oriolesPitching) {
+        leverageNote = `${playerLabel(pitcher)} protecting a ${diff}-run Orioles lead in the ${inning}${ordinalSuffix(inning)}.`;
+      } else if (isOriolesGame && oriolesBatting) {
+        leverageNote = `Orioles up ${diff} in the ${inning}${ordinalSuffix(inning)} — ${playerLabel(batter)} can extend the lead.`;
+      } else {
+        leverageNote = `${playerLabel(pitcher)} protecting a ${diff}-run lead, ${inning}${ordinalSuffix(inning)}.`;
+      }
+    } else if (diff >= 1 && diff <= 2 && lateGame && runnersOn >= 1) {
+      leverageNote = `${playerLabel(batter)} can add insurance in a ${diff}-run game.`;
     }
 
-    // Double-play opportunity
-    if (offense.first && !offense.second && !offense.third && outs < 2 && runnersOn === 1) {
-      notes.push(`${playerLabel(pitcher)} has a double-play chance with ${playerLabel(batter)} up.`);
+    // ── Category 3: Count ───────────────────────────────────────────
+    // Only notable counts — extreme hitter/pitcher counts.
+    let countNote = null;
+    if (balls != null && strikes != null) {
+      if (balls === 3 && strikes === 0) {
+        countNote = `${playerLabel(pitcher)} in a 3-0 hole to ${playerLabel(batter)}.`;
+      } else if (balls === 3 && strikes === 1) {
+        countNote = `Hitter's count, 3-1 — ${playerLabel(pitcher)} needs a strike.`;
+      } else if (strikes === 2 && balls === 0) {
+        countNote = `${playerLabel(pitcher)} sitting 0-2 on ${playerLabel(batter)}.`;
+      } else if (strikes === 2 && balls === 1) {
+        countNote = `${playerLabel(pitcher)} ahead 1-2 — looking for the strikeout.`;
+      }
     }
 
-    // Count leverage
-    if (balls === 3 && strikes !== 2) {
-      notes.push(`Count favors ${playerLabel(batter)} at ${balls}-${strikes} against ${playerLabel(pitcher)}.`);
-    } else if (strikes === 2 && balls != null && balls <= 1) {
-      notes.push(`${playerLabel(pitcher)} is ahead ${balls}-${strikes} to ${playerLabel(batter)}.`);
+    // ── Category 4: Next batters ────────────────────────────────────
+    let nextNote = null;
+    if (onDeck?.fullName) {
+      nextNote = inHole?.fullName
+        ? `Next: ${playerLabel(onDeck)}, then ${playerLabel(inHole)}.`
+        : `On deck: ${playerLabel(onDeck)}.`;
     }
 
-    // Next batters
-    if (onDeck?.fullName && inHole?.fullName) {
-      notes.push(`Next up: ${playerLabel(onDeck)}, then ${playerLabel(inHole)}.`);
+    // ── Category 5: Late-game summary ──────────────────────────────
+    // Only fires when nothing else captured the late-game tension.
+    let summaryNote = null;
+    if (lateGame && !leverageNote) {
+      if (diff === 0) {
+        summaryNote = `Tied ballgame in the ${inning}${ordinalSuffix(inning)}.`;
+      } else if (absLead <= 2) {
+        summaryNote = `A ${absLead}-run game in the ${inning}${ordinalSuffix(inning)}.`;
+      }
     }
 
-    // Late leverage summary
-    if (Math.abs(offScore - defScore) <= 2 && inning >= 7) {
-      notes.push(`Late leverage: a ${Math.abs(offScore - defScore)}-run game in the ${inning}${ordinalSuffix(inning)}.`);
-    }
-
+    notes.push(...[situationNote, leverageNote, countNote, nextNote, summaryNote].filter(Boolean));
     context = `${ls.inningHalf || ''} ${String(inning || '')}`;
   } else if (isPreview) {
     const awayPitcher = game.teams?.away?.probablePitcher?.fullName;

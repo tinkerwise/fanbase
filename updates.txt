@@ -11,9 +11,10 @@
 - Update this file after tasks are completed, remove '-' and leave checkmark
 
 ##Active
-- in-game pitcher's pitches by inning stat line (somewhere)
-- Improve accuracy and quality of Scout Notes (see screenshot)
 - verify The Athletic feed URL works (added as https://theathletic.com/mlb/baltimore-orioles/feed/)
+
+##Table
+- in-game pitcher's pitches by inning stat line (somewhere)
 
 ##Queued
 
@@ -26,6 +27,14 @@
 ---
 
 ##Recently Completed (April 7, 2026)
+
+# SCOUT NOTES
+- ✓ rewrote live-game note logic with 5-category priority system (situation, leverage, count, next batters, summary)
+- ✓ each category contributes at most one note — eliminates "tying run" + "late leverage" redundancy
+- ✓ count notes now cover notable extremes only: 3-0, 3-1, 0-2, 1-2
+- ✓ next-batter note degrades gracefully (shows on-deck even if in-hole is unknown)
+- ✓ late-game summary only fires when leverage category hasn't already captured the tension
+- ✓ Orioles perspective restored for Orioles games (pitcher protecting an Orioles lead, etc.)
 
 # GAME DAY WIDGET
 - ✓ added Watch (MASN) + Listen (WBAL · 98 Rock) media strip inside On Deck card; only visible when today's game is upcoming or live
