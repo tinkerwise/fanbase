@@ -1012,18 +1012,29 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
     }
 
     // ── Category 2: Score leverage ──────────────────────────────────
-    // The most impactful note — what the deficit/lead means right now.
+    // "Tying run" logic: the tying run is on base only when runnersOn >= deficit.
+    // If runnersOn < deficit, the batter IS the tying run (they represent run #deficit).
     let leverageNote = null;
     if (diff === 0 && lateGame && runnersOn >= 1) {
       leverageNote = `Tied game, ${half} of the ${inning}${ordinalSuffix(inning)} — ${playerLabel(batter)} with a chance to take the lead.`;
     } else if (diff === -1) {
-      if (basesLoaded) {
-        leverageNote = `Down one with the bases juiced — a sac fly ties it.`;
+      if (runnersOn >= 1) {
+        // Runner on base is the tying run
+        leverageNote = basesLoaded
+          ? `Down one with the bases loaded — a sac fly ties it.`
+          : `Tying run is on base with ${playerLabel(batter)} up.`;
       } else {
+        // Batter is the tying run
         leverageNote = `${playerLabel(batter)} is the tying run at the plate.`;
       }
-    } else if (diff === -2 && runnersOn >= 1) {
-      leverageNote = `Tying run is on base with ${playerLabel(batter)} up.`;
+    } else if (diff === -2) {
+      if (runnersOn >= 2) {
+        // Two runners on — one of them is the tying run
+        leverageNote = `Tying run is on base with ${playerLabel(batter)} up.`;
+      } else if (runnersOn === 1) {
+        // Only one runner — batter is the tying run
+        leverageNote = `${playerLabel(batter)} is the tying run at the plate.`;
+      }
     } else if (diff === -3 && runnersOn >= 2) {
       leverageNote = `${playerLabel(batter)} at the plate with the tying run in scoring position.`;
     } else if (diff > 0 && diff <= 3 && lateGame) {
