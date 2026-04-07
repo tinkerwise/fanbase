@@ -12,6 +12,7 @@
 
 ##Active
 - include code that uses the favicon as an ocon on ios home screens
+- add The Athletic to sources
 
 ##Queued
 
