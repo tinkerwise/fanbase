@@ -2085,6 +2085,10 @@ a.il-name:hover { color: var(--orange); }
   font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: 3px;
   background: rgba(34,197,94,0.15); color: #22c55e; text-transform: uppercase;
 }
+.paywall-badge {
+  font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: 3px;
+  background: rgba(100,116,139,0.15); color: var(--text-3); white-space: nowrap;
+}
 .share-btn {
   margin-left: auto; background: none; border: none; color: var(--text-3);
   padding: 2px 4px; cursor: pointer; display: flex; align-items: center;

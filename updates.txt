@@ -11,10 +11,20 @@
 - Update this file after tasks are completed, remove '-' and leave checkmark
 
 ##Active
-- verify The Athletic feed URL works (added as https://theathletic.com/mlb/baltimore-orioles/feed/)
+
+##Recently Completed (April 11, 2026)
+
+# IMAGES
+✓ Added referrerpolicy="no-referrer" to article thumbnails — bypasses most hotlink-protection redirects so the real image loads instead of an error image
+✓ Raised onload dimension guard from 20px to 80×60px — catches small default thumbnails that slipped through previously
+
+# THE ATHLETIC
+✓ Verified feed URL (https://theathletic.com/mlb/baltimore-orioles/feed/) is present in feeds.json
+✓ Added 🔒 Subscriber badge to all Athletic article cards
+✓ Athletic cards now open The Athletic directly in a new tab on click instead of the reader overlay (content requires a subscription)
 
 ##Table
-- in-game pitcher's pitches by inning stat line (somewhere)
+
 
 ##Queued
 

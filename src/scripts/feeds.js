@@ -221,23 +221,27 @@ function renderCardDescription(article, mode) {
 function renderCard(a, i) {
   const imgSrc = extractThumbnail(a);
   const hasFullContent = (a.content || '').length > 400;
+  const isPaywall = a.source.id === 'athletic';
   const mode = state.viewMode;
   const favicon = faviconUrl(a.link);
   const isRead = getReadArticles().has(a.link);
   const readClass = isRead ? ' read' : '';
+  const paywallAttr = isPaywall ? ' data-paywall="1"' : '';
   const readTick = isRead ? '<span class="read-tick" title="Read">✓</span>' : '';
+  const paywallBadge = isPaywall ? '<span class="paywall-badge">🔒 Subscriber</span>' : '';
 
   const fallback = `<div class=\\'article-thumb-placeholder\\'><img class=\\'placeholder-logo\\' src=\\'${PLACEHOLDER_IMG}\\' alt=\\'\\'></div>`;
   const thumbImg = imgSrc
-    ? `<img class="article-thumb" src="${esc(imgSrc)}" alt="" loading="lazy"
+    ? `<img class="article-thumb" src="${esc(imgSrc)}" alt="" loading="lazy" referrerpolicy="no-referrer"
          onerror="this.outerHTML='${fallback}'"
-         onload="var w=this.naturalWidth,h=this.naturalHeight,r=w/h;if(w<20||h<20||r>4||r<0.3)this.outerHTML='${fallback}'">`
+         onload="var w=this.naturalWidth,h=this.naturalHeight,r=w/h;if(w<80||h<60||r>4||r<0.3)this.outerHTML='${fallback}'">`
     : `<div class="article-thumb-placeholder"><img class="placeholder-logo" src="${PLACEHOLDER_IMG}" alt=""></div>`;
 
   const source = `<span class="source-line">
     <img class="source-ico" src="${esc(favicon)}" alt="" onerror="this.style.display='none'">
     <span class="source-name">${esc(a.source.name)}</span>
     <span class="article-date">${relativeDate(a.pubDate)}</span>
+    ${paywallBadge}
     ${hasFullContent ? '<span class="full-badge">Full</span>' : ''}
     <button class="share-btn" data-url="${esc(a.link)}" data-title="${esc(a.title)}" title="Share" onclick="event.stopPropagation();if(navigator.share)navigator.share({title:this.dataset.title,url:this.dataset.url});else{navigator.clipboard.writeText(this.dataset.url);this.textContent='Copied!';setTimeout(()=>this.innerHTML='<svg width=\\'12\\' height=\\'12\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><path d=\\'M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8\\'/><polyline points=\\'16 6 12 2 8 6\\'/><line x1=\\'12\\' y1=\\'2\\' x2=\\'12\\' y2=\\'15\\'/></svg>',1500)}">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
@@ -246,14 +250,14 @@ function renderCard(a, i) {
   </span>`;
 
   if (mode === 'compact') {
-    return `<div class="article-card compact${readClass}" data-idx="${i}" role="button" tabindex="0">
+    return `<div class="article-card compact${readClass}" data-idx="${i}"${paywallAttr} role="button" tabindex="0">
       ${source}
       <div class="article-title">${esc(a.title)}</div>
     </div>`;
   }
 
   if (mode === 'list') {
-    return `<div class="article-card list-view${readClass}" data-idx="${i}" role="button" tabindex="0">
+    return `<div class="article-card list-view${readClass}" data-idx="${i}"${paywallAttr} role="button" tabindex="0">
       ${thumbImg}
       <div class="article-body">
         ${source}
@@ -263,7 +267,7 @@ function renderCard(a, i) {
     </div>`;
   }
 
-  return `<div class="article-card${readClass}" data-idx="${i}" role="button" tabindex="0">
+  return `<div class="article-card${readClass}" data-idx="${i}"${paywallAttr} role="button" tabindex="0">
     ${thumbImg}
     <div class="article-body">
       ${source}
@@ -675,7 +679,14 @@ export function renderArticles() {
     el.addEventListener('click', e => {
       if (e.target.tagName === 'A') return;
       const idx = Number(el.dataset.idx);
-      openReader(arts[idx]);
+      const article = arts[idx];
+      if (el.dataset.paywall) {
+        markRead(article.link);
+        renderArticles();
+        window.open(article.link, '_blank', 'noopener,noreferrer');
+        return;
+      }
+      openReader(article);
     });
     el.addEventListener('keydown', e => {
       if (e.key === 'Enter') el.click();
