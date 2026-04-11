@@ -1,4 +1,4 @@
-import { loadPrefs, savePrefs } from './storage.js';
+import { loadPrefs, savePrefs, getDisabledSources, saveDisabledSources } from './storage.js';
 import { state } from './state.js';
 import { applyTheme } from './theme.js';
 import { $ } from './utils.js';
@@ -9,6 +9,7 @@ import {
   setViewMode,
   syncShowReadButton,
   closeReader,
+  getAllSources,
 } from './feeds.js';
 import {
   loadStandings,
@@ -26,6 +27,77 @@ import {
   toggleOpacyTheme,
   toggleCityConnectTheme,
 } from './easter-eggs.js';
+
+// ── Source settings ───────────────────────────────────────────────
+function renderSourceSettings() {
+  const container = $('settingsSourcesList');
+  if (!container) return;
+  const sources = getAllSources();
+  const disabled = getDisabledSources();
+
+  if (!sources.length) {
+    container.innerHTML = '<span class="settings-sources-empty">Loading…</span>';
+    return;
+  }
+
+  const groups = [
+    { key: 'orioles', label: 'Orioles' },
+    { key: 'mlb',     label: 'MLB'     },
+    { key: 'milb',    label: 'MiLB'    },
+  ];
+
+  const enabledCount = sources.filter(s => !disabled.has(s.id)).length;
+  const warnHtml = enabledCount === 0
+    ? '<div class="source-setting-warning">No sources selected — no articles will load.</div>'
+    : '';
+
+  let html = warnHtml;
+  for (const { key, label } of groups) {
+    const srcs = sources.filter(s => s.category === key);
+    if (!srcs.length) continue;
+    html += `<div class="source-setting-group">
+      <div class="source-setting-group-label">${label}</div>
+      ${srcs.map(s => `
+        <label class="source-setting-row">
+          <input type="checkbox" class="source-setting-cb" data-source-id="${s.id}"${disabled.has(s.id) ? '' : ' checked'}>
+          <span class="source-setting-name">${s.name}</span>
+        </label>`).join('')}
+    </div>`;
+  }
+
+  html += '<button class="source-setting-reset" id="sourceResetBtn">Reset to defaults</button>';
+  container.innerHTML = html;
+
+  container.querySelectorAll('.source-setting-cb').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const newDisabled = new Set(
+        [...container.querySelectorAll('.source-setting-cb')]
+          .filter(c => !c.checked)
+          .map(c => c.dataset.sourceId)
+      );
+      const remaining = sources.length - newDisabled.size;
+      let warn = container.querySelector('.source-setting-warning');
+      if (remaining === 0) {
+        if (!warn) {
+          warn = document.createElement('div');
+          warn.className = 'source-setting-warning';
+          container.prepend(warn);
+        }
+        warn.textContent = 'No sources selected — no articles will load.';
+      } else {
+        warn?.remove();
+      }
+      saveDisabledSources(newDisabled);
+      loadFeeds();
+    });
+  });
+
+  $('sourceResetBtn')?.addEventListener('click', () => {
+    saveDisabledSources(new Set());
+    renderSourceSettings();
+    loadFeeds();
+  });
+}
 
 // ── Refresh ───────────────────────────────────────────────────────
 async function refresh() {
@@ -103,6 +175,7 @@ function setupEvents() {
       b.classList.toggle('active', b.dataset.theme === (p.theme || 'dark')));
     $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.defview === (p.defaultView || 'list')));
+    renderSourceSettings();
   });
   $('settingsClose').addEventListener('click', () => $('settingsOverlay').classList.add('hidden'));
   $('settingsOverlay').addEventListener('click', e => {

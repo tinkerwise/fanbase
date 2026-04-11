@@ -51,3 +51,11 @@ export function markReadAthBundle(slug) {
   const arr = [...read].slice(-100);
   localStorage.setItem(READ_ATH_KEY, JSON.stringify(arr));
 }
+
+export function getDisabledSources() {
+  return new Set(loadPrefs().disabledSources || []);
+}
+
+export function saveDisabledSources(disabled) {
+  savePrefs({ disabledSources: [...disabled] });
+}

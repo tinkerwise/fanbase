@@ -11,6 +11,7 @@ import {
   markRead,
   markReadAthBundle,
   unmarkRead,
+  getDisabledSources,
 } from './storage.js';
 import { state } from './state.js';
 import {
@@ -26,6 +27,10 @@ import {
   buildReaderDoc,
   cleanFeedText,
 } from './utils.js';
+
+// ── Source registry (populated on first load) ─────────────────────
+let ALL_FEEDS = [];
+export function getAllSources() { return ALL_FEEDS; }
 
 // ── View mode ─────────────────────────────────────────────────────
 export function setViewMode(view, { render = true } = {}) {
@@ -64,11 +69,26 @@ export async function loadFeeds() {
   let FEEDS;
   try {
     FEEDS = await fetch(`${import.meta.env.BASE_URL}feeds.json`).then(r => r.json());
+    ALL_FEEDS = FEEDS;
   } catch {
     $('articleList').innerHTML = '<div class="feed-msg">Could not load feeds.json</div>';
     return [];
   }
-  const results = await Promise.allSettled(FEEDS.map(fetchFeed));
+
+  const disabled = getDisabledSources();
+  const activeFEEDS = FEEDS.filter(f => !disabled.has(f.id));
+
+  if (activeFEEDS.length === 0) {
+    state.articles = [];
+    renderSourceFilters([]);
+    $('articleList').innerHTML =
+      '<div class="feed-msg">No sources selected. <button class="feed-msg-link" id="feedMsgSettingsBtn">Open Settings</button> to enable sources.</div>';
+    document.getElementById('feedMsgSettingsBtn')?.addEventListener('click', () =>
+      document.getElementById('settingsBtn')?.click());
+    return [];
+  }
+
+  const results = await Promise.allSettled(activeFEEDS.map(fetchFeed));
 
   state.articles = [];
   const successfulSources = [];

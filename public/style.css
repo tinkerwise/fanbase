@@ -449,8 +449,9 @@ img { display: block; max-width: 100%; }
 .settings-overlay.hidden { display: none; }
 .settings-panel {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; width: 360px; max-width: 90vw;
+  border-radius: 12px; width: 400px; max-width: 90vw;
   box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  max-height: 88vh; display: flex; flex-direction: column;
 }
 .settings-header {
   display: flex; justify-content: space-between; align-items: center;
@@ -462,8 +463,48 @@ img { display: block; max-width: 100%; }
   cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: color 0.15s;
 }
 .btn-close-settings:hover { color: var(--text); }
-.settings-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.settings-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
 .settings-group { display: flex; flex-direction: column; gap: 8px; }
+/* ── Source settings ──────────────────────────────────────────────── */
+.settings-sources-note {
+  font-size: 0.68rem; color: var(--text-3); margin: -2px 0 2px;
+}
+.settings-sources-list {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.settings-sources-empty { font-size: 0.8rem; color: var(--text-3); }
+.source-setting-group { display: flex; flex-direction: column; gap: 1px; }
+.source-setting-group-label {
+  font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-3); padding: 6px 0 3px;
+}
+.source-setting-row {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 4px 6px; border-radius: 5px; font-size: 0.82rem; color: var(--text);
+  transition: background 0.12s;
+}
+.source-setting-row:hover { background: rgba(255,255,255,0.04); }
+[data-theme="light"] .source-setting-row:hover,
+[data-theme="city-connect"] .source-setting-row:hover { background: rgba(0,0,0,0.04); }
+.source-setting-cb { cursor: pointer; accent-color: var(--orange); flex-shrink: 0; }
+.source-setting-name { flex: 1; }
+.source-setting-warning {
+  font-size: 0.76rem; color: #f59e0b;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 6px; padding: 6px 10px; margin-bottom: 2px;
+}
+.source-setting-reset {
+  margin-top: 8px; font-size: 0.72rem; color: var(--text-3);
+  background: none; border: 1px solid var(--border); border-radius: 4px;
+  padding: 4px 10px; cursor: pointer; transition: color 0.15s, border-color 0.15s;
+  align-self: flex-start;
+}
+.source-setting-reset:hover { color: var(--orange); border-color: var(--orange); }
+/* "No sources" feed message link */
+.feed-msg-link {
+  background: none; border: none; color: var(--orange); font-size: inherit;
+  cursor: pointer; text-decoration: underline; padding: 0;
+}
 .settings-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
 .theme-toggle { display: flex; gap: 4px; }
 .theme-btn {

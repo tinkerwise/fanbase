@@ -25,6 +25,16 @@
 
 ##Table
 
+##Recently Completed (April 11, 2026 — sources)
+
+# SETTINGS — SOURCE SELECTION
+✓ Added Sources section to the Settings panel — per-source checkboxes grouped by category (Orioles / MLB / MiLB)
+✓ Disabled sources persisted in localStorage under yr_prefs.disabledSources; survives page reloads
+✓ Only enabled sources are fetched on load and refresh — disabled sources are skipped entirely
+✓ Inline warning appears immediately if all sources are unchecked: "No sources selected — no articles will load."
+✓ Feed area shows "No sources selected" with a direct link to open Settings when all sources are off
+✓ Reset to defaults button restores all sources and reloads
+✓ Settings panel note: "Saved locally. Clearing browser data resets to defaults."
 
 ##Queued
 
