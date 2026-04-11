@@ -11,6 +11,6 @@
     "smoke": "npm run build && npm run smoke:verify"
   },
   "dependencies": {
-    "astro": "^4.16.0"
+    "astro": "^6.1.5"
   }
 }

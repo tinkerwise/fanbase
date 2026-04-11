@@ -16,7 +16,7 @@
 
 # CONTRACTS & SALARIES
 ✓ Added Contracts widget to right sidebar between Roster and Injury Report
-✓ Pulls salary data from MLB Stats API (salaries endpoint, teamId=110, current season)
+✓ Pulls salary data from local static contracts.json (MLB Stats API has no public salary endpoint)
 ✓ Sortable by salary (default) or position (C/1B/2B/3B/SS/OF/DH order, pitchers last)
 ✓ Shows formatted salary ($X.XXM / $XXXK), position tag, player last name, contract type badge
 ✓ Total payroll row at bottom; "Full contracts on FanGraphs ↗" link
