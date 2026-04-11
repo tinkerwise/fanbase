@@ -855,3 +855,95 @@ function renderLeaders() {
     });
   });
 }
+
+// ── Contracts & Payroll ───────────────────────────────────────────
+const FG_PAYROLL_PAGE = 'https://www.fangraphs.com/roster-resource/payroll/orioles';
+
+function formatSalary(amount) {
+  if (!amount && amount !== 0) return '—';
+  if (amount >= 1_000_000) {
+    const m = amount / 1_000_000;
+    const str = m.toFixed(2).replace(/\.?0+$/, '');
+    return `$${str}M`;
+  }
+  if (amount >= 1_000) return `$${Math.round(amount / 1_000)}K`;
+  return `$${amount.toLocaleString()}`;
+}
+
+const CONTRACT_POS_ORDER = { C: 0, '1B': 1, '2B': 2, '3B': 3, SS: 4, LF: 5, CF: 6, RF: 7, OF: 8, DH: 9 };
+
+let contractsSort = 'salary';
+let contractsData = [];
+
+function renderContracts(wrap) {
+  let sorted = [...contractsData];
+  if (contractsSort === 'salary') {
+    sorted.sort((a, b) => (b.salary ?? 0) - (a.salary ?? 0));
+  } else {
+    sorted.sort((a, b) => {
+      const posA = a.position?.abbreviation ?? '';
+      const posB = b.position?.abbreviation ?? '';
+      const isPitcherA = !Object.prototype.hasOwnProperty.call(CONTRACT_POS_ORDER, posA);
+      const isPitcherB = !Object.prototype.hasOwnProperty.call(CONTRACT_POS_ORDER, posB);
+      if (isPitcherA !== isPitcherB) return isPitcherA ? 1 : -1;
+      if (!isPitcherA) return (CONTRACT_POS_ORDER[posA] ?? 99) - (CONTRACT_POS_ORDER[posB] ?? 99);
+      return (b.salary ?? 0) - (a.salary ?? 0);
+    });
+  }
+
+  const total = contractsData.reduce((sum, s) => sum + (s.salary ?? 0), 0);
+
+  const rows = sorted.map(s => {
+    const name = s.player?.fullName ?? '—';
+    const lastName = name.split(' ').slice(1).join(' ') || name;
+    const pos = s.position?.abbreviation ?? '—';
+    const isPitcher = !Object.prototype.hasOwnProperty.call(CONTRACT_POS_ORDER, pos);
+    const typeLabel = s.type?.description ?? '';
+    const statusHtml = typeLabel
+      ? `<span class="contract-status">${esc(typeLabel)}</span>`
+      : '<span></span>';
+    return `<div class="contract-row">
+      <span class="contract-pos${isPitcher ? ' contract-pos--p' : ''}">${esc(pos)}</span>
+      <span class="contract-name">${esc(lastName)}</span>
+      ${statusHtml}
+      <span class="contract-salary">${esc(formatSalary(s.salary))}</span>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div class="contract-controls">
+      <button class="contract-sort-btn${contractsSort === 'salary' ? ' active' : ''}" data-sort="salary">$ Salary</button>
+      <button class="contract-sort-btn${contractsSort === 'position' ? ' active' : ''}" data-sort="position">Position</button>
+    </div>
+    <div class="contracts-list">${rows}</div>
+    <div class="contracts-total">
+      <span class="contracts-total-label">Total payroll</span>
+      <span class="contracts-total-val">${formatSalary(total)}</span>
+    </div>
+    <a class="widget-link" href="${FG_PAYROLL_PAGE}" target="_blank" rel="noopener">Full contracts on FanGraphs ↗</a>`;
+
+  wrap.querySelectorAll('.contract-sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      contractsSort = btn.dataset.sort;
+      renderContracts(wrap);
+    });
+  });
+}
+
+export async function loadContracts() {
+  const wrap = $('contractsWrap');
+  if (!wrap) return;
+  contractsData = [];
+  try {
+    const data = await fetch(
+      `${MLB}/salaries?teamId=${ORIOLES_ID}&season=${SEASON}`
+    ).then(r => r.json());
+    contractsData = (data.salaries ?? []).filter(s => s.team?.id === ORIOLES_ID);
+    if (!contractsData.length) throw new Error('empty');
+    renderContracts(wrap);
+  } catch {
+    wrap.innerHTML = `
+      <span class="sidebar-msg">Salary data unavailable</span>
+      <a class="widget-link" href="${FG_PAYROLL_PAGE}" target="_blank" rel="noopener">View payroll on FanGraphs ↗</a>`;
+  }
+}

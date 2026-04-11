@@ -62,24 +62,141 @@
 
 /* ── City Connect Theme (Easter Egg — "From The Stoop to The Yard") ── */
 [data-theme="city-connect"] {
-  --bg: #F0E6CC;
-  --surface: #E6D8B8;
-  --card: #DCCFA5;
-  --border: #C2B48A;
-  --border-light: #D2C49A;
-  --text: #152B1C;
+  --bg: #ffffff;
+  --surface: #f0f7f3;
+  --card: #e1f0e8;
+  --border: #aacbb8;
+  --border-light: #c2ddd0;
+  --text: #0e2118;
   --text-2: #2D5A3D;
   --text-3: #4A7A59;
   --orange: #C84B11;
-  --orange-dim: rgba(200, 75, 17, 0.14);
+  --orange-dim: rgba(200, 75, 17, 0.12);
 }
-[data-theme="city-connect"] .site-header { background: #F0E6CC; border-color: #2D5A3D; }
-[data-theme="city-connect"] .scores-bar { background: linear-gradient(180deg, #F0E6CC 0%, #E6D8B8 100%); }
-[data-theme="city-connect"] .score-chip { background: #DCCFA5; }
-[data-theme="city-connect"] .article-thumb-placeholder { background: linear-gradient(135deg, #2D5A3D 0%, #1E3D29 100%); }
+/* Jersey pinstripes */
+[data-theme="city-connect"] body {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0px, transparent 18px,
+    rgba(45, 90, 61, 0.045) 18px, rgba(45, 90, 61, 0.045) 19px
+  );
+}
+/* Header: white with green collar + brick orange shadow line */
+[data-theme="city-connect"] .site-header {
+  background: #ffffff;
+  border-bottom: 3px solid #2D5A3D;
+  box-shadow: 0 3px 0 0 #C84B11;
+}
+/* Scores bar: Camden Yards green with brick mortar grid texture */
+[data-theme="city-connect"] .scores-bar {
+  background-color: #1E3D29;
+  background-image:
+    repeating-linear-gradient(
+      0deg, transparent 0px, transparent 18px,
+      rgba(0,0,0,0.14) 18px, rgba(0,0,0,0.14) 19px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent 0px, transparent 36px,
+      rgba(0,0,0,0.09) 36px, rgba(0,0,0,0.09) 37px
+    );
+  background-size: 37px 19px;
+  border-bottom: 2px solid #C84B11;
+}
+/* Score chips pop white against the dark green bar */
+[data-theme="city-connect"] .score-chip {
+  background: rgba(255,255,255,0.93);
+  border-color: rgba(255,255,255,0.22);
+  color: #0e2118;
+}
+[data-theme="city-connect"] .score-chip:hover { border-color: #C84B11; transform: translateY(-1px); }
+[data-theme="city-connect"] .score-chip[aria-expanded="true"] { border-color: #C84B11; }
+[data-theme="city-connect"] .score-chip.orioles {
+  border-left: 3px solid #2D5A3D;
+  background: rgba(255,255,255,0.97);
+}
+[data-theme="city-connect"] .chip-status.final { color: #4A7A59; }
+[data-theme="city-connect"] .chip-status.preview { color: #2D5A3D; }
+/* Article cards: jersey piping left stripe */
+[data-theme="city-connect"] .article-card {
+  background: #ffffff;
+  border-left: 3px solid rgba(45, 90, 61, 0.28);
+}
+[data-theme="city-connect"] .article-card:hover {
+  border-color: #2D5A3D;
+  border-left-color: #2D5A3D;
+  box-shadow: 0 8px 24px rgba(45,90,61,0.16);
+}
+/* Article thumb placeholder: rich Camden green */
+[data-theme="city-connect"] .article-thumb-placeholder {
+  background: linear-gradient(135deg, #2D5A3D 0%, #1E3D29 100%);
+}
+/* Section labels: Graduate font — like jersey chest lettering */
+[data-theme="city-connect"] .section-label {
+  font-family: 'Graduate', serif;
+  color: #2D5A3D;
+  letter-spacing: 0.04em;
+}
+/* Search: green focus ring */
+[data-theme="city-connect"] .search-wrap {
+  background: linear-gradient(180deg, rgba(45,90,61,0.07), rgba(45,90,61,0.02));
+  border-color: rgba(45,90,61,0.18);
+}
+[data-theme="city-connect"] .search-input:focus {
+  border-color: #2D5A3D;
+  box-shadow: 0 0 0 3px rgba(45,90,61,0.18);
+}
+[data-theme="city-connect"] .search-wrap:focus-within .search-icon { color: #2D5A3D; }
+/* Pills & tabs: Camden green active state */
+[data-theme="city-connect"] .pill:hover { border-color: #2D5A3D; color: #2D5A3D; }
+[data-theme="city-connect"] .pill.active { background: #2D5A3D; border-color: #2D5A3D; color: #fff; }
+[data-theme="city-connect"] .div-tab:hover { border-color: #2D5A3D; color: #2D5A3D; }
+[data-theme="city-connect"] .div-tab.active { background: #2D5A3D; border-color: #2D5A3D; color: #fff; }
+[data-theme="city-connect"] .leaders-scope-btn:hover { border-color: #2D5A3D; color: #2D5A3D; }
+[data-theme="city-connect"] .leaders-scope-btn.active { background: #2D5A3D; border-color: #2D5A3D; }
+/* Buttons */
+[data-theme="city-connect"] .btn-settings:hover { color: #2D5A3D; border-color: #2D5A3D; }
+[data-theme="city-connect"] .theme-btn:hover { border-color: #2D5A3D; color: #2D5A3D; }
+[data-theme="city-connect"] .theme-btn.active { background: #2D5A3D; border-color: #2D5A3D; }
+/* Standings */
+[data-theme="city-connect"] .standings-table tr.orioles-row td { color: #2D5A3D; font-weight: 700; }
+[data-theme="city-connect"] .standings-table td { border-bottom-color: rgba(45,90,61,0.12); }
+[data-theme="city-connect"] .team-abbrev a:hover { color: #2D5A3D; }
+/* Leaders */
+[data-theme="city-connect"] .leader-cat { color: #2D5A3D; }
+[data-theme="city-connect"] a.leader-name:hover { color: #2D5A3D; }
+/* Roster */
+[data-theme="city-connect"] .roster-group-label { color: #2D5A3D; }
+[data-theme="city-connect"] a.roster-name:hover { color: #2D5A3D; }
+/* On Deck */
+[data-theme="city-connect"] .on-deck-card { background: #e1f0e8; border-color: #aacbb8; }
+[data-theme="city-connect"] .on-deck-card:hover { border-color: #2D5A3D; }
+/* Podcast: green-tinted */
+[data-theme="city-connect"] .podcast-card {
+  background:
+    linear-gradient(180deg, rgba(45,90,61,0.14), rgba(45,90,61,0.04)),
+    var(--card);
+  border-color: rgba(45,90,61,0.30);
+}
+/* Box score popover */
+[data-theme="city-connect"] .box-score-popover {
+  background: linear-gradient(180deg, #f0f7f3, #e8f2ed);
+  border-color: rgba(45,90,61,0.22);
+}
+/* Arsenal pills: subtle green */
+[data-theme="city-connect"] .arsenal-pill {
+  background: rgba(45,90,61,0.08);
+  border-color: rgba(45,90,61,0.24);
+}
+/* Links & misc */
+[data-theme="city-connect"] .widget-link:hover { color: #2D5A3D; }
+[data-theme="city-connect"] .txn-player:hover { color: #2D5A3D; }
+[data-theme="city-connect"] a.il-name:hover { color: #2D5A3D; }
+[data-theme="city-connect"] .share-btn:hover { color: #2D5A3D; background: rgba(45,90,61,0.08); }
+/* Logo */
 [data-theme="city-connect"] .logo strong { color: #2D5A3D; }
-[data-theme="city-connect"] .on-deck-card { background: #DCCFA5; }
-[data-theme="city-connect"] .box-score-popover { background: #E6D8B8; }
+[data-theme="city-connect"] .logo::after { background: rgba(45, 90, 61, 0.25); }
+[data-theme="city-connect"] .logo-word { color: #0e2118; text-shadow: none; }
+[data-theme="city-connect"] .logo-word-accent { color: #C84B11; }
 
 /* ── OPACY Theme (Easter Egg) ─────────────────────────────────── */
 [data-theme="opacy"] {
@@ -106,46 +223,74 @@
 .city-connect-banner {
   position: fixed; inset: 0; z-index: 9999;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(21, 43, 28, 0.88);
-  backdrop-filter: blur(4px);
+  background: rgba(14, 33, 24, 0.92);
+  backdrop-filter: blur(6px);
   animation: cc-fade-in 0.35s ease;
   cursor: pointer;
+  /* Brick mortar grid on the overlay */
+  background-image:
+    rgba(14,33,24,0.92),
+    repeating-linear-gradient(0deg, transparent 0px, transparent 22px, rgba(255,255,255,0.03) 22px, rgba(255,255,255,0.03) 23px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 44px, rgba(255,255,255,0.03) 44px, rgba(255,255,255,0.03) 45px);
 }
 .city-connect-banner-out { animation: cc-fade-out 0.5s ease forwards; }
 .city-connect-banner-inner {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  text-align: center; padding: 40px 56px;
-  background: #F0E6CC;
-  border: 3px solid #2D5A3D;
-  border-radius: 4px;
-  box-shadow: 0 0 0 6px #C84B11, 0 20px 60px rgba(0,0,0,0.5);
-  animation: cc-scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  text-align: center; padding: 44px 64px;
+  background: #ffffff;
+  border: 4px solid #2D5A3D;
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 8px #C84B11, 0 0 0 10px #2D5A3D, 0 28px 72px rgba(0,0,0,0.65);
+  animation: cc-scale-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+/* Green pinstripes on banner card */
+.city-connect-banner-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0px, transparent 16px,
+    rgba(45, 90, 61, 0.055) 16px, rgba(45, 90, 61, 0.055) 17px
+  );
+  pointer-events: none;
+  border-radius: 0;
 }
 .city-connect-stoop, .city-connect-yard {
   font-family: 'Graduate', serif;
-  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-size: clamp(2rem, 6vw, 3.6rem);
   font-weight: 700;
-  color: #2D5A3D;
+  color: #1E3D29;
   letter-spacing: 0.06em;
-  text-shadow: 2px 2px 0 #C84B11;
+  text-shadow: 3px 3px 0 #C84B11;
+  position: relative;
 }
 .city-connect-to {
   font-family: 'Graduate', serif;
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
   color: #C84B11;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.25em;
+  position: relative;
+}
+.city-connect-divider {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #2D5A3D, #C84B11, #2D5A3D);
+  border-radius: 2px;
+  position: relative;
 }
 .city-connect-sub {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   color: #4A7A59;
-  margin-top: 4px;
   text-transform: uppercase;
+  position: relative;
 }
 @keyframes cc-fade-in  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes cc-fade-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes cc-scale-in { from { transform: scale(0.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes cc-scale-in { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 /* ── Reset ─────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -272,7 +417,7 @@ img { display: block; max-width: 100%; }
   background: rgba(255, 107, 26, 0.5);
 }
 [data-theme="city-connect"] .logo::after {
-  background: rgba(45, 90, 61, 0.35);
+  background: rgba(45, 90, 61, 0.25);
 }
 [data-theme="light"] .logo-word { color: #3e2415; }
 [data-theme="light"] .logo-word-accent { color: #b84000; }
@@ -304,8 +449,9 @@ img { display: block; max-width: 100%; }
 .settings-overlay.hidden { display: none; }
 .settings-panel {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; width: 360px; max-width: 90vw;
+  border-radius: 12px; width: 400px; max-width: 90vw;
   box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  max-height: 88vh; display: flex; flex-direction: column;
 }
 .settings-header {
   display: flex; justify-content: space-between; align-items: center;
@@ -317,8 +463,48 @@ img { display: block; max-width: 100%; }
   cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: color 0.15s;
 }
 .btn-close-settings:hover { color: var(--text); }
-.settings-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.settings-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
 .settings-group { display: flex; flex-direction: column; gap: 8px; }
+/* ── Source settings ──────────────────────────────────────────────── */
+.settings-sources-note {
+  font-size: 0.68rem; color: var(--text-3); margin: -2px 0 2px;
+}
+.settings-sources-list {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.settings-sources-empty { font-size: 0.8rem; color: var(--text-3); }
+.source-setting-group { display: flex; flex-direction: column; gap: 1px; }
+.source-setting-group-label {
+  font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-3); padding: 6px 0 3px;
+}
+.source-setting-row {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 4px 6px; border-radius: 5px; font-size: 0.82rem; color: var(--text);
+  transition: background 0.12s;
+}
+.source-setting-row:hover { background: rgba(255,255,255,0.04); }
+[data-theme="light"] .source-setting-row:hover,
+[data-theme="city-connect"] .source-setting-row:hover { background: rgba(0,0,0,0.04); }
+.source-setting-cb { cursor: pointer; accent-color: var(--orange); flex-shrink: 0; }
+.source-setting-name { flex: 1; }
+.source-setting-warning {
+  font-size: 0.76rem; color: #f59e0b;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 6px; padding: 6px 10px; margin-bottom: 2px;
+}
+.source-setting-reset {
+  margin-top: 8px; font-size: 0.72rem; color: var(--text-3);
+  background: none; border: 1px solid var(--border); border-radius: 4px;
+  padding: 4px 10px; cursor: pointer; transition: color 0.15s, border-color 0.15s;
+  align-self: flex-start;
+}
+.source-setting-reset:hover { color: var(--orange); border-color: var(--orange); }
+/* "No sources" feed message link */
+.feed-msg-link {
+  background: none; border: none; color: var(--orange); font-size: inherit;
+  cursor: pointer; text-decoration: underline; padding: 0;
+}
 .settings-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
 .theme-toggle { display: flex; gap: 4px; }
 .theme-btn {
@@ -1526,6 +1712,21 @@ a.leader-name:hover { color: var(--orange); }
 a.roster-name:hover { color: var(--orange); }
 .roster-pos { color: var(--text-3); font-size: 0.68rem; flex-shrink: 0; }
 
+/* ── Contracts ────────────────────────────────────────────────── */
+.contract-controls { display: flex; gap: 4px; margin-bottom: 6px; }
+.contract-sort-btn { font-size: 0.62rem; padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text-3); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.contract-sort-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+.contracts-list { display: flex; flex-direction: column; gap: 1px; }
+.contract-row { display: grid; grid-template-columns: 28px 1fr auto auto; align-items: center; gap: 4px; font-size: 0.73rem; padding: 3px 0; border-bottom: 1px solid #1e1e1e; }
+.contract-pos { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; color: var(--text-3); text-align: right; }
+.contract-pos--p { color: #6c8fc4; }
+.contract-name { color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.contract-status { font-size: 0.6rem; color: var(--text-3); background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1px 4px; white-space: nowrap; }
+.contract-salary { font-variant-numeric: tabular-nums; color: var(--text-2); font-size: 0.71rem; text-align: right; }
+.contracts-total { display: flex; justify-content: space-between; align-items: center; padding: 6px 0 2px; margin-top: 3px; border-top: 1px solid var(--border); font-size: 0.72rem; }
+.contracts-total-label { color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.62rem; }
+.contracts-total-val { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+
 /* ── Widget Link ──────────────────────────────────────────────── */
 .widget-link {
   display: block; text-align: center; font-size: 0.7rem; color: var(--text-3);
@@ -1939,6 +2140,10 @@ a.il-name:hover { color: var(--orange); }
 .full-badge {
   font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: 3px;
   background: rgba(34,197,94,0.15); color: #22c55e; text-transform: uppercase;
+}
+.paywall-badge {
+  font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: 3px;
+  background: rgba(100,116,139,0.15); color: var(--text-3); white-space: nowrap;
 }
 .share-btn {
   margin-left: auto; background: none; border: none; color: var(--text-3);

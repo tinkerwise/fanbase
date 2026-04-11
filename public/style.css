@@ -1712,6 +1712,21 @@ a.leader-name:hover { color: var(--orange); }
 a.roster-name:hover { color: var(--orange); }
 .roster-pos { color: var(--text-3); font-size: 0.68rem; flex-shrink: 0; }
 
+/* ── Contracts ────────────────────────────────────────────────── */
+.contract-controls { display: flex; gap: 4px; margin-bottom: 6px; }
+.contract-sort-btn { font-size: 0.62rem; padding: 2px 7px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text-3); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.contract-sort-btn.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+.contracts-list { display: flex; flex-direction: column; gap: 1px; }
+.contract-row { display: grid; grid-template-columns: 28px 1fr auto auto; align-items: center; gap: 4px; font-size: 0.73rem; padding: 3px 0; border-bottom: 1px solid #1e1e1e; }
+.contract-pos { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; color: var(--text-3); text-align: right; }
+.contract-pos--p { color: #6c8fc4; }
+.contract-name { color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.contract-status { font-size: 0.6rem; color: var(--text-3); background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1px 4px; white-space: nowrap; }
+.contract-salary { font-variant-numeric: tabular-nums; color: var(--text-2); font-size: 0.71rem; text-align: right; }
+.contracts-total { display: flex; justify-content: space-between; align-items: center; padding: 6px 0 2px; margin-top: 3px; border-top: 1px solid var(--border); font-size: 0.72rem; }
+.contracts-total-label { color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.62rem; }
+.contracts-total-val { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+
 /* ── Widget Link ──────────────────────────────────────────────── */
 .widget-link {
   display: block; text-align: center; font-size: 0.7rem; color: var(--text-3);

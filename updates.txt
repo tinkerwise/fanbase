@@ -14,6 +14,14 @@
 
 ##Recently Completed (April 11, 2026)
 
+# CONTRACTS & SALARIES
+✓ Added Contracts widget to right sidebar between Roster and Injury Report
+✓ Pulls salary data from MLB Stats API (salaries endpoint, teamId=110, current season)
+✓ Sortable by salary (default) or position (C/1B/2B/3B/SS/OF/DH order, pitchers last)
+✓ Shows formatted salary ($X.XXM / $XXXK), position tag, player last name, contract type badge
+✓ Total payroll row at bottom; "Full contracts on FanGraphs ↗" link
+✓ Graceful fallback to FanGraphs link if MLB endpoint returns empty or fails
+
 # IMAGES
 ✓ Added referrerpolicy="no-referrer" to article thumbnails — bypasses most hotlink-protection redirects so the real image loads instead of an error image
 ✓ Raised onload dimension guard from 20px to 80×60px — catches small default thumbnails that slipped through previously

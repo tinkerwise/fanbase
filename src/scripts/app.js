@@ -20,6 +20,7 @@ import {
   loadLeaders,
   loadPodcast,
   loadVideos,
+  loadContracts,
 } from './sidebars.js';
 import {
   triggerOriolesMagic,
@@ -308,6 +309,7 @@ async function init() {
     loadLeaders(),
     loadPodcast(),
     loadVideos(),
+    loadContracts(),
   ]);
 }
 
