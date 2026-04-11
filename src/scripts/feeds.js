@@ -12,6 +12,7 @@ import {
   markReadAthBundle,
   unmarkRead,
   getDisabledSources,
+  saveDisabledSources,
 } from './storage.js';
 import { state } from './state.js';
 import {
@@ -80,7 +81,7 @@ export async function loadFeeds() {
 
   if (activeFEEDS.length === 0) {
     state.articles = [];
-    renderSourceFilters([]);
+    renderSourceFilters();
     $('articleList').innerHTML =
       '<div class="feed-msg">No sources selected. <button class="feed-msg-link" id="feedMsgSettingsBtn">Open Settings</button> to enable sources.</div>';
     document.getElementById('feedMsgSettingsBtn')?.addEventListener('click', () =>
@@ -106,45 +107,65 @@ export async function loadFeeds() {
     }
   }
 
-  renderSourceFilters(successfulSources);
+  renderSourceFilters();
   renderArticles();
   return successfulSources;
 }
 
 // ── Source filters ────────────────────────────────────────────────
-function syncSourceFilterBtn(sources) {
+function syncSourceFilterBtn() {
   const btn = $('sourceFilterBtn');
   if (!btn) return;
-  const isFiltered = state.activeSource !== 'all';
+  const disabled = getDisabledSources();
+  const isFiltered = disabled.size > 0;
   btn.setAttribute('aria-pressed', String(isFiltered));
   const label = btn.querySelector('.source-filter-label');
   if (label) {
-    if (isFiltered) {
-      const src = sources.find(s => s.id === state.activeSource);
-      label.textContent = src?.name ?? 'Source';
+    if (isFiltered && ALL_FEEDS.length > 0) {
+      const active = ALL_FEEDS.length - disabled.size;
+      label.textContent = `${active} / ${ALL_FEEDS.length} Sources`;
     } else {
       label.textContent = 'Sources';
     }
   }
 }
 
-export function renderSourceFilters(sources) {
+export function renderSourceFilters() {
+  const sources = ALL_FEEDS;
+  const disabled = getDisabledSources();
   const container = $('sourceFilters');
+
   container.innerHTML =
-    `<button class="pill${state.activeSource === 'all' ? ' active' : ''}" data-source="all">All</button>` +
+    `<button class="pill${disabled.size === 0 ? ' active' : ''}" data-source="all">All</button>` +
     sources.map(s =>
-      `<button class="pill${state.activeSource === s.id ? ' active' : ''}" data-source="${esc(s.id)}">${esc(s.name)}</button>`
+      `<button class="pill${!disabled.has(s.id) ? ' active' : ''}" data-source="${esc(s.id)}">${esc(s.name)}</button>`
     ).join('');
 
-  syncSourceFilterBtn(sources);
+  syncSourceFilterBtn();
 
-  container.querySelectorAll('.pill').forEach(btn => {
-    btn.addEventListener('click', () => {
-      state.activeSource = btn.dataset.source;
-      container.querySelectorAll('.pill').forEach(p =>
-        p.classList.toggle('active', p.dataset.source === state.activeSource));
-      syncSourceFilterBtn(sources);
-      renderArticles();
+  container.querySelector('[data-source="all"]').addEventListener('click', () => {
+    saveDisabledSources(new Set());
+    renderSourceFilters();
+    loadFeeds();
+  });
+
+  container.querySelectorAll('.pill:not([data-source="all"])').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const current = getDisabledSources();
+      const id = pill.dataset.source;
+      const wasDisabled = current.has(id);
+      if (wasDisabled) {
+        current.delete(id);
+      } else {
+        current.add(id);
+      }
+      saveDisabledSources(current);
+      renderSourceFilters();
+      if (wasDisabled) {
+        loadFeeds();
+      } else {
+        renderArticles();
+      }
     });
   });
 }
@@ -172,8 +193,9 @@ function getFilteredArticles() {
   if (state.activeCategory !== 'all') {
     arts = arts.filter(a => a.source.category === state.activeCategory);
   }
-  if (state.activeSource !== 'all') {
-    arts = arts.filter(a => a.source.id === state.activeSource);
+  const disabledSources = getDisabledSources();
+  if (disabledSources.size > 0) {
+    arts = arts.filter(a => !disabledSources.has(a.source.id));
   }
   if (state.searchQuery) {
     const q = state.searchQuery.toLowerCase();
@@ -212,8 +234,9 @@ function getAthCandidateArticles() {
   if (state.activeCategory !== 'all') {
     arts = arts.filter(a => a.source.category === state.activeCategory);
   }
-  if (state.activeSource !== 'all') {
-    arts = arts.filter(a => a.source.id === state.activeSource);
+  const disabledSources = getDisabledSources();
+  if (disabledSources.size > 0) {
+    arts = arts.filter(a => !disabledSources.has(a.source.id));
   }
 
   return [...arts].sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));

@@ -44,7 +44,10 @@
 ✓ Settings panel note: "Saved locally. Clearing browser data resets to defaults."
 
 # FEEDS
-✓ Source filter button highlights orange and shows active source name when a specific source is selected
+✓ Source filter popover and settings checkboxes are now unified — both read/write the same disabledSources state
+✓ Multi-select: toggle individual source pills on/off; "All" pill resets all to enabled
+✓ Source filter button shows "X / Y Sources" count when any sources are hidden
+✓ Enabling a source via pills re-fetches its articles; disabling filters them out instantly
 ✓ Added The Athletic (Orioles feed) to the source mix
 ✓ Added 🔒 Subscriber badge to all Athletic article cards
 ✓ Athletic cards now open The Athletic directly in a new tab (content requires a subscription)

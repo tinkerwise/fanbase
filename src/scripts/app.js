@@ -6,6 +6,7 @@ import { loadScores } from './scores.js';
 import {
   loadFeeds,
   renderArticles,
+  renderSourceFilters,
   setViewMode,
   syncShowReadButton,
   closeReader,
@@ -89,12 +90,14 @@ function renderSourceSettings() {
         warn?.remove();
       }
       saveDisabledSources(newDisabled);
+      renderSourceFilters();
       loadFeeds();
     });
   });
 
   $('sourceResetBtn')?.addEventListener('click', () => {
     saveDisabledSources(new Set());
+    renderSourceFilters();
     renderSourceSettings();
     loadFeeds();
   });
