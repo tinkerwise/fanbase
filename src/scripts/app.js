@@ -1,7 +1,7 @@
 import { loadPrefs, savePrefs, getDisabledSources, saveDisabledSources } from './storage.js';
 import { state } from './state.js';
 import { applyTheme } from './theme.js';
-import { $ } from './utils.js';
+import { $, syncOriolesLogos } from './utils.js';
 import { loadScores } from './scores.js';
 import {
   loadFeeds,
@@ -192,6 +192,7 @@ function setupEvents() {
     const newTheme = btn.dataset.theme;
     const wasCC = document.documentElement.getAttribute('data-theme') === 'city-connect';
     applyTheme(newTheme);
+    syncOriolesLogos();
     $('themeToggle').querySelectorAll('.theme-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.theme === newTheme));
     if (newTheme === 'city-connect' && !wasCC) triggerCityConnectBanner();

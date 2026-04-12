@@ -7,7 +7,7 @@ import {
   TEAM_ABBREV,
   TEAM_SLUG,
 } from './config.js';
-import { $, esc, localDateStr, dayLabel, formatGameTime, normalizeText } from './utils.js';
+import { $, esc, localDateStr, dayLabel, formatGameTime, normalizeText, teamLogoSrc } from './utils.js';
 import { getGameWeather, fetchWeatherForGames } from './weather.js';
 import { state } from './state.js';
 
@@ -607,7 +607,7 @@ function renderPreviewTeamCard(game, boxData, side, arsenalData) {
   const probablePitcherId = game.teams?.[side]?.probablePitcher?.id ?? null;
   const lineupRows = boxTeam ? renderLineupRows(boxTeam, 'preview') : '<div class="score-lineups-empty">Loading lineup status…</div>';
   const arsenal = renderPitcherArsenal(arsenalData ?? null, { limit: 7, showVelo: false });
-  const logoHtml = teamId ? `<img class="score-lineup-logo" src="https://www.mlbstatic.com/team-logos/${teamId}.svg" alt="${esc(teamName)}" width="20" height="20">` : '';
+  const logoHtml = teamId ? `<img class="score-lineup-logo" src="${teamLogoSrc(teamId)}" alt="${esc(teamName)}" width="20" height="20">` : '';
   return `<div class="preview-team-card">
     <div class="score-lineup-head">${logoHtml}<span class="score-lineup-label">${esc(teamName)}</span></div>
     <div class="preview-team-section">
@@ -681,7 +681,7 @@ function renderPitchingLines(boxData, gameState = 'final') {
     if (!team) return '';
     const teamName = team.team?.teamName ?? team.team?.name ?? (side === 'away' ? 'Away' : 'Home');
     const teamId = team.team?.id;
-    const logoHtml = teamId ? `<img class="score-lineup-logo" src="https://www.mlbstatic.com/team-logos/${teamId}.svg" alt="${esc(teamName)}" width="20" height="20">` : '';
+    const logoHtml = teamId ? `<img class="score-lineup-logo" src="${teamLogoSrc(teamId)}" alt="${esc(teamName)}" width="20" height="20">` : '';
     return `<div class="team-detail-card">
       <div class="score-lineup-head">${logoHtml}<span class="score-lineup-label">${esc(teamName)}</span></div>
       <div class="preview-team-section team-detail-pitching">

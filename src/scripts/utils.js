@@ -111,6 +111,26 @@ export function buildReaderDoc(article, htmlContent) {
   </head><body>${htmlContent}</body></html>`;
 }
 
+const CC_ORIOLES_LOGO = 'https://www.mlbstatic.com/team-logos/team-cap-on-light/110.svg';
+const STD_TEAM_LOGO = id => `https://www.mlbstatic.com/team-logos/${id}.svg`;
+
+/** Returns the correct team logo URL, swapping in the City Connect curly-B for the Orioles. */
+export function teamLogoSrc(teamId) {
+  const isCC = document.documentElement.getAttribute('data-theme') === 'city-connect';
+  if (isCC && Number(teamId) === 110) return CC_ORIOLES_LOGO;
+  return STD_TEAM_LOGO(teamId);
+}
+
+/** Swap any rendered Orioles logo imgs already in the DOM to match current theme. */
+export function syncOriolesLogos() {
+  const isCC = document.documentElement.getAttribute('data-theme') === 'city-connect';
+  const target = isCC ? CC_ORIOLES_LOGO : STD_TEAM_LOGO(110);
+  const selector = isCC
+    ? 'img[src*="team-logos/110"]'
+    : `img[src="${CC_ORIOLES_LOGO}"]`;
+  document.querySelectorAll(selector).forEach(img => { img.src = target; });
+}
+
 export function normalizeText(str) {
   return String(str ?? '').replace(/\s+/g, ' ').trim();
 }

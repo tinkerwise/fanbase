@@ -18,6 +18,7 @@ import {
   fetchVenueDetails,
   cleanFeedText,
   relativeDate,
+  teamLogoSrc,
 } from './utils.js';
 import { fetchWeatherForGames, getGameWeather } from './weather.js';
 
@@ -80,7 +81,7 @@ function renderStandings() {
       <tbody>${div.teams.map(t => {
         const teamUrl = TEAM_PAGE[t.id] ? `https://www.mlb.com/${TEAM_PAGE[t.id]}` : '#';
         return `<tr class="${t.isOrioles ? 'orioles-row' : ''}">
-          <td class="team-abbrev"><a href="${teamUrl}" target="_blank" rel="noopener"><img class="standings-team-logo" src="https://www.mlbstatic.com/team-logos/${t.id}.svg" alt="" width="14" height="14" loading="lazy" decoding="async">${esc(t.abbrev)}</a></td>
+          <td class="team-abbrev"><a href="${teamUrl}" target="_blank" rel="noopener"><img class="standings-team-logo" src="${teamLogoSrc(t.id)}" alt="" width="14" height="14" loading="lazy" decoding="async">${esc(t.abbrev)}</a></td>
           <td>${t.wins}</td><td>${t.losses}</td>
           <td>${esc(t.gb)}</td><td>${esc(t.streak)}</td>
         </tr>`;
@@ -165,7 +166,7 @@ export async function loadOnDeck() {
         <span class="sched-box-day">${esc(gDay)}</span>
         <div class="sched-box-logo-wrap">
           <span class="sched-box-at">${gIsHome ? 'vs' : '@'}</span>
-          <img class="sched-box-logo" src="https://www.mlbstatic.com/team-logos/${gOpp.team.id}.svg" alt="${esc(gOppAbbr)}" width="22" height="22">
+          <img class="sched-box-logo" src="${teamLogoSrc(gOpp.team.id)}" alt="${esc(gOppAbbr)}" width="22" height="22">
         </div>
       </a>`;
     }).join('');
@@ -205,7 +206,7 @@ export async function loadOnDeck() {
         <a class="on-deck-card" href="${gdUrl}" target="_blank" rel="noopener">
           ${wxHtml}
           <div class="on-deck-matchup">
-            <img class="on-deck-logo" src="https://www.mlbstatic.com/team-logos/${opponent.team.id}.svg" alt="" width="28" height="28">
+            <img class="on-deck-logo" src="${teamLogoSrc(opponent.team.id)}" alt="" width="28" height="28">
             <span class="on-deck-opp">${esc(onDeckOpponentLabel)}</span>
           </div>
           <div class="on-deck-details">
@@ -863,7 +864,7 @@ function renderLeaders() {
   if (!cached) { wrap.innerHTML = '<span class="sidebar-msg">Loading…</span>'; return; }
 
   const scopeHtml = `<div class="leaders-scope">
-    <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles"><img class="leaders-scope-logo" src="https://www.mlbstatic.com/team-logos/110.svg" alt="" width="12" height="12" loading="eager" decoding="async">O's</button>
+    <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles"><img class="leaders-scope-logo" src="${teamLogoSrc(110)}" alt="" width="12" height="12" loading="eager" decoding="async">O's</button>
     <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://midfield.mlbstatic.com/v1/team/american-league/logo" alt="" width="12" height="12" loading="eager" decoding="async">AL</button>
     <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://midfield.mlbstatic.com/v1/team/national-league/logo" alt="" width="12" height="12" loading="eager" decoding="async">NL</button>
     <button class="leaders-scope-btn${leadersScope === 'mlb' ? ' active' : ''}" data-scope="mlb"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/apple-touch-icons-180x180/mlb.png" alt="" width="12" height="12" loading="eager" decoding="async">MLB</button>

@@ -27,6 +27,7 @@ import {
   sanitizeHtml,
   buildReaderDoc,
   cleanFeedText,
+  teamLogoSrc,
 } from './utils.js';
 
 // ── Source registry (populated on first load) ─────────────────────
@@ -409,7 +410,7 @@ function bundleVariant(bundle) {
 
 function bundleLogoMarkup(bundle, variant) {
   if (variant === 'orioles') {
-    return `<img class="bundle-logo-mark" src="https://www.mlbstatic.com/team-logos/110.svg" alt="Orioles logo" loading="lazy">`;
+    return `<img class="bundle-logo-mark" src="${teamLogoSrc(110)}" alt="Orioles logo" loading="lazy">`;
   }
   const mlbFavicon = faviconUrl('https://www.mlb.com');
   return mlbFavicon
