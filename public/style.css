@@ -2444,9 +2444,9 @@ a.il-name:hover { color: var(--orange); }
   font-weight: 700;
   line-height: 1.1;
   color: #fff6df;
-  font-family: 'Graduate', 'Georgia', serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   text-transform: none;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   text-shadow: 0 1px 0 rgba(43,36,27,0.45);
   display: -webkit-box;
   -webkit-line-clamp: 2;
