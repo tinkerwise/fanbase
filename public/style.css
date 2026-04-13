@@ -137,6 +137,8 @@
   background: rgba(255,255,255,0.97);
 }
 [data-theme="city-connect"] .chip-status.final { color: #4A7A59; }
+[data-theme="city-connect"] .chip-row.winner { color: #0e2118; }
+[data-theme="city-connect"] .chip-row.winner .chip-score { color: #C84B11; font-weight: 800; }
 [data-theme="city-connect"] .chip-row:not(.winner) .chip-score { color: #1A3826; }
 [data-theme="city-connect"] .chip-status.preview { color: #2D5A3D; }
 /* Article cards: jersey piping left stripe */
