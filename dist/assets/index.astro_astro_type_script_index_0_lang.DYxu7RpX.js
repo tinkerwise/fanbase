@@ -33,16 +33,16 @@ const wt="yr_prefs",Ge="yr_read",$t="yr_read_ath";function ae(){try{return JSON.
   </div>`}function tt(e){const t=e?.battingOrder??[],s=e?.batters??[],n=e?.players??{},a=new Set,o=[],r=(l,c=null)=>{if(a.has(l))return;const i=n[`ID${l}`];if(!i||i.position?.type==="Pitcher")return;a.add(l);const p=String(i.battingOrder??c??""),m=Number.parseInt(p,10),d=Number.isFinite(m)&&m>0?Math.floor(m/100):null,u=!!(i.gameStatus?.isSubstitute||Number.isFinite(m)&&m%100!==0);o.push({id:l,player:i,rawOrder:p,orderNum:m,slot:d,isSubstitution:u})};return t.forEach((l,c)=>r(l,`${c+1}00`)),s.forEach(l=>r(l)),o.sort((l,c)=>{const i=Number.isFinite(l.orderNum)?l.orderNum:Number.MAX_SAFE_INTEGER,p=Number.isFinite(c.orderNum)?c.orderNum:Number.MAX_SAFE_INTEGER;return i!==p?i-p:l.id-c.id})}function Pt(e,t="preview"){const s=e?.battingOrder??[],n=e?.players??{};if(!s.length)return'<div class="score-lineups-empty">Lineup not yet posted</div>';if(t==="final"){const r=tt(e),l=`<div class="score-lineup-row score-lineup-row--header">
       <span class="score-lineup-pos"></span>
       <span class="score-lineup-name"></span>
-      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>SB</span></span>
-    </div>`,c=r.map(({player:i,isSubstitution:p})=>{const m=K(i.person?.fullName??"TBD"),d=p?"ph":i.position?.abbreviation??"",u=i.stats?.batting??{},h=[u.atBats??0,u.runs??0,u.hits??0,u.homeRuns??0,u.rbi??0,u.stolenBases??0].map(f=>`<span>${f}</span>`).join("");return`<div class="score-lineup-row${(u.atBats??0)>0||(u.baseOnBalls??0)>0?"":" score-lineup-row--dnp"}${p?" score-lineup-row--sub":""}">
+      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>BB</span><span>SB</span></span>
+    </div>`,c=r.map(({player:i,isSubstitution:p})=>{const m=K(i.person?.fullName??"TBD"),d=p?"ph":i.position?.abbreviation??"",u=i.stats?.batting??{},h=[u.atBats??0,u.runs??0,u.hits??0,u.homeRuns??0,u.rbi??0,u.baseOnBalls??0,u.stolenBases??0].map(f=>`<span>${f}</span>`).join("");return`<div class="score-lineup-row${(u.atBats??0)>0||(u.baseOnBalls??0)>0?"":" score-lineup-row--dnp"}${p?" score-lineup-row--sub":""}">
         <span class="score-lineup-pos">${g(d)}</span>
         <span class="score-lineup-name">${ge(m,i.person?.id??null)}</span>
         <span class="score-lineup-box-cols">${h}</span>
       </div>`}).join("");return l+c}if(t==="live"){const r=tt(e),l=`<div class="score-lineup-row score-lineup-row--header">
       <span class="score-lineup-pos"></span>
       <span class="score-lineup-name"></span>
-      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>SB</span></span>
-    </div>`,c=r.map(({player:i,isSubstitution:p})=>{const m=K(i.person?.fullName??"TBD"),d=p?"ph":i.position?.abbreviation??"",u=i.stats?.batting??{},h=[u.atBats??0,u.runs??0,u.hits??0,u.homeRuns??0,u.rbi??0,u.stolenBases??0].map(f=>`<span>${f}</span>`).join("");return`<div class="score-lineup-row${i.gameStatus?.isCurrentBatter?" score-lineup-row--current":""}${p?" score-lineup-row--sub":""}">
+      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>BB</span><span>SB</span></span>
+    </div>`,c=r.map(({player:i,isSubstitution:p})=>{const m=K(i.person?.fullName??"TBD"),d=p?"ph":i.position?.abbreviation??"",u=i.stats?.batting??{},h=[u.atBats??0,u.runs??0,u.hits??0,u.homeRuns??0,u.rbi??0,u.baseOnBalls??0,u.stolenBases??0].map(f=>`<span>${f}</span>`).join("");return`<div class="score-lineup-row${i.gameStatus?.isCurrentBatter?" score-lineup-row--current":""}${p?" score-lineup-row--sub":""}">
         <span class="score-lineup-pos">${g(d)}</span>
         <span class="score-lineup-name">${ge(m,i.person?.id??null)}</span>
         <span class="score-lineup-box-cols">${h}</span>

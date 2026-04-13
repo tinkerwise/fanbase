@@ -273,13 +273,13 @@ function renderLineupRows(team, gameState = 'preview') {
     const header = `<div class="score-lineup-row score-lineup-row--header">
       <span class="score-lineup-pos"></span>
       <span class="score-lineup-name"></span>
-      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>SB</span></span>
+      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>BB</span><span>SB</span></span>
     </div>`;
     const rows = entries.map(({ player: p, isSubstitution }) => {
       const name = compactBoxName(p.person?.fullName ?? 'TBD');
       const pos = isSubstitution ? 'ph' : (p.position?.abbreviation ?? '');
       const bs = p.stats?.batting ?? {};
-      const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.stolenBases ?? 0]
+      const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.baseOnBalls ?? 0, bs.stolenBases ?? 0]
         .map(v => `<span>${v}</span>`).join('');
       const hasActivity = (bs.atBats ?? 0) > 0 || (bs.baseOnBalls ?? 0) > 0;
       return `<div class="score-lineup-row${hasActivity ? '' : ' score-lineup-row--dnp'}${isSubstitution ? ' score-lineup-row--sub' : ''}">
@@ -296,13 +296,13 @@ function renderLineupRows(team, gameState = 'preview') {
     const header = `<div class="score-lineup-row score-lineup-row--header">
       <span class="score-lineup-pos"></span>
       <span class="score-lineup-name"></span>
-      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>SB</span></span>
+      <span class="score-lineup-box-cols"><span>AB</span><span>R</span><span>H</span><span>HR</span><span>RBI</span><span>BB</span><span>SB</span></span>
     </div>`;
     const rows = entries.map(({ player: p, isSubstitution }) => {
       const name = compactBoxName(p.person?.fullName ?? 'TBD');
       const pos = isSubstitution ? 'ph' : (p.position?.abbreviation ?? '');
       const bs = p.stats?.batting ?? {};
-      const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.stolenBases ?? 0]
+      const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.baseOnBalls ?? 0, bs.stolenBases ?? 0]
         .map(v => `<span>${v}</span>`).join('');
       const isCurrentBatter = p.gameStatus?.isCurrentBatter;
       return `<div class="score-lineup-row${isCurrentBatter ? ' score-lineup-row--current' : ''}${isSubstitution ? ' score-lineup-row--sub' : ''}">

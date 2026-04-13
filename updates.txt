@@ -14,7 +14,6 @@
 
 ##Active
 
-
 ##Queued
 
 ##Ideas
@@ -89,6 +88,7 @@
 ✓ Listed pitchers based on appearance: starters first, relievers as they enter
 ✓ Added batter/pitcher handedness and batting-order pocket notes for matchup context
 ✓ Removed the Story link at the bottom of the final Score Bug
+✓ Added BB (walks) to live and final lineup stat columns — AB/R/H/HR/RBI/BB/SB
 
 # SCOUT NOTES
 ✓ Rewrote live-game note logic with 5-category priority system (situation, leverage, count, next batters, summary)
