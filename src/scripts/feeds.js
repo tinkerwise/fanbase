@@ -410,7 +410,7 @@ function bundleVariant(bundle) {
 
 function bundleLogoMarkup(bundle, variant) {
   if (variant === 'orioles') {
-    return `<img class="bundle-logo-mark" src="${teamLogoSrc(110)}" alt="Orioles logo" loading="lazy">`;
+    return `<img class="bundle-logo-mark" src="${teamLogoSrc(110, 36)}" alt="Orioles logo" loading="lazy">`;
   }
   const mlbFavicon = faviconUrl('https://www.mlb.com');
   return mlbFavicon

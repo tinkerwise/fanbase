@@ -111,24 +111,37 @@ export function buildReaderDoc(article, htmlContent) {
   </head><body>${htmlContent}</body></html>`;
 }
 
-const CC_ORIOLES_LOGO = `${import.meta.env.BASE_URL}img/cc-orioles-b.svg`;
+const CC_LOGO_32 = `${import.meta.env.BASE_URL}img/cc_B_32px.png`;
+const CC_LOGO_48 = `${import.meta.env.BASE_URL}img/cc_B_48px.png`;
+const CC_LOGO_64 = `${import.meta.env.BASE_URL}img/cc_B_64px.png`;
 const STD_TEAM_LOGO = id => `https://www.mlbstatic.com/team-logos/${id}.svg`;
 
-/** Returns the correct team logo URL, swapping in the City Connect curly-B for the Orioles. */
-export function teamLogoSrc(teamId) {
+function ccLogoForSize(displaySize) {
+  if (displaySize <= 32) return CC_LOGO_32;
+  if (displaySize <= 48) return CC_LOGO_48;
+  return CC_LOGO_64;
+}
+
+/** Returns the correct team logo URL, using the appropriately-sized CC B mark for the Orioles. */
+export function teamLogoSrc(teamId, displaySize = 20) {
   const isCC = document.documentElement.getAttribute('data-theme') === 'city-connect';
-  if (isCC && Number(teamId) === 110) return CC_ORIOLES_LOGO;
+  if (isCC && Number(teamId) === 110) return ccLogoForSize(displaySize);
   return STD_TEAM_LOGO(teamId);
 }
 
 /** Swap any rendered Orioles logo imgs already in the DOM to match current theme. */
 export function syncOriolesLogos() {
   const isCC = document.documentElement.getAttribute('data-theme') === 'city-connect';
-  const target = isCC ? CC_ORIOLES_LOGO : STD_TEAM_LOGO(110);
-  const selector = isCC
-    ? 'img[src*="team-logos/110"]'
-    : `img[src="${CC_ORIOLES_LOGO}"]`;
-  document.querySelectorAll(selector).forEach(img => { img.src = target; });
+  if (isCC) {
+    document.querySelectorAll('img[src*="team-logos/110"]').forEach(img => {
+      const w = Number(img.getAttribute('width') || img.offsetWidth || 20);
+      img.src = ccLogoForSize(w);
+    });
+  } else {
+    document.querySelectorAll('img[src*="cc_B_"]').forEach(img => {
+      img.src = STD_TEAM_LOGO(110);
+    });
+  }
 }
 
 export function normalizeText(str) {
