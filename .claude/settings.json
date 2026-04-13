@@ -17,7 +17,14 @@
       "Bash(python3 -c \" import json,sys; d=json.load\\(sys.stdin\\) for c in d.get\\('teamLeaders', []\\): l = c.get\\('leaders', [{}]\\)[0] print\\(c.get\\('leaderCategory'\\), c.get\\('statGroup'\\), '->', l.get\\('person',{}\\).get\\('fullName'\\), l.get\\('value'\\)\\) \" curl -s \"https://statsapi.mlb.com/api/v1/teams/110/leaders?leaderCategories=earnedRunAverage,strikeouts&season=2026&leaderGameTypes=R&playerPool=Qualified&statGroup=pitching&limit=1\")",
       "Bash(python3 -c \" import json,sys; d=json.load\\(sys.stdin\\) for c in d.get\\('teamLeaders', []\\): l = c.get\\('leaders', [{}]\\)[0] print\\(c.get\\('leaderCategory'\\), c.get\\('statGroup'\\), '->', l.get\\('person',{}\\).get\\('fullName'\\), l.get\\('value'\\)\\) \")",
       "Bash(python3 -c \" import json,sys; d=json.load\\(sys.stdin\\) for c in d.get\\('leagueLeaders', []\\): l = c.get\\('leaders', [{}]\\)[0] print\\(c.get\\('leaderCategory'\\), '|', c.get\\('statGroup'\\), '->', l.get\\('person',{}\\).get\\('fullName'\\), l.get\\('value'\\)\\) \")",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/yardreport/)",
+      "Bash(curl -sI \"https://www.mlbstatic.com/team-logos/team-cap-on-dark/110.svg\")",
+      "Bash(curl -s \"https://www.mlbstatic.com/team-logos/team-cap-on-light/110.svg\")",
+      "Bash(grep -o '..\\\\{20\\\\}city-connect..\\\\{60\\\\}' /Users/briancsmith/Documents/GitHub/yardreport/dist/assets/index.astro_astro_type_script_index_0_lang.gK6plSNO.js)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/yardreport/img/cc-orioles-b.svg)",
+      "Bash(grep -o '..\\\\{10\\\\}cc-orioles-b..\\\\{10\\\\}' /Users/briancsmith/Documents/GitHub/yardreport/dist/assets/index.astro_astro_type_script_index_0_lang.DcXFTjSQ.js)",
+      "Bash(git merge:*)"
     ]
   }
 }
