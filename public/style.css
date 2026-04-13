@@ -82,13 +82,13 @@
 /* ── City Connect Theme (Easter Egg — "From The Stoop to The Yard") ── */
 [data-theme="city-connect"] {
   --bg: #ffffff;
-  --surface: #f0f7f3;
-  --card: #e1f0e8;
-  --border: #aacbb8;
-  --border-light: #c2ddd0;
+  --surface: #daeae1;
+  --card: #c4d9cc;
+  --border: #90b5a2;
+  --border-light: #aacbb8;
   --text: #0e2118;
-  --text-2: #2D5A3D;
-  --text-3: #4A7A59;
+  --text-2: #1E4A30;
+  --text-3: #3A6A4A;
   --orange: #C84B11;
   --orange-dim: rgba(200, 75, 17, 0.12);
 }
@@ -137,6 +137,7 @@
   background: rgba(255,255,255,0.97);
 }
 [data-theme="city-connect"] .chip-status.final { color: #4A7A59; }
+[data-theme="city-connect"] .chip-row:not(.winner) .chip-score { color: #1A3826; }
 [data-theme="city-connect"] .chip-status.preview { color: #2D5A3D; }
 /* Article cards: jersey piping left stripe */
 [data-theme="city-connect"] .article-card {
@@ -190,7 +191,7 @@
 [data-theme="city-connect"] .roster-group-label { color: #2D5A3D; }
 [data-theme="city-connect"] a.roster-name:hover { color: #2D5A3D; }
 /* On Deck */
-[data-theme="city-connect"] .on-deck-card { background: #e1f0e8; border-color: #aacbb8; }
+[data-theme="city-connect"] .on-deck-card { background: var(--card); border-color: var(--border); }
 [data-theme="city-connect"] .on-deck-card:hover { border-color: #2D5A3D; }
 /* Podcast: green-tinted */
 [data-theme="city-connect"] .podcast-card {
@@ -252,63 +253,15 @@
     repeating-linear-gradient(90deg, transparent 0px, transparent 44px, rgba(255,255,255,0.03) 44px, rgba(255,255,255,0.03) 45px);
 }
 .city-connect-banner-out { animation: cc-fade-out 0.5s ease forwards; }
-.city-connect-banner-inner {
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-  text-align: center; padding: 44px 64px;
-  background: #ffffff;
-  border: 4px solid #2D5A3D;
-  border-radius: 2px;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 8px #C84B11, 0 0 0 10px #2D5A3D, 0 28px 72px rgba(0,0,0,0.65);
-  animation: cc-scale-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-}
-/* Green pinstripes on banner card */
-.city-connect-banner-inner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent 0px, transparent 16px,
-    rgba(45, 90, 61, 0.055) 16px, rgba(45, 90, 61, 0.055) 17px
-  );
-  pointer-events: none;
-  border-radius: 0;
-}
-.city-connect-stoop, .city-connect-yard {
-  font-family: 'Graduate', serif;
-  font-size: clamp(2rem, 6vw, 3.6rem);
-  font-weight: 700;
-  color: #1E3D29;
-  letter-spacing: 0.06em;
-  text-shadow: 3px 3px 0 #C84B11;
-  position: relative;
-}
-.city-connect-to {
-  font-family: 'Graduate', serif;
-  font-size: clamp(0.85rem, 2vw, 1.1rem);
-  color: #C84B11;
-  letter-spacing: 0.25em;
-  position: relative;
-}
-.city-connect-divider {
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, #2D5A3D, #C84B11, #2D5A3D);
-  border-radius: 2px;
-  position: relative;
-}
-.city-connect-sub {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: #4A7A59;
-  text-transform: uppercase;
-  position: relative;
+.cc-patch-svg {
+  width: min(360px, 86vw);
+  height: min(360px, 86vw);
+  animation: cc-scale-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 6px 32px rgba(0,0,0,0.85)) drop-shadow(0 0 18px rgba(200,75,17,0.22));
 }
 @keyframes cc-fade-in  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes cc-fade-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes cc-scale-in { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes cc-scale-in { from { transform: scale(0.82); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 /* ── Reset ─────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

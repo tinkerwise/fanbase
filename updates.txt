@@ -143,6 +143,10 @@
 ✓ All Orioles bird logos (team-logos/110) replaced by orange B mark via CSS content replacement
 ✓ Scores bar mortar grid lines updated to orange-tinted (rgba 200,75,17) — brick-on-green feel
 ✓ Header bottom trim updated to layered jersey-collar bands: green border → orange strip → subtle mortar shadow
+✓ City Connect theme auto-applied on Fridays; user's saved preference restored all other days
+✓ Losing team final score in Score Bugs darkened for legibility on white CC chips
+✓ Widget block backgrounds darkened; text variables adjusted for contrast on deeper greens
+✓ City Connect welcome banner redesigned as circular baseball-stitched patch (jersey sleeve badge style)
 
 # IOS / PWA
 ✓ Added apple-touch-icon link in <head> so favicon appears on iOS home screens

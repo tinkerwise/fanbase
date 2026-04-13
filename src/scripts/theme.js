@@ -10,4 +10,10 @@ export function applyTheme(theme) {
 }
 
 // Apply saved theme immediately on import
-applyTheme(loadPrefs().theme || 'dark');
+const _savedTheme = loadPrefs().theme || 'dark';
+applyTheme(_savedTheme);
+
+// Auto City Connect on Fridays (without overwriting the user's saved preference)
+if (new Date().getDay() === 5 && _savedTheme !== 'city-connect') {
+  document.documentElement.setAttribute('data-theme', 'city-connect');
+}
