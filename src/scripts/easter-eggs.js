@@ -115,58 +115,49 @@ export function triggerCityConnectBanner() {
   banner.className = 'city-connect-banner';
   banner.innerHTML = `
     <svg class="cc-patch-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-label="From the Stoop to the Yard">
-      <!-- Background circles -->
+      <!-- Background -->
       <circle cx="150" cy="150" r="148" fill="#080F0B"/>
-      <circle cx="150" cy="150" r="141" fill="#112019"/>
+      <circle cx="150" cy="150" r="141" fill="#0E1C12"/>
       <!-- Outer stitch ring -->
-      <circle cx="150" cy="150" r="140" fill="none" stroke="#C84B11" stroke-width="2.5" stroke-dasharray="5 4" stroke-linecap="round"/>
-      <!-- Inner thin ring -->
-      <circle cx="150" cy="150" r="133" fill="none" stroke="#C84B11" stroke-width="0.75" opacity="0.5"/>
+      <circle cx="150" cy="150" r="139" fill="none" stroke="#C84B11" stroke-width="2.8" stroke-dasharray="6 5.2" stroke-linecap="round"/>
+      <!-- Inner border ring -->
+      <circle cx="150" cy="150" r="131" fill="none" stroke="#C84B11" stroke-width="0.9" opacity="0.6"/>
 
-      <!-- Baseball seam — left outer -->
-      <path d="M 105 48 C 42 85 42 215 105 252" fill="none" stroke="#C84B11" stroke-width="2.2" stroke-linecap="round"/>
-      <!-- Baseball seam — left inner -->
-      <path d="M 118 56 C 62 90 62 210 118 244" fill="none" stroke="#C84B11" stroke-width="2.2" stroke-linecap="round"/>
-      <!-- Cross-stitches left -->
-      <line x1="88"  y1="62"  x2="103" y2="69"  stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="75"  y1="80"  x2="91"  y2="85"  stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="65"  y1="101" x2="83"  y2="105" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="60"  y1="125" x2="78"  y2="127" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="58"  y1="150" x2="76"  y2="150" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="60"  y1="175" x2="78"  y2="173" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="65"  y1="199" x2="83"  y2="195" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="75"  y1="220" x2="91"  y2="215" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="88"  y1="238" x2="103" y2="231" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- BALTIMORE -->
+      <text x="150" y="90"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="11.5" font-weight="bold" fill="#C84B11" letter-spacing="4.5">BALTIMORE</text>
 
-      <!-- Baseball seam — right outer -->
-      <path d="M 195 48 C 258 85 258 215 195 252" fill="none" stroke="#C84B11" stroke-width="2.2" stroke-linecap="round"/>
-      <!-- Baseball seam — right inner -->
-      <path d="M 182 56 C 238 90 238 210 182 244" fill="none" stroke="#C84B11" stroke-width="2.2" stroke-linecap="round"/>
-      <!-- Cross-stitches right -->
-      <line x1="212" y1="62"  x2="197" y2="69"  stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="225" y1="80"  x2="209" y2="85"  stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="235" y1="101" x2="217" y2="105" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="240" y1="125" x2="222" y2="127" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="242" y1="150" x2="224" y2="150" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="240" y1="175" x2="222" y2="173" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="235" y1="199" x2="217" y2="195" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="225" y1="220" x2="209" y2="215" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
-      <line x1="212" y1="238" x2="197" y2="231" stroke="#C84B11" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- ORIOLES -->
+      <text x="150" y="127"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="38" font-weight="bold" fill="#C84B11" letter-spacing="1.5">ORIOLES</text>
 
-      <!-- Text content -->
-      <text x="150" y="92"  text-anchor="middle" font-family="'Graduate',Georgia,serif" font-size="13" fill="#C84B11" letter-spacing="3">BALTIMORE</text>
-      <text x="150" y="108" text-anchor="middle" font-family="'Graduate',Georgia,serif" font-size="11" fill="#C84B11" letter-spacing="5" opacity="0.8">ORIOLES</text>
-      <!-- Top rule -->
-      <line x1="125" y1="117" x2="175" y2="117" stroke="#C84B11" stroke-width="0.7" opacity="0.55"/>
+      <!-- Rule -->
+      <line x1="100" y1="138" x2="200" y2="138" stroke="#C84B11" stroke-width="0.9" opacity="0.55"/>
 
-      <text x="150" y="141" text-anchor="middle" font-family="'Graduate',Georgia,serif" font-size="13" fill="#FFFFFF" letter-spacing="1">FROM THE STOOP</text>
-      <text x="150" y="159" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#C84B11" letter-spacing="4" font-style="italic">to</text>
-      <text x="150" y="177" text-anchor="middle" font-family="'Graduate',Georgia,serif" font-size="13" fill="#FFFFFF" letter-spacing="1">THE YARD</text>
-      <!-- Bottom rule -->
-      <line x1="125" y1="187" x2="175" y2="187" stroke="#C84B11" stroke-width="0.7" opacity="0.55"/>
+      <!-- FROM THE STOOP -->
+      <text x="150" y="160"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="14.5" font-weight="bold" fill="#ffffff" letter-spacing="1.5">FROM THE STOOP</text>
 
-      <text x="150" y="206" text-anchor="middle" font-family="'Graduate',Georgia,serif" font-size="13" fill="#C84B11" letter-spacing="5">· 410 ·</text>
-      <text x="150" y="221" text-anchor="middle" font-family="'Graduate',Georgia,serif" font-size="7.5" fill="#C84B11" letter-spacing="2.5" opacity="0.6">BMORE · CITY CONNECT</text>
+      <!-- TO THE YARD -->
+      <text x="150" y="179"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="14.5" font-weight="bold" fill="#ffffff" letter-spacing="1.5">TO THE YARD</text>
+
+      <!-- Rule -->
+      <line x1="100" y1="190" x2="200" y2="190" stroke="#C84B11" stroke-width="0.9" opacity="0.55"/>
+
+      <!-- 410 -->
+      <text x="150" y="215"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="24" font-weight="bold" fill="#C84B11" letter-spacing="5">410</text>
     </svg>`;
   document.body.appendChild(banner);
 

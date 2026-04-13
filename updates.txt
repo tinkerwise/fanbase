@@ -147,7 +147,7 @@
 ✓ City Connect theme auto-applied on Fridays; user's saved preference restored all other days
 ✓ Score Bug chip text (light + CC themes): winner score orange, loser score dark — anchored for final, live, and preview states
 ✓ Widget block backgrounds darkened; text variables adjusted for contrast on deeper greens
-✓ City Connect welcome banner redesigned as circular baseball-stitched patch (jersey sleeve badge style)
+✓ City Connect welcome banner: circular patch, typography-only (no seams) — BALTIMORE / ORIOLES / FROM THE STOOP / TO THE YARD / 410 in bold Georgia serif matching jersey patch
 
 # IOS / PWA
 ✓ Added apple-touch-icon link in <head> so favicon appears on iOS home screens
