@@ -41,10 +41,10 @@ const base = import.meta.env.BASE_URL;
 
       <!-- Legend -->
       <div class="sch-legend">
-        <span class="sch-legend-item legend--win">W Win</span>
-        <span class="sch-legend-item legend--loss">L Loss</span>
+        <span class="sch-legend-item legend--home">🏟 Home</span>
+        <span class="sch-legend-item legend--away">✈ Away</span>
         <span class="sch-legend-item legend--live">● Live</span>
-        <span class="sch-legend-item legend--preview">Upcoming</span>
+        <span class="sch-legend-item legend--preview">W 5–3 · L 2–4</span>
       </div>
 
       <!-- Calendar -->
@@ -182,14 +182,11 @@ const base = import.meta.env.BASE_URL;
     const logoSrc = `https://www.mlbstatic.com/team-logos/${opp.id}.svg`;
     const gameUrl = `https://www.mlb.com/gameday/${g.gamePk}`;
 
-    let chipClass = 'sch-chip';
+    let chipClass = `sch-chip${home ? ' chip--home' : ''}`;
     let statusHtml = '';
 
     if (result) {
-      if (result.result === 'W') chipClass += ' chip--win';
-      else if (result.result === 'L') chipClass += ' chip--loss';
-      else chipClass += ' chip--tie';
-      statusHtml = `<span class="chip-result">${result.result} <strong>${result.oriScore}–${result.oppScore}</strong></span>`;
+      statusHtml = `<span class="chip-result">${result.result} ${result.oriScore}–${result.oppScore}</span>`;
     } else if (state === 'Live') {
       chipClass += ' chip--live';
       const half = g.linescore?.inningHalf === 'Top' ? '▲' : '▼';

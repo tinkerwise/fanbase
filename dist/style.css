@@ -3228,10 +3228,10 @@ a.il-name:hover { color: var(--orange); }
   border-radius: 3px;
   border: 1px solid var(--border);
 }
-.legend--win   { background: rgba(34,85,34,0.25);  border-color: rgba(76,175,80,0.3);  color: #8fe08f; }
-.legend--loss  { background: rgba(85,25,25,0.25);  border-color: rgba(239,83,80,0.3);  color: #f09090; }
-.legend--live  { background: rgba(223,70,1,0.12);  border-color: rgba(223,70,1,0.4);   color: var(--orange); }
-.legend--preview { background: var(--surface); color: var(--text-3); }
+.legend--home    { background: rgba(223,70,1,0.08); border-color: rgba(223,70,1,0.30); color: var(--orange); }
+.legend--away    { background: var(--surface); color: var(--text-3); }
+.legend--live    { background: rgba(223,70,1,0.12); border-color: rgba(223,70,1,0.4); color: var(--orange); }
+.legend--preview { background: var(--surface); color: var(--text-2); }
 
 /* ── Month calendar grid ──────────────────────────────────────── */
 .cal-grid {
@@ -3293,12 +3293,9 @@ a.il-name:hover { color: var(--orange); }
 }
 .sch-chip:hover { border-color: var(--border-light); background: var(--border); }
 
-.chip--win  { background: rgba(34,85,34,0.25);  border-color: rgba(76,175,80,0.3); }
-.chip--loss { background: rgba(85,25,25,0.25);  border-color: rgba(239,83,80,0.3); }
-.chip--tie  { background: rgba(60,60,60,0.3);   border-color: var(--border); }
-.chip--live { background: rgba(223,70,1,0.12);  border-color: rgba(223,70,1,0.4); }
-.chip--win:hover  { background: rgba(34,85,34,0.35); }
-.chip--loss:hover { background: rgba(85,25,25,0.35); }
+.chip--home       { background: rgba(223,70,1,0.08); border-color: rgba(223,70,1,0.30); }
+.chip--home:hover { background: rgba(223,70,1,0.12); border-color: rgba(223,70,1,0.40); }
+.chip--live       { background: rgba(223,70,1,0.12); border-color: rgba(223,70,1,0.4); }
 
 .chip-row1 {
   display: flex;
@@ -3328,11 +3325,6 @@ a.il-name:hover { color: var(--orange); }
   gap: 4px;
 }
 .chip-result  { font-size: 0.64rem; color: var(--text-2); }
-.chip-result strong { font-weight: 700; color: var(--text); }
-.chip--win  .chip-result         { color: #6fcf6f; }
-.chip--win  .chip-result strong  { color: #8fe08f; }
-.chip--loss .chip-result         { color: #ef8080; }
-.chip--loss .chip-result strong  { color: #f09090; }
 .chip-time  { font-size: 0.6rem;  color: var(--text-3); }
 .chip-live  { font-size: 0.62rem; color: var(--orange); font-weight: 600; }
 .chip-wx    { font-size: 0.62rem; color: var(--text-3); margin-left: auto; }
@@ -3472,15 +3464,8 @@ a.il-name:hover { color: var(--orange); }
 [data-theme="light"] .cal-cell      { background: #fff; }
 [data-theme="light"] .cal-cell--empty { background: #f0f0f0; }
 [data-theme="light"] .sch-chip      { background: #f8f8f8; }
-[data-theme="light"] .chip--win     { background: rgba(34,139,34,0.1); border-color: rgba(34,139,34,0.3); }
-[data-theme="light"] .chip--loss    { background: rgba(200,40,40,0.1); border-color: rgba(200,40,40,0.3); }
-[data-theme="light"] .chip--win  .chip-result        { color: #2a7a2a; }
-[data-theme="light"] .chip--win  .chip-result strong { color: #1a5a1a; }
-[data-theme="light"] .chip--loss .chip-result        { color: #c02020; }
-[data-theme="light"] .chip--loss .chip-result strong { color: #901010; }
+[data-theme="light"] .chip--home    { background: rgba(223,70,1,0.06); border-color: rgba(223,70,1,0.25); }
 [data-theme="light"] .week-col { background: #fff; }
-[data-theme="light"] .legend--win  { color: #2a7a2a; }
-[data-theme="light"] .legend--loss { color: #c02020; }
 [data-theme="light"] .chip-probable { background: #f0f0f0; }
 
 /* ── Schedule: responsive ─────────────────────────────────────── */
