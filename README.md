@@ -1,33 +1,44 @@
 # Yard Report
 
-Yard Report is a personal Orioles-first baseball dashboard built with Astro. It combines a filtered Orioles, MLB, and MiLB news feed with live score bugs, featured story cards, and compact Orioles-focused widgets in a single-page experience.
+A personal Orioles-first baseball dashboard built with [Astro](https://astro.build). Combines a filtered news feed, live score bugs, and compact Orioles-focused widgets in a single-page experience.
 
-## The Site
+## Features
 
-- Orioles-, MLB-, and MiLB-focused news aggregation
-- Grid, list, and compact article views
-- Category, source, search, sort, and date-range filtering
-- Around the Horn featured story cards for shared baseball topics
-- Score bugs for yesterday, today, and tomorrow with preview, live, and final popovers
-- Orioles-focused sidebar widgets for On Deck, standings, leaders, roster, injuries, transactions, podcast, and video
-- Reader modal with share actions and read/unread tracking
-- Theme and default-view preferences saved in localStorage
-
-## Focus
-
-- Orioles-first coverage with broader MLB and MiLB context
-- Fast scan of scores, news, and Orioles context in one place
-- A personal dashboard rather than a general sports portal
-
-## Current Surfaces
-
-- Main feed with category and source filtering across Orioles, MLB, and MiLB reporting
+**News feed**
+- Aggregates Orioles, MLB, and MiLB reporting from 13 RSS sources
+- Grid, list, and compact article views with category, source, search, sort, and date-range filtering
 - Around the Horn featured story cards with a dedicated story page
-- Score bug rail with preview, live, and final popovers for lineup, pitching, scouting, and box score context
-- Orioles-first widgets for On Deck, standings, leaders, roster, injuries, transactions, podcast, and video
 - Reader overlay for opening articles without leaving the dashboard
+- Read/unread tracking with swipe gestures on mobile
+
+**Scores**
+- Yesterday, today, and tomorrow score bugs with preview, live, and final states
+- Popovers with lineup, pitching, scout notes, pitch arsenal, and box score context
+- Rain delay and postponed states
+
+**Schedule**
+- Full-season Orioles schedule page at `/schedule/`
+- Month and week calendar views with game results, series grouping, homestand/road trip context, probable pitchers, broadcast info, and weather for upcoming games
+
+**Sidebar widgets**
+- On Deck: next Orioles game with weather forecast and schedule strip
+- Standings, Yard Leaders, Roster, Injury Report, Transactions, Contracts
+- Podcast: latest Baseball Tonight with Buster Olney episode
+- Video: MLB Fastcast, Top Plays, Orioles Game Recaps, Orioles Moments
+
+**Other**
+- Dark, light, system, and City Connect themes (auto-applied on Fridays)
+- PWA-ready with apple-touch-icon support
+- Easter eggs
+
+## Stack
+
+- [Astro](https://astro.build) — static site framework
+- Vanilla JS — client-side rendering, state, and data fetching
+- [MLB Stats API](https://statsapi.mlb.com/api/v1) — scores, schedule, roster, leaders, pitching data
+- [Open-Meteo](https://open-meteo.com) — weather forecasts
+- PHP RSS proxy — feed aggregation for production
 
 ## Notes
 
-- This repository is maintained as a personal project with an Orioles-first editorial bias.
-- Stack, development, deployment, workflow, and source-inventory details live in [brief.txt](/Users/briancsmith/Documents/GitHub/yardreport/brief.txt).
+This is a personal project maintained with an Orioles-first editorial bias. Maintainer workflow, deployment, source inventory, and development guidance are in `brief.txt`.
