@@ -15,6 +15,7 @@ export const FALLBACK_WALKUP_SONGS = {
   681297: ['https://open.spotify.com/track/1EiLrPd8JMTcQUr1aLEUKi'], // Colton Cowser – Work (Gang Starr)
   624413: ['https://open.spotify.com/track/0k9JIBszlCqCa4SpXI353F'], // Pete Alonso – BIRDS (Turnstile)
   691723: ['https://open.spotify.com/track/28DySuOwKC5m8We3yRPS04'], // Coby Mayo – End of Beginning (Djo)
+  665750: ['https://open.spotify.com/track/7uH27oIt4a6cIFCA8ZPcyG'], // Leody Taveras – Baila Baila Baila (Ozuna)
 };
 
 const walkupSongsCache = {
