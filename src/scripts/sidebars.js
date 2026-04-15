@@ -234,10 +234,14 @@ const IL_BADGE = { D10: '10-Day IL', D15: '15-Day IL', D60: '60-Day IL' };
 export async function loadRoster() {
   const wrap = $('rosterWrap');
   try {
-    const [data] = await Promise.all([
-      fetch(`${MLB}/teams/${ORIOLES_ID}/roster?rosterType=40Man&season=${SEASON}`).then(r => r.json()),
-      ensureWalkupSongsLoaded(PROXY),
-    ]);
+    // Fetch roster data and kick off song loading concurrently — but don't
+    // block the render on songs. Render immediately with whatever is in the
+    // cache (fallback songs or already-loaded data), then re-render once the
+    // song fetch resolves if it was still in flight.
+    const songPromise = ensureWalkupSongsLoaded(PROXY);
+    const data = await fetch(
+      `${MLB}/teams/${ORIOLES_ID}/roster?rosterType=40Man&season=${SEASON}`
+    ).then(r => r.json());
 
     const all = data.roster ?? [];
     if (!all.length) {
@@ -282,38 +286,37 @@ export async function loadRoster() {
       </div>`;
     };
 
-    let html = '';
-
     // Active 26-man — split into batters / pitchers
     const activeBatters  = sortByPos(active.filter(p => !['SP','RP','P'].includes(p.position?.abbreviation ?? '')));
     const activePitchers = sortByPos(active.filter(p => ['SP','RP','P'].includes(p.position?.abbreviation ?? '')));
 
-    if (activeBatters.length) {
-      html += `<div class="roster-group-label">Position Players</div>`;
-      html += activeBatters.map(p => renderItem(p)).join('');
-    }
-    if (activePitchers.length) {
-      html += `<div class="roster-group-label">Pitchers</div>`;
-      html += activePitchers.map(p => renderItem(p)).join('');
-    }
+    const buildHtml = () => {
+      let h = '';
+      if (activeBatters.length) {
+        h += `<div class="roster-group-label">Position Players</div>`;
+        h += activeBatters.map(p => renderItem(p)).join('');
+      }
+      if (activePitchers.length) {
+        h += `<div class="roster-group-label">Pitchers</div>`;
+        h += activePitchers.map(p => renderItem(p)).join('');
+      }
+      if (il.length) {
+        h += `<div class="roster-group-label">Injured List</div>`;
+        h += sortByPos(il).map(p => renderItem(p, { badge: IL_BADGE[p.status?.code] ?? 'IL', badgeType: 'il' })).join('');
+      }
+      if (minors.length) {
+        h += `<div class="roster-group-label">Minors</div>`;
+        h += sortByPos(minors).map(p => renderItem(p, { muted: true })).join('');
+      }
+      return `<div class="roster-list">${h}</div>
+        <a class="widget-link" href="https://www.mlb.com/orioles/roster/40-man" target="_blank" rel="noopener">Full 40-man roster ↗</a>`;
+    };
 
-    // IL
-    if (il.length) {
-      html += `<div class="roster-group-label">Injured List</div>`;
-      html += sortByPos(il).map(p => {
-        const badge = IL_BADGE[p.status?.code] ?? 'IL';
-        return renderItem(p, { badge, badgeType: 'il' });
-      }).join('');
-    }
+    wrap.innerHTML = buildHtml();
 
-    // Minors
-    if (minors.length) {
-      html += `<div class="roster-group-label">Minors</div>`;
-      html += sortByPos(minors).map(p => renderItem(p, { muted: true })).join('');
-    }
-
-    wrap.innerHTML = `<div class="roster-list">${html}</div>
-      <a class="widget-link" href="https://www.mlb.com/orioles/roster/40-man" target="_blank" rel="noopener">Full 40-man roster ↗</a>`;
+    // If songs were still loading, re-render once they arrive so grey icons
+    // flip to green without the user having to wait for the initial render.
+    songPromise.then(() => { wrap.innerHTML = buildHtml(); }).catch(() => {});
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }
