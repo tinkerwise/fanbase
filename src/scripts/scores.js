@@ -218,11 +218,12 @@ function mlbPlayerUrl(playerId) {
 function spotifyEmbedUrl(songUrl) {
   try {
     const url = new URL(songUrl);
-    const parts = url.pathname.split('/').filter(Boolean);
-    const trackIdx = parts.findIndex(part => part === 'track');
-    const trackId = trackIdx >= 0 ? parts[trackIdx + 1] : '';
-    if (!trackId) return '';
-    return `https://open.spotify.com/embed/track/${trackId}?utm_source=yardreport`;
+    // Strip any existing /embed/ prefix so both canonical and embed URLs work.
+    const parts = url.pathname.replace(/^\/embed\//, '/').split('/').filter(Boolean);
+    const type = parts[0]; // 'track', 'playlist', 'album', 'search', …
+    const id   = parts[1];
+    if (!type || !id) return '';
+    return `https://open.spotify.com/embed/${type}/${id}?utm_source=yardreport`;
   } catch {
     return '';
   }
@@ -267,13 +268,19 @@ function openWalkupPlayerOverlay(songUrl, playerName = '') {
     window.open(songUrl, '_blank', 'noopener');
     return;
   }
+  const isSearch = /\/embed\/search\//i.test(embedUrl);
   const overlay = ensureWalkupPlayerOverlay();
   const frame = overlay.querySelector('.walkup-player-frame');
   const source = overlay.querySelector('.walkup-player-open');
   const name = overlay.querySelector('.walkup-player-name');
-  if (frame) frame.setAttribute('src', embedUrl);
+  const title = overlay.querySelector('.walkup-player-title');
+  if (frame) {
+    frame.setAttribute('src', embedUrl);
+    frame.height = isSearch ? '380' : '152';
+  }
   if (source) source.setAttribute('href', songUrl);
   if (name) name.textContent = playerName || '';
+  if (title) title.textContent = isSearch ? 'Find walk-up song' : 'Walk-up song';
   overlay.classList.remove('hidden');
   document.body.classList.add('walkup-player-overlay-open');
 }
@@ -1173,8 +1180,6 @@ export async function loadScores() {
         const clickTarget = e.target instanceof Element ? e.target : null;
         const songLink = clickTarget?.closest('.walkup-song-link');
         if (songLink) {
-          // Search-fallback icons open Spotify search directly in a new tab — no overlay.
-          if (songLink.classList.contains('walkup-song-link--search')) return;
           const useDefaultTab = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
           if (!useDefaultTab) {
             e.preventDefault();
