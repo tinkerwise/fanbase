@@ -39,41 +39,127 @@ function extractPlayerIdFromHref(href) {
   return match ? match[1] : '';
 }
 
+// Normalise any Spotify URL (including embed variants) to the canonical
+// open.spotify.com/track/ID form stored in the cache.
+function normalizeSpotifyUrl(rawUrl) {
+  try {
+    const url = new URL(String(rawUrl));
+    if (!/open\.spotify\.com/i.test(url.hostname)) return null;
+    const m = url.pathname.match(/^\/(?:embed\/)?(track|playlist|album)\/([A-Za-z0-9]+)/i);
+    if (!m) return null;
+    return `https://open.spotify.com/${m[1].toLowerCase()}/${m[2]}`;
+  } catch {
+    return null;
+  }
+}
+
+function addSongToMaps(url, playerId, playerName, byPlayerId, byPlayerName) {
+  const key = normalizePlayerKey(playerName);
+  if (playerId) {
+    byPlayerId[playerId] ??= [];
+    if (!byPlayerId[playerId].includes(url)) byPlayerId[playerId].push(url);
+  }
+  if (key) {
+    byPlayerName[key] ??= [];
+    if (!byPlayerName[key].includes(url)) byPlayerName[key].push(url);
+  }
+}
+
+// Recursively walk a Next.js __NEXT_DATA__ object looking for objects that
+// contain both a player identity (id + name) and one or more Spotify track URLs.
+function walkObjectForSongs(obj, byPlayerId, byPlayerName, depth) {
+  if (!obj || typeof obj !== 'object' || depth > 25) return;
+  if (Array.isArray(obj)) {
+    for (const item of obj) walkObjectForSongs(item, byPlayerId, byPlayerName, depth + 1);
+    return;
+  }
+
+  let playerId = '';
+  let playerName = '';
+  const spotifyUrls = [];
+
+  for (const [key, val] of Object.entries(obj)) {
+    if (val == null) continue;
+    if (typeof val === 'string') {
+      if (/open\.spotify\.com\/(embed\/)?track\//i.test(val)) {
+        const norm = normalizeSpotifyUrl(val);
+        if (norm) spotifyUrls.push(norm);
+      } else if (/^\d{5,8}$/.test(val) && /\bid\b|player|person/i.test(key)) {
+        playerId = val;
+      } else if (val.length > 1 && val.length < 60 && /^(?:full)?name$/i.test(key)) {
+        playerName = val;
+      }
+    } else if (typeof val === 'number') {
+      const s = String(val);
+      if (/^\d{5,8}$/.test(s) && /\bid\b|player|person/i.test(key)) {
+        playerId = s;
+      }
+    }
+  }
+
+  if ((playerId || playerName) && spotifyUrls.length > 0) {
+    for (const url of spotifyUrls) {
+      addSongToMaps(url, playerId, playerName, byPlayerId, byPlayerName);
+    }
+  }
+
+  for (const val of Object.values(obj)) {
+    if (val && typeof val === 'object') {
+      walkObjectForSongs(val, byPlayerId, byPlayerName, depth + 1);
+    }
+  }
+}
+
 function parseWalkupSongs(htmlText) {
   const byPlayerId = {};
   const byPlayerName = {};
   if (!htmlText) return { byPlayerId, byPlayerName };
 
   const doc = new DOMParser().parseFromString(String(htmlText), 'text/html');
-  const anchors = [...doc.querySelectorAll('a[href]')];
+
+  // ── 1. Next.js __NEXT_DATA__ JSON (most reliable when present) ────
+  const nextDataEl = doc.querySelector('script#__NEXT_DATA__');
+  if (nextDataEl?.textContent) {
+    try {
+      walkObjectForSongs(JSON.parse(nextDataEl.textContent), byPlayerId, byPlayerName, 0);
+    } catch {}
+  }
+  if (Object.keys(byPlayerId).length + Object.keys(byPlayerName).length > 0) {
+    return { byPlayerId, byPlayerName };
+  }
+
+  // ── 2. DOM scan: anchors + Spotify iframes in document order ──────
+  // querySelectorAll guarantees document order for compound selectors.
   let currentPlayerId = '';
   let currentPlayerName = '';
 
-  for (const anchor of anchors) {
-    const rawHref = anchor.getAttribute('href') || '';
-    let href = rawHref;
-    try {
-      href = new URL(rawHref, ORIOLES_WALKUP_MUSIC_URL).toString();
-    } catch {}
+  for (const el of doc.querySelectorAll('a[href], iframe[src]')) {
+    if (el.tagName === 'A') {
+      const rawHref = el.getAttribute('href') || '';
+      let href = rawHref;
+      try { href = new URL(rawHref, ORIOLES_WALKUP_MUSIC_URL).href; } catch {}
 
-    const label = String(anchor.textContent ?? '').replace(/\s+/g, ' ').trim();
-    const playerId = extractPlayerIdFromHref(href);
-    if (playerId && label) {
-      currentPlayerId = playerId;
-      currentPlayerName = label;
-      continue;
+      const playerId = extractPlayerIdFromHref(href);
+      if (playerId) {
+        // This is a player profile link — establish current context.
+        currentPlayerId = playerId;
+        currentPlayerName = String(el.textContent ?? '').replace(/\s+/g, ' ').trim();
+        continue;
+      }
+      if (!currentPlayerName) continue;
+      if (/open\.spotify\.com\//i.test(href)) {
+        const url = normalizeSpotifyUrl(href);
+        if (url) addSongToMaps(url, currentPlayerId, currentPlayerName, byPlayerId, byPlayerName);
+      }
+    } else if (el.tagName === 'IFRAME') {
+      // Spotify embeds use <iframe src="https://open.spotify.com/embed/track/...">
+      if (!currentPlayerName) continue;
+      const src = el.getAttribute('src') || '';
+      if (/open\.spotify\.com\//i.test(src)) {
+        const url = normalizeSpotifyUrl(src);
+        if (url) addSongToMaps(url, currentPlayerId, currentPlayerName, byPlayerId, byPlayerName);
+      }
     }
-
-    if (!currentPlayerName || !/open\.spotify\.com\//i.test(href)) continue;
-    const playerKey = normalizePlayerKey(currentPlayerName);
-    if (!playerKey) continue;
-
-    if (currentPlayerId) {
-      byPlayerId[currentPlayerId] ??= [];
-      if (!byPlayerId[currentPlayerId].includes(href)) byPlayerId[currentPlayerId].push(href);
-    }
-    byPlayerName[playerKey] ??= [];
-    if (!byPlayerName[playerKey].includes(href)) byPlayerName[playerKey].push(href);
   }
 
   return { byPlayerId, byPlayerName };
