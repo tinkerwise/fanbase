@@ -6,10 +6,15 @@ const ORIOLES_WALKUP_MUSIC_URL = 'https://www.mlb.com/orioles/ballpark/music';
 const WALKUP_SONG_TTL_MS = 1000 * 60 * 60 * 6;
 
 export const FALLBACK_WALKUP_SONGS = {
-  683002: ['https://open.spotify.com/track/66ZcOcouenzZEnzTJvoFmH'], // Gunnar Henderson
-  668939: ['https://open.spotify.com/track/23SZWX2IaDnxmhFsSLvkG2'], // Adley Rutschman
-  683734: ['https://open.spotify.com/track/2CGNAOSuO1MEFCbBRgUzjd'], // Jackson Holliday
-  663624: ['https://open.spotify.com/track/0JJP0IS4w0fJx01EcrfkDe'], // Ryan Mountcastle
+  683002: ['https://open.spotify.com/track/66ZcOcouenzZEnzTJvoFmH'], // Gunnar Henderson – The Sweet Escape (Gwen Stefani)
+  668939: ['https://open.spotify.com/track/2ueM6ZRm1HJZo5FBatt7Qm'], // Adley Rutschman – Alive (nightmare) (Kid Cudi & Ratatat)
+  683734: ['https://open.spotify.com/track/2CGNAOSuO1MEFCbBRgUzjd'], // Jackson Holliday – luther (Kendrick Lamar & SZA)
+  663624: ['https://open.spotify.com/track/0JJP0IS4w0fJx01EcrfkDe'], // Ryan Mountcastle – Dear Maria, Count Me In (All Time Low)
+  641933: ['https://open.spotify.com/track/2tUL6dZf1mywCj5WvCPZw6'], // Tyler O'Neill – No Friends In The Industry (Drake)
+  676059: ['https://open.spotify.com/track/1OLkuTadZZSdfzgUeemRsU'], // Jordan Westburg – The Name (KB ft. Koryn Hawthorne)
+  681297: ['https://open.spotify.com/track/1EiLrPd8JMTcQUr1aLEUKi'], // Colton Cowser – Work (Gang Starr)
+  624413: ['https://open.spotify.com/track/0k9JIBszlCqCa4SpXI353F'], // Pete Alonso – BIRDS (Turnstile)
+  691723: ['https://open.spotify.com/track/28DySuOwKC5m8We3yRPS04'], // Coby Mayo – End of Beginning (Djo)
 };
 
 const walkupSongsCache = {
