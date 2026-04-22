@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Fanbase</title><link rel="stylesheet" href="/styles/global.css"><!-- Step 7: Apply team CSS variables before first paint to prevent FOUC.
+       Embeds a minimal color map so this script can be synchronous & inline. --><script>
+    (function () {
+      var COLORS = {
+        108: ['#BA0021','#003263'], 109: ['#A71930','#E3D4AD'],
+        110: ['#DF4601','#000000'], 111: ['#BD3039','#0C2340'],
+        112: ['#0E3386','#CC3433'], 113: ['#C6011F','#000000'],
+        114: ['#00385D','#E31937'], 115: ['#33006F','#C4CED4'],
+        116: ['#0C2340','#FA4616'], 117: ['#002D62','#EB6E1F'],
+        118: ['#174885','#BD9B60'], 119: ['#005A9C','#EF3E42'],
+        120: ['#AB0003','#14225A'], 121: ['#002D72','#FF5910'],
+        133: ['#003831','#EFB21E'], 134: ['#27251F','#FDB827'],
+        135: ['#2F241D','#FFC425'], 136: ['#0C2C56','#005C5C'],
+        137: ['#27251F','#FD5A1E'], 138: ['#C41E3A','#0C2340'],
+        139: ['#092C5C','#8FBCE6'], 140: ['#003278','#C0111F'],
+        141: ['#134A8E','#E8291C'], 142: ['#002B5C','#D31145'],
+        143: ['#E81828','#002D72'], 144: ['#CE1141','#13274F'],
+        145: ['#27251F','#C4CED4'], 146: ['#00A3E0','#EF3340'],
+        147: ['#1C3557','#C4CED4'], 158: ['#12284B','#FFC52F'],
+      };
+      var CITIES = {
+        108:'Los Angeles', 109:'Arizona', 110:'Baltimore', 111:'Boston',
+        112:'Chicago',     113:'Cincinnati', 114:'Cleveland', 115:'Colorado',
+        116:'Detroit',     117:'Houston',  118:'Kansas City', 119:'Los Angeles',
+        120:'Washington',  121:'New York', 133:'Oakland',  134:'Pittsburgh',
+        135:'San Diego',   136:'Seattle',  137:'San Francisco', 138:'St. Louis',
+        139:'Tampa Bay',   140:'Texas',    141:'Toronto',  142:'Minnesota',
+        143:'Philadelphia',144:'Atlanta',  145:'Chicago',  146:'Miami',
+        147:'New York',    158:'Milwaukee',
+      };
+      var id = parseInt(localStorage.getItem('fanbase_team') || '110', 10);
+      var colors = COLORS[id] || COLORS[110];
+      var city   = CITIES[id] || 'Baltimore';
+      document.documentElement.style.setProperty('--primary', colors[0]);
+      document.documentElement.style.setProperty('--accent',  colors[1]);
+      document.title = city + ' Fanbase';
+    })();
+  </script></head> <body> <header class="site-header"> <div class="header-inner"> <!-- Step 8: src and alt are set dynamically by the module script below --> <img src="/logo.svg" alt="Team logo" width="46" height="46" class="team-logo"> <h1 class="site-title">Fanbase</h1> <nav class="site-nav"> <a href="/">Home</a> </nav> </div> </header> <main class="site-main">  <div class="page-grid"> <section class="feeds-section"> <h2>Latest News</h2> <div id="feeds-panel"> <p class="loading">Loading feeds&hellip;</p> </div> </section> <aside class="sidebar"> <div class="widget" id="scores-widget"> <h3>Recent Scores</h3> <div class="widget-content" id="scores-list"> <p class="loading">Loading&hellip;</p> </div> </div> <div class="widget" id="standings-widget"> <h3>AL East Standings</h3> <div class="widget-content" id="standings-list"> <p class="loading">Loading&hellip;</p> </div> </div> </aside> </div>  </main> <footer class="site-footer"> <p>Fanbase &copy; 2026 &mdash; Fan-run. Not affiliated with MLB.</p> </footer> <!-- Step 8: Update logo src + header title from full team config --> <script type="module" src="/_astro/Layout.astro_astro_type_script_index_0_lang.BqflCtRO.js"></script> <!-- teamPicker runs on every page --> <script type="module" src="/_astro/Layout.astro_astro_type_script_index_1_lang.QHgGLst3.js"></script> </body> </html> <script type="module" src="/_astro/index.astro_astro_type_script_index_0_lang.DyQK-n2P.js"></script>

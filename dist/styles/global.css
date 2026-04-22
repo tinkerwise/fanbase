@@ -1,0 +1,308 @@
+:root {
+  --primary: #DF4601;
+  --accent: #000000;
+  --bg-dark: #111214;
+  --bg-card: #1e2024;
+  --text: #f0f0f0;
+  --text-muted: #888;
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--primary);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.6rem 1.5rem;
+}
+
+.team-logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.site-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  flex: 1;
+  letter-spacing: -0.01em;
+}
+
+.site-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.site-nav a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.site-nav a:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* ── Main Layout ── */
+.site-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .page-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Section headings ── */
+.feeds-section > h2,
+.widget > h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 6px 6px 0 0;
+}
+
+/* ── Feeds ── */
+.feed-list {
+  list-style: none;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+}
+
+.feed-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.feed-item:last-child { border-bottom: none; }
+
+.feed-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--bg-card);
+  transition: background 0.12s;
+}
+
+.feed-link:hover { background: rgba(255, 255, 255, 0.04); }
+
+.feed-label { font-weight: 500; font-size: 0.9rem; }
+
+.feed-type {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── Widgets ── */
+.widget {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.widget-content { padding: 0.25rem 0; }
+
+/* ── Score rows ── */
+.score-row {
+  display: grid;
+  grid-template-columns: 36px 28px 18px 36px 28px;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.score-row:last-child { border-bottom: none; }
+
+.team-abbrev { font-weight: 600; }
+.score { font-weight: 700; }
+.vs { color: var(--text-muted); text-align: center; font-size: 0.75rem; }
+.winner { color: var(--primary); }
+
+/* ── Standing rows ── */
+.standing-row {
+  display: grid;
+  grid-template-columns: 18px 38px 52px 46px;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.38rem 1rem;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.standing-row:last-child { border-bottom: none; }
+
+.standing-row.highlight {
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.standing-rank,
+.standing-pct { color: var(--text-muted); }
+
+/* ── Footer ── */
+.site-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+/* ── Utilities ── */
+.loading { padding: 1rem; color: var(--text-muted); font-size: 0.875rem; }
+.error   { padding: 1rem; color: #ff6b6b; font-size: 0.875rem; }
+
+/* ── Team Picker Modal ── */
+.team-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 2rem 1rem;
+}
+
+.team-picker-modal {
+  background: #1e2024;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 860px;
+  width: 100%;
+}
+
+.team-picker-modal h2 {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-bottom: 1.75rem;
+  color: #fff;
+}
+
+.division-group { margin-bottom: 1.5rem; }
+
+.division-group h3 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #666;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.6rem;
+}
+
+.team-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  background: #252830;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.78rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.team-btn:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: #2e3340;
+}
+
+.team-btn.active {
+  border-color: var(--primary);
+}
+
+.team-btn img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.team-btn .team-name {
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* ── Change Team button ── */
+.change-team-btn {
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.change-team-btn:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.55);
+}
