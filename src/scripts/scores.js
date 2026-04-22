@@ -1,8 +1,10 @@
-import { ORIOLES_ID, MLB_API_BASE, SEASON } from './config.js';
+import { getActiveTeamId, MLB_API_BASE, SEASON } from './config.js';
 
 async function loadScores() {
   const container = document.getElementById('scores-list');
   if (!container) return;
+
+  const teamId = getActiveTeamId();
 
   try {
     const today = new Date();
@@ -10,7 +12,7 @@ async function loadScores() {
     const startDate = new Date(today - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
     const url =
-      `${MLB_API_BASE}/schedule?teamId=${ORIOLES_ID}&sportId=1` +
+      `${MLB_API_BASE}/schedule?teamId=${teamId}&sportId=1` +
       `&startDate=${startDate}&endDate=${endDate}&hydrate=linescore,decisions`;
 
     const res = await fetch(url);

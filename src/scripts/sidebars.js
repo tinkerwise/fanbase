@@ -1,8 +1,12 @@
-import { ORIOLES_ID, MLB_API_BASE, SEASON } from './config.js';
+import { getActiveTeamId, getActiveTeam, MLB_API_BASE, SEASON } from './config.js';
 
 async function loadStandings() {
   const container = document.getElementById('standings-list');
+  const heading = document.querySelector('#standings-widget h3');
   if (!container) return;
+
+  const teamId = getActiveTeamId();
+  const team = getActiveTeam();
 
   try {
     const url =
@@ -15,7 +19,7 @@ async function loadStandings() {
 
     const records = data.records || [];
     const divisionRecord = records.find(r =>
-      r.teamRecords?.some(tr => tr.team?.id === ORIOLES_ID)
+      r.teamRecords?.some(tr => tr.team?.id === teamId)
     );
 
     if (!divisionRecord) {
@@ -23,11 +27,14 @@ async function loadStandings() {
       return;
     }
 
+    // Update the widget heading to reflect the active division
+    if (heading) heading.textContent = `${team.division} Standings`;
+
     container.innerHTML = divisionRecord.teamRecords
       .slice()
       .sort((a, b) => Number(a.divisionRank) - Number(b.divisionRank))
       .map(tr => {
-        const isOurs = tr.team?.id === ORIOLES_ID;
+        const isOurs = tr.team?.id === teamId;
         const cls = isOurs ? ' highlight' : '';
         return `
           <div class="standing-row${cls}">
