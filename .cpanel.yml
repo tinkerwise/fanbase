@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - /bin/mkdir -p $HOME/public_html/fanbase
-    - /bin/cp -R dist/* $HOME/public_html/fanbase/
+    - /bin/mkdir -p /home/briancsm/public_html/fanbase
+    - /bin/cp -rp dist/. /home/briancsm/public_html/fanbase/
