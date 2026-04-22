@@ -1,5 +1,5 @@
 // ── Feeds ─────────────────────────────────────────────────────────
-import { PROXY } from './config.js';
+import { PROXY, TEAM_SLUG, TEAM_ABBREV, ORIOLES_ID, getActiveTeamId } from './config.js';
 import {
   MAX_VISIBLE_ARTICLES,
   selectDisplayArticles,
@@ -71,11 +71,29 @@ export async function loadFeeds() {
   let FEEDS;
   try {
     FEEDS = await fetch(`${import.meta.env.BASE_URL}feeds.json`).then(r => r.json());
-    ALL_FEEDS = FEEDS;
   } catch {
     $('articleList').innerHTML = '<div class="feed-msg">Could not load feeds.json</div>';
     return [];
   }
+
+  const activeTeamId = getActiveTeamId();
+  const teamSlug = TEAM_SLUG[activeTeamId] ?? TEAM_SLUG[ORIOLES_ID];
+  const teamName = TEAM_ABBREV[activeTeamId] ? `${TEAM_ABBREV[activeTeamId]} News` : 'Team News';
+
+  FEEDS = FEEDS
+    .filter(f => f.teamId === 0 || f.teamFeed || f.teamId === activeTeamId)
+    .map(f => {
+      if (f.teamFeed && activeTeamId !== ORIOLES_ID) {
+        return {
+          ...f,
+          url: `https://www.mlb.com/${teamSlug}/feeds/news/rss.xml`,
+          name: teamName,
+        };
+      }
+      return f;
+    });
+
+  ALL_FEEDS = FEEDS;
 
   const disabled = getDisabledSources();
   const activeFEEDS = FEEDS.filter(f => !disabled.has(f.id));
@@ -397,20 +415,24 @@ function bundlePhoto(bundle, usedImages = new Set()) {
   return urls.find(url => !usedImages.has(url)) || urls[0] || null;
 }
 
-function isOriolesArticle(article) {
+function isTeamArticle(article) {
+  const activeTeamId = getActiveTeamId();
   return article.source?.category === 'orioles' ||
-    /\b(orioles|baltimore|camden|adley|henderson|mullins|o'hearn|westburg|rutschman|mountcastle|holliday|cowser|kjerstad|urias|mateo|bautista|cano|eflin|grayson|kremer|povich)\b/i
-      .test(`${article.title || ''} ${article.description || ''}`);
+    (activeTeamId === ORIOLES_ID &&
+      /\b(orioles|baltimore|camden|adley|henderson|mullins|o'hearn|westburg|rutschman|mountcastle|holliday|cowser|kjerstad|urias|mateo|bautista|cano|eflin|grayson|kremer|povich)\b/i
+        .test(`${article.title || ''} ${article.description || ''}`)
+    );
 }
 
 function bundleVariant(bundle) {
-  const oriolesHits = bundle.articles.filter(isOriolesArticle).length;
-  return oriolesHits >= Math.max(1, Math.ceil(bundle.articles.length / 2)) ? 'orioles' : 'mlb';
+  const teamHits = bundle.articles.filter(isTeamArticle).length;
+  return teamHits >= Math.max(1, Math.ceil(bundle.articles.length / 2)) ? 'orioles' : 'mlb';
 }
 
 function bundleLogoMarkup(bundle, variant) {
+  const activeTeamId = getActiveTeamId();
   if (variant === 'orioles') {
-    return `<img class="bundle-logo-mark" src="${teamLogoSrc(110, 36)}" alt="Orioles logo" loading="lazy">`;
+    return `<img class="bundle-logo-mark" src="${teamLogoSrc(activeTeamId, 36)}" alt="Team logo" loading="lazy">`;
   }
   const mlbFavicon = faviconUrl('https://www.mlb.com');
   return mlbFavicon

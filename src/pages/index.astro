@@ -102,9 +102,9 @@ import Layout from '../layouts/Layout.astro';
         <div class="toolbar-left">
           <div class="pill-group" id="categoryFilters">
             <button class="pill active" data-category="all">All</button>
-            <button class="pill pill--category" data-category="orioles">
-              <img class="pill-logo pill-logo--orioles" src="https://www.mlbstatic.com/team-logos/110.svg" alt="" width="16" height="16" loading="lazy" decoding="async">
-              <span>Orioles</span>
+            <button class="pill pill--category" id="teamPill" data-category="orioles">
+              <img class="pill-logo pill-logo--orioles" id="teamPillLogo" src="https://www.mlbstatic.com/team-logos/110.svg" alt="" width="16" height="16" loading="lazy" decoding="async">
+              <span id="teamPillLabel">Orioles</span>
             </button>
             <button class="pill pill--category" data-category="mlb">
               <img class="pill-logo pill-logo--league" src="https://www.mlbstatic.com/team-logos/apple-touch-icons-180x180/mlb.png" alt="" width="16" height="16" loading="lazy" decoding="async">

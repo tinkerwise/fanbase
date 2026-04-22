@@ -40,6 +40,14 @@ export const MLB = 'https://statsapi.mlb.com/api/v1';
 export const ORIOLES_ID = 110;
 export const SEASON = new Date().getFullYear();
 
+export function getActiveTeamId() {
+  try {
+    return Number(localStorage.getItem('fanbase_team') || ORIOLES_ID) || ORIOLES_ID;
+  } catch {
+    return ORIOLES_ID;
+  }
+}
+
 export const PITCH_NAMES = {
   'Four-Seam Fastball': '4-Seam', 'Two-Seam Fastball': '2-Seam', 'Sinker': 'Sinker',
   'Slider': 'Slider', 'Curveball': 'Curve', 'Changeup': 'Changeup', 'Cutter': 'Cutter',

@@ -8,6 +8,7 @@ import {
   TEAM_ABBREV,
   TEAM_PAGE,
   TEAM_SLUG,
+  getActiveTeamId,
 } from './config.js';
 import { state } from './state.js';
 import {
@@ -41,7 +42,7 @@ export async function loadStandings() {
         losses: t.losses,
         gb: t.gamesBack === '0' ? '-' : t.gamesBack,
         streak: t.streak?.streakCode ?? '-',
-        isOrioles: t.team.id === ORIOLES_ID,
+        isOrioles: t.team.id === getActiveTeamId(),
       })),
     }));
 
@@ -99,8 +100,9 @@ export async function loadOnDeck() {
     const today = localDateStr(0);
     const tomorrowStr = localDateStr(1);
     const endDate = localDateStr(14);
+    const activeTeamId = getActiveTeamId();
     const data = await fetch(
-      `${MLB}/schedule?sportId=1&teamId=${ORIOLES_ID}&startDate=${today}&endDate=${endDate}&hydrate=probablePitcher,venue`
+      `${MLB}/schedule?sportId=1&teamId=${activeTeamId}&startDate=${today}&endDate=${endDate}&hydrate=probablePitcher,venue`
     ).then(r => r.json());
 
     const games = (data.dates ?? []).flatMap(d => d.games);
@@ -119,7 +121,7 @@ export async function loadOnDeck() {
 
     const away = next.teams.away;
     const home = next.teams.home;
-    const isHome = home.team.id === ORIOLES_ID;
+    const isHome = home.team.id === activeTeamId;
     const opponent = isHome ? away : home;
     const oppAbbr = TEAM_ABBREV[opponent.team.id] ?? opponent.team.name.slice(0, 3);
     const onDeckOpponentLabel = isHome ? oppAbbr : opponent.team.name;
@@ -154,7 +156,7 @@ export async function loadOnDeck() {
     const scheduleBoxes = upcoming.slice(0, 5).map(g => {
       const gAway = g.teams.away;
       const gHome = g.teams.home;
-      const gIsHome = gHome.team.id === ORIOLES_ID;
+      const gIsHome = gHome.team.id === activeTeamId;
       const gOpp = gIsHome ? gAway : gHome;
       const gOppAbbr = TEAM_ABBREV[gOpp.team.id] ?? gOpp.team.name.slice(0, 3);
       const gDate = new Date(g.gameDate);
@@ -239,8 +241,10 @@ export async function loadRoster() {
     // cache (fallback songs or already-loaded data), then re-render once the
     // song fetch resolves if it was still in flight.
     const songPromise = ensureWalkupSongsLoaded(PROXY);
+    const activeTeamId = getActiveTeamId();
+    const teamPage = TEAM_PAGE[activeTeamId] ?? 'orioles';
     const data = await fetch(
-      `${MLB}/teams/${ORIOLES_ID}/roster?rosterType=40Man&season=${SEASON}`
+      `${MLB}/teams/${activeTeamId}/roster?rosterType=40Man&season=${SEASON}`
     ).then(r => r.json());
 
     const all = data.roster ?? [];
@@ -309,7 +313,7 @@ export async function loadRoster() {
         h += sortByPos(minors).map(p => renderItem(p, { muted: true })).join('');
       }
       return `<div class="roster-list">${h}</div>
-        <a class="widget-link" href="https://www.mlb.com/orioles/roster/40-man" target="_blank" rel="noopener">Full 40-man roster ↗</a>`;
+        <a class="widget-link" href="https://www.mlb.com/${teamPage}/roster/40-man" target="_blank" rel="noopener">Full 40-man roster ↗</a>`;
     };
 
     wrap.innerHTML = buildHtml();
@@ -331,8 +335,10 @@ export async function loadTransactions() {
     startD.setDate(startD.getDate() - 14);
     const start = startD.toISOString().slice(0, 10);
 
+    const activeTeamId = getActiveTeamId();
+    const teamPage = TEAM_PAGE[activeTeamId] ?? 'orioles';
     const data = await fetch(
-      `${MLB}/transactions?teamId=${ORIOLES_ID}&startDate=${start}&endDate=${end}`
+      `${MLB}/transactions?teamId=${activeTeamId}&startDate=${start}&endDate=${end}`
     ).then(r => r.json());
 
     const txns = (data.transactions ?? [])
@@ -360,7 +366,7 @@ export async function loadTransactions() {
     }).join('');
 
     wrap.innerHTML = `<div class="txn-list">${txnHtml}</div>
-      <a class="widget-link" href="https://www.mlb.com/orioles/roster/transactions" target="_blank" rel="noopener">View all transactions ↗</a>`;
+      <a class="widget-link" href="https://www.mlb.com/${teamPage}/roster/transactions" target="_blank" rel="noopener">View all transactions ↗</a>`;
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }
@@ -371,8 +377,8 @@ export async function loadInjuryReport() {
   const wrap = $('ilWrap');
   try {
     const [data, txData] = await Promise.all([
-      fetch(`${MLB}/teams/${ORIOLES_ID}/roster?rosterType=40Man`).then(r => r.json()),
-      fetch(`${MLB}/transactions?teamId=${ORIOLES_ID}&startDate=${SEASON}-01-01&endDate=${localDateStr(0)}`).then(r => r.json()).catch(() => ({ transactions: [] })),
+      fetch(`${MLB}/teams/${getActiveTeamId()}/roster?rosterType=40Man`).then(r => r.json()),
+      fetch(`${MLB}/transactions?teamId=${getActiveTeamId()}&startDate=${SEASON}-01-01&endDate=${localDateStr(0)}`).then(r => r.json()).catch(() => ({ transactions: [] })),
     ]);
 
     const injured = (data.roster ?? []).filter(p =>
@@ -528,12 +534,15 @@ function thumbnailForMlbItem(item) {
 }
 
 async function fetchOriolesRecapVideo() {
+  const activeTeamId = getActiveTeamId();
   const endDate = localDateStr(0);
   const startDate = localDateStr(-4);
 
   const [playlistData, gameData] = await Promise.all([
-    fetch(`${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${ORIOLES_RECAP_PLAYLIST}`)}`).then(r => r.json()),
-    fetch(`${MLB}/schedule?sportId=1&teamId=${ORIOLES_ID}&startDate=${startDate}&endDate=${endDate}&hydrate=game(content(media(epg)))`).then(r => r.json()),
+    activeTeamId === ORIOLES_ID
+      ? fetch(`${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${ORIOLES_RECAP_PLAYLIST}`)}`).then(r => r.json())
+      : Promise.resolve({ items: [] }),
+    fetch(`${MLB}/schedule?sportId=1&teamId=${activeTeamId}&startDate=${startDate}&endDate=${endDate}&hydrate=game(content(media(epg)))`).then(r => r.json()),
   ]);
 
   const recapItems = playlistData.items ?? [];
@@ -553,7 +562,7 @@ async function fetchOriolesRecapVideo() {
     const videoId = extractVideoId(link);
     return {
       title: cleanFeedText(matchingPlaylistItem.title),
-      label: 'Orioles Game Recaps',
+      label: `${TEAM_ABBREV[getActiveTeamId()] ?? 'Orioles'} Game Recaps`,
       thumb: matchingPlaylistItem.thumbnail || (videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : ''),
       url: link,
       videoId,
@@ -564,8 +573,8 @@ async function fetchOriolesRecapVideo() {
   if (!mlbItem) return null;
 
   return {
-    title: cleanFeedText(mlbItem.headline || mlbItem.title || mlbItem.blurb || 'Orioles Recap'),
-    label: 'Orioles Recap',
+    title: cleanFeedText(mlbItem.headline || mlbItem.title || mlbItem.blurb || `${TEAM_ABBREV[getActiveTeamId()] ?? 'Game'} Recap`),
+    label: `${TEAM_ABBREV[getActiveTeamId()] ?? 'Orioles'} Recap`,
     thumb: thumbnailForMlbItem(mlbItem),
     url: `https://www.mlb.com/video/${mlbItem.slug || mlbItem.id}`,
     videoId: '',
@@ -813,7 +822,7 @@ const ROY_PITCHING_ORDER = ['earnedRunAverage', 'strikeouts', 'walksAndHitsPerIn
 
 function leadersFetchUrl(scope) {
   if (scope === 'orioles') {
-    return `${MLB}/teams/${ORIOLES_ID}/leaders?leaderCategories=${TEAM_LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R&playerPool=Qualified`;
+    return `${MLB}/teams/${getActiveTeamId()}/leaders?leaderCategories=${TEAM_LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R&playerPool=Qualified`;
   }
   const leagueParam = scope === 'al' ? '&leagueId=103' : scope === 'nl' ? '&leagueId=104' : '';
   return `${MLB}/stats/leaders?leaderCategories=${LEAGUE_LEADERS_CATS}&season=${SEASON}&leaderGameTypes=R${leagueParam}&playerPool=Qualified&limit=1`;
@@ -880,7 +889,7 @@ function renderLeaders() {
   if (!cached) { wrap.innerHTML = '<span class="sidebar-msg">Loading…</span>'; return; }
 
   const scopeHtml = `<div class="leaders-scope">
-    <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles"><img class="leaders-scope-logo" src="${teamLogoSrc(110, 12)}" alt="" width="12" height="12" loading="eager" decoding="async">O's</button>
+    <button class="leaders-scope-btn${leadersScope === 'orioles' ? ' active' : ''}" data-scope="orioles"><img class="leaders-scope-logo" src="${teamLogoSrc(getActiveTeamId(), 12)}" alt="" width="12" height="12" loading="eager" decoding="async">${TEAM_ABBREV[getActiveTeamId()] ?? "O's"}</button>
     <button class="leaders-scope-btn${leadersScope === 'al' ? ' active' : ''}" data-scope="al"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://midfield.mlbstatic.com/v1/team/american-league/logo" alt="" width="12" height="12" loading="eager" decoding="async">AL</button>
     <button class="leaders-scope-btn${leadersScope === 'nl' ? ' active' : ''}" data-scope="nl"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://midfield.mlbstatic.com/v1/team/national-league/logo" alt="" width="12" height="12" loading="eager" decoding="async">NL</button>
     <button class="leaders-scope-btn${leadersScope === 'mlb' ? ' active' : ''}" data-scope="mlb"><img class="leaders-scope-logo leaders-scope-logo--league" src="https://www.mlbstatic.com/team-logos/apple-touch-icons-180x180/mlb.png" alt="" width="12" height="12" loading="eager" decoding="async">MLB</button>
@@ -928,13 +937,18 @@ function renderLeaders() {
 export function loadContracts() {
   const wrap = $('contractsWrap');
   if (!wrap) return;
+  const activeTeamId = getActiveTeamId();
+  const teamSlug = TEAM_SLUG[activeTeamId] ?? 'orioles';
+  const teamPage = TEAM_PAGE[activeTeamId] ?? 'orioles';
+  const teamAbbrev = TEAM_ABBREV[activeTeamId] ?? 'Orioles';
+  const spotracSlug = teamPage.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   wrap.innerHTML = `
-    <p class="contracts-blurb">Salary, contract type, and payroll data for the 2026 Orioles roster.</p>
-    <a class="widget-link-card" href="https://www.fangraphs.com/roster-resource/payroll/orioles" target="_blank" rel="noopener">
+    <p class="contracts-blurb">Salary, contract type, and payroll data for the ${new Date().getFullYear()} ${teamAbbrev} roster.</p>
+    <a class="widget-link-card" href="https://www.fangraphs.com/roster-resource/payroll/${teamSlug}" target="_blank" rel="noopener">
       <span class="widget-link-card-label">Contracts &amp; Payroll</span>
       <span class="widget-link-card-sub">FanGraphs Roster Resource ↗</span>
     </a>
-    <a class="widget-link-card" href="https://www.spotrac.com/mlb/baltimore-orioles/payroll/" target="_blank" rel="noopener">
+    <a class="widget-link-card" href="https://www.spotrac.com/mlb/${spotracSlug}/payroll/" target="_blank" rel="noopener">
       <span class="widget-link-card-label">Spotrac Payroll</span>
       <span class="widget-link-card-sub">Salaries, options &amp; totals ↗</span>
     </a>`;

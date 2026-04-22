@@ -7,6 +7,7 @@ import {
   SEASON,
   TEAM_ABBREV,
   TEAM_SLUG,
+  getActiveTeamId,
 } from './config.js';
 import { $, esc, localDateStr, dayLabel, formatGameTime, teamLogoSrc } from './utils.js';
 import { ensureWalkupSongsLoaded, getWalkupSongUrls } from './walkup-songs.js';
@@ -35,9 +36,10 @@ function teamAbbr(team) {
 }
 
 function sortGamesOrioles(games) {
+  const activeTeam = getActiveTeamId();
   return [...games].sort((a, b) => {
-    const aO = a.teams.away.team.id === ORIOLES_ID || a.teams.home.team.id === ORIOLES_ID;
-    const bO = b.teams.away.team.id === ORIOLES_ID || b.teams.home.team.id === ORIOLES_ID;
+    const aO = a.teams.away.team.id === activeTeam || a.teams.home.team.id === activeTeam;
+    const bO = b.teams.away.team.id === activeTeam || b.teams.home.team.id === activeTeam;
     if (aO && !bO) return -1;
     if (!aO && bO) return 1;
     return new Date(a.gameDate) - new Date(b.gameDate);
@@ -85,7 +87,8 @@ export function getScoreChipStatus(g) {
 function renderGameChip(g) {
   const away = g.teams.away;
   const home = g.teams.home;
-  const hasOrioles = away.team.id === ORIOLES_ID || home.team.id === ORIOLES_ID;
+  const activeTeam = getActiveTeamId();
+  const hasOrioles = away.team.id === activeTeam || home.team.id === activeTeam;
   const { stateClass, statusInner, isPreviewLike, isFinal } = getScoreChipStatus(g);
   const awayScore = (!isPreviewLike && away.score != null) ? away.score : '';
   const homeScore = (!isPreviewLike && home.score != null) ? home.score : '';
@@ -590,7 +593,8 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
   const isFinal = game.status?.abstractGameState === 'Final';
   const awayId = game.teams?.away?.team?.id;
   const homeId = game.teams?.home?.team?.id;
-  const isOriolesGame = awayId === ORIOLES_ID || homeId === ORIOLES_ID;
+  const activeTeam = getActiveTeamId();
+  const isOriolesGame = awayId === activeTeam || homeId === activeTeam;
 
   const notes = [];
   let badge = 'Scouting Report';
@@ -620,8 +624,8 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
     const diff = offScore - defScore;
     const absLead = Math.abs(diff);
     const lateGame = Number.isFinite(Number(inning)) && Number(inning) >= 7;
-    const oriolesBatting = offense.team?.id === ORIOLES_ID;
-    const oriolesPitching = defense.team?.id === ORIOLES_ID;
+    const oriolesBatting = offense.team?.id === activeTeam;
+    const oriolesPitching = defense.team?.id === activeTeam;
     pitchMix = renderScoutPitchMix(arsenals?.current ?? null, pitcher?.fullName ?? pitcher?.lastInitName ?? '');
     const liveMusicRows = [];
     if (oriolesBatting) {
@@ -681,9 +685,9 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
       leverageNote = `${playerLabel(batter)} at the plate with the tying run in scoring position.`;
     } else if (diff > 0 && diff <= 3 && lateGame) {
       if (isOriolesGame && oriolesPitching) {
-        leverageNote = `${playerLabel(pitcher)} protecting a ${diff}-run Orioles lead in the ${inning}${ordinalSuffix(inning)}.`;
+        leverageNote = `${playerLabel(pitcher)} protecting a ${diff}-run lead in the ${inning}${ordinalSuffix(inning)}.`;
       } else if (isOriolesGame && oriolesBatting) {
-        leverageNote = `Orioles up ${diff} in the ${inning}${ordinalSuffix(inning)} — ${playerLabel(batter)} can extend the lead.`;
+        leverageNote = `Up ${diff} in the ${inning}${ordinalSuffix(inning)} — ${playerLabel(batter)} can extend the lead.`;
       } else {
         leverageNote = `${playerLabel(pitcher)} protecting a ${diff}-run lead, ${inning}${ordinalSuffix(inning)}.`;
       }
@@ -727,27 +731,30 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
     const homePitcher = game.teams?.home?.probablePitcher?.fullName;
     const mc = matchupCtx;
     if (mc && isOriolesGame) {
-      const oriolesPitcherVs = awayId === ORIOLES_ID ? mc.awayPitcherVs : mc.homePitcherVs;
-      const oppAbbr = TEAM_ABBREV[awayId === ORIOLES_ID ? game.teams?.home?.team?.id : game.teams?.away?.team?.id] ?? '';
-      if (oriolesPitcherVs?.gamesPlayed >= 1) {
-        const gp = oriolesPitcherVs.gamesPlayed;
-        const oppBA = oriolesPitcherVs.avg ?? '';
-        const k = oriolesPitcherVs.strikeOuts ?? '';
-        const oriolesPitcherName = compactBoxName(awayId === ORIOLES_ID ? awayPitcher : homePitcher);
+      const isActiveTeamAway = awayId === activeTeam;
+      const teamPitcherVs = isActiveTeamAway ? mc.awayPitcherVs : mc.homePitcherVs;
+      const oppId = isActiveTeamAway ? homeId : awayId;
+      const oppAbbr = TEAM_ABBREV[oppId] ?? '';
+      const activeAbbr = TEAM_ABBREV[activeTeam] ?? '';
+      if (teamPitcherVs?.gamesPlayed >= 1) {
+        const gp = teamPitcherVs.gamesPlayed;
+        const oppBA = teamPitcherVs.avg ?? '';
+        const k = teamPitcherVs.strikeOuts ?? '';
+        const teamPitcherName = compactBoxName(isActiveTeamAway ? awayPitcher : homePitcher);
         const parts = [`${gp} G`];
         if (oppBA) parts.push(`opp. BA ${oppBA}`);
         if (k !== '') parts.push(`${k} K`);
-        notes.push(`${oriolesPitcherName} vs ${oppAbbr} (career): ${parts.join(', ')}`);
+        notes.push(`${teamPitcherName} vs ${oppAbbr} (career): ${parts.join(', ')}`);
       }
-      const oriolesStats = awayId === ORIOLES_ID ? mc.awayTeamStats : mc.homeTeamStats;
-      if (oriolesStats?.avg) {
-        const avg = oriolesStats.avg;
-        const obp = oriolesStats.obp ?? '';
-        const gp = oriolesStats.gamesPlayed ?? 0;
-        const rpg = gp > 0 && oriolesStats.runs != null ? (oriolesStats.runs / gp).toFixed(1) : null;
+      const teamStats = isActiveTeamAway ? mc.awayTeamStats : mc.homeTeamStats;
+      if (teamStats?.avg) {
+        const avg = teamStats.avg;
+        const obp = teamStats.obp ?? '';
+        const gp = teamStats.gamesPlayed ?? 0;
+        const rpg = gp > 0 && teamStats.runs != null ? (teamStats.runs / gp).toFixed(1) : null;
         const parts = [`${avg}/${obp}`];
         if (rpg) parts.push(`${rpg} R/G`);
-        notes.push(`BAL offense: ${parts.join(', ')}`);
+        notes.push(`${activeAbbr} offense: ${parts.join(', ')}`);
       }
     } else if (!isOriolesGame) {
       const awayAbbr = TEAM_ABBREV[awayId] ?? 'Away';
@@ -1098,13 +1105,14 @@ export async function loadScores() {
 
       const isPreview = g.status?.abstractGameState === 'Preview';
       const isLive = g.status?.abstractGameState === 'Live';
-      const isOriolesGame = g.teams?.away?.team?.id === ORIOLES_ID || g.teams?.home?.team?.id === ORIOLES_ID;
+      const _activeTeam = getActiveTeamId();
+      const isOriolesGame = g.teams?.away?.team?.id === _activeTeam || g.teams?.home?.team?.id === _activeTeam;
       const awayPitcherId = g.teams?.away?.probablePitcher?.id;
       const homePitcherId = g.teams?.home?.probablePitcher?.id;
       const awayTeamId = g.teams?.away?.team?.id;
       const homeTeamId = g.teams?.home?.team?.id;
       const livePitcherId = isLive && isOriolesGame
-        ? (g.linescore?.offense?.team?.id === ORIOLES_ID
+        ? (g.linescore?.offense?.team?.id === _activeTeam
             ? g.linescore?.offense?.pitcher?.id
             : g.linescore?.defense?.pitcher?.id)
         : null;

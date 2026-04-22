@@ -2,6 +2,9 @@ import { loadPrefs, savePrefs, getDisabledSources, saveDisabledSources } from '.
 import { state } from './state.js';
 import { applyTheme } from './theme.js';
 import { $, syncOriolesLogos } from './utils.js';
+import { initTeamPicker } from './teamPicker.js';
+import { getActiveTeamId, TEAM_ABBREV } from './config.js';
+import { TEAM_CONFIG } from './teamConfig.js';
 import { loadScores } from './scores.js';
 import {
   loadFeeds,
@@ -181,6 +184,7 @@ function setupEvents() {
     $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.defview === (p.defaultView || 'list')));
     renderSourceSettings();
+    updateSourceGroupLabel();
   });
   $('settingsClose').addEventListener('click', () => $('settingsOverlay').classList.add('hidden'));
   $('settingsOverlay').addEventListener('click', e => {
@@ -293,8 +297,29 @@ function setupEvents() {
   });
 }
 
+// ── Team pill update ──────────────────────────────────────────────
+function updateTeamPill() {
+  const activeTeamId = getActiveTeamId();
+  const teamName = TEAM_CONFIG[activeTeamId]?.name ?? TEAM_ABBREV[activeTeamId] ?? 'Team';
+  const logo = document.getElementById('teamPillLogo');
+  const label = document.getElementById('teamPillLabel');
+  if (logo) logo.src = `https://www.mlbstatic.com/team-logos/${activeTeamId}.svg`;
+  if (label) label.textContent = teamName;
+}
+
+// ── Source settings group label update ────────────────────────────
+function updateSourceGroupLabel() {
+  const activeTeamId = getActiveTeamId();
+  const teamName = TEAM_CONFIG[activeTeamId]?.name ?? TEAM_ABBREV[activeTeamId] ?? 'Team';
+  document.querySelectorAll('.source-setting-group-label').forEach(el => {
+    if (el.textContent === 'Orioles') el.textContent = teamName;
+  });
+}
+
 // ── Init ──────────────────────────────────────────────────────────
 async function init() {
+  initTeamPicker();
+  updateTeamPill();
   setupEvents();
 
   await Promise.allSettled([
