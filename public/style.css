@@ -3527,6 +3527,7 @@ a.il-name:hover { color: var(--orange); }
 }
 .btn-team-picker:hover { border-color: var(--orange); background: var(--orange-dim); }
 .team-picker-active-logo { display: block; width: 20px; height: 20px; object-fit: contain; }
+.team-picker-active-name { font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
 
 .team-picker-overlay {
   position: fixed; inset: 0; z-index: 2000;

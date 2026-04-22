@@ -86,12 +86,18 @@ export function initTeamPicker() {
   if (!headerRight) return;
 
   const activeTeamId = getActiveTeamId();
+  const teamName = TEAM_CONFIG[activeTeamId]?.name ?? 'Team';
   applyTeamColor(activeTeamId);
 
   const btn = document.createElement('button');
   btn.className = 'btn-team-picker';
   btn.setAttribute('aria-label', 'Change team');
-  btn.innerHTML = `<img class="team-picker-active-logo" src="https://www.mlbstatic.com/team-logos/${activeTeamId}.svg" alt="" width="20" height="20" loading="eager">`;
+  btn.title = `My Team: ${teamName}`;
+  btn.innerHTML = `
+    <img class="team-picker-active-logo" src="https://www.mlbstatic.com/team-logos/${activeTeamId}.svg"
+      alt="${teamName}" width="20" height="20" loading="eager"
+      onerror="this.style.display='none'">
+    <span class="team-picker-active-name">${teamName}</span>`;
   btn.addEventListener('click', openOverlay);
   headerRight.prepend(btn);
 }
