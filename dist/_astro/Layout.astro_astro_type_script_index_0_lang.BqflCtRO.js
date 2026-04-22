@@ -1,0 +1,1 @@
+import{g as c}from"./teamConfig.ClYXjOh9.js";const e=c(),t=document.querySelector(".team-logo");t&&(t.src=e.logoUrl,t.alt=e.name);const o=document.querySelector(".site-title");o&&(o.textContent=e.city+" Fanbase");
