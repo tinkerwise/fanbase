@@ -1,0 +1,182 @@
+Yard Report Changelog
+Week of April 14, 2026
+
+April 14, 2026
+
+Schedule Page
+- Added a full-season Orioles schedule page at /schedule/.
+- Month view: 7-column calendar grid (Sun–Sat) with compact game chips per day showing opponent logo, home/away indicator, result (W/L + score, color-coded green/red) or start time, series badge (G1/3) on multi-game series, and weather emoji for upcoming games within 10 days.
+- Week view: 7-column day-by-day layout with full game cards showing opponent name, result or time, weather, probable pitcher (last name), broadcast network pill, series position ("Game X of Y"), and home/away stretch label.
+- Navigation: previous/next and Today buttons for month and week views; Month/Week view toggle.
+- Series detection groups consecutive games vs. the same opponent (within 2 days); first game of each series shows the full series label ("vs NYY (3-game series)") in month view.
+- Broadcast pill highlights national TV (ESPN, FS1, Apple TV+, Peacock, TBS, MLBN); falls back to MASN if no national broadcast is listed.
+- Weather fetched via Open-Meteo for upcoming games within the next 10 days, reusing the existing weather module.
+- Theme applied on load using the existing theme.js module (respects dark/light/system/city-connect preferences and Friday auto-CC).
+- "Full Schedule" link added to the left sidebar below the On Deck widget.
+- Breadcrumb header links back to the main Yard Report page.
+- Responsive: month grid adapts to small screens; week view stacks to a single column at ≤600px.
+
+---
+
+Week of April 4 - April 10, 2026
+
+April 5, 2026
+
+Documentation
+- Trimmed `README.md` into a more standard public-facing project README.
+- Moved maintainer-heavy workflow, deployment, source inventory, and operations detail into `brief.txt`.
+- Documented recommended cron cadence as minimal operational checks: deploy-time smoke tests plus optional daily homepage/proxy health checks, not scheduled content-refresh jobs.
+- Removed Orioles Hangout and The Long Game from the feed source mix and maintainer source inventory.
+- Refreshed `README.md`, `brief.txt`, and `updates.txt` so the docs match the current site: Orioles/MLB/MiLB feed categories, Around the Horn story cards, score-bug popovers, On Deck weather behavior, and current sidebar/widget structure.
+
+Operations
+- Added scheduled GitHub Actions health checks for daily smoke + homepage verification and daily production proxy/feed verification, while keeping deploy-on-push behavior separate.
+
+April 4, 2026 (afternoon)
+
+Score Bug Enhancements
+- Added pitch arsenal (pitch type, usage %, velocity) to probable pitcher scouting notes in preview-game popovers.
+- Fetches per-pitcher arsenal data from MLB Stats API `pitchArsenal` endpoint.
+- Displays pitches as pill badges sorted by usage %; shows top 5 pitches per pitcher.
+- Uses two-phase async loading: "Loading…" stub followed by populated arsenal pills once API responds.
+- Pitch type abbreviations: FF (Four-Seam), SI (Sinker), SL (Slider), CU (Curveball), CH (Changeup), FC (Cutter), FS (Splitter), SW (Sweeper), KC (Knuckle Curve), etc.
+- Live and final game popovers remain unchanged; scout notes focus on situational context.
+
+Popover Styling & Layout
+- Added team logos inline before player names in Key Hitters section (removed abbreviations, replaced with logos).
+- Added team logos to lineup popover titles followed by full team names (e.g., "Baltimore Orioles").
+- Added batter/pitcher handedness (L/R) as small inline indicators next to player names throughout popovers.
+
+Pitcher Organization & Matchup Context
+- Reordered pitchers in pitching lines by innings pitched (starters first, relievers by appearance).
+- Lineup display now includes batter handedness for better at-a-glance matchup context.
+
+On Deck Widget
+- On Deck now switches to the next upcoming game when today's Orioles game goes Live.
+- Weather display only shown for today's games; hidden when showing future games.
+
+Scout Notes Enhancement
+- Scout Notes now display for all game states (preview, live, final), not just live games.
+- Preview games show "Matchup" badge with probable pitcher names.
+- Final games show "Final" badge with result summary (win/loss/tie and score).
+
+Sidebar Improvements
+- Right sidebar (Yard Leaders, Roster, Injury Report, Transactions) now has scrollable behavior matching the left sidebar.
+- Both sidebars stick to the header and stay within viewport height with independent overflow.
+
+Podcast Widget
+- Fixed audio player to properly feed and play podcast audio from Megaphone RSS feed.
+- Changed preload from "none" to "metadata" for better UX (episode title and duration load immediately).
+- Removed incorrect HTML escaping on audio source URL.
+
+Removed Elements
+- Removed "Story" link from final score bug chips (no longer needed since users can click the chip itself to go to MLB Gameday).
+
+Documentation
+- Updated `README.md` to reflect pitcher arsenal feature and added MLB Stats API pitch arsenal endpoint documentation.
+- Updated `brief.txt` with guidance on prompt patterns and future refactoring priorities.
+- Updated `updates.txt` with completed feature summary.
+
+Week of March 28 - April 3, 2026
+
+April 4, 2026
+
+Podcast Widget
+- Added a compact `Baseball Tonight with Buster Olney` player above the Video widget in the left sidebar.
+- The podcast card now loads the latest playable episode from the public feed and renders a small native audio player with `preload="none"` to keep browser load down.
+- Added direct links to the episode details page and the show archive as lightweight fallbacks.
+
+Infrastructure
+- Extended the RSS proxy allowlist to include Megaphone so the podcast feed can be fetched safely in production.
+- Updated the proxy JSON payload to expose audio enclosure URLs and MIME types in addition to images and text content.
+
+Documentation
+- Updated `README.md`, `brief.txt`, `updates.txt`, and `changelog.txt` to reflect the shipped podcast player and proxy support.
+- Added a fuller documentation inventory of the site's external RSS feeds, podcast sources, video playlists, APIs, and asset providers.
+
+Video Widget
+- Removed The Chill from the video rotation.
+- Kept Orioles Game Recaps in the widget, but now fall back to MLB game media for the latest completed Orioles game when the Orioles YouTube recap playlist is stale.
+
+Deployment
+- Made GitHub Actions the clearer primary release path by deploying to an explicit FTP target path instead of relying on the server's default directory.
+- Documented cPanel Git Version Control as a legacy/manual fallback rather than the normal release workflow.
+
+April 3, 2026
+
+Masthead
+- Reworked the Yard Report masthead to sit more cleanly inline with the full-width header instead of crowding the score bar.
+- Kept the logo visually larger while slimming its horizontal footprint.
+- Replaced the previous Yard wordmark font with a cleaner athletic display face and refined the Camden-inspired banner treatment.
+
+Lineups
+- Added lineup-card content to the score bug hover popover so each game chip can surface posted/not-posted lineup state.
+- Updated the On Deck lineup indicator to always show the lineup-card icon, grey when unavailable and green when at least one lineup is posted.
+- Tightened lineup popover rows so player names stay on one line with smaller type and truncation instead of wrapping.
+- Expanded the lineup popovers so names fit more comfortably and gave them a warmer distinct background treatment.
+- Simplified the On Deck lineup badge to an icon-only state without the numeric `2/2` counter.
+- Added probable pitchers to lineup popovers so the starters appear even before lineups are posted.
+- Reworked the On Deck lineup popover so it can expand over the page instead of being constrained to the sidebar width.
+- Standardized the lineup/box popover surfaces to use stronger contrasting backgrounds against the rest of the page.
+- Removed the On Deck lineup card hover and replaced it with a custom ballpark-style overlay graphic on hover.
+- Fixed the score bug schedule fetch so probable pitchers are actually available to lineup popovers.
+- Converted the On Deck stadium hover into a true popover below the card instead of an in-place overlay.
+- Replaced the generic stadium art with venue-specific field-dimensions data from the MLB venue API.
+- Simplified score bug lineup popovers so lineup states only show `Unavailable` when nothing is posted, instead of showing `Posted`.
+
+Light Theme
+- Improved light-mode masthead contrast so the header wordmark and banner treatment stand apart more clearly from the page background.
+
+Right Sidebar
+- Let the right-side widgets expand to their full content height instead of clipping to the viewport.
+- Removed the remaining internal height caps from the Roster and Transactions lists so both widgets expand to full content on desktop and mobile.
+- Changed the right sidebar to scroll with the page more naturally instead of behaving like a sticky full-height rail.
+
+Yard Leaders
+- Stacked batting and pitching leaders into one expanded widget and removed the separate batting/pitching toggle labels.
+
+Feed and Toolbar
+- Tightened the main feed toolbar layout.
+- Left-justified the category pills (All / Orioles / MLB / MiLB).
+- Right-justified the source filter and view controls.
+- Removed the article count and "Last X days" helper text above the feed for a cleaner top-of-feed presentation.
+
+Score Bugs
+- Added dedicated score-chip states for Rain Delay and Postponed games.
+- Delay/postponement states now get their own labels and visual accents instead of falling back to generic preview/live/final handling.
+
+Yard Leaders
+- Updated stat-label links so batting stats open the corresponding Baseball Savant leaderboard/custom stat view.
+- Reworked pitching stat links against the live Baseball Savant site.
+- Exact Savant custom-column links now support ERA, SO, W, QS, and GS.
+- WHIP, K/9, and BB/9 now route to the closest valid Savant custom views built from the live available pitcher fields.
+- Changed the pitching label from K to SO.
+
+Right Sidebar
+- Reordered the right sidebar so Injury Report now appears above Transactions.
+- Expanded the Injury Report widget to include injury notes in a more compact layout.
+- Injury notes from the roster feed are now displayed under each injured player when available.
+
+Video Widget
+- Removed Jomboy Breakdowns from the video rotation.
+- Added Orioles Game Recaps.
+- Added The Chill.
+- Added Orioles Moments as a random-per-load playlist entry so a different Orioles highlight can appear on each page refresh.
+
+Easter Eggs
+- Improved the "magic" Easter egg:
+  - the bird now appears centered in the viewport
+  - confetti repeats for the full visible/audio duration instead of firing once
+- Added a new "heritage" Easter egg trigger.
+- Typing "heritage" in search now launches a temporary Heritage Edition mode:
+  - forces grid view during the effect
+  - transforms feed cards into vintage baseball-card-inspired designs
+  - shows a Heritage Edition badge
+  - restores the user's previous view after the effect ends
+
+Infrastructure
+- Extended the RSS proxy to optionally return raw text/HTML for trusted pages, not just feed XML.
+- Added dev/prod support for using that proxy path to enrich client widgets with trusted page content.
+
+Documentation
+- Updated `README.md`, `brief.txt`, `updates.txt`, and `changelog.txt` to reflect the current shipped behavior, including toolbar alignment changes, score-bug delay states, Yard Leaders updates, the enhanced IL widget, the revised video widget, and the new Heritage Easter egg.
