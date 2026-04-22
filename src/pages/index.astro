@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout>
+  <div class="page-grid">
+    <section class="feeds-section">
+      <h2>Latest News</h2>
+      <div id="feeds-panel">
+        <p class="loading">Loading feeds&hellip;</p>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="widget" id="scores-widget">
+        <h3>Recent Scores</h3>
+        <div class="widget-content" id="scores-list">
+          <p class="loading">Loading&hellip;</p>
+        </div>
+      </div>
+
+      <div class="widget" id="standings-widget">
+        <h3>AL East Standings</h3>
+        <div class="widget-content" id="standings-list">
+          <p class="loading">Loading&hellip;</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</Layout>
+
+<script>
+  import '../scripts/feeds.js';
+  import '../scripts/scores.js';
+  import '../scripts/sidebars.js';
+</script>

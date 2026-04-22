@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://www.mlb.com/orioles/news/rss.xml",
+    "label": "MLB.com — Orioles News",
+    "type": "rss"
+  },
+  {
+    "url": "https://www.espn.com/espn/rss/mlb/news",
+    "label": "ESPN — MLB News",
+    "type": "rss"
+  },
+  {
+    "url": "https://www.mlb.com/feeds/news/rss.xml",
+    "label": "MLB.com — General News",
+    "type": "rss"
+  }
+]
