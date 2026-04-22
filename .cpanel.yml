@@ -1,6 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=$HOME/public_html/fanbase
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R dist/* $DEPLOYPATH
+    - /bin/mkdir -p $HOME/public_html/fanbase
+    - /bin/cp -R dist/* $HOME/public_html/fanbase/
