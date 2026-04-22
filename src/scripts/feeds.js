@@ -1,3 +1,5 @@
+import { getActiveTeamId } from './config.js';
+
 async function loadFeeds() {
   const panel = document.getElementById('feeds-panel');
   if (!panel) return;
@@ -5,12 +7,15 @@ async function loadFeeds() {
   try {
     const res = await fetch('/feeds.json');
     if (!res.ok) throw new Error('Failed to load feeds');
-    const feeds = await res.json();
+    const allFeeds = await res.json();
+
+    const activeId = getActiveTeamId();
+    const feeds = allFeeds.filter(f => f.teamId === activeId || f.teamId === 0);
 
     panel.innerHTML = '';
 
     if (feeds.length === 0) {
-      panel.innerHTML = '<p class="loading">No feeds available.</p>';
+      panel.innerHTML = '<p class="loading">No feeds available for this team.</p>';
       return;
     }
 
