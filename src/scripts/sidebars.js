@@ -240,9 +240,9 @@ export async function loadRoster() {
     // block the render on songs. Render immediately with whatever is in the
     // cache (fallback songs or already-loaded data), then re-render once the
     // song fetch resolves if it was still in flight.
-    const songPromise = ensureWalkupSongsLoaded(PROXY);
     const activeTeamId = getActiveTeamId();
     const teamPage = TEAM_PAGE[activeTeamId] ?? 'orioles';
+    const songPromise = ensureWalkupSongsLoaded(PROXY, teamPage);
     const data = await fetch(
       `${MLB}/teams/${activeTeamId}/roster?rosterType=40Man&season=${SEASON}`
     ).then(r => r.json());
@@ -273,7 +273,7 @@ export async function loadRoster() {
       const pos = p.position?.abbreviation ?? '';
       const badge = opts.badge ? `<span class="roster-badge roster-badge--${opts.badgeType ?? 'il'}">${esc(opts.badge)}</span>` : '';
       const fullName = p.person.fullName;
-      const songUrls = getWalkupSongUrls(p.person.id, fullName);
+      const songUrls = getWalkupSongUrls(p.person.id, fullName, teamPage);
       const label = esc(fullName);
       let musicIcon;
       if (songUrls.length > 0) {

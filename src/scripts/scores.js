@@ -6,6 +6,7 @@ import {
   PROXY,
   SEASON,
   TEAM_ABBREV,
+  TEAM_PAGE,
   TEAM_SLUG,
   getActiveTeamId,
 } from './config.js';
@@ -316,11 +317,11 @@ export function renderPlayerNameLink(name, playerId, className = 'popover-player
 
 export { WALKUP_ICON_SVG };
 
-function renderLiveWalkupQueueRow(label, person) {
+function renderLiveWalkupQueueRow(label, person, teamPage = 'orioles') {
   if (!person?.fullName) return '';
   const fullName = person.fullName;
   const name = compactBoxName(fullName);
-  const urls = getWalkupSongUrls(person.id, fullName);
+  const urls = getWalkupSongUrls(person.id, fullName, teamPage);
   if (!urls.length) return '';
   return `<div class="live-music-row">
     <span class="live-music-label">${esc(label)}</span>
@@ -414,7 +415,9 @@ function renderLineupRows(team, gameState = 'preview', teamId = null) {
   const players = team?.battingOrder ?? [];
   const roster = team?.players ?? {};
   const lineupTeamId = teamId ?? team?.team?.id ?? null;
-  const isOriolesLineup = Number(lineupTeamId) === ORIOLES_ID;
+  const activeTeamId = getActiveTeamId();
+  const isActiveTeamLineup = Number(lineupTeamId) === activeTeamId;
+  const activeTeamPage = TEAM_PAGE[activeTeamId] ?? 'orioles';
   if (!players.length) return '<div class="score-lineups-empty">Lineup not yet posted</div>';
 
   if (gameState === 'final') {
@@ -432,10 +435,10 @@ function renderLineupRows(team, gameState = 'preview', teamId = null) {
       const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.baseOnBalls ?? 0, bs.stolenBases ?? 0]
         .map(v => `<span>${v}</span>`).join('');
       const hasActivity = (bs.atBats ?? 0) > 0 || (bs.baseOnBalls ?? 0) > 0;
-      const walkupUrls = isOriolesLineup ? getWalkupSongUrls(p.person?.id, fullName) : [];
+      const walkupUrls = isActiveTeamLineup ? getWalkupSongUrls(p.person?.id, fullName, activeTeamPage) : [];
       return `<div class="score-lineup-row${hasActivity ? '' : ' score-lineup-row--dnp'}${isSubstitution ? ' score-lineup-row--sub' : ''}">
         <span class="score-lineup-pos">${esc(pos)}</span>
-        <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null, 'popover-player-link', walkupUrls, isOriolesLineup ? fullName : '')}</span>
+        <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null, 'popover-player-link', walkupUrls, isActiveTeamLineup ? fullName : '')}</span>
         <span class="score-lineup-box-cols">${cols}</span>
       </div>`;
     }).join('');
@@ -457,10 +460,10 @@ function renderLineupRows(team, gameState = 'preview', teamId = null) {
       const cols = [bs.atBats ?? 0, bs.runs ?? 0, bs.hits ?? 0, bs.homeRuns ?? 0, bs.rbi ?? 0, bs.baseOnBalls ?? 0, bs.stolenBases ?? 0]
         .map(v => `<span>${v}</span>`).join('');
       const isCurrentBatter = p.gameStatus?.isCurrentBatter;
-      const walkupUrls = isOriolesLineup ? getWalkupSongUrls(p.person?.id, fullName) : [];
+      const walkupUrls = isActiveTeamLineup ? getWalkupSongUrls(p.person?.id, fullName, activeTeamPage) : [];
       return `<div class="score-lineup-row${isCurrentBatter ? ' score-lineup-row--current' : ''}${isSubstitution ? ' score-lineup-row--sub' : ''}">
         <span class="score-lineup-pos">${esc(pos)}</span>
-        <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null, 'popover-player-link', walkupUrls, isOriolesLineup ? fullName : '')}</span>
+        <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null, 'popover-player-link', walkupUrls, isActiveTeamLineup ? fullName : '')}</span>
         <span class="score-lineup-box-cols">${cols}</span>
       </div>`;
     }).join('');
@@ -485,10 +488,10 @@ function renderLineupRows(team, gameState = 'preview', teamId = null) {
       renderSlashSegment(rates.obp, obpValue > 0 && obpValue === leaders.obp, obpValue >= MLB_TOP_TEN_PROXY_RATES.obp),
       renderSlashSegment(rates.ops, opsValue > 0 && opsValue === leaders.ops, opsValue >= MLB_TOP_TEN_PROXY_RATES.ops),
     ].map((segment, idx) => `<span class="score-lineup-preview-stat score-lineup-preview-stat--${idx}">${segment}</span>`).join('');
-    const walkupUrls = isOriolesLineup ? getWalkupSongUrls(p.person?.id, fullName) : [];
+    const walkupUrls = isActiveTeamLineup ? getWalkupSongUrls(p.person?.id, fullName, activeTeamPage) : [];
     return `<div class="score-lineup-row">
       <span class="score-lineup-pos">${esc(pos)}</span>
-      <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null, 'popover-player-link', walkupUrls, isOriolesLineup ? fullName : '')}${batSideDisplay}</span>
+      <span class="score-lineup-name">${renderPlayerNameLink(name, p.person?.id ?? null, 'popover-player-link', walkupUrls, isActiveTeamLineup ? fullName : '')}${batSideDisplay}</span>
       <span class="score-lineup-box-cols score-lineup-box-cols--preview">${slashLine}</span>
     </div>`;
   }).join('');
@@ -626,17 +629,18 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
     const lateGame = Number.isFinite(Number(inning)) && Number(inning) >= 7;
     const oriolesBatting = offense.team?.id === activeTeam;
     const oriolesPitching = defense.team?.id === activeTeam;
+    const activeTeamPage = TEAM_PAGE[activeTeam] ?? 'orioles';
     pitchMix = renderScoutPitchMix(arsenals?.current ?? null, pitcher?.fullName ?? pitcher?.lastInitName ?? '');
     const liveMusicRows = [];
     if (oriolesBatting) {
       liveMusicRows.push(
-        renderLiveWalkupQueueRow('At Bat', batter),
-        renderLiveWalkupQueueRow('On Deck', onDeck),
-        renderLiveWalkupQueueRow('In Hole', inHole),
+        renderLiveWalkupQueueRow('At Bat', batter, activeTeamPage),
+        renderLiveWalkupQueueRow('On Deck', onDeck, activeTeamPage),
+        renderLiveWalkupQueueRow('In Hole', inHole, activeTeamPage),
       );
     }
     if (oriolesPitching && pitcher?.fullName) {
-      const warmupUrls = getWalkupSongUrls(pitcher.id, pitcher.fullName);
+      const warmupUrls = getWalkupSongUrls(pitcher.id, pitcher.fullName, activeTeamPage);
       if (warmupUrls.length) {
         liveMusicRows.push(`<div class="live-music-row">
           <span class="live-music-label">Warmup</span>
@@ -647,7 +651,7 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
     const queueRowsHtml = liveMusicRows.filter(Boolean).join('');
     if (queueRowsHtml) {
       liveWalkupQueue = `<div class="live-music-queue">
-        <div class="live-music-head">Orioles Walk-Up Queue</div>
+        <div class="live-music-head">${esc(TEAM_ABBREV[activeTeam] ?? 'Walk-Up')} Walk-Up Queue</div>
         ${queueRowsHtml}
       </div>`;
     }
@@ -790,8 +794,10 @@ function renderPreviewTeamCard(game, boxData, side, arsenalData) {
   const teamName = matchupTeam.teamName ?? boxTeam?.team?.teamName ?? matchupTeam.name ?? (side === 'away' ? 'Away Team' : 'Home Team');
   const probablePitcher = game.teams?.[side]?.probablePitcher?.fullName ?? 'TBD';
   const probablePitcherId = game.teams?.[side]?.probablePitcher?.id ?? null;
-  const probablePitcherSongs = Number(teamId) === ORIOLES_ID
-    ? getWalkupSongUrls(probablePitcherId, probablePitcher)
+  const _activeTeamId = getActiveTeamId();
+  const _activeTeamPage = TEAM_PAGE[_activeTeamId] ?? 'orioles';
+  const probablePitcherSongs = Number(teamId) === _activeTeamId
+    ? getWalkupSongUrls(probablePitcherId, probablePitcher, _activeTeamPage)
     : [];
   const lineupRows = boxTeam ? renderLineupRows(boxTeam, 'preview', teamId) : '<div class="score-lineups-empty">Loading lineup status…</div>';
   const arsenal = renderPitcherArsenal(arsenalData ?? null, { limit: 7, showVelo: false });
@@ -800,7 +806,7 @@ function renderPreviewTeamCard(game, boxData, side, arsenalData) {
     <div class="score-lineup-head">${logoHtml}<span class="score-lineup-label">${esc(teamName)}</span></div>
     <div class="preview-team-section">
       <div class="preview-team-subhead">Probable Pitcher</div>
-      <div class="probable-pitcher-row"><span class="probable-pitcher-name">${renderPlayerNameLink(probablePitcher, probablePitcherId, 'popover-player-link', probablePitcherSongs, Number(teamId) === ORIOLES_ID ? probablePitcher : '')}</span></div>
+      <div class="probable-pitcher-row"><span class="probable-pitcher-name">${renderPlayerNameLink(probablePitcher, probablePitcherId, 'popover-player-link', probablePitcherSongs, Number(teamId) === _activeTeamId ? probablePitcher : '')}</span></div>
       ${arsenal}
     </div>
     <div class="preview-team-section">
@@ -854,11 +860,12 @@ function renderPitchingLines(boxData, gameState = 'final') {
       const role = i === spIndex ? 'SP' : 'RP';
       const handDisplay = p.pitchHand ? `<span class="score-lineup-hand">(${p.pitchHand})</span>` : '';
       const cols = [p.ip, p.h, p.er, p.k].map(v => `<span>${v}</span>`).join('');
-      const isOriolesPitching = Number(team.team?.id) === ORIOLES_ID;
-      const walkupUrls = isOriolesPitching ? getWalkupSongUrls(p.playerId, p.name) : [];
+      const _pitchActiveId = getActiveTeamId();
+      const isActiveTeamPitching = Number(team.team?.id) === _pitchActiveId;
+      const walkupUrls = isActiveTeamPitching ? getWalkupSongUrls(p.playerId, p.name, TEAM_PAGE[_pitchActiveId] ?? 'orioles') : [];
       return `<div class="score-lineup-row">
         <span class="score-lineup-pos">${role}</span>
-        <span class="score-lineup-name">${renderPlayerNameLink(compactBoxName(p.name), p.playerId, 'popover-player-link', walkupUrls, isOriolesPitching ? p.name : '')}${handDisplay}</span>
+        <span class="score-lineup-name">${renderPlayerNameLink(compactBoxName(p.name), p.playerId, 'popover-player-link', walkupUrls, isActiveTeamPitching ? p.name : '')}${handDisplay}</span>
         <span class="score-lineup-box-cols score-lineup-box-cols--pitch">${cols}</span>
       </div>`;
     }).join('');
@@ -1142,7 +1149,7 @@ export async function loadScores() {
 
       const missing = [
         !boxscoreCache[pk]                                         && fetchBoxscore(pk),
-        isOriolesGame                                              && ensureWalkupSongsLoaded(PROXY),
+        isOriolesGame                                              && ensureWalkupSongsLoaded(PROXY, TEAM_PAGE[_activeTeam] ?? 'orioles'),
         isPreview && !arsenalCache[awayPitcherId]                 && fetchArsenal(awayPitcherId),
         isPreview && !arsenalCache[homePitcherId]                 && fetchArsenal(homePitcherId),
         isLive && livePitcherId && !arsenalCache[livePitcherId]   && fetchArsenal(livePitcherId),

@@ -1,8 +1,7 @@
-// ── Orioles player walkup songs ───────────────────────────────────
-// Dynamic source: official Orioles walk-up page.
-// Fallback map below is used when the live page cannot be fetched.
+// ── Player walkup songs ────────────────────────────────────────────
+// Dynamic source: official MLB team walk-up music pages.
+// FALLBACK_WALKUP_SONGS is used when the live page cannot be fetched (Orioles only).
 
-const ORIOLES_WALKUP_MUSIC_URL = 'https://www.mlb.com/orioles/ballpark/music';
 const WALKUP_SONG_TTL_MS = 1000 * 60 * 60 * 6;
 
 export const FALLBACK_WALKUP_SONGS = {
@@ -39,17 +38,27 @@ export const FALLBACK_WALKUP_SONGS = {
   681297: ['https://open.spotify.com/track/1EiLrPd8JMTcQUr1aLEUKi'], // Colton Cowser – Work (Gang Starr)
 };
 
-const walkupSongsCache = {
-  loadedAt: 0,
-  byPlayerId: { ...FALLBACK_WALKUP_SONGS },
-  byPlayerName: {},
+// Per-team caches keyed by team page slug (e.g. 'orioles', 'yankees')
+const teamCaches = {
+  orioles: {
+    loadedAt: 0,
+    byPlayerId: { ...FALLBACK_WALKUP_SONGS },
+    byPlayerName: {},
+  },
 };
-let walkupSongsPromise = null;
+const teamPromises = {};
+
+function getTeamCache(teamPage) {
+  if (!teamCaches[teamPage]) {
+    teamCaches[teamPage] = { loadedAt: 0, byPlayerId: {}, byPlayerName: {} };
+  }
+  return teamCaches[teamPage];
+}
 
 function normalizePlayerKey(name) {
   return String(name ?? '')
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-zA-Z0-9 ]+/g, ' ')
     .replace(/\s+/g, ' ')
     .toLowerCase()
@@ -132,7 +141,7 @@ function walkObjectForSongs(obj, byPlayerId, byPlayerName, depth) {
   }
 }
 
-function parseWalkupSongs(htmlText) {
+function parseWalkupSongs(htmlText, baseUrl) {
   const byPlayerId = {};
   const byPlayerName = {};
   if (!htmlText) return { byPlayerId, byPlayerName };
@@ -159,7 +168,7 @@ function parseWalkupSongs(htmlText) {
     if (el.tagName === 'A') {
       const rawHref = el.getAttribute('href') || '';
       let href = rawHref;
-      try { href = new URL(rawHref, ORIOLES_WALKUP_MUSIC_URL).href; } catch {}
+      try { href = new URL(rawHref, baseUrl).href; } catch {}
 
       const playerId = extractPlayerIdFromHref(href);
       if (playerId) {
@@ -187,51 +196,48 @@ function parseWalkupSongs(htmlText) {
   return { byPlayerId, byPlayerName };
 }
 
-function hasFreshWalkupSongs() {
-  return (Date.now() - walkupSongsCache.loadedAt) < WALKUP_SONG_TTL_MS;
+function hasFreshWalkupSongs(teamPage) {
+  return (Date.now() - getTeamCache(teamPage).loadedAt) < WALKUP_SONG_TTL_MS;
 }
 
-export async function ensureWalkupSongsLoaded(proxyBaseUrl) {
-  if (hasFreshWalkupSongs()) return walkupSongsCache;
-  if (walkupSongsPromise) return walkupSongsPromise;
-  if (!proxyBaseUrl) return walkupSongsCache;
+export async function ensureWalkupSongsLoaded(proxyBaseUrl, teamPage = 'orioles') {
+  if (hasFreshWalkupSongs(teamPage)) return getTeamCache(teamPage);
+  if (teamPromises[teamPage]) return teamPromises[teamPage];
+  if (!proxyBaseUrl) return getTeamCache(teamPage);
 
-  const targetUrl = `${proxyBaseUrl}?url=${encodeURIComponent(ORIOLES_WALKUP_MUSIC_URL)}&format=text`;
-  walkupSongsPromise = fetch(targetUrl)
+  const musicUrl = `https://www.mlb.com/${teamPage}/ballpark/music`;
+  const targetUrl = `${proxyBaseUrl}?url=${encodeURIComponent(musicUrl)}&format=text`;
+
+  teamPromises[teamPage] = fetch(targetUrl)
     .then(r => r.json())
     .then(payload => {
-      const parsed = parseWalkupSongs(payload?.text ?? '');
-      const mergedById = {};
-      for (const [id, urls] of Object.entries(FALLBACK_WALKUP_SONGS)) {
-        mergedById[id] = [...urls];
-      }
+      const parsed = parseWalkupSongs(payload?.text ?? '', musicUrl);
+      const cache = getTeamCache(teamPage);
+      const mergedById = teamPage === 'orioles' ? { ...FALLBACK_WALKUP_SONGS } : {};
       for (const [id, urls] of Object.entries(parsed.byPlayerId)) {
         mergedById[id] ??= [];
         for (const url of urls) {
           if (!mergedById[id].includes(url)) mergedById[id].push(url);
         }
       }
-      walkupSongsCache.byPlayerId = {
-        ...mergedById,
-      };
-      walkupSongsCache.byPlayerName = parsed.byPlayerName;
-      walkupSongsCache.loadedAt = Date.now();
-      return walkupSongsCache;
+      cache.byPlayerId = mergedById;
+      cache.byPlayerName = parsed.byPlayerName;
+      cache.loadedAt = Date.now();
+      return cache;
     })
-    .catch(() => walkupSongsCache)
-    .finally(() => {
-      walkupSongsPromise = null;
-    });
+    .catch(() => getTeamCache(teamPage))
+    .finally(() => { delete teamPromises[teamPage]; });
 
-  return walkupSongsPromise;
+  return teamPromises[teamPage];
 }
 
-export function getWalkupSongUrls(playerId, fullName = '') {
+export function getWalkupSongUrls(playerId, fullName = '', teamPage = 'orioles') {
+  const cache = getTeamCache(teamPage);
   if (playerId != null) {
-    const byId = walkupSongsCache.byPlayerId[String(playerId)];
+    const byId = cache.byPlayerId[String(playerId)];
     if (Array.isArray(byId) && byId.length) return byId;
   }
   const key = normalizePlayerKey(fullName);
-  const byName = key ? (walkupSongsCache.byPlayerName[key] ?? []) : [];
+  const byName = key ? (cache.byPlayerName[key] ?? []) : [];
   return Array.isArray(byName) ? byName : [];
 }
