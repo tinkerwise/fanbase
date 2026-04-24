@@ -3529,6 +3529,34 @@ a.il-name:hover { color: var(--orange); }
 .team-picker-active-logo { display: block; width: 20px; height: 20px; object-fit: contain; }
 .team-picker-active-name { font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
 
+/* First-load tooltip */
+.btn-team-picker--tooltip {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 2px var(--orange-dim), 0 0 8px 2px var(--orange-dim);
+  animation: team-picker-pulse 1.8s ease-in-out infinite;
+  position: relative;
+}
+@keyframes team-picker-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px var(--orange-dim), 0 0 6px 1px var(--orange-dim); }
+  50%       { box-shadow: 0 0 0 4px var(--orange-dim), 0 0 14px 4px var(--orange-dim); }
+}
+.team-picker-tooltip {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--orange); color: #fff;
+  font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+  padding: 5px 10px; border-radius: 6px;
+  pointer-events: none; z-index: 100;
+  animation: tooltip-drop 0.25s ease;
+}
+.team-picker-tooltip::before {
+  content: ''; position: absolute; bottom: 100%; right: 12px;
+  border: 5px solid transparent; border-bottom-color: var(--orange);
+}
+@keyframes tooltip-drop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .team-picker-overlay {
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
@@ -3571,3 +3599,23 @@ a.il-name:hover { color: var(--orange); }
 .team-picker-btn:hover { background: var(--orange-dim); border-color: var(--orange); }
 .team-picker-logo { width: 48px; height: 48px; object-fit: contain; }
 .team-picker-name { font-size: 0.62rem; color: var(--muted); text-align: center; line-height: 1.2; }
+
+/* ── No-team / first-visit state ─────────────────────────────── */
+/* Hide the team-specific feed pill until a team is chosen */
+.fanbase--no-team #teamPill { display: none; }
+
+/* On Deck placeholder */
+.on-deck-no-team {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 24px 16px; text-align: center;
+}
+.on-deck-no-team-icon { font-size: 2rem; opacity: 0.45; }
+.on-deck-no-team-msg {
+  font-size: 0.78rem; color: var(--muted); line-height: 1.45; max-width: 200px;
+}
+
+/* Sidebar placeholder for roster / IL / transactions */
+.sidebar-no-team-msg {
+  font-size: 0.75rem; color: var(--muted);
+  padding: 12px 0; text-align: center; line-height: 1.45;
+}

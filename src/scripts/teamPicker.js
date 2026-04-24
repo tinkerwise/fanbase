@@ -2,6 +2,8 @@
 import { TEAM_CONFIG } from './teamConfig.js';
 import { ORIOLES_ID, getActiveTeamId } from './config.js';
 
+const STORAGE_KEY = 'fanbase_team';
+
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
@@ -71,6 +73,30 @@ function closeOverlay() {
   document.body.style.overflow = '';
 }
 
+function isFirstLoad() {
+  try { return !localStorage.getItem(STORAGE_KEY); } catch { return false; }
+}
+
+function dismissTooltip(btn) {
+  btn.classList.remove('btn-team-picker--tooltip');
+  const tip = btn.querySelector('.team-picker-tooltip');
+  if (tip) tip.remove();
+}
+
+function attachTooltip(btn) {
+  if (!isFirstLoad()) return;
+  btn.classList.add('btn-team-picker--tooltip');
+  const tip = document.createElement('div');
+  tip.className = 'team-picker-tooltip';
+  tip.textContent = 'Pick your team!';
+  btn.appendChild(tip);
+  // Dismiss on any click outside
+  const handler = e => {
+    if (!btn.contains(e.target)) { dismissTooltip(btn); document.removeEventListener('click', handler, true); }
+  };
+  document.addEventListener('click', handler, true);
+}
+
 export function initTeamPicker() {
   const headerRight = document.querySelector('.header-right');
   if (!headerRight) return;
@@ -88,6 +114,9 @@ export function initTeamPicker() {
       alt="${teamName}" width="20" height="20" loading="eager"
       onerror="this.style.display='none'">
     <span class="team-picker-active-name">${teamName}</span>`;
-  btn.addEventListener('click', openOverlay);
+  btn.addEventListener('click', () => { dismissTooltip(btn); openOverlay(); });
   headerRight.prepend(btn);
+
+  // Show tooltip on first load or after localStorage is cleared
+  attachTooltip(btn);
 }

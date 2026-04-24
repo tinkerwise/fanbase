@@ -322,10 +322,11 @@ function renderLiveWalkupQueueRow(label, person, teamPage = 'orioles') {
   const fullName = person.fullName;
   const name = compactBoxName(fullName);
   const urls = getWalkupSongUrls(person.id, fullName, teamPage);
-  if (!urls.length) return '';
+  // Always render the row — pass fullName as fallback so a Spotify search icon
+  // appears even when no song URL is cached yet (live scrape loads async).
   return `<div class="live-music-row">
     <span class="live-music-label">${esc(label)}</span>
-    <span class="live-music-name">${renderPlayerNameLink(name, person.id ?? null, 'popover-player-link', urls)}</span>
+    <span class="live-music-name">${renderPlayerNameLink(name, person.id ?? null, 'popover-player-link', urls, fullName)}</span>
   </div>`;
 }
 
@@ -641,12 +642,10 @@ function renderScoutNotes(game, arsenals, matchupCtx = null) {
     }
     if (activeTeamPitching && pitcher?.fullName) {
       const warmupUrls = getWalkupSongUrls(pitcher.id, pitcher.fullName, activeTeamPage);
-      if (warmupUrls.length) {
-        liveMusicRows.push(`<div class="live-music-row">
-          <span class="live-music-label">Warmup</span>
-          <span class="live-music-name">${renderPlayerNameLink(compactBoxName(pitcher.fullName), pitcher.id ?? null, 'popover-player-link', warmupUrls)}</span>
-        </div>`);
-      }
+      liveMusicRows.push(`<div class="live-music-row">
+        <span class="live-music-label">Warmup</span>
+        <span class="live-music-name">${renderPlayerNameLink(compactBoxName(pitcher.fullName), pitcher.id ?? null, 'popover-player-link', warmupUrls, pitcher.fullName)}</span>
+      </div>`);
     }
     const queueRowsHtml = liveMusicRows.filter(Boolean).join('');
     if (queueRowsHtml) {

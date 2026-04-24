@@ -48,6 +48,11 @@ export function getActiveTeamId() {
   }
 }
 
+/** True when the user has never explicitly chosen a team (first load or cleared localStorage). */
+export function isFirstVisit() {
+  try { return !localStorage.getItem('fanbase_team'); } catch { return false; }
+}
+
 export const PITCH_NAMES = {
   'Four-Seam Fastball': '4-Seam', 'Two-Seam Fastball': '2-Seam', 'Sinker': 'Sinker',
   'Slider': 'Slider', 'Curveball': 'Curve', 'Changeup': 'Changeup', 'Cutter': 'Cutter',
