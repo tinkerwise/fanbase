@@ -3,7 +3,7 @@ import { state } from './state.js';
 import { applyTheme } from './theme.js';
 import { $, syncOriolesLogos } from './utils.js';
 import { initTeamPicker } from './teamPicker.js';
-import { getActiveTeamId, TEAM_ABBREV } from './config.js';
+import { getActiveTeamId, ORIOLES_ID, TEAM_ABBREV } from './config.js';
 import { TEAM_CONFIG } from './teamConfig.js';
 import { loadScores } from './scores.js';
 import {
@@ -180,8 +180,12 @@ function setupEvents() {
   $('settingsBtn').addEventListener('click', () => {
     $('settingsOverlay').classList.toggle('hidden');
     const p = loadPrefs();
+    const isOrioles = getActiveTeamId() === ORIOLES_ID;
     $('themeToggle').querySelectorAll('.theme-btn').forEach(b =>
-      b.classList.toggle('active', b.dataset.theme === (p.theme || 'dark')));
+      b.classList.toggle('active', b.dataset.theme === (p.theme || 'light')));
+    // City Connect is Orioles-only — hide the button for other teams
+    const ccBtn = $('themeToggle').querySelector('.theme-btn--cc');
+    if (ccBtn) ccBtn.style.display = isOrioles ? '' : 'none';
     $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.defview === (p.defaultView || 'list')));
     renderSourceSettings();
@@ -194,6 +198,7 @@ function setupEvents() {
     const btn = e.target.closest('[data-theme]');
     if (!btn) return;
     const newTheme = btn.dataset.theme;
+    if (newTheme === 'city-connect' && getActiveTeamId() !== ORIOLES_ID) return;
     const wasCC = document.documentElement.getAttribute('data-theme') === 'city-connect';
     applyTheme(newTheme);
     syncOriolesLogos();
