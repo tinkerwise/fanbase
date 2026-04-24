@@ -196,6 +196,33 @@ function parseWalkupSongs(htmlText, baseUrl) {
   return { byPlayerId, byPlayerName };
 }
 
+// ── Curated data (walkup-data.json, loaded once for all teams) ────
+let curatedData = null;
+let curatedDataPromise = null;
+
+function getCuratedData(dataUrl) {
+  if (curatedData !== null) return Promise.resolve(curatedData);
+  if (!dataUrl) return Promise.resolve({});
+  if (!curatedDataPromise) {
+    curatedDataPromise = fetch(dataUrl)
+      .then(r => r.ok ? r.json() : {})
+      .then(data => { curatedData = data ?? {}; return curatedData; })
+      .catch(() => { curatedData = {}; return {}; });
+  }
+  return curatedDataPromise;
+}
+
+function mergeUrlsInto(target, source) {
+  for (const [id, urls] of Object.entries(source ?? {})) {
+    if (!Array.isArray(urls) || !urls.length) continue;
+    target[id] ??= [];
+    for (const url of urls) {
+      const norm = normalizeSpotifyUrl(url);
+      if (norm && !target[id].includes(norm)) target[id].push(norm);
+    }
+  }
+}
+
 function hasFreshWalkupSongs(teamPage) {
   return (Date.now() - getTeamCache(teamPage).loadedAt) < WALKUP_SONG_TTL_MS;
 }
@@ -205,28 +232,30 @@ export async function ensureWalkupSongsLoaded(proxyBaseUrl, teamPage = 'orioles'
   if (teamPromises[teamPage]) return teamPromises[teamPage];
   if (!proxyBaseUrl) return getTeamCache(teamPage);
 
+  // walkup-data.json sits alongside rss-proxy.php on the server
+  const dataUrl = proxyBaseUrl.replace(/\/[^/]+$/, '/walkup-data.json');
   const musicUrl = `https://www.mlb.com/${teamPage}/ballpark/music`;
-  const targetUrl = `${proxyBaseUrl}?url=${encodeURIComponent(musicUrl)}&format=text`;
+  const proxyUrl = `${proxyBaseUrl}?url=${encodeURIComponent(musicUrl)}&format=text`;
 
-  teamPromises[teamPage] = fetch(targetUrl)
-    .then(r => r.json())
-    .then(payload => {
-      const parsed = parseWalkupSongs(payload?.text ?? '', musicUrl);
-      const cache = getTeamCache(teamPage);
-      const mergedById = teamPage === 'orioles' ? { ...FALLBACK_WALKUP_SONGS } : {};
-      for (const [id, urls] of Object.entries(parsed.byPlayerId)) {
-        mergedById[id] ??= [];
-        for (const url of urls) {
-          if (!mergedById[id].includes(url)) mergedById[id].push(url);
-        }
-      }
-      cache.byPlayerId = mergedById;
-      cache.byPlayerName = parsed.byPlayerName;
-      cache.loadedAt = Date.now();
-      return cache;
-    })
-    .catch(() => getTeamCache(teamPage))
-    .finally(() => { delete teamPromises[teamPage]; });
+  teamPromises[teamPage] = Promise.all([
+    getCuratedData(dataUrl),
+    fetch(proxyUrl).then(r => r.json()).catch(() => ({})),
+  ]).then(([curated, scrapePayload]) => {
+    const parsed = parseWalkupSongs(scrapePayload?.text ?? '', musicUrl);
+    const cache = getTeamCache(teamPage);
+
+    // Priority: JS fallback (Orioles only) → curated JSON → live scrape
+    const mergedById = teamPage === 'orioles' ? { ...FALLBACK_WALKUP_SONGS } : {};
+    mergeUrlsInto(mergedById, curated?.[teamPage]);
+    mergeUrlsInto(mergedById, parsed.byPlayerId);
+
+    cache.byPlayerId = mergedById;
+    cache.byPlayerName = parsed.byPlayerName;
+    cache.loadedAt = Date.now();
+    return cache;
+  })
+  .catch(() => getTeamCache(teamPage))
+  .finally(() => { delete teamPromises[teamPage]; });
 
   return teamPromises[teamPage];
 }

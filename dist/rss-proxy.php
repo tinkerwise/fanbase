@@ -65,9 +65,12 @@ if ($format === 'text') {
 }
 
 $headers = [
-    'User-Agent: Mozilla/5.0 (compatible; OriolesNews/1.0)',
+    'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
     'Accept: ' . $accept,
     'Accept-Language: en-US,en;q=0.9',
+    'Sec-Fetch-Dest: document',
+    'Sec-Fetch-Mode: navigate',
+    'Sec-Fetch-Site: none',
 ];
 if ($format === 'audio' && !empty($_SERVER['HTTP_RANGE'])) {
     $headers[] = 'Range: ' . $_SERVER['HTTP_RANGE'];
