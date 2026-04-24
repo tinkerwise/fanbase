@@ -9,6 +9,7 @@ import {
   TEAM_PAGE,
   TEAM_SLUG,
   getActiveTeamId,
+  isFirstVisit,
 } from './config.js';
 import { state } from './state.js';
 import {
@@ -96,6 +97,17 @@ function renderStandings() {
 // ── On Deck ───────────────────────────────────────────────────────
 export async function loadOnDeck() {
   const wrap = $('onDeckWrap');
+
+  // No team selected yet — show a prompt rather than defaulting to Orioles
+  if (isFirstVisit()) {
+    if (wrap) wrap.innerHTML = `
+      <div class="on-deck-no-team">
+        <div class="on-deck-no-team-icon">⚾</div>
+        <div class="on-deck-no-team-msg">Pick your team to see their schedule and upcoming games.</div>
+      </div>`;
+    return;
+  }
+
   try {
     const today = localDateStr(0);
     const tomorrowStr = localDateStr(1);
@@ -235,6 +247,10 @@ const IL_BADGE = { D10: '10-Day IL', D15: '15-Day IL', D60: '60-Day IL' };
 
 export async function loadRoster() {
   const wrap = $('rosterWrap');
+  if (isFirstVisit()) {
+    if (wrap) wrap.innerHTML = '<div class="sidebar-no-team-msg">Select a team to see their roster.</div>';
+    return;
+  }
   try {
     // Fetch roster data and kick off song loading concurrently — but don't
     // block the render on songs. Render immediately with whatever is in the
@@ -329,6 +345,10 @@ export async function loadRoster() {
 // ── Transactions ──────────────────────────────────────────────────
 export async function loadTransactions() {
   const wrap = $('transactionsWrap');
+  if (isFirstVisit()) {
+    if (wrap) wrap.innerHTML = '<div class="sidebar-no-team-msg">Select a team to see their transactions.</div>';
+    return;
+  }
   try {
     const end = localDateStr(0);
     const startD = new Date();
@@ -375,6 +395,10 @@ export async function loadTransactions() {
 // ── Injury Report ─────────────────────────────────────────────────
 export async function loadInjuryReport() {
   const wrap = $('ilWrap');
+  if (isFirstVisit()) {
+    if (wrap) wrap.innerHTML = '<div class="sidebar-no-team-msg">Select a team to see their injury report.</div>';
+    return;
+  }
   try {
     const [data, txData] = await Promise.all([
       fetch(`${MLB}/teams/${getActiveTeamId()}/roster?rosterType=40Man`).then(r => r.json()),

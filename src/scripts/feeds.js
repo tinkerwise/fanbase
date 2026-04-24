@@ -1,5 +1,6 @@
 // ── Feeds ─────────────────────────────────────────────────────────
 import { PROXY, TEAM_SLUG, TEAM_ABBREV, ORIOLES_ID, getActiveTeamId } from './config.js';
+import { TEAM_CONFIG } from './teamConfig.js';
 import {
   MAX_VISIBLE_ARTICLES,
   selectDisplayArticles,
@@ -84,6 +85,16 @@ export async function loadFeeds() {
     .filter(f => f.teamId === 0 || f.teamFeed || f.teamId === activeTeamId)
     .map(f => {
       if (f.teamFeed && activeTeamId !== ORIOLES_ID) {
+        if (f.teamFeedType === 'mlbtr') {
+          const fullName = TEAM_CONFIG[activeTeamId]?.fullName ?? '';
+          const mlbtrSlug = fullName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+          return {
+            ...f,
+            url: mlbtrSlug ? `https://www.mlbtraderumors.com/${mlbtrSlug}/feed` : f.url,
+            name: `${TEAM_ABBREV[activeTeamId] ?? 'Team'} – MLB Trade Rumors`,
+          };
+        }
+        // default: mlbcom team news feed
         return {
           ...f,
           url: `https://www.mlb.com/${teamSlug}/feeds/news/rss.xml`,
