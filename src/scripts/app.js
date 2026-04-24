@@ -45,10 +45,11 @@ function renderSourceSettings() {
     return;
   }
 
+  const teamName = TEAM_CONFIG[getActiveTeamId()]?.name ?? 'Team';
   const groups = [
-    { key: 'orioles', label: 'Orioles' },
-    { key: 'mlb',     label: 'MLB'     },
-    { key: 'milb',    label: 'MiLB'    },
+    { key: 'orioles', label: teamName },
+    { key: 'mlb',     label: 'MLB'    },
+    { key: 'milb',    label: 'MiLB'   },
   ];
 
   const enabledCount = sources.filter(s => !disabled.has(s.id)).length;
@@ -184,7 +185,6 @@ function setupEvents() {
     $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.defview === (p.defaultView || 'list')));
     renderSourceSettings();
-    updateSourceGroupLabel();
   });
   $('settingsClose').addEventListener('click', () => $('settingsOverlay').classList.add('hidden'));
   $('settingsOverlay').addEventListener('click', e => {
@@ -305,15 +305,6 @@ function updateTeamPill() {
   const label = document.getElementById('teamPillLabel');
   if (logo) logo.src = `https://www.mlbstatic.com/team-logos/${activeTeamId}.svg`;
   if (label) label.textContent = teamName;
-}
-
-// ── Source settings group label update ────────────────────────────
-function updateSourceGroupLabel() {
-  const activeTeamId = getActiveTeamId();
-  const teamName = TEAM_CONFIG[activeTeamId]?.name ?? TEAM_ABBREV[activeTeamId] ?? 'Team';
-  document.querySelectorAll('.source-setting-group-label').forEach(el => {
-    if (el.textContent === 'Orioles') el.textContent = teamName;
-  });
 }
 
 // ── Init ──────────────────────────────────────────────────────────

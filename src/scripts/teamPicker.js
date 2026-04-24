@@ -1,16 +1,6 @@
 // ── Team Picker ───────────────────────────────────────────────────
 import { TEAM_CONFIG } from './teamConfig.js';
-import { ORIOLES_ID } from './config.js';
-
-const STORAGE_KEY = 'fanbase_team';
-
-function getActiveTeamId() {
-  try {
-    return Number(localStorage.getItem(STORAGE_KEY) || ORIOLES_ID) || ORIOLES_ID;
-  } catch {
-    return ORIOLES_ID;
-  }
-}
+import { ORIOLES_ID, getActiveTeamId } from './config.js';
 
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1, 3), 16);
