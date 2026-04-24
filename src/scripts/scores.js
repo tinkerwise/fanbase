@@ -1196,10 +1196,15 @@ export async function loadScores() {
         const songLink = clickTarget?.closest('.walkup-song-link');
         if (songLink) {
           const useDefaultTab = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
-          if (!useDefaultTab) {
+          const songUrl = songLink.dataset.songUrl;
+          if (songUrl && !useDefaultTab) {
+            // Has an actual track URL → open in MiniPlayer
             e.preventDefault();
             e.stopPropagation();
-            openWalkupPlayerOverlay(songLink.dataset.songUrl || songLink.href, songLink.dataset.playerName || '');
+            openWalkupPlayerOverlay(songUrl, songLink.dataset.playerName || '');
+          } else {
+            // Search fallback → open Spotify in a new tab; prevent popover from closing
+            e.stopPropagation();
           }
           return;
         }
