@@ -59,3 +59,27 @@ export function getDisabledSources() {
 export function saveDisabledSources(disabled) {
   savePrefs({ disabledSources: [...disabled] });
 }
+
+const CUSTOM_FEEDS_KEY = 'fanbase_custom_feeds';
+
+export function loadCustomFeeds() {
+  try {
+    return JSON.parse(localStorage.getItem(CUSTOM_FEEDS_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveCustomFeeds(feeds) {
+  localStorage.setItem(CUSTOM_FEEDS_KEY, JSON.stringify(feeds));
+}
+
+export function addCustomFeed(feed) {
+  const feeds = loadCustomFeeds();
+  feeds.push(feed);
+  saveCustomFeeds(feeds);
+}
+
+export function removeCustomFeed(id) {
+  saveCustomFeeds(loadCustomFeeds().filter(f => f.id !== id));
+}

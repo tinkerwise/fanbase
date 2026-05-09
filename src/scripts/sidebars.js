@@ -608,8 +608,11 @@ async function fetchOriolesRecapVideo() {
 export async function loadVideos() {
   const wrap = $('videoWrap');
   try {
+    const playlists = getActiveTeamId() === ORIOLES_ID
+      ? YT_PLAYLISTS
+      : YT_PLAYLISTS.filter(pl => pl.label !== 'Orioles Moments');
     const results = await Promise.allSettled(
-      [fetchOriolesRecapVideo(), ...YT_PLAYLISTS.map(fetchPlaylistVideo)]
+      [fetchOriolesRecapVideo(), ...playlists.map(fetchPlaylistVideo)]
     );
 
     const videos = results
@@ -789,7 +792,7 @@ function closeVideoTheater() {
 
 // ── Yard Leaders ──────────────────────────────────────────────────
 const leadersCache = {};
-let leadersScope = 'orioles';
+let leadersScope = isFirstVisit() ? 'mlb' : 'orioles';
 
 const BATTING_ORDER = ['onBasePlusSlugging', 'sluggingPercentage', 'onBasePercentage', 'battingAverage', 'homeRuns', 'runsBattedIn', 'hits', 'baseOnBalls', 'walks'];
 const PITCHING_ORDER = ['earnedRunAverage', 'walksAndHitsPerInningPitched', 'strikeoutsPer9Inn', 'strikeouts', 'walksPer9Inn', 'qualityStarts', 'wins'];
@@ -961,6 +964,10 @@ function renderLeaders() {
 export function loadContracts() {
   const wrap = $('contractsWrap');
   if (!wrap) return;
+  if (isFirstVisit()) {
+    wrap.innerHTML = '<div class="sidebar-no-team-msg">Select a team to see their contracts &amp; payroll.</div>';
+    return;
+  }
   const activeTeamId = getActiveTeamId();
   const teamSlug = TEAM_SLUG[activeTeamId] ?? 'orioles';
   const teamPage = TEAM_PAGE[activeTeamId] ?? 'orioles';

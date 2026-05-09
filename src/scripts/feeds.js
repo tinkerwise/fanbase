@@ -14,6 +14,7 @@ import {
   unmarkRead,
   getDisabledSources,
   saveDisabledSources,
+  loadCustomFeeds,
 } from './storage.js';
 import { state } from './state.js';
 import {
@@ -104,7 +105,12 @@ export async function loadFeeds() {
       return f;
     });
 
-  ALL_FEEDS = FEEDS;
+  const customFeeds = loadCustomFeeds().map(f => ({
+    ...f,
+    category: f.category || 'custom',
+    custom: true,
+  }));
+  ALL_FEEDS = [...FEEDS, ...customFeeds];
 
   const disabled = getDisabledSources();
   const activeFEEDS = FEEDS.filter(f => !disabled.has(f.id));

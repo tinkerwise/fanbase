@@ -1,4 +1,4 @@
-import { loadPrefs, savePrefs, getDisabledSources, saveDisabledSources } from './storage.js';
+import { loadPrefs, savePrefs, getDisabledSources, saveDisabledSources, loadCustomFeeds, addCustomFeed, removeCustomFeed } from './storage.js';
 import { state } from './state.js';
 import { applyTheme } from './theme.js';
 import { $, syncOriolesLogos } from './utils.js';
@@ -50,6 +50,7 @@ function renderSourceSettings() {
     { key: 'orioles', label: teamName },
     { key: 'mlb',     label: 'MLB'    },
     { key: 'milb',    label: 'MiLB'   },
+    { key: 'custom',  label: 'Custom' },
   ];
 
   const enabledCount = sources.filter(s => !disabled.has(s.id)).length;
@@ -103,6 +104,64 @@ function renderSourceSettings() {
   $('sourceResetBtn')?.addEventListener('click', () => {
     saveDisabledSources(new Set());
     renderSourceFilters();
+    renderSourceSettings();
+    loadFeeds();
+  });
+}
+
+// ── Custom Feed Settings ──────────────────────────────────────────
+function renderCustomFeedSettings() {
+  const wrap = $('customFeedsWrap');
+  if (!wrap) return;
+
+  const feeds = loadCustomFeeds();
+  const listHtml = feeds.length
+    ? feeds.map(f => `
+        <div class="custom-feed-row" data-id="${f.id}">
+          <span class="custom-feed-name">${f.name}</span>
+          <button class="custom-feed-remove" data-id="${f.id}" aria-label="Remove ${f.name}">✕</button>
+        </div>`).join('')
+    : '<span class="custom-feeds-empty">No custom feeds added yet.</span>';
+
+  wrap.innerHTML = `
+    <div class="custom-feeds-list">${listHtml}</div>
+    <form class="custom-feed-form" id="customFeedForm" autocomplete="off">
+      <input class="custom-feed-input" id="customFeedName" type="text" placeholder="Feed name" required maxlength="60">
+      <input class="custom-feed-input" id="customFeedUrl" type="url" placeholder="RSS feed URL" required>
+      <button class="custom-feed-add-btn" type="submit">Add Feed</button>
+    </form>
+    <div class="custom-feed-error hidden" id="customFeedError"></div>`;
+
+  wrap.querySelectorAll('.custom-feed-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      removeCustomFeed(btn.dataset.id);
+      renderCustomFeedSettings();
+      loadFeeds();
+    });
+  });
+
+  $('customFeedForm')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const nameInput = $('customFeedName');
+    const urlInput = $('customFeedUrl');
+    const errorEl = $('customFeedError');
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+    errorEl.classList.add('hidden');
+    errorEl.textContent = '';
+
+    const existing = loadCustomFeeds();
+    if (existing.some(f => f.url === url)) {
+      errorEl.textContent = 'This feed URL is already added.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    const id = `custom_${Date.now()}`;
+    addCustomFeed({ id, name, url, category: 'custom', color: '#6366f1' });
+    nameInput.value = '';
+    urlInput.value = '';
+    renderCustomFeedSettings();
     renderSourceSettings();
     loadFeeds();
   });
@@ -189,6 +248,7 @@ function setupEvents() {
     $('defaultViewToggle').querySelectorAll('.theme-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.defview === (p.defaultView || 'list')));
     renderSourceSettings();
+    renderCustomFeedSettings();
   });
   $('settingsClose').addEventListener('click', () => $('settingsOverlay').classList.add('hidden'));
   $('settingsOverlay').addEventListener('click', e => {
@@ -300,6 +360,26 @@ function setupEvents() {
       toggleOpacyTheme();
     }
   });
+
+  // First-visit tooltip on settings button
+  if (isFirstVisit()) {
+    const settingsBtn = $('settingsBtn');
+    if (settingsBtn) {
+      settingsBtn.classList.add('btn-settings--tooltip');
+      const tip = document.createElement('div');
+      tip.className = 'settings-btn-tooltip';
+      tip.textContent = 'Customize your feeds!';
+      settingsBtn.appendChild(tip);
+      const dismiss = () => {
+        settingsBtn.classList.remove('btn-settings--tooltip');
+        tip.remove();
+        document.removeEventListener('click', handler, true);
+      };
+      const handler = e => { if (!settingsBtn.contains(e.target)) dismiss(); };
+      document.addEventListener('click', handler, true);
+      settingsBtn.addEventListener('click', dismiss, { once: true });
+    }
+  }
 }
 
 // ── Team pill update ──────────────────────────────────────────────
