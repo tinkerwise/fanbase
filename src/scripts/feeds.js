@@ -442,7 +442,6 @@ function storeAthBundle(bundle) {
         source: article.source,
         pubDate: article.pubDate,
         description: article.description,
-        content: article.content,
       })),
       savedAt: Date.now(),
     };
