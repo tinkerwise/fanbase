@@ -1,0 +1,7 @@
+# Astro's build output: every file name carries a content hash, so a
+# changed file is a new URL. Cache for a year.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

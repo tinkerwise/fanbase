@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout title="Not Found | Fanbase">
+  <PageHeader current="Not found" />
+  <main class="not-found">
+    <h1 class="not-found-title">Foul ball</h1>
+    <p class="not-found-text">That page isn't here. It may have moved, or the link has a typo.</p>
+    <p class="not-found-text"><a href={base}>Back to Fanbase</a> or press <kbd>/</kbd> to search.</p>
+  </main>
+</Layout>

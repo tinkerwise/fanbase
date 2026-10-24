@@ -1,15 +1,36 @@
 DirectoryIndex index.html
 Options -Indexes
 
+# Unknown paths get a real 404 (src/pages/404.astro). This used to serve
+# index.html with a 200, which hid missing files: a deleted asset or a PHP
+# script that never deployed still "loaded".
+ErrorDocument 404 /fanbase/404.html
+
 RewriteEngine On
 
 # Force HTTPS
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# If the requested file or directory exists, serve it directly
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+<IfModule mod_headers.c>
+  # Baseline hardening for static files. PHP scripts send their own headers
+  # (feedback-admin.php has a stricter CSP and X-Frame-Options DENY), so
+  # they're left out rather than overridden. No script-src: pages still use
+  # inline handlers. The reader view's srcdoc iframe inherits this policy,
+  # so no base-uri either (articles set <base>). Only Header set inside
+  # FilesMatch: no <If> or setifempty, which not every host supports.
+  <FilesMatch "\.(html|css|js|json|svg|png|jpe?g|ico|ttf|woff2?|mp3)$">
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+    Header set Content-Security-Policy "frame-ancestors 'self'; object-src 'none'; form-action 'self'"
+  </FilesMatch>
 
-# Otherwise serve index.html (SPA-style fallback)
-RewriteRule ^ /fanbase/index.html [L]
+  # Pages: always revalidate, so a deploy shows up at once and a cached page
+  # never asks for bundles the deploy has deleted. (assets/.htaccess caches
+  # the hashed bundles for a year.)
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
