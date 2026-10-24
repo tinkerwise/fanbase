@@ -49,6 +49,8 @@ export const SEASON = new Date().getFullYear();
 // Layout.astro's inline head script resolves the same key and params for
 // the theme and accent colors, so keep the two in step.
 export const TEAM_KEY = 'fb_team';
+// Set when a visitor gets their first team; onboarding.js shows the welcome
+export const ONBOARD_PENDING_KEY = 'fb_onboard_pending';
 
 export function teamIdFromParam(value) {
   const v = String(value ?? '').trim().toUpperCase();

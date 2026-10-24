@@ -77,6 +77,8 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
           }
           var shared = find(params.get('team'));
           if (shared) {
+            // A first team gets the welcome (onboarding.js, ONBOARD_PENDING_KEY)
+            if (!find(localStorage.getItem('fb_team'))) localStorage.setItem('fb_onboard_pending', '1');
             localStorage.setItem('fb_team', String(shared));
             // Saved, so drop the param: a reload or bookmark is a plain link
             params.delete('team');
@@ -160,6 +162,14 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
       ))}
     </nav>
     <slot />
+    <footer class="site-footer">
+      <button class="feedback-link" type="button" data-feedback>Send feedback</button>
+    </footer>
+    <script>
+      import '../scripts/search.js';
+      import '../scripts/onboarding.js';
+      import '../scripts/feedback.js';
+    </script>
     <script is:inline define:vars={{ base }}>
       // While viewing another team (?view=), keep it on every link within the
       // site, including links pages add later, until "Back to …" drops it
