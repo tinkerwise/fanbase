@@ -136,7 +136,7 @@ export default defineConfig({
   vite: {
     plugins: [rssProxyDevPlugin()],
     build: {
-      rollupOptions: {
+      rolldownOptions: {
         output: {
           entryFileNames: 'assets/[name].js',
           chunkFileNames: 'assets/[name].js',

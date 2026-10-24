@@ -12,6 +12,6 @@
     "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {
-    "astro": "^6.1.5"
+    "astro": "^7.4.2"
   }
 }
