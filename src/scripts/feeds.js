@@ -453,7 +453,7 @@ function bundleLogoMarkup(bundle, variant) {
 
 function storeAthBundle(bundle) {
   try {
-    const key = 'yr_ath_bundles';
+    const key = 'fb_ath_bundles';
     const existing = JSON.parse(sessionStorage.getItem(key) || '{}');
     existing[bundle.slug] = {
       label: bundle.label,

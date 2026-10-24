@@ -1,6 +1,20 @@
-const PREFS_KEY = 'yr_prefs';
-const READ_KEY = 'yr_read';
-const READ_ATH_KEY = 'yr_read_ath';
+const PREFS_KEY = 'fb_prefs';
+const READ_KEY = 'fb_read';
+const READ_ATH_KEY = 'fb_read_ath';
+
+// One-time migration: Fanbase used to share yr_* keys with Yard Report on the
+// same origin. Copy them to fb_* on first load so existing settings survive.
+// The yr_* originals are left alone since Yard Report still uses them.
+(function migrateLegacyKeys() {
+  try {
+    if (localStorage.getItem(PREFS_KEY) !== null) return;
+    if (localStorage.getItem('yr_prefs') === null) return;
+    for (const key of ['prefs', 'read', 'read_ath']) {
+      const value = localStorage.getItem(`yr_${key}`);
+      if (value !== null) localStorage.setItem(`fb_${key}`, value);
+    }
+  } catch { /* storage unavailable */ }
+})();
 
 export function loadPrefs() {
   try {
