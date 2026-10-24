@@ -1,0 +1,610 @@
+// ── MLB Draft page ─────────────────────────────────────────────────
+import './theme.js';
+import { PROXY, MLB, SEASON, TEAM_ID, TEAM_ABBR, TEAM_NICK, TEAM_ABBREV } from './config.js';
+import { requireTeam } from './teamPicker.js';
+import { loadFeedSources } from './feedSources.js';
+import { $, esc, relativeDate, cleanFeedText, savantUrl, mlbPlayerUrl, fetchPlayerIdMap, lookupPlayerId, searchPlayerId, teamLogoSrc, extractThumbnail, renderNewsThumbCard, fetchOgImage, playerNameOrLookup, resolveNameLookups, stripAccents } from './utils.js';
+
+let draftData = null;
+let playerIdMap = null;
+let activeRound = 1;
+let draftStatus = 'upcoming';
+
+function headshotUrl(id) {
+  return `https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_213,q_auto:best/v1/people/${id}/headshot/67/current`;
+}
+
+const HIGHLIGHT_ICONS = [
+  // player (a highlight's `photo` player headshot is swapped in once resolved)
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>',
+  // bat + ball
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20 15 9"/><path d="M13 7a2.5 2.5 0 1 1 3.5 3.5L15 12l-3.5-3.5Z"/><circle cx="19" cy="5" r="2"/></svg>',
+  // star (top of the class)
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.2-5.4 3.2 1.3-6-4.6-4.1 6.1-.6L12 3Z"/></svg>',
+  // megaphone (mock draft buzz)
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11v2a2 2 0 0 0 2 2h1l4 4v-4h1l7 4V5l-7 4h-1L6 9H5a2 2 0 0 0-2 2Z"/></svg>',
+];
+
+// ── Live draft results (MLB Stats API) ───────────────────────────────
+// public/draft-picks.json holds the league-wide details plus a round 1
+// order published ahead of time; the full order, the active team's picks,
+// and the players selected come from the live draft feed, which reports
+// the order as soon as it's set and fills in each pick the moment it
+// happens. Curated per-team extras (highlights, notables) live under
+// `teams` in the JSON, keyed by team id; teams without any just skip them.
+async function fetchLiveDraft(season) {
+  try {
+    const data = await fetch(`${MLB}/draft/${season}`).then(r => r.json());
+    return data.drafts?.rounds ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function buildLiveState(rounds) {
+  if (!rounds) return null;
+  const teamPickOrder = [];
+  const picks = [];
+  const roundOrders = {};
+
+  for (const r of rounds) {
+    if (!/^\d+$/.test(r.round)) continue; // skip comp-round labels (PPI, CB-A, ...)
+    const roundNum = Number(r.round);
+    if (roundNum > 5) continue; // matches the rounds we track in the sidebar
+
+    roundOrders[r.round] = r.picks.map(p => ({
+      pick: p.pickNumber,
+      teamId: p.team?.id,
+      note: p.isDrafted && p.person ? `${p.person.fullName} · ${p.person.primaryPosition?.abbreviation ?? ''}` : undefined,
+      personId: p.isDrafted ? p.person?.id : undefined,
+    }));
+
+    for (const p of r.picks) {
+      if (p.team?.id !== TEAM_ID) continue;
+      teamPickOrder.push({ round: roundNum, pick: p.pickNumber });
+      if (p.isDrafted && p.person) {
+        picks.push({
+          round: roundNum,
+          pick: p.pickNumber,
+          name: p.person.fullName,
+          position: p.person.primaryPosition?.abbreviation ?? '',
+          personId: p.person.id,
+        });
+      }
+    }
+  }
+
+  if (!teamPickOrder.length) return null;
+  teamPickOrder.sort((a, b) => a.pick - b.pick);
+  return { teamPickOrder, picks, roundOrders };
+}
+
+// The active team's slots in the published (pre-draft) round orders
+function staticPickOrder(data) {
+  return Object.entries(data.roundOrders ?? {}).flatMap(([round, order]) =>
+    order.filter(s => s.teamId === TEAM_ID).map(s => ({ round: Number(round), pick: s.pick })));
+}
+
+function normalizeName(name) {
+  return stripAccents(name ?? '').toLowerCase().trim();
+}
+
+// Every drafted player across every round/comp-round, keyed by normalized
+// name — used to compute "who's left" on the prospect board regardless of
+// which round they eventually go in.
+function buildDraftedIndex(rounds) {
+  const index = new Map();
+  if (!rounds) return index;
+  for (const r of rounds) {
+    for (const p of r.picks) {
+      if (!p.isDrafted || !p.person) continue;
+      index.set(normalizeName(p.person.fullName), {
+        personId: p.person.id,
+        pickNumber: p.pickNumber,
+        teamId: p.team?.id,
+      });
+    }
+  }
+  return index;
+}
+
+function posGroup(position) {
+  const p = (position || '').split('/')[0].toUpperCase();
+  if (p === 'C') return 'c';
+  if (['SS', '2B', '3B', '1B', 'MIF'].includes(p)) return 'if';
+  if (['OF', 'CF', 'RF', 'LF'].includes(p)) return 'of';
+  if (p === 'RHP') return 'rhp';
+  if (p === 'LHP') return 'lhp';
+  return 'other';
+}
+
+// ── Top prospects remaining — big board minus whoever's already off it ──
+function renderProspectBoard(data, draftedIndex, idMap) {
+  const board = $('draftProspectBoard');
+  if (!board) return;
+  const bigBoard = data.bigBoard ?? [];
+  if (!bigBoard.length) {
+    board.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
+    return;
+  }
+
+  const remaining = bigBoard.filter(p => !draftedIndex.has(normalizeName(p.name)));
+  const top10 = remaining.slice(0, 10);
+
+  const draftedFromBoard = bigBoard
+    .filter(p => draftedIndex.has(normalizeName(p.name)))
+    .map(p => ({ ...p, info: draftedIndex.get(normalizeName(p.name)) }))
+    .sort((a, b) => b.info.pickNumber - a.info.pickNumber);
+  const lastOff = draftedFromBoard[0];
+  const statusHtml = lastOff
+    ? `<div class="prospect-board-status">Last off the board: <a href="${mlbPlayerUrl(lastOff.info.personId)}" target="_blank" rel="noopener">${esc(lastOff.name)}</a> — Pick #${lastOff.info.pickNumber}${TEAM_ABBREV[lastOff.info.teamId] ? ` (${esc(TEAM_ABBREV[lastOff.info.teamId])})` : ''}</div>`
+    : '';
+
+  const rowsHtml = top10.map(p => `
+    <div class="prospect-row">
+      <span class="prospect-rank">${p.rank}</span>
+      <div class="prospect-info">
+        ${playerNameOrLookup(p.name, idMap, 'prospect-name')}
+        <span class="prospect-meta">${esc(p.school)}</span>
+      </div>
+      <span class="prospect-pos-badge prospect-pos-badge--${posGroup(p.position)}">${esc(p.position)}</span>
+    </div>
+  `).join('');
+
+  board.innerHTML = `
+    <div class="prospect-board-head">
+      <span class="prospect-board-count">${remaining.length} remaining on our board</span>
+    </div>
+    <div class="prospect-board-list">${rowsHtml || '<span class="sidebar-msg">Board fully drafted</span>'}</div>
+    ${statusHtml}
+  `;
+  resolveNameLookups(board);
+}
+
+function computeStatus(data) {
+  const start = data.startTime ? new Date(data.startTime) : null;
+  const end = data.endTime ? new Date(data.endTime) : null;
+  const now = Date.now();
+  if (start && now < start.getTime()) return 'upcoming';
+  const total = (data.teamPickOrder ?? []).length;
+  const made = (data.picks ?? []).length;
+  if (total && made >= total) return 'complete';
+  if (end && now > end.getTime()) return 'complete';
+  return 'live';
+}
+
+// Undrafted amateurs and very recent draftees have no MLB person id until
+// the active-player list picks them up — playerNameOrLookup falls back to
+// a per-name search (resolveNameLookups patches it in once that resolves),
+// which also covers minor leaguers and retired players the bulk id map misses.
+function playerNameHtml(name, idMap) {
+  return playerNameOrLookup(name, idMap);
+}
+
+// ── Ticker tape — the team's picks, all rounds ───────────────────
+function tickerEntry(slot, pick, idMap) {
+  const prefix = `R${slot.round} · #${slot.pick} — `;
+  if (!pick) return `<span class="draft-ticker-item">${esc(prefix)}on the clock</span>`;
+  const nameHtml = pick.personId
+    ? `<a class="draft-ticker-name" href="${mlbPlayerUrl(pick.personId)}" target="_blank" rel="noopener">${esc(pick.name)}</a>`
+    : playerNameOrLookup(pick.name, idMap, 'draft-ticker-name');
+  const posSuffix = pick.position ? esc(` (${pick.position})`) : '';
+  return `<span class="draft-ticker-item">${esc(prefix)}${nameHtml}${posSuffix}</span>`;
+}
+
+function infoTickerEntries(data) {
+  const order = data.teamPickOrder ?? [];
+  const chips = order.map(s => `R${s.round} #${s.pick}`).join(', ');
+  const items = [
+    `2026 MLB Draft begins ${esc(data.dates ?? '')} at the ${esc(data.location ?? '')}`,
+  ];
+  if (chips) items.push(`${esc(TEAM_NICK)} pick order: ${esc(chips)}`);
+  items.push('Round 1 airs on NBC & Peacock starting 1:00 PM ET Saturday');
+  return items.map(t => `<span class="draft-ticker-item">${t}</span>`);
+}
+
+function renderTicker(data, idMap) {
+  const track = $('draftTickerTrack');
+  const label = $('draftTickerLabel');
+  if (!track) return;
+
+  if (label) {
+    label.innerHTML = draftStatus === 'live'
+      ? '<span class="live-dot" aria-hidden="true"></span> Live Picks'
+      : draftStatus === 'complete'
+        ? 'Final Picks'
+        : `${esc(TEAM_ABBR)} Picks`;
+  }
+
+  if (draftStatus === 'upcoming') {
+    const entries = infoTickerEntries(data);
+    track.innerHTML = entries.join('') + entries.join('');
+    return;
+  }
+
+  const order = data.teamPickOrder ?? [];
+  const made = data.picks ?? [];
+  if (!order.length) {
+    track.innerHTML = `<span class="draft-ticker-item">${esc(TEAM_NICK)} pick order unavailable</span>`;
+    return;
+  }
+  const entries = order.map(slot => tickerEntry(slot, made.find(p => p.round === slot.round && p.pick === slot.pick), idMap));
+  // Duplicate the run so the CSS scroll loop is seamless.
+  track.innerHTML = entries.join('') + entries.join('');
+  resolveNameLookups(track);
+}
+
+// ── Round order (tabbed — full order where we have it, the team's pick otherwise) ──
+function renderRoundTabs(data) {
+  const wrap = $('draftRoundTabs');
+  if (!wrap) return;
+  const rounds = (data.teamPickOrder ?? []).map(s => s.round);
+  wrap.innerHTML = rounds.map(r =>
+    `<button class="pill${r === activeRound ? ' active' : ''}" data-round="${r}">Round ${r}</button>`
+  ).join('');
+  wrap.querySelectorAll('button[data-round]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeRound = Number(btn.dataset.round);
+      wrap.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+      renderOrder(draftData, playerIdMap);
+    });
+  });
+}
+
+function renderOrder(data, idMap) {
+  const el = $('draftOrder');
+  if (!el) return;
+  const order = data.roundOrders?.[String(activeRound)];
+  const teamSlot = (data.teamPickOrder ?? []).find(s => s.round === activeRound);
+
+  if (!order?.length) {
+    const pick = (data.picks ?? []).find(p => p.round === activeRound);
+    el.innerHTML = `<div class="draft-order-empty">
+      <p>Full Round ${activeRound} order isn't published yet.</p>
+      ${teamSlot ? `<div class="roster-item">
+        <span class="roster-pos">R${teamSlot.round}</span>
+        ${pick ? playerNameHtml(pick.name, idMap) : `<span class="roster-name roster-name--pending">${esc(TEAM_NICK)} on the clock</span>`}
+        <span class="roster-badge roster-badge--info">Pick #${teamSlot.pick}</span>
+      </div>` : ''}
+      <a class="widget-link" href="https://www.mlb.com/draft/${draftData?.season ?? ''}/order" target="_blank" rel="noopener">Check MLB.com for the latest order ↗</a>
+    </div>`;
+    resolveNameLookups(el);
+    return;
+  }
+
+  el.innerHTML = order.map(slot => {
+    const isMine = slot.teamId === TEAM_ID;
+    const abbr = TEAM_ABBREV[slot.teamId] ?? '';
+    const noteHtml = slot.note
+      ? (slot.personId
+          ? `<a class="draft-order-note draft-order-note--pick" href="${mlbPlayerUrl(slot.personId)}" target="_blank" rel="noopener">${esc(slot.note)}</a>`
+          : `<span class="draft-order-note">${esc(slot.note)}</span>`)
+      : '';
+    return `<div class="draft-order-row${isMine ? ' draft-order-row--my-team' : ''}">
+      <span class="draft-order-pick">${slot.pick}</span>
+      <img class="draft-order-logo" src="${teamLogoSrc(slot.teamId, 18)}" alt="" width="18" height="18" loading="lazy">
+      <span class="draft-order-team">${esc(abbr)}</span>
+      ${noteHtml}
+    </div>`;
+  }).join('');
+}
+
+async function loadPicks() {
+  try {
+    const [data, idMap, liveRounds] = await Promise.all([
+      fetch(`${import.meta.env.BASE_URL}draft-picks.json`).then(r => r.json()),
+      fetchPlayerIdMap(),
+      fetchLiveDraft(SEASON),
+    ]);
+    const live = buildLiveState(liveRounds);
+    const team = data.teams?.[TEAM_ID] ?? {};
+    draftData = { ...data, ...team, teamPickOrder: staticPickOrder(data), picks: [], ...live };
+    playerIdMap = idMap;
+    draftStatus = computeStatus(draftData);
+
+    renderHero(draftData);
+    renderTicker(draftData, idMap);
+    renderRoundTabs(draftData);
+    renderOrder(draftData, idMap);
+    renderProspectBoard(draftData, buildDraftedIndex(liveRounds), idMap);
+    const updatedEl = $('draftUpdated');
+    if (updatedEl && draftData.lastUpdated) {
+      updatedEl.textContent = `Updated ${relativeDate(draftData.lastUpdated)}`;
+    }
+    loadDraftInfo(draftData);
+    loadHistory(draftData, idMap);
+    loadSourcesAndCoverage(draftData);
+
+    // Live picks land within minutes of each other on draft day — refresh
+    // the whole picture instead of just polling one widget.
+    if (draftStatus === 'live') {
+      setTimeout(loadPicks, 90 * 1000);
+    }
+  } catch {
+    $('draftTickerTrack').innerHTML = '<span class="draft-ticker-item">Draft data unavailable</span>';
+    $('draftOrder').innerHTML = '<span class="sidebar-msg">Draft data unavailable</span>';
+  }
+}
+
+// ── Hero + highlights (key info above the news feed) ────────────────
+function renderHero(data) {
+  const badge = $('draftHeroBadge');
+  const facts = $('draftHeroFacts');
+  const highlights = $('draftHighlights');
+  const logo = $('draftHeroLogo');
+
+  if (logo) logo.src = teamLogoSrc(TEAM_ID, 56);
+
+  if (badge) {
+    if (draftStatus === 'live') {
+      badge.innerHTML = '<span class="live-dot" aria-hidden="true"></span> Draft is live';
+    } else if (draftStatus === 'complete') {
+      badge.textContent = 'Draft complete';
+    } else {
+      const start = data.startTime ? new Date(data.startTime) : null;
+      const diffMs = start ? start.getTime() - Date.now() : 0;
+      if (diffMs > 0) {
+        const days = Math.floor(diffMs / 864e5);
+        const hours = Math.floor((diffMs % 864e5) / 36e5);
+        const mins = Math.floor((diffMs % 36e5) / 6e4);
+        badge.textContent = days > 0 ? `${days}d ${hours}h until Round 1` : `${hours}h ${mins}m until Round 1`;
+      } else {
+        badge.textContent = 'Draft is underway';
+      }
+    }
+  }
+
+  if (facts) {
+    const order = data.teamPickOrder ?? [];
+    facts.innerHTML = `
+      <div class="draft-hero-fact">
+        <span class="draft-hero-fact-label">When</span>
+        <span class="draft-hero-fact-value">${esc(data.dates ?? '')}</span>
+      </div>
+      <div class="draft-hero-fact">
+        <span class="draft-hero-fact-label">Where</span>
+        <span class="draft-hero-fact-value">${esc(data.location ?? '')}</span>
+      </div>
+      <div class="draft-hero-fact">
+        <span class="draft-hero-fact-label">${esc(TEAM_NICK)} picks</span>
+        <span class="draft-hero-fact-value">${order.length} in the first ${order.length ? order[order.length - 1].round : 5} rounds</span>
+      </div>
+    `;
+  }
+
+  if (highlights) {
+    const items = data.highlights ?? [];
+    highlights.innerHTML = items.map((h, i) => {
+      const photoId = h.photo ? lookupPlayerId(playerIdMap, h.photo) : null;
+      const media = photoId
+        ? `<img class="draft-highlight-photo" src="${headshotUrl(photoId)}" alt="" loading="lazy">`
+        : `<span class="draft-highlight-icon">${HIGHLIGHT_ICONS[i % HIGHLIGHT_ICONS.length]}</span>`;
+      return `
+      <div class="draft-highlight-card">
+        <div class="draft-highlight-head">
+          ${media}
+          <div class="draft-highlight-title">${esc(h.title)}</div>
+        </div>
+        <div class="draft-highlight-body">${esc(h.body)}</div>
+      </div>
+    `;
+    }).join('');
+  }
+
+  const bcast = $('draftBroadcast');
+  if (bcast) {
+    bcast.innerHTML = (data.broadcast ?? []).map(day => `
+      <div class="draft-broadcast-day">
+        <div class="draft-broadcast-day-label">${esc(day.day)}</div>
+        ${day.blocks.map(b => `
+          <div class="draft-broadcast-row">
+            <span class="draft-broadcast-time">${esc(b.time)}</span>
+            <span class="draft-broadcast-desc">${esc(b.desc)}</span>
+            <span class="draft-broadcast-network">${esc(b.network)}</span>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+}
+
+// ── Draft info (dates, location, countdown) ─────────────────────────
+function loadDraftInfo(data) {
+  const el = $('draftInfo');
+  if (!el) return;
+
+  const start = data.startTime ? new Date(data.startTime) : null;
+  let countdownHtml = '';
+  const diffMs = start ? start.getTime() - Date.now() : 0;
+  if (draftStatus === 'upcoming' && diffMs > 0) {
+    const days = Math.floor(diffMs / 864e5);
+    const hours = Math.floor((diffMs % 864e5) / 36e5);
+    countdownHtml = `<div class="event-countdown">${days}d ${hours}h until Round 1</div>`;
+  } else if (draftStatus === 'complete') {
+    countdownHtml = '<div class="event-countdown">Draft complete</div>';
+  } else {
+    countdownHtml = '<div class="event-countdown">Draft is underway</div>';
+  }
+
+  el.innerHTML = `
+    <div class="event-game-card">
+      <div class="event-game-date">${esc(data.dates ?? '')}</div>
+      ${countdownHtml}
+      <div class="event-game-venue">${esc(data.location ?? '')}</div>
+    </div>
+    <div class="draft-order-summary">
+      ${(data.teamPickOrder ?? []).map(s => `<span class="draft-order-chip">R${s.round} · #${s.pick}</span>`).join('')}
+    </div>
+    <a class="widget-link" href="https://www.mlb.com/draft" target="_blank" rel="noopener">MLB Draft hub ↗</a>
+  `;
+}
+
+// ── Sources & Live Coverage ──────────────────────────────────────────
+function renderLinkList(links) {
+  if (!links?.length) return '<span class="sidebar-msg">Unavailable</span>';
+  return `<div class="draft-links-list">${links.map(l =>
+    `<a class="draft-link-item" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`
+  ).join('')}</div>`;
+}
+
+function loadSourcesAndCoverage(data) {
+  const coverageEl = $('draftLiveCoverage');
+  const sourcesEl = $('draftSources');
+  if (coverageEl) coverageEl.innerHTML = renderLinkList(data.liveCoverage);
+  if (sourcesEl) sourcesEl.innerHTML = renderLinkList([...(data.teamSources ?? []), ...(data.sources ?? [])]);
+}
+
+// ── History ───────────────────────────────────────────────────────
+const PITCHER_POSITIONS = new Set(['P', 'SP', 'RP', 'LHP', 'RHP']);
+
+async function fetchCurrentStatLine(playerId, position) {
+  if (!playerId) return null;
+  const group = PITCHER_POSITIONS.has(position) ? 'pitching' : 'hitting';
+  try {
+    const data = await fetch(`${MLB}/people/${playerId}/stats?stats=season&season=${SEASON}&group=${group}`).then(r => r.json());
+    const stat = data.stats?.[0]?.splits?.[0]?.stat;
+    if (!stat) return null;
+    return group === 'hitting'
+      ? `${SEASON}: ${stat.avg ?? '.---'}/${stat.obp ?? '.---'}/${stat.slg ?? '.---'}, ${stat.homeRuns ?? 0} HR`
+      : `${SEASON}: ${stat.era ?? '-.--'} ERA, ${stat.strikeOuts ?? 0} K`;
+  } catch { return null; }
+}
+
+function historyKey(h) {
+  return `${h.year}-${h.pick}-${h.name}`.replace(/\W+/g, '');
+}
+
+function renderHistoryRow(h, idMap, statLine, avatarId) {
+  const avatarHtml = avatarId
+    ? `<img class="event-history-avatar" src="${headshotUrl(avatarId)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'event-history-avatar event-history-avatar--placeholder'}))">`
+    : `<span class="event-history-avatar event-history-avatar--placeholder"></span>`;
+  return `
+    <div class="event-history-item" data-history-key="${historyKey(h)}">
+      ${avatarHtml}
+      <span class="event-history-year">${h.year}</span>
+      <div class="event-history-body">
+        <div class="event-history-result">${playerNameHtml(h.name, idMap)} · ${esc(h.position)}</div>
+        <div class="event-history-meta">Round ${h.round}, Pick ${h.pick} · ${esc(h.school)}</div>
+        ${statLine ? `<div class="event-history-stat">${esc(statLine)}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// The active team's first two picks in each of the last three drafts,
+// from the draft API (works for any team, unlike the curated notables)
+async function fetchRecentTopPicks() {
+  const years = [SEASON - 1, SEASON - 2, SEASON - 3];
+  const drafts = await Promise.all(years.map(y =>
+    fetch(`${MLB}/draft/${y}?teamId=${TEAM_ID}`).then(r => r.json()).catch(() => null)));
+  return drafts.flatMap((d, i) =>
+    (d?.drafts?.rounds ?? [])
+      .flatMap(r => r.picks)
+      .filter(p => p.isDrafted && p.person)
+      .sort((a, b) => a.pickNumber - b.pickNumber)
+      .slice(0, 2)
+      .map(p => ({
+        year: years[i],
+        round: p.pickRound,
+        pick: p.pickNumber,
+        name: p.person.fullName,
+        position: p.person.primaryPosition?.abbreviation ?? '',
+        school: p.school?.name ?? '',
+        personId: p.person.id,
+      })));
+}
+
+async function loadHistory(data, idMap) {
+  const el = $('draftHistory');
+  if (!el) return;
+  const recentPicks = await fetchRecentTopPicks();
+  const notables = [...(data.notables ?? [])].sort((a, b) => b.year - a.year);
+  const all = [...recentPicks, ...notables];
+
+  if (!all.length) {
+    el.innerHTML = '<span class="sidebar-msg">No history available</span>';
+    return;
+  }
+
+  // Paint immediately without stat lines or avatars, then fill each in as it
+  // resolves — one slow /people/{id}/stats or /people/search call shouldn't
+  // block the list. Rows are matched back up by key since there are two groups.
+  el.innerHTML = `
+    ${recentPicks.length ? `<div class="roster-group-label">Recent Top Picks</div>${recentPicks.map(h => renderHistoryRow(h, idMap, null, h.personId)).join('')}` : ''}
+    ${notables.length ? `<div class="roster-group-label">Franchise Notables</div>${notables.map(h => renderHistoryRow(h, idMap, null, lookupPlayerId(idMap, h.name))).join('')}` : ''}
+  `;
+  resolveNameLookups(el);
+
+  all.forEach(async h => {
+    let id = h.personId ?? lookupPlayerId(idMap, h.name);
+    if (!id) id = await searchPlayerId(h.name); // retired/pre-active players (Ripken, Murray, ...)
+    const statLine = await fetchCurrentStatLine(id, h.position);
+    const row = el.querySelector(`[data-history-key="${historyKey(h)}"]`);
+    if (row) row.outerHTML = renderHistoryRow(h, idMap, statLine, id);
+  });
+}
+
+// ── Draft news (reuses the site's existing RSS sources, filtered) ──
+async function loadDraftNews() {
+  const wrap = $('draftNews');
+  if (!wrap) return;
+  try {
+    const feeds = await loadFeedSources();
+    const results = await Promise.allSettled(feeds.map(source =>
+      fetch(`${PROXY}?url=${encodeURIComponent(source.url)}`).then(r => r.json())
+        .then(data => ({ source, articles: data.items ?? [] }))
+    ));
+
+    const cutoff = Date.now() - 14 * 864e5;
+    const draftRe = /draft/i;
+    const matches = [];
+    for (const r of results) {
+      if (r.status !== 'fulfilled') continue;
+      const { source, articles } = r.value;
+      for (const a of articles) {
+        const title = cleanFeedText(a.title || '');
+        if (!draftRe.test(title) && !draftRe.test(a.description || '')) continue;
+        const d = new Date(a.pubDate);
+        if (isNaN(d) || d.getTime() < cutoff) continue;
+        matches.push({ title, link: a.link, pubDate: a.pubDate, sourceName: source.name, thumbnail: extractThumbnail(a) });
+      }
+    }
+
+    matches.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+    const top = matches.slice(0, 12);
+
+    if (!top.length) {
+      wrap.innerHTML = '<span class="sidebar-msg">No recent Draft news</span>';
+      return;
+    }
+
+    await Promise.all(top.map(async a => {
+      if (!a.thumbnail) a.thumbnail = await fetchOgImage(a.link);
+    }));
+
+    wrap.innerHTML = `<div class="news-thumb-list">${top.map(renderNewsThumbCard).join('')}</div>`;
+  } catch {
+    wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
+  }
+}
+
+// ── Sidebar accordion (mirrors app.js behavior for the right sidebar) ──
+function setupAccordion() {
+  document.querySelectorAll('.section-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const section = toggle.closest('.sidebar-section');
+      const sidebar = section.closest('.sidebar');
+      const isCollapsed = section.classList.contains('collapsed');
+      sidebar?.querySelectorAll('.sidebar-section.collapsible').forEach(peer => {
+        if (peer !== section) peer.classList.add('collapsed');
+      });
+      section.classList.toggle('collapsed', !isCollapsed);
+    });
+  });
+}
+
+setupAccordion();
+if (requireTeam()) {
+  loadPicks();
+  loadDraftNews();
+}

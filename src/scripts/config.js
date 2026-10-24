@@ -1,4 +1,6 @@
-export const PROXY = `${import.meta.env.BASE_URL}rss-proxy.php`;
+import { TEAM_CONFIG } from './teamConfig.js';
+
+export const PROXY =`${import.meta.env.BASE_URL}rss-proxy.php`;
 
 export const DIVISION_NAMES = {
   200: 'AL West', 201: 'AL East', 202: 'AL Central',
@@ -40,17 +42,74 @@ export const MLB = 'https://statsapi.mlb.com/api/v1';
 export const ORIOLES_ID = 110;
 export const SEASON = new Date().getFullYear();
 
-export function getActiveTeamId() {
-  try {
-    return Number(localStorage.getItem('fanbase_team') || ORIOLES_ID) || ORIOLES_ID;
-  } catch {
-    return ORIOLES_ID;
-  }
+// ── Active team ───────────────────────────────────────────────────
+// Chosen in the team picker and kept in localStorage. `?team=bal` (abbr or
+// MLB id) overrides and saves, so a link can open the site as any team.
+// The id is fixed for the page's lifetime: switching teams reloads.
+// Layout.astro's inline head script resolves the same key and params for
+// the theme and accent colors, so keep the two in step.
+export const TEAM_KEY = 'fb_team';
+
+export function teamIdFromParam(value) {
+  const v = String(value ?? '').trim().toUpperCase();
+  if (!v) return null;
+  if (TEAM_CONFIG[Number(v)]) return Number(v);
+  const hit = Object.values(TEAM_CONFIG).find(t => t.abbr === v);
+  return hit ? hit.id : null;
 }
 
-/** True when the user has never explicitly chosen a team (first load or cleared localStorage). */
+function resolveTeamId() {
+  const fromUrl = teamIdFromParam(new URLSearchParams(location.search).get('team'));
+  if (fromUrl) {
+    try { localStorage.setItem(TEAM_KEY, String(fromUrl)); } catch {}
+    return fromUrl;
+  }
+  try {
+    const saved = Number(localStorage.getItem(TEAM_KEY));
+    if (TEAM_CONFIG[saved]) return saved;
+  } catch {}
+  return null;
+}
+
+// ── Viewing another team ──
+// `?view=nyy` shows the site as another team without touching the saved
+// pick. Nothing is written; Layout.astro carries the param on internal
+// links and teamPicker.js shows the "Viewing as…" banner.
+export const MY_TEAM_ID = resolveTeamId();
+const VIEW_ID = teamIdFromParam(new URLSearchParams(location.search).get('view'));
+export const VIEWING = Boolean(VIEW_ID && VIEW_ID !== MY_TEAM_ID);
+export const MY_TEAM = TEAM_CONFIG[MY_TEAM_ID] ?? null;
+
+// Null until a team is picked; pages show the picker instead of loading.
+export const PICKED_TEAM_ID = VIEWING ? VIEW_ID : MY_TEAM_ID;
+// Modules read TEAM_ID at import, so give them a valid id even before a
+// pick; nothing fetches until PICKED_TEAM_ID is set (see requireTeam()).
+export const TEAM_ID = PICKED_TEAM_ID ?? ORIOLES_ID;
+export const TEAM = { ...TEAM_CONFIG[TEAM_ID], nick: TEAM_CONFIG[TEAM_ID].name };
+export const TEAM_ABBR = TEAM.abbr;
+export const TEAM_NICK = TEAM.nick;
+export const TEAM_CONFERENCE = TEAM.div.split(' ')[0]; // 'AL' | 'NL'
+export const TEAM_DIVISION = TEAM.div.split(' ')[1];   // 'East' | 'Central' | 'West'
+
+/** The team the page shows: the ?view= team, else your own. */
+export function getActiveTeamId() {
+  return TEAM_ID;
+}
+
+/** True until a team is picked (and none is being viewed). */
 export function isFirstVisit() {
-  try { return !localStorage.getItem('fanbase_team'); } catch { return false; }
+  return !PICKED_TEAM_ID;
+}
+
+/**
+ * URL for a site page (relative to the site root: '' for Home,
+ * 'schedule/', …) as team `id`: your own team gets the plain path, any
+ * other team a ?view= link that leaves your saved pick alone.
+ */
+export function viewUrl(id, page = '') {
+  const t = TEAM_CONFIG[id];
+  const path = `${import.meta.env.BASE_URL}${page}`;
+  return !t || Number(id) === MY_TEAM_ID ? path : `${path}?view=${t.abbr.toLowerCase()}`;
 }
 
 export const PITCH_NAMES = {

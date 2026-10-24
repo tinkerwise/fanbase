@@ -1,35 +1,24 @@
-name: Build and Deploy
+name: Build
+
+# CI only builds and smoke-tests. The host firewall (BitNinja) blocks GitHub
+# Actions runner IPs, so deploys run locally via `npm run deploy`.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-env:
-  REMOTE_DEPLOY_PATH: ./public_html/fanbase/
-  SITE_URL: https://www.briancsmith.org/fanbase/
-
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
 
       - run: npm ci
       - run: npm run build
-
-      - name: Deploy via lftp
-        run: |
-          sudo apt-get install -y lftp > /dev/null 2>&1
-          lftp -e "
-            set ssl:verify-certificate false;
-            set ftp:ssl-force true;
-            open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }};
-            mirror --reverse --delete --verbose ./dist/ ${REMOTE_DEPLOY_PATH};
-            quit;
-          "
+      - run: npm run smoke

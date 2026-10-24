@@ -2,10 +2,10 @@
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="Around the Horn | Yard Report">
+<Layout title="Around the Horn | Fanbase">
   <main class="ath-page">
     <div class="ath-page-shell">
-      <a class="ath-page-back" href={`${import.meta.env.BASE_URL}`}>← Back to Yard Report</a>
+      <a class="ath-page-back" href={`${import.meta.env.BASE_URL}`}>← Back to Fanbase</a>
       <header class="ath-page-head">
         <span class="ath-page-kicker">Around the Horn</span>
         <h1 class="ath-page-title" id="athPageTitle">Loading story…</h1>
@@ -18,10 +18,12 @@ import Layout from '../../layouts/Layout.astro';
   </main>
 
   <script type="module">
+    import { requireTeam } from '../../scripts/teamPicker.js';
+
     const grid = document.getElementById('athStoryGrid');
     const title = document.getElementById('athPageTitle');
     const subtitle = document.getElementById('athPageSubtitle');
-    const key = 'yr_ath_bundles';
+    const key = 'fb_ath_bundles';
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('topic') || '';
 
@@ -74,7 +76,9 @@ import Layout from '../../layouts/Layout.astro';
 
     const bundle = bundles[slug];
 
-    if (!bundle) {
+    if (!requireTeam()) {
+      // No team yet: the picker is open instead
+    } else if (!bundle) {
       title.textContent = 'Story bundle unavailable';
       subtitle.textContent = 'Open an Around the Horn card from the homepage first so this page can load the saved related-coverage bundle.';
       grid.innerHTML = '<div class="feed-msg">No saved Around the Horn bundle was found for this story yet.</div>';

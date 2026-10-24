@@ -98,7 +98,7 @@ function renderGameChip(g) {
   const wx = getGameWeather(g);
   const wxInline = (stateClass === 'preview' && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
 
-  return `<button class="score-chip ${stateClass}${hasActiveTeam ? ' orioles' : ''}"
+  return `<button class="score-chip ${stateClass}${hasActiveTeam ? ' my-team' : ''}"
       data-gamepk="${g.gamePk}" type="button" aria-haspopup="dialog" aria-expanded="false">
     <div class="chip-row${awayWin ? ' winner' : ''}">
       <span class="chip-team">${esc(teamAbbr(away.team))}</span>
@@ -227,7 +227,7 @@ function spotifyEmbedUrl(songUrl) {
     const type = parts[0]; // 'track', 'playlist', 'album', 'search', …
     const id   = parts[1];
     if (!type || !id) return '';
-    return `https://open.spotify.com/embed/${type}/${id}?utm_source=yardreport`;
+    return `https://open.spotify.com/embed/${type}/${id}?utm_source=fanbase`;
   } catch {
     return '';
   }

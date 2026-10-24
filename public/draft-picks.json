@@ -1,0 +1,602 @@
+{
+  "_readme": "League-wide draft details for /draft/. The active team's pick order, picks and recent top picks come live from the MLB draft API. `teams` holds optional curated extras keyed by MLB team id: highlights (a `photo` player name swaps in their headshot), notables, teamSources.",
+  "season": 2026,
+  "lastUpdated": "2026-07-10",
+  "dates": "July 11–12, 2026",
+  "location": "Pennsylvania Convention Center, Philadelphia, PA",
+  "startTime": "2026-07-11T13:00:00-04:00",
+  "endTime": "2026-07-12T19:30:00-04:00",
+  "broadcast": [
+    {
+      "day": "Saturday, July 11 — Rounds 1–4",
+      "blocks": [
+        {
+          "time": "1:00–2:30 PM ET",
+          "desc": "Picks 1–10",
+          "network": "NBC · Peacock"
+        },
+        {
+          "time": "2:30–4:30 PM ET",
+          "desc": "Picks 11–40",
+          "network": "MLB Network · MLB.com"
+        },
+        {
+          "time": "4:30–7:45 PM ET",
+          "desc": "Picks 41–135",
+          "network": "MLB.com · MLB.TV"
+        }
+      ]
+    },
+    {
+      "day": "Sunday, July 12 — Rounds 5–20",
+      "blocks": [
+        {
+          "time": "11:30 AM–7:30 PM ET",
+          "desc": "Remaining rounds",
+          "network": "MLB.com · MLB.TV"
+        }
+      ]
+    }
+  ],
+  "liveCoverage": [
+    {
+      "label": "MLB.com Draft Tracker",
+      "url": "https://www.mlb.com/draft/tracker"
+    },
+    {
+      "label": "MLB.com Draft Order",
+      "url": "https://www.mlb.com/draft/2026/order"
+    },
+    {
+      "label": "ESPN Draft Tracker",
+      "url": "https://www.espn.com/mlb/story/_/id/49306565/2026-mlb-draft-tracker-live-updates-order-results-analysis-every-first-round-pick"
+    },
+    {
+      "label": "Baseball America Draft Results",
+      "url": "https://www.baseballamerica.com/draft-results/"
+    },
+    {
+      "label": "Baseball America Best Available",
+      "url": "https://www.baseballamerica.com/stories/mlb-draft-2026-best-available-prospects/"
+    }
+  ],
+  "sources": [
+    {
+      "label": "2026 MLB Draft — Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/2026_Major_League_Baseball_draft"
+    },
+    {
+      "label": "2026 Draft Overview & Schedule — MLB.com",
+      "url": "https://www.mlb.com/news/2026-mlb-draft-overview-and-schedule"
+    },
+    {
+      "label": "2026 Mock Draft 1.0 — FanGraphs",
+      "url": "https://blogs.fangraphs.com/2026-mock-draft-1-0/"
+    },
+    {
+      "label": "Mock Draft 2.0 — Just Baseball",
+      "url": "https://www.justbaseball.com/mlb-draft/mock-2026-shakeups-stock-risers/"
+    },
+    {
+      "label": "2026 Mock Draft Predictions — Bleacher Report",
+      "url": "https://bleacherreport.com/articles/25452697-2026-mlb-mock-draft-1st-round-predictions-where-top-prospects-will-land"
+    },
+    {
+      "label": "How to Watch the 2026 MLB Draft — NBC Sports",
+      "url": "https://www.nbcsports.com/mlb/news/how-to-watch-2026-mlb-draft-tv-live-stream-info-schedule-time-draft-order"
+    },
+    {
+      "label": "Final 2026 MLB Draft Rankings — ESPN",
+      "url": "https://www.espn.com/mlb/story/_/id/49297819/2026-mlb-draft-rankings-top-250-prospects-roch-cholowsky-grady-emerson-vahn-lackey"
+    },
+    {
+      "label": "MLB Draft 2026 Best Available Prospects — Baseball America",
+      "url": "https://www.baseballamerica.com/stories/mlb-draft-2026-best-available-prospects/"
+    }
+  ],
+  "bigBoard": [
+    {
+      "rank": 1,
+      "name": "Roch Cholowsky",
+      "position": "SS",
+      "school": "UCLA"
+    },
+    {
+      "rank": 2,
+      "name": "Grady Emerson",
+      "position": "SS",
+      "school": "Fort Worth Christian HS (TX)"
+    },
+    {
+      "rank": 3,
+      "name": "Vahn Lackey",
+      "position": "C",
+      "school": "Georgia Tech"
+    },
+    {
+      "rank": 4,
+      "name": "Jackson Flora",
+      "position": "RHP",
+      "school": "UC Santa Barbara"
+    },
+    {
+      "rank": 5,
+      "name": "Eric Booth Jr.",
+      "position": "OF",
+      "school": "Oak Grove HS (MS)"
+    },
+    {
+      "rank": 6,
+      "name": "Drew Burress",
+      "position": "OF",
+      "school": "Georgia Tech"
+    },
+    {
+      "rank": 7,
+      "name": "Justin Lebron",
+      "position": "SS",
+      "school": "Alabama"
+    },
+    {
+      "rank": 8,
+      "name": "Tyler Bell",
+      "position": "SS",
+      "school": "Kentucky"
+    },
+    {
+      "rank": 9,
+      "name": "Derek Curiel",
+      "position": "CF",
+      "school": "LSU"
+    },
+    {
+      "rank": 10,
+      "name": "Jared Grindlinger",
+      "position": "RF/LHP",
+      "school": "Huntington Beach HS (CA)"
+    },
+    {
+      "rank": 11,
+      "name": "Liam Peterson",
+      "position": "RHP",
+      "school": "Florida"
+    },
+    {
+      "rank": 12,
+      "name": "Chris Hacopian",
+      "position": "2B",
+      "school": "Texas A&M"
+    },
+    {
+      "rank": 13,
+      "name": "Ryder Helfrick",
+      "position": "C",
+      "school": "Arkansas"
+    },
+    {
+      "rank": 14,
+      "name": "Hunter Dietz",
+      "position": "LHP",
+      "school": "Arkansas"
+    },
+    {
+      "rank": 15,
+      "name": "Trevor Condon",
+      "position": "OF",
+      "school": "Etowah HS (GA)"
+    },
+    {
+      "rank": 16,
+      "name": "Ace Reese",
+      "position": "3B",
+      "school": "Mississippi State"
+    },
+    {
+      "rank": 17,
+      "name": "Zion Rose",
+      "position": "OF/C",
+      "school": "Louisville"
+    },
+    {
+      "rank": 18,
+      "name": "Cameron Flukey",
+      "position": "RHP",
+      "school": "Coastal Carolina"
+    },
+    {
+      "rank": 19,
+      "name": "Daniel Jackson",
+      "position": "C",
+      "school": "Georgia"
+    },
+    {
+      "rank": 20,
+      "name": "Gio Rojas",
+      "position": "LHP",
+      "school": "Stoneman Douglas HS (FL)"
+    },
+    {
+      "rank": 21,
+      "name": "Mason Edwards",
+      "position": "LHP",
+      "school": "USC"
+    },
+    {
+      "rank": 22,
+      "name": "Eric Becker",
+      "position": "SS",
+      "school": "Virginia"
+    },
+    {
+      "rank": 23,
+      "name": "AJ Gracia",
+      "position": "CF",
+      "school": "Virginia"
+    },
+    {
+      "rank": 24,
+      "name": "Logan Hughes",
+      "position": "OF",
+      "school": "Texas Tech"
+    },
+    {
+      "rank": 25,
+      "name": "Tyler Spangler",
+      "position": "SS",
+      "school": "De La Salle HS (CA)"
+    },
+    {
+      "rank": 26,
+      "name": "Logan Reddemann",
+      "position": "RHP",
+      "school": "UCLA"
+    },
+    {
+      "rank": 27,
+      "name": "Cade Townsend",
+      "position": "RHP",
+      "school": "Ole Miss"
+    },
+    {
+      "rank": 28,
+      "name": "Brody Bumila",
+      "position": "LHP",
+      "school": "Bishop Feehan HS (MA)"
+    },
+    {
+      "rank": 29,
+      "name": "Tegan Kuhns",
+      "position": "RHP",
+      "school": "Tennessee"
+    },
+    {
+      "rank": 30,
+      "name": "Caden Sorrell",
+      "position": "OF",
+      "school": "Texas A&M"
+    },
+    {
+      "rank": 31,
+      "name": "Logan Schmidt",
+      "position": "LHP",
+      "school": "Ganesha HS (CA)"
+    },
+    {
+      "rank": 32,
+      "name": "Coleman Borthwick",
+      "position": "RHP/3B",
+      "school": "South Walton HS (FL)"
+    },
+    {
+      "rank": 33,
+      "name": "Bo Lowrance",
+      "position": "3B",
+      "school": "Christ Church Episcopal HS (SC)"
+    },
+    {
+      "rank": 34,
+      "name": "Chase Brunson",
+      "position": "OF",
+      "school": "TCU"
+    },
+    {
+      "rank": 35,
+      "name": "Cole Prosek",
+      "position": "SS/C",
+      "school": "Magnolia Heights HS (MS)"
+    },
+    {
+      "rank": 36,
+      "name": "Ben Blair",
+      "position": "RHP",
+      "school": "Liberty"
+    },
+    {
+      "rank": 37,
+      "name": "Jack Radel",
+      "position": "RHP",
+      "school": "Notre Dame"
+    },
+    {
+      "rank": 38,
+      "name": "Aiden Ruiz",
+      "position": "SS",
+      "school": "The Stony Brook School (NY)"
+    },
+    {
+      "rank": 39,
+      "name": "Jensen Hirschkorn",
+      "position": "RHP",
+      "school": "Kingsburg HS (CA)"
+    },
+    {
+      "rank": 40,
+      "name": "Chris Rembert",
+      "position": "2B/OF",
+      "school": "Auburn"
+    },
+    {
+      "rank": 41,
+      "name": "Archer Horn",
+      "position": "SS/RHP",
+      "school": "St. Ignatius Prep (CA)"
+    },
+    {
+      "rank": 42,
+      "name": "Jarren Advincula",
+      "position": "MIF",
+      "school": "Georgia Tech"
+    },
+    {
+      "rank": 43,
+      "name": "Andrew Williamson",
+      "position": "OF",
+      "school": "Central Florida"
+    },
+    {
+      "rank": 44,
+      "name": "Ty Head",
+      "position": "OF",
+      "school": "NC State"
+    }
+  ],
+  "roundOrders": {
+    "1": [
+      {
+        "pick": 1,
+        "teamId": 145
+      },
+      {
+        "pick": 2,
+        "teamId": 139
+      },
+      {
+        "pick": 3,
+        "teamId": 142
+      },
+      {
+        "pick": 4,
+        "teamId": 137
+      },
+      {
+        "pick": 5,
+        "teamId": 134
+      },
+      {
+        "pick": 6,
+        "teamId": 118
+      },
+      {
+        "pick": 7,
+        "teamId": 110
+      },
+      {
+        "pick": 8,
+        "teamId": 133
+      },
+      {
+        "pick": 9,
+        "teamId": 144
+      },
+      {
+        "pick": 10,
+        "teamId": 115
+      },
+      {
+        "pick": 11,
+        "teamId": 120
+      },
+      {
+        "pick": 12,
+        "teamId": 108
+      },
+      {
+        "pick": 13,
+        "teamId": 138
+      },
+      {
+        "pick": 14,
+        "teamId": 146
+      },
+      {
+        "pick": 15,
+        "teamId": 109
+      },
+      {
+        "pick": 16,
+        "teamId": 140
+      },
+      {
+        "pick": 17,
+        "teamId": 117
+      },
+      {
+        "pick": 18,
+        "teamId": 113
+      },
+      {
+        "pick": 19,
+        "teamId": 114
+      },
+      {
+        "pick": 20,
+        "teamId": 111
+      },
+      {
+        "pick": 21,
+        "teamId": 135
+      },
+      {
+        "pick": 22,
+        "teamId": 116
+      },
+      {
+        "pick": 23,
+        "teamId": 112
+      },
+      {
+        "pick": 24,
+        "teamId": 136
+      },
+      {
+        "pick": 25,
+        "teamId": 158
+      },
+      {
+        "pick": 26,
+        "teamId": 144,
+        "note": "Prospect Promotion Incentive"
+      },
+      {
+        "pick": 27,
+        "teamId": 121,
+        "note": "Prospect Promotion Incentive"
+      },
+      {
+        "pick": 28,
+        "teamId": 117,
+        "note": "Prospect Promotion Incentive"
+      },
+      {
+        "pick": 29,
+        "teamId": 137,
+        "note": "Competitive Balance A · from Guardians"
+      },
+      {
+        "pick": 30,
+        "teamId": 118,
+        "note": "Competitive Balance A"
+      },
+      {
+        "pick": 31,
+        "teamId": 109,
+        "note": "Competitive Balance A"
+      },
+      {
+        "pick": 32,
+        "teamId": 138,
+        "note": "Competitive Balance A"
+      },
+      {
+        "pick": 33,
+        "teamId": 139,
+        "note": "Competitive Balance A · from Orioles"
+      },
+      {
+        "pick": 34,
+        "teamId": 134,
+        "note": "Competitive Balance A"
+      },
+      {
+        "pick": 35,
+        "teamId": 147,
+        "note": "Competitive Balance A"
+      },
+      {
+        "pick": 36,
+        "teamId": 143,
+        "note": "Competitive Balance A"
+      },
+      {
+        "pick": 37,
+        "teamId": 115,
+        "note": "Competitive Balance A"
+      }
+    ]
+  },
+  "teams": {
+    "110": {
+      "highlights": [
+        {
+          "title": "Earliest pick since Holliday",
+          "body": "At #7 overall, the Orioles are drafting this early for the first time since taking Jackson Holliday #1 in 2022.",
+          "photo": "Jackson Holliday"
+        },
+        {
+          "title": "Position player likely",
+          "body": "Scouts expect Baltimore to lean toward a college position player at #7, continuing the front office's recent draft philosophy."
+        },
+        {
+          "title": "Top of the class",
+          "body": "The consensus top tier: prep shortstops Grady Emerson and Jacob Lombard, UCLA SS Roch Cholowsky, Georgia Tech C Vahn Lackey, UCSB RHP Jackson Flora, and prep OF Eric Booth Jr."
+        },
+        {
+          "title": "Mock draft buzz",
+          "body": "Recent mocks have linked the O's to Kentucky SS Tyler Bell (FanGraphs), do-it-all hitter Chris Hacopian (Just Baseball), and Drew Burress, once a top-five candidate (Bleacher Report)."
+        }
+      ],
+      "notables": [
+        {
+          "year": 2019,
+          "round": 2,
+          "pick": 42,
+          "name": "Gunnar Henderson",
+          "position": "SS",
+          "school": "John T. Morgan Academy (AL)"
+        },
+        {
+          "year": 2015,
+          "round": 13,
+          "pick": 403,
+          "name": "Cedric Mullins",
+          "position": "OF",
+          "school": "Campbell"
+        },
+        {
+          "year": 2013,
+          "round": 8,
+          "pick": 249,
+          "name": "Trey Mancini",
+          "position": "1B/OF",
+          "school": "Notre Dame"
+        },
+        {
+          "year": 1978,
+          "round": 2,
+          "pick": 48,
+          "name": "Cal Ripken Jr.",
+          "position": "SS",
+          "school": "Aberdeen HS (MD)"
+        },
+        {
+          "year": 1973,
+          "round": 3,
+          "pick": 63,
+          "name": "Eddie Murray",
+          "position": "1B",
+          "school": "Locke HS (CA)"
+        }
+      ],
+      "teamSources": [
+        {
+          "label": "Orioles 2026 Draft Picks — Birds Watcher",
+          "url": "https://birdswatcher.com/complete-list-of-the-baltimore-orioles-2026-mlb-draft-picks"
+        },
+        {
+          "label": "Orioles 2026 Draft Preview — MLB.com",
+          "url": "https://www.mlb.com/news/orioles-2026-draft-preview"
+        }
+      ]
+    }
+  }
+}
