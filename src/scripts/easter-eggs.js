@@ -1,5 +1,5 @@
 // ── Easter Eggs ───────────────────────────────────────────────────
-import { applyTheme } from './theme.js';
+import { applyTheme, syncThemeColor } from './theme.js';
 import { loadPrefs } from './storage.js';
 
 export function triggerOriolesMagic() {
@@ -95,6 +95,7 @@ export function toggleOpacyTheme() {
     applyTheme(loadPrefs().theme || 'dark');
   } else {
     html.setAttribute('data-theme', 'opacy');
+    syncThemeColor('opacy');
   }
 }
 
@@ -104,6 +105,7 @@ export function toggleCityConnectTheme() {
     applyTheme(loadPrefs().theme || 'dark');
   } else {
     html.setAttribute('data-theme', 'city-connect');
+    syncThemeColor('city-connect');
     triggerCityConnectBanner();
   }
 }

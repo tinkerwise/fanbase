@@ -98,7 +98,7 @@ function renderGameChip(g) {
   const wx = getGameWeather(g);
   const wxInline = (stateClass === 'preview' && wx) ? ` ${wx.emoji}${wx.temp}°` : '';
 
-  return `<button class="score-chip ${stateClass}${hasActiveTeam ? ' orioles' : ''}"
+  return `<button class="score-chip ${stateClass}${hasActiveTeam ? ' my-team' : ''}"
       data-gamepk="${g.gamePk}" type="button" aria-haspopup="dialog" aria-expanded="false">
     <div class="chip-row${awayWin ? ' winner' : ''}">
       <span class="chip-team">${esc(teamAbbr(away.team))}</span>

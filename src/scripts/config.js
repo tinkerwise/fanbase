@@ -42,7 +42,7 @@ export const SEASON = new Date().getFullYear();
 
 export function getActiveTeamId() {
   try {
-    return Number(localStorage.getItem('fanbase_team') || ORIOLES_ID) || ORIOLES_ID;
+    return Number(localStorage.getItem('fb_team') || ORIOLES_ID) || ORIOLES_ID;
   } catch {
     return ORIOLES_ID;
   }
@@ -50,7 +50,7 @@ export function getActiveTeamId() {
 
 /** True when the user has never explicitly chosen a team (first load or cleared localStorage). */
 export function isFirstVisit() {
-  try { return !localStorage.getItem('fanbase_team'); } catch { return false; }
+  try { return !localStorage.getItem('fb_team'); } catch { return false; }
 }
 
 export const PITCH_NAMES = {

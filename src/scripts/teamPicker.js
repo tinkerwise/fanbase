@@ -1,22 +1,8 @@
 // ── Team Picker ───────────────────────────────────────────────────
 import { TEAM_CONFIG } from './teamConfig.js';
-import { ORIOLES_ID, getActiveTeamId } from './config.js';
+import { getActiveTeamId } from './config.js';
 
-const STORAGE_KEY = 'fanbase_team';
-
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `${r},${g},${b}`;
-}
-
-function applyTeamColor(teamId) {
-  const cfg = TEAM_CONFIG[teamId] ?? TEAM_CONFIG[ORIOLES_ID];
-  const rgb = hexToRgb(cfg.color);
-  document.documentElement.style.setProperty('--orange', cfg.color);
-  document.documentElement.style.setProperty('--orange-dim', `rgba(${rgb},0.12)`);
-}
+const STORAGE_KEY = 'fb_team';
 
 let overlay = null;
 
@@ -103,7 +89,6 @@ export function initTeamPicker() {
 
   const activeTeamId = getActiveTeamId();
   const teamName = TEAM_CONFIG[activeTeamId]?.name ?? 'Team';
-  applyTeamColor(activeTeamId);
 
   const btn = document.createElement('button');
   btn.className = 'btn-team-picker';

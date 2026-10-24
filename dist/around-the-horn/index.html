@@ -1,4 +1,81 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="Multi-team MLB news aggregator"><title>Around the Horn | Yard Report</title><link rel="icon" type="image/jpeg" href="/fanbase/favicon.jpg"><link rel="apple-touch-icon" href="/fanbase/favicon.jpg"><link rel="stylesheet" href="/fanbase/style.css?v=1777069190016"></head><body><main class="ath-page"><div class="ath-page-shell"><a class="ath-page-back" href="/fanbase/">← Back to Yard Report</a><header class="ath-page-head"><span class="ath-page-kicker">Around the Horn</span><h1 class="ath-page-title" id="athPageTitle">Loading story…</h1><p class="ath-page-subtitle" id="athPageSubtitle">Gathering related coverage from the saved bundle.</p></header><section class="ath-story-grid" id="athStoryGrid"><div class="feed-msg">Loading bundle…</div></section></div></main><script type="module">var e=document.getElementById(`athStoryGrid`),t=document.getElementById(`athPageTitle`),n=document.getElementById(`athPageSubtitle`),r=`fb_ath_bundles`,i=new URLSearchParams(window.location.search).get(`topic`)||``;function a(e=``){return String(e).replace(/[&<>"']/g,e=>({"&":`&amp;`,"<":`&lt;`,">":`&gt;`,'"':`&quot;`,"'":`&#39;`})[e])}function o(e){try{let{hostname:t}=new URL(e);return`https://www.google.com/s2/favicons?domain=${t}&sz=32`}catch{return``}}function s(e){let t=new Date(e);if(Number.isNaN(t.getTime()))return``;let n=Date.now()-t.getTime(),r=Math.floor(n/6e4);if(r<60)return`${Math.max(r,1)}m ago`;let i=Math.floor(r/60);if(i<24)return`${i}h ago`;let a=Math.floor(i/24);return a<7?`${a}d ago`:t.toLocaleDateString(`en-US`,{month:`short`,day:`numeric`})}function c(e){let t=o(e.link),n=(e.description||``).slice(0,180);return`<article class="ath-story-card">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="Multi-team MLB news aggregator"><title>Around the Horn | Yard Report</title><link rel="icon" type="image/jpeg" href="/fanbase/favicon.jpg"><link rel="apple-touch-icon" href="/fanbase/favicon.jpg"><link rel="stylesheet" href="/fanbase/style.css?v=1792847930395"><!--
+      Theme and team accent, applied before first paint so the page never
+      flashes the default. Mirrors theme.js (City Connect is Orioles-only and
+      turns on automatically on Fridays). Brand colors are stored as-is in
+      teamConfig.js; this lightens (dark theme) or darkens (light theme) each
+      one until it has enough contrast: 3:1 for fills and borders, 4.5:1 for
+      text. City Connect and Opacy keep the accent their CSS was designed with.
+    --><script>(function(){const teamColors = {"108":["#BA0021","#BA0021"],"109":["#A71930","#A71930"],"110":["#DF4601","#DF4601"],"111":["#BD3039","#BD3039"],"112":["#0E3386","#CC3433"],"113":["#C6011F","#C6011F"],"114":["#E31937","#E31937"],"115":["#8B5EA5","#8B5EA5"],"116":["#FA4616","#FA4616"],"117":["#EB6E1F","#EB6E1F"],"118":["#004687","#BD9B60"],"119":["#005A9C","#005A9C"],"120":["#AB0003","#AB0003"],"121":["#002D72","#FF5910"],"133":["#EFB21E","#EFB21E"],"134":["#FDB827","#FDB827"],"135":["#2F241D","#FFC425"],"136":["#0C2C56","#005C5C"],"137":["#FD5A1E","#FD5A1E"],"138":["#C41E3A","#C41E3A"],"139":["#8FBCE6","#8FBCE6"],"140":["#C0111F","#C0111F"],"141":["#134A8E","#134A8E"],"142":["#D31145","#D31145"],"143":["#E81828","#E81828"],"144":["#CE1141","#CE1141"],"145":["#27251F","#C4CED4"],"146":["#00A3E0","#00A3E0"],"147":["#003087","#C4CED3"],"158":["#FFC52F","#FFC52F"]};
+
+      (function () {
+        var root = document.documentElement;
+        var ORIOLES = 110;
+        var prefs = {};
+        var id = null;
+        try {
+          // Older builds stored the team as fanbase_team and prefs as yr_prefs
+          // (storage.js migrates the rest of the yr_* keys).
+          var legacyTeam = localStorage.getItem('fanbase_team');
+          if (legacyTeam !== null && localStorage.getItem('fb_team') === null) {
+            localStorage.setItem('fb_team', legacyTeam);
+          }
+          id = Number(localStorage.getItem('fb_team'));
+          prefs = JSON.parse(localStorage.getItem('fb_prefs') || localStorage.getItem('yr_prefs')) || {};
+        } catch (e) {}
+        if (!teamColors[id]) id = ORIOLES;
+
+        var theme = prefs.theme || 'light';
+        if (theme === 'system') theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        if (theme === 'city-connect' && id !== ORIOLES) theme = 'light';
+        if (new Date().getDay() === 5 && id === ORIOLES) theme = 'city-connect';
+        root.setAttribute('data-theme', theme);
+        // Status bar follows the app's theme, not the system's
+        var metas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var i = 0; i < metas.length; i++) {
+          metas[i].removeAttribute('media');
+          metas[i].setAttribute('content', theme === 'dark' ? '#111111' : '#ffffff');
+        }
+
+        function rgb(hex) {
+          return [1, 3, 5].map(function (i) { return parseInt(hex.slice(i, i + 2), 16); });
+        }
+        function lum(c) {
+          var v = c.map(function (x) { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+          return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+        }
+        function contrast(a, b) {
+          var la = lum(a), lb = lum(b);
+          return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+        }
+        // Blend c toward `toward` in 5% steps until it reaches `ratio` against bg
+        function ensure(c, bg, ratio, toward) {
+          for (var t = 0; t <= 1.0001; t += 0.05) {
+            var m = c.map(function (x, i) { return Math.round(x + (toward[i] - x) * t); });
+            if (contrast(m, bg) >= ratio) return m;
+          }
+          return toward;
+        }
+        function onColor(c) {
+          return contrast(c, [255, 255, 255]) > contrast(c, [16, 24, 32]) ? '#ffffff' : '#101820';
+        }
+        function vars(hex, bg, toward) {
+          var fill = ensure(rgb(hex), bg, 3, toward), text = ensure(rgb(hex), bg, 4.5, toward);
+          return '{--accent:rgb(' + fill + ');--accent-text:rgb(' + text + ');--accent-rgb:' + fill +
+            ';--accent-dim:rgba(' + fill + ',0.13);--on-accent:' + onColor(fill) + ';}';
+        }
+        // Backgrounds checked against: dark --surface, light --bg, and the
+        // two Orioles easter-egg themes' --bg
+        var WHITE = [255, 255, 255], BLACK = [0, 0, 0];
+        var css = ':root' + vars(teamColors[id][1], [23, 23, 23], WHITE) +
+          '[data-theme="light"]' + vars(teamColors[id][0], [245, 245, 245], BLACK) +
+          '[data-theme="city-connect"]' + vars('#c84b11', [255, 255, 255], BLACK) +
+          '[data-theme="opacy"]' + vars('#ff6b1a', [26, 10, 0], WHITE);
+        var style = document.createElement('style');
+        style.id = 'teamAccent';
+        style.textContent = css;
+        document.head.appendChild(style);
+      })();
+    })();</script></head><body><main class="ath-page"><div class="ath-page-shell"><a class="ath-page-back" href="/fanbase/">← Back to Yard Report</a><header class="ath-page-head"><span class="ath-page-kicker">Around the Horn</span><h1 class="ath-page-title" id="athPageTitle">Loading story…</h1><p class="ath-page-subtitle" id="athPageSubtitle">Gathering related coverage from the saved bundle.</p></header><section class="ath-story-grid" id="athStoryGrid"><div class="feed-msg">Loading bundle…</div></section></div></main><script type="module">var e=document.getElementById(`athStoryGrid`),t=document.getElementById(`athPageTitle`),n=document.getElementById(`athPageSubtitle`),r=`fb_ath_bundles`,i=new URLSearchParams(window.location.search).get(`topic`)||``;function a(e=``){return String(e).replace(/[&<>"']/g,e=>({"&":`&amp;`,"<":`&lt;`,">":`&gt;`,'"':`&quot;`,"'":`&#39;`})[e])}function o(e){try{let{hostname:t}=new URL(e);return`https://www.google.com/s2/favicons?domain=${t}&sz=32`}catch{return``}}function s(e){let t=new Date(e);if(Number.isNaN(t.getTime()))return``;let n=Date.now()-t.getTime(),r=Math.floor(n/6e4);if(r<60)return`${Math.max(r,1)}m ago`;let i=Math.floor(r/60);if(i<24)return`${i}h ago`;let a=Math.floor(i/24);return a<7?`${a}d ago`:t.toLocaleDateString(`en-US`,{month:`short`,day:`numeric`})}function c(e){let t=o(e.link),n=(e.description||``).slice(0,180);return`<article class="ath-story-card">
         <div class="ath-story-meta">
           ${t?`<img class="source-ico" src="${a(t)}" alt="" onerror="this.style.display='none'">`:``}
           <span class="source-name">${a(e.source?.name||`Source`)}</span>
