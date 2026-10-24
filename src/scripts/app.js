@@ -263,14 +263,14 @@ function setupEvents() {
   // visible; a tab that comes back after longer refreshes at once
   const REFRESH_MS = 5 * 60 * 1000;
   let lastRefresh = Date.now();
-  const refresh = () => {
+  const autoRefresh = () => {
     lastRefresh = Date.now();
     loadScores();
     loadTransactions();
   };
-  setInterval(() => { if (!document.hidden) refresh(); }, REFRESH_MS);
+  setInterval(() => { if (!document.hidden) autoRefresh(); }, REFRESH_MS);
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && Date.now() - lastRefresh >= REFRESH_MS) refresh();
+    if (!document.hidden && Date.now() - lastRefresh >= REFRESH_MS) autoRefresh();
   });
 
   // ── Easter Eggs ──────────────────────────────────────────────────
