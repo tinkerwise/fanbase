@@ -49,8 +49,9 @@ export async function loadStandings() {
       })),
     }));
 
-    const alEast = state.standings.find(d => d.divisionId === 201);
-    state.activeDiv = alEast?.divisionId ?? state.standings[0]?.divisionId ?? null;
+    // Open on the active team's division
+    const mine = state.standings.find(d => d.teams.some(t => t.isOrioles));
+    state.activeDiv = mine?.divisionId ?? state.standings[0]?.divisionId ?? null;
 
     renderDivTabs();
     renderStandings();
