@@ -21,6 +21,9 @@ function done($code, $body) {
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') done(405, ['error' => 'POST only']);
+// A JSON content type makes other sites' requests preflight (and fail: no
+// CORS header), so a cross-site text/plain form post can't add entries
+if (stripos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') !== 0) done(415, ['error' => 'JSON only']);
 
 $input = json_decode(file_get_contents('php://input', false, null, 0, 8192), true);
 if (!is_array($input)) done(400, ['error' => 'Invalid JSON']);
