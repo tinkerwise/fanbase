@@ -14,7 +14,7 @@ kc_get() { security find-generic-password -s "$KEYCHAIN_SERVICE" -a "$1" -w 2>/d
 if [[ -f .env ]]; then
   set -a; source .env; set +a
 fi
-REMOTE_DEPLOY_PATH="${REMOTE_DEPLOY_PATH:-./public_html/fanbase/}"
+REMOTE_DEPLOY_PATH="${REMOTE_DEPLOY_PATH:-./}"
 FTP_SERVER="${FTP_SERVER:-$(kc_get server)}"
 FTP_USERNAME="${FTP_USERNAME:-$(kc_get username)}"
 FTP_PASSWORD="${FTP_PASSWORD:-$(kc_get password)}"

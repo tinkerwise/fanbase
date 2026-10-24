@@ -8,8 +8,8 @@
 # "fanbase-ftp"). Anything missing is prompted for once and saved to
 # the Keychain after a successful upload, so later runs don't ask.
 #
-# REMOTE_DEPLOY_PATH defaults to "./public_html/fanbase/"; override it in
-# .env if the FTP account is rooted elsewhere.
+# REMOTE_DEPLOY_PATH defaults to "./" (the fanbase FTP account opens in
+# public_html/fanbase); override it in .env if that changes.
 #
 # Usage: npm run deploy                 # build, verify, upload
 #        npm run deploy -- --dry-run    # show what would change, upload nothing
@@ -40,7 +40,7 @@ command -v lftp >/dev/null || { echo "lftp not found — brew install lftp" >&2;
 if [[ -f .env ]]; then
   set -a; source .env; set +a
 fi
-REMOTE_DEPLOY_PATH="${REMOTE_DEPLOY_PATH:-./public_html/fanbase/}"
+REMOTE_DEPLOY_PATH="${REMOTE_DEPLOY_PATH:-./}"
 FTP_SERVER="${FTP_SERVER:-$(kc_get server)}"
 FTP_USERNAME="${FTP_USERNAME:-$(kc_get username)}"
 FTP_PASSWORD="${FTP_PASSWORD:-$(kc_get password)}"
