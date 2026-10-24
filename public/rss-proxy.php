@@ -27,31 +27,24 @@ function fail($code, $message) {
     exit;
 }
 
-// ── Allowlist of trusted RSS domains ─────────────────────────────
+// ── Allowlist ─────────────────────────────────────────────────────
+// Hosts in public/feeds.json, plus youtube.com (video playlists) and
+// mlb.com pages (walk-up music). og:image lookups fetch article pages, so
+// they're limited to the same hosts. Subdomains match (blogs.fangraphs.com).
 const ALLOWED_DOMAINS = [
     'mlb.com',
-    'orioles.com',
     'espn.com',
-    'baltimorebaseball.com',
-    'blogs.fangraphs.com',
+    'nytimes.com',
     'fangraphs.com',
-    'tht.fangraphs.com',
     'mlbtraderumors.com',
     'baseballprospectus.com',
+    'baseballamerica.com',
+    'baltimorebaseball.com',
     'camdenchat.com',
     'birdswatcher.com',
     'eutawstreetreport.com',
     'masnsports.com',
-    'orioleshangout.com',
-    'cbssports.com',
-    'sports.yahoo.com',
-    'mlb.nbcsports.com',
-    'nbcsports.com',
-    'baseballamerica.com',
-    'nytimes.com',
-    'substack.com',
     'youtube.com',
-    'megaphone.fm',
 ];
 
 function is_allowed($url) {

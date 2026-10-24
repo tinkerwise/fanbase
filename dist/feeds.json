@@ -12,5 +12,5 @@
   { "id": "bp",           "name": "Baseball Prospectus",  "url": "https://www.baseballprospectus.com/feed/",                        "color": "#1e40af", "category": "mlb",     "teamId": 0   },
   { "id": "ba",           "name": "Baseball America",     "url": "https://www.baseballamerica.com/feed/",                           "color": "#b91c1c", "category": "mlb",     "teamId": 0   },
   { "id": "nyt",          "name": "NY Times Baseball",    "url": "https://rss.nytimes.com/services/xml/rss/nyt/Baseball.xml",       "color": "#1a1a1a", "category": "mlb",     "teamId": 0   },
-  { "id": "athletic",     "name": "The Athletic",         "url": "https://theathletic.com/mlb/baltimore-orioles/feed/",             "color": "#222222", "category": "orioles", "teamId": 110 }
+  { "id": "athletic",     "name": "The Athletic",         "url": "https://www.nytimes.com/athletic/rss/mlb/orioles/",              "color": "#222222", "category": "orioles", "teamId": 110 }
 ]
