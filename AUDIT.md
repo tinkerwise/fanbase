@@ -182,6 +182,8 @@ CLS **0.185**, 59 requests, 258 KB transferred, **19 proxy calls** (median
 | Finding | Recommendation |
 |---|---|
 | **The Athletic feed never loaded** (domain not allowlisted; URL now 404s) | Fixed `e93a669` (new nytimes.com/athletic feed) |
+| **MLB.com news never loaded**: mlb.com returns 403 to every request from the web host's IP (found with the proxy's new upstream diagnostics, `3124300`). Each team's MLB.com feed and the league MLB.com feed were blank | Fixed `f3dd07f`: MLB's content API (`dapi.cms.mlbinfra.com`, selections `t<teamId>-news-list` / `mlb-news-list`) sends CORS headers, so the browser reads it directly: per-team, current, with thumbnails. Duplicate stories across sources are dropped |
+| **Walk-up songs can't scrape mlb.com** (same 403 on `/<team>/ballpark/music`) | Open. Falls back to `walkup-data.json`; refresh that file from a machine mlb.com doesn't block |
 | **"Orioles Moments" playlist shown to every team's fans** | Fixed `2ca1e87` |
 | **Around the Horn had no site header** | Fixed `86b238d` |
 | **Home standings always opened on the AL East**, whatever your team | Fixed `d6a3852` |
