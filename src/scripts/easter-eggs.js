@@ -99,17 +99,6 @@ export function toggleOpacyTheme() {
   }
 }
 
-export function toggleCityConnectTheme() {
-  const html = document.documentElement;
-  if (html.getAttribute('data-theme') === 'city-connect') {
-    applyTheme(loadPrefs().theme || 'dark');
-  } else {
-    html.setAttribute('data-theme', 'city-connect');
-    syncThemeColor('city-connect');
-    triggerCityConnectBanner();
-  }
-}
-
 export function triggerCityConnectBanner() {
   const banner = document.createElement('div');
   banner.className = 'city-connect-banner';

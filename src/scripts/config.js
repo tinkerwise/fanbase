@@ -84,8 +84,6 @@ export const TEAM_ID = PICKED_TEAM_ID ?? ORIOLES_ID;
 export const TEAM = { ...TEAM_CONFIG[TEAM_ID], nick: TEAM_CONFIG[TEAM_ID].name };
 export const TEAM_ABBR = TEAM.abbr;
 export const TEAM_NICK = TEAM.nick;
-export const TEAM_CONFERENCE = TEAM.div.split(' ')[0]; // 'AL' | 'NL'
-export const TEAM_DIVISION = TEAM.div.split(' ')[1];   // 'East' | 'Central' | 'West'
 
 /** The team the page shows: the ?view= team, else your own. */
 export function getActiveTeamId() {

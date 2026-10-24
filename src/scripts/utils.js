@@ -212,12 +212,6 @@ export function dayLabel(dateStr) {
   return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
-export function shortGameDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
-}
-
 // Venue detail cache (shared by scores + sidebars)
 const venueCache = {};
 export async function fetchVenueDetails(venueId) {
@@ -330,16 +324,6 @@ export function searchPlayerId(name) {
     .catch(() => null);
   searchIdCache.set(key, promise);
   return promise;
-}
-
-// ── Cot's Contracts (Baseball Prospectus) — AL East page covers the Orioles ──
-export const COTS_URL = 'https://legacy.baseballprospectus.com/compensation/cots/al_east.php';
-export const COTS_PAGE_URL = 'https://legacy.baseballprospectus.com/compensation/cots/';
-
-function parseCotsSalary(text) {
-  const t = (text ?? '').trim();
-  if (!t || t === '-' || t === ' ') return '';
-  return t;
 }
 
 // Full {id, fullName, teamId} rows for scanning free text (e.g. trade-rumor

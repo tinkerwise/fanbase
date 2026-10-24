@@ -9,3 +9,6 @@ Icon?
 
 # Feedback log downloaded by npm run feedback
 feedback/
+
+# Astro generated types
+.astro/
