@@ -4,10 +4,10 @@
 // against rumor text. League-wide details (deadline, reporters) come from
 // public/trades.json.
 import './theme.js';
-import { MLB, PROXY, TEAM_ID, TEAM, TEAM_NICK, SEASON } from './config.js';
+import { MLB, TEAM_ID, TEAM, TEAM_NICK, SEASON } from './config.js';
 import { TEAM_CONFIG } from './teamConfig.js';
 import { requireTeam } from './teamPicker.js';
-import { loadFeedSources } from './feedSources.js';
+import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { $, esc, relativeDate, cleanFeedText, extractThumbnail, renderNewsThumbCard, fetchOgImage, fetchPlayerIndex, savantUrl, teamLogoSrc, decodeHtmlEntities, mlbPlayerUrl } from './utils.js';
 
 // ── Team Moves — confirmed trades only, straight from MLB's own
@@ -423,7 +423,7 @@ async function loadDeadlineNews() {
   try {
     const feeds = await loadFeedSources();
     const results = await Promise.allSettled(feeds.map(source =>
-      fetch(`${PROXY}?url=${encodeURIComponent(source.url)}`).then(r => r.json())
+      fetchFeedItems(source)
         .then(data => ({ source, articles: data.items ?? [] }))
     ));
 

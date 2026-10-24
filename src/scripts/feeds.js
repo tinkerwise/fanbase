@@ -1,6 +1,6 @@
 // ── Feeds ─────────────────────────────────────────────────────────
-import { PROXY, TEAM_SLUG, TEAM_ABBREV, ORIOLES_ID, getActiveTeamId } from './config.js';
-import { resolveFeedSources } from './feedSources.js';
+import { TEAM_SLUG, TEAM_ABBREV, ORIOLES_ID, getActiveTeamId } from './config.js';
+import { resolveFeedSources, fetchFeedItems } from './feedSources.js';
 import {
   MAX_VISIBLE_ARTICLES,
   selectDisplayArticles,
@@ -50,8 +50,7 @@ export function setViewMode(view, { render = true } = {}) {
 // ── Feed fetching ─────────────────────────────────────────────────
 async function fetchFeed(source) {
   try {
-    const url = `${PROXY}?url=${encodeURIComponent(source.url)}`;
-    const data = await fetch(url).then(r => r.json());
+    const data = await fetchFeedItems(source);
     return {
       source,
       articles: (data.items ?? []).map(item => ({
@@ -99,6 +98,9 @@ export async function loadFeeds() {
 
   state.articles = [];
   const successfulSources = [];
+  // The same story can come from two sources (a team's MLB.com news also
+  // runs in the league list); keep the first, which is the team's
+  const seenLinks = new Set();
 
   for (const r of results) {
     if (r.status !== 'fulfilled') continue;
@@ -106,6 +108,8 @@ export async function loadFeeds() {
     successfulSources.push(source);
     for (const article of articles) {
       if (isOffTopic(article)) continue;
+      if (article.link && seenLinks.has(article.link)) continue;
+      if (article.link) seenLinks.add(article.link);
       const effectiveSource = isMiLB(article)
         ? { ...source, category: 'milb' }
         : source;

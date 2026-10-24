@@ -1,8 +1,8 @@
 // ── MLB Draft page ─────────────────────────────────────────────────
 import './theme.js';
-import { PROXY, MLB, SEASON, TEAM_ID, TEAM_ABBR, TEAM_NICK, TEAM_ABBREV } from './config.js';
+import { MLB, SEASON, TEAM_ID, TEAM_ABBR, TEAM_NICK, TEAM_ABBREV } from './config.js';
 import { requireTeam } from './teamPicker.js';
-import { loadFeedSources } from './feedSources.js';
+import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { $, esc, relativeDate, cleanFeedText, savantUrl, mlbPlayerUrl, fetchPlayerIdMap, lookupPlayerId, searchPlayerId, teamLogoSrc, extractThumbnail, renderNewsThumbCard, fetchOgImage, playerNameOrLookup, resolveNameLookups, stripAccents } from './utils.js';
 
 let draftData = null;
@@ -551,7 +551,7 @@ async function loadDraftNews() {
   try {
     const feeds = await loadFeedSources();
     const results = await Promise.allSettled(feeds.map(source =>
-      fetch(`${PROXY}?url=${encodeURIComponent(source.url)}`).then(r => r.json())
+      fetchFeedItems(source)
         .then(data => ({ source, articles: data.items ?? [] }))
     ));
 

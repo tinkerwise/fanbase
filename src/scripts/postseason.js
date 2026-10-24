@@ -6,7 +6,7 @@
 import './theme.js';
 import { MLB, TEAM_ID, TEAM_NICK, PROXY, SEASON, TEAM_ABBREV, TEAM_SLUG } from './config.js';
 import { requireTeam } from './teamPicker.js';
-import { loadFeedSources } from './feedSources.js';
+import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { $, esc, teamLogoSrc, cleanFeedText, extractThumbnail, renderNewsThumbCard, fetchOgImage, decodeHtmlEntities, formatGameTime, localDateStr, savantUrl } from './utils.js';
 import { extractVideoId, bindVideoClicks } from './videoTheater.js';
 import { getScoreChipStatus } from './scores.js';
@@ -670,7 +670,7 @@ async function loadNews() {
   try {
     const feeds = await loadFeedSources();
     const results = await Promise.allSettled(feeds.map(source =>
-      fetch(`${PROXY}?url=${encodeURIComponent(source.url)}`).then(r => r.json())
+      fetchFeedItems(source)
         .then(data => ({ source, articles: data.items ?? [] }))
     ));
     const cutoff = Date.now() - 7 * 864e5;
