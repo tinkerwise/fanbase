@@ -2562,12 +2562,6 @@ a.il-name:hover { color: var(--accent); }
   flex-direction: column;
   gap: 24px;
 }
-.ath-page-back {
-  color: var(--text-2);
-  text-decoration: none;
-  font-size: 0.92rem;
-}
-.ath-page-back:hover { color: var(--accent); }
 .ath-page-head {
   display: flex;
   flex-direction: column;
