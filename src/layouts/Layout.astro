@@ -162,9 +162,13 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
       ))}
     </nav>
     <slot />
+    <footer class="site-footer">
+      <button class="feedback-link" type="button" data-feedback>Send feedback</button>
+    </footer>
     <script>
       import '../scripts/search.js';
       import '../scripts/onboarding.js';
+      import '../scripts/feedback.js';
     </script>
     <script is:inline define:vars={{ base }}>
       // While viewing another team (?view=), keep it on every link within the

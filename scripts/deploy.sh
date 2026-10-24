@@ -61,6 +61,8 @@ npm run smoke
 
 # iCloud Documents sync can make "name 2.ext" copies in dist/ while the
 # build rewrites it, so the mirror skips any file named that way.
+# feedback-data/ only exists on the host (feedback.php writes it), so the
+# mirror leaves it alone rather than deleting it.
 # Password goes through LFTP_PASSWORD so it never appears in lftp's args.
 export LFTP_PASSWORD="$FTP_PASSWORD"
 lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" <<LFTP_EOF
@@ -69,7 +71,7 @@ lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" <<LFTP_EOF
   set net:timeout 30
   set net:max-retries 2
   mirror --reverse --delete --verbose $DRY_RUN \
-    --exclude-glob .ftpquota --exclude-glob .DS_Store \
+    --exclude-glob .ftpquota --exclude-glob .DS_Store --exclude ^feedback-data/ \
     --exclude-glob '* [0-9].*' \
     ./dist/ ${REMOTE_DEPLOY_PATH}
   quit

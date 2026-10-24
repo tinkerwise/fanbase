@@ -3737,3 +3737,55 @@ a.il-name:hover { color: var(--accent); }
 .ob-actions { display: flex; align-items: center; gap: 10px; }
 .ob-skip { padding: 11px 14px; border: none; background: none; color: var(--text-2); font-family: inherit; font-weight: 600; font-size: 0.9rem; line-height: 1; cursor: pointer; }
 .ob-next { flex: 1; padding: 11px; border-radius: 10px; border: none; background: var(--accent); color: var(--on-accent); font-family: inherit; font-weight: 700; font-size: 0.9rem; line-height: 1; cursor: pointer; }
+/* ── Feedback (feedback.js) ── */
+.site-footer { display: flex; justify-content: center; padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px)); }
+.feedback-link {
+  padding: 4px 8px; border: none; background: none; color: var(--text-2); font-family: inherit; font-size: 0.8rem;
+  text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+}
+.feedback-link:hover { color: var(--accent-text); }
+.thanks-overlay {
+  position: fixed; inset: 0; z-index: 10001; display: flex; align-items: center; justify-content: center;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  background: rgba(0,0,0,0.6);
+}
+.thanks-dialog {
+  position: relative; width: 100%; max-width: 420px; max-height: 100%; overflow-y: auto;
+  padding: 20px; border: 1px solid var(--border); border-top: 4px solid var(--accent); border-radius: 16px;
+  background: var(--surface); color: var(--text); box-shadow: 0 16px 48px rgba(0,0,0,0.45); outline: none;
+}
+.thanks-close {
+  position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border: 0; border-radius: 50%;
+  background: transparent; color: var(--text-2); font: inherit; font-size: 1rem; cursor: pointer;
+}
+.thanks-title { margin: 0 42px 16px 0; font-size: 1.15rem; line-height: 1.35; }
+.thanks-scale { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 14px; padding: 0; border: 0; }
+.thanks-scale legend { margin-bottom: 8px; padding: 0; font-size: 0.85rem; font-weight: 600; }
+.thanks-rating {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px;
+  border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.thanks-rating input { position: absolute; opacity: 0; pointer-events: none; }
+.thanks-rating:hover { border-color: var(--accent); }
+.thanks-rating:has(input:checked) { border-color: var(--accent); background: var(--accent-dim); }
+.thanks-rating:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.thanks-emoji { font-size: 1.6rem; line-height: 1; }
+.thanks-rating-label { font-size: 0.72rem; color: var(--text-2); text-align: center; }
+.thanks-comment-label { display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; }
+.thanks-comment-label span { color: var(--text-2); font-weight: 400; }
+.thanks-comment {
+  width: 100%; box-sizing: border-box; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text); font: inherit; font-size: 0.85rem; resize: vertical;
+}
+.thanks-comment:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.thanks-hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
+.thanks-status { min-height: 1.2em; margin: 6px 0 0; font-size: 0.75rem; color: var(--text-2); }
+.thanks-status:empty { min-height: 0; }
+.thanks-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+.thanks-later, .thanks-send {
+  min-height: 40px; padding: 9px 16px; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer;
+}
+.thanks-later { border: 1px solid var(--border); background: transparent; color: var(--text); }
+.thanks-send { border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); }
+.thanks-send:disabled { opacity: 0.6; cursor: default; }
+.thanks-sent { margin: 8px 0; font-size: 1rem; font-weight: 600; text-align: center; }

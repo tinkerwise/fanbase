@@ -6,3 +6,6 @@ node_modules/
 .DS_Store
 
 Icon?
+
+# Feedback log downloaded by npm run feedback
+feedback/

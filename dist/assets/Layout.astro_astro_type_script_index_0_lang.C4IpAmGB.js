@@ -34,4 +34,27 @@ import{$ as e,A as t,B as n,F as r,I as i,M as a,Q as o,U as s,Y as c,s as l,z a
         ${U===0?`<button class="ob-skip" type="button" data-ob="skip">Skip</button>`:`<button class="ob-skip" type="button" data-ob="back">Back</button>`}
         <button class="ob-next" type="button" data-ob="${e?`done`:`next`}">${e?`Let's go`:`Next`}</button>
       </div>
-    </div>`,H.querySelector(`.ob-next`)?.focus()}function Y(){W(e=>{e.setItem(z,`1`),e.removeItem(r)}),H?.classList.add(`hidden`),document.body.style.overflow=``}function X(){H||(H=document.createElement(`div`),H.className=`ob-overlay hidden`,document.body.appendChild(H),H.addEventListener(`click`,e=>{let t=e.target.closest(`[data-ob-theme]`);if(t){f(t.dataset.obTheme),J();return}let n=e.target.closest(`[data-ob]`)?.dataset.ob;n===`next`?(U=Math.min(U+1,2),J()):n===`back`?(U=Math.max(U-1,0),J()):n===`skip`||n===`done`?Y():n===`search`&&(Y(),F())}),document.addEventListener(`keydown`,e=>{e.key===`Escape`&&H&&!H.classList.contains(`hidden`)&&Y()})),U=0,J(),H.classList.remove(`hidden`),document.body.style.overflow=`hidden`}function Z(){if(!i||c)return;let e=!1,t=!1;W(n=>{e=n.getItem(r)===`1`,t=n.getItem(z)===`1`}),e&&!t?X():e&&W(e=>e.removeItem(r))}document.readyState===`loading`?document.addEventListener(`DOMContentLoaded`,Z):Z();
+    </div>`,H.querySelector(`.ob-next`)?.focus()}function Y(){W(e=>{e.setItem(z,`1`),e.removeItem(r)}),H?.classList.add(`hidden`),document.body.style.overflow=``}function X(){H||(H=document.createElement(`div`),H.className=`ob-overlay hidden`,document.body.appendChild(H),H.addEventListener(`click`,e=>{let t=e.target.closest(`[data-ob-theme]`);if(t){f(t.dataset.obTheme),J();return}let n=e.target.closest(`[data-ob]`)?.dataset.ob;n===`next`?(U=Math.min(U+1,2),J()):n===`back`?(U=Math.max(U-1,0),J()):n===`skip`||n===`done`?Y():n===`search`&&(Y(),F())}),document.addEventListener(`keydown`,e=>{e.key===`Escape`&&H&&!H.classList.contains(`hidden`)&&Y()})),U=0,J(),H.classList.remove(`hidden`),document.body.style.overflow=`hidden`}function Z(){if(!i||c)return;let e=!1,t=!1;W(n=>{e=n.getItem(r)===`1`,t=n.getItem(z)===`1`}),e&&!t?X():e&&W(e=>e.removeItem(r))}document.readyState===`loading`?document.addEventListener(`DOMContentLoaded`,Z):Z();var Q=`/fanbase/feedback.php`,$=[{value:-1,emoji:`👎`,label:`Not great`},{value:0,emoji:`😐`,label:`It’s okay`},{value:1,emoji:`👍`,label:`Love it`}];function ee(){let e=document.createElement(`div`);e.className=`thanks-overlay`,e.innerHTML=`
+    <section class="thanks-dialog" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+      <button class="thanks-close" type="button" aria-label="Close">✕</button>
+      <h2 class="thanks-title" id="feedbackTitle">Send feedback</h2>
+      <form class="thanks-form">
+        <fieldset class="thanks-scale">
+          <legend>How’s Fanbase working for you?</legend>
+          ${$.map(e=>`
+            <label class="thanks-rating">
+              <input type="radio" name="rating" value="${e.value}" required>
+              <span class="thanks-emoji" aria-hidden="true">${e.emoji}</span>
+              <span class="thanks-rating-label">${e.label}</span>
+            </label>`).join(``)}
+        </fieldset>
+        <label class="thanks-comment-label" for="feedbackComment">Anything to add? <span>(optional)</span></label>
+        <textarea class="thanks-comment" id="feedbackComment" name="comment" rows="3" maxlength="1000" placeholder="What would make it better?"></textarea>
+        <input class="thanks-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="thanks-status" role="status"></p>
+        <div class="thanks-actions">
+          <button class="thanks-later" type="button">Cancel</button>
+          <button class="thanks-send" type="submit">Send feedback</button>
+        </div>
+      </form>
+    </section>`,document.body.appendChild(e);let t=document.body.style.overflow;document.body.style.overflow=`hidden`;let n=e.querySelector(`.thanks-form`),r=e.querySelector(`.thanks-status`),i=e.querySelector(`.thanks-send`);function a(){e.remove(),document.body.style.overflow=t,document.removeEventListener(`keydown`,o)}function o(e){e.key===`Escape`&&a()}e.addEventListener(`click`,t=>{(t.target===e||t.target.closest(`.thanks-close, .thanks-later`))&&a()}),document.addEventListener(`keydown`,o),n.addEventListener(`submit`,async e=>{e.preventDefault();let t=new FormData(n),o=``;try{o=localStorage.getItem(`fb_team`)||``}catch{}i.disabled=!0,r.textContent=`Sending…`;try{let e=await fetch(Q,{method:`POST`,headers:{"Content-Type":`application/json`},body:JSON.stringify({rating:Number(t.get(`rating`)),comment:String(t.get(`comment`)||``).trim(),website:String(t.get(`website`)||``),team:o,page:location.pathname})});if(!e.ok)throw Error(`Feedback request failed (${e.status})`);n.innerHTML=`<p class="thanks-sent">Got it, thank you! ⚾</p>`,setTimeout(a,1800)}catch(e){console.error(`Unable to send feedback`,e),r.textContent=`That didn’t go through. Please try again in a bit.`,i.disabled=!1}}),e.querySelector(`.thanks-dialog`).focus()}document.addEventListener(`click`,e=>{e.target.closest(`[data-feedback]`)&&ee()});
