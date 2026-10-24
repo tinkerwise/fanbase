@@ -1,7 +1,8 @@
 import { defineConfig } from 'astro/config';
 
 // Dev-only plugin: proxies rss-proxy.php requests so the static PHP file
-// doesn't need a running PHP server during local development.
+// doesn't need a running PHP server during local development. No CORS
+// header, so other sites open in the browser can't read through it.
 function rssProxyDevPlugin() {
   return {
     name: 'rss-proxy-dev',
@@ -12,9 +13,9 @@ function rssProxyDevPlugin() {
         const { searchParams } = new URL(req.url, 'http://localhost');
         const feedUrl = searchParams.get('url');
         const format = searchParams.get('format');
-        if (!feedUrl) {
+        if (!/^https?:\/\//i.test(feedUrl ?? '')) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Missing url parameter' }));
+          res.end(JSON.stringify({ error: 'Missing or invalid url parameter' }));
           return;
         }
 
@@ -24,33 +25,14 @@ function rssProxyDevPlugin() {
               'User-Agent': 'Mozilla/5.0 (compatible; Fanbase/1.0)',
               Accept: format === 'text' || format === 'og'
                 ? 'text/html, text/plain, */*'
-                : format === 'audio'
-                  ? 'audio/*,*/*;q=0.8'
-                  : 'application/rss+xml, application/xml, text/xml, */*',
-              ...(format === 'audio' && req.headers.range ? { Range: req.headers.range } : {}),
+                : 'application/rss+xml, application/xml, text/xml, */*',
             },
           });
-          if (format === 'audio') {
-            const buffer = Buffer.from(await response.arrayBuffer());
-            res.writeHead(response.status || 200, {
-              'Content-Type': response.headers.get('content-type') || 'audio/mpeg',
-              'Content-Length': response.headers.get('content-length') || String(buffer.length),
-              'Accept-Ranges': response.headers.get('accept-ranges') || 'bytes',
-              ...(response.headers.get('content-range')
-                ? { 'Content-Range': response.headers.get('content-range') }
-                : {}),
-              'Access-Control-Allow-Origin': '*',
-              'Cache-Control': 'public, max-age=900',
-            });
-            res.end(buffer);
-            return;
-          }
           const xml = await response.text();
 
           if (format === 'text') {
             res.writeHead(200, {
               'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
             });
             res.end(JSON.stringify({ text: xml }));
             return;
@@ -62,7 +44,6 @@ function rssProxyDevPlugin() {
               ?? null;
             res.writeHead(200, {
               'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
             });
             res.end(JSON.stringify({ image }));
             return;
@@ -126,7 +107,6 @@ function rssProxyDevPlugin() {
 
           res.writeHead(200, {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
           });
           res.end(JSON.stringify({ feedTitle, items }));
         } catch {

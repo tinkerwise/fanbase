@@ -1,22 +1,34 @@
 <?php
 /**
- * RSS Proxy — serves RSS feeds as JSON for the Orioles Magic frontend.
- * Place this file in the same directory as your built site on cPanel.
+ * RSS proxy: fetches a feed (or page) from an allowlisted domain and returns
+ * it as JSON for the site's scripts. Same-origin only (no CORS header).
+ *
+ *   ?url=<feed>               RSS 2.0 / Atom → { feedTitle, items: [...] }
+ *   ?url=<page>&format=text   raw page text   → { text }
+ *   ?url=<page>&format=og     og:image lookup → { image }
+ *
+ * http(s) only. Redirects are followed by hand, at most 3, and every hop
+ * must stay on the allowlist. Responses are capped at 5 MB and cached in
+ * the system temp directory (15 minutes, a day for og:image) so visitors
+ * share one upstream fetch; if upstream fails, a stale copy is served.
  */
 
-header('Access-Control-Allow-Origin: *');
+header('X-Content-Type-Options: nosniff');
 
-// ── Validate URL ──────────────────────────────────────────────────
-$url = filter_var($_GET['url'] ?? '', FILTER_VALIDATE_URL);
-$format = strtolower($_GET['format'] ?? '');
-if (!$url) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing or invalid url parameter']);
+const MAX_BYTES = 5 * 1024 * 1024;
+const MAX_REDIRECTS = 3;
+const CACHE_TTL = ['' => 900, 'text' => 900, 'og' => 86400];
+
+function fail($code, $message) {
+    http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    echo json_encode(['error' => $message]);
     exit;
 }
 
 // ── Allowlist of trusted RSS domains ─────────────────────────────
-$allowed_domains = [
+const ALLOWED_DOMAINS = [
     'mlb.com',
     'orioles.com',
     'espn.com',
@@ -42,104 +54,117 @@ $allowed_domains = [
     'megaphone.fm',
 ];
 
-$host = strtolower(parse_url($url, PHP_URL_HOST) ?? '');
-$trusted = false;
-foreach ($allowed_domains as $domain) {
-    if ($host === $domain || substr($host, -(strlen($domain) + 1)) === '.' . $domain) {
-        $trusted = true;
-        break;
+function is_allowed($url) {
+    if (!filter_var($url, FILTER_VALIDATE_URL)) return false;
+    $parts = parse_url($url);
+    if (!in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)) return false;
+    if (isset($parts['user']) || isset($parts['pass'])) return false;
+    $host = strtolower($parts['host'] ?? '');
+    foreach (ALLOWED_DOMAINS as $domain) {
+        if ($host === $domain || substr($host, -(strlen($domain) + 1)) === '.' . $domain) return true;
     }
+    return false;
 }
-if (!$trusted) {
-    http_response_code(403);
-    echo json_encode(['error' => 'Domain not in allowlist']);
+
+// A redirect's Location, made absolute against the URL that sent it
+function resolve_url($base, $location) {
+    if (preg_match('#^https?://#i', $location)) return $location;
+    $b = parse_url($base);
+    if (strpos($location, '//') === 0) return $b['scheme'] . ':' . $location;
+    $origin = $b['scheme'] . '://' . $b['host'] . (isset($b['port']) ? ':' . $b['port'] : '');
+    if (strpos($location, '/') === 0) return $origin . $location;
+    return $origin . preg_replace('#/[^/]*$#', '/', $b['path'] ?? '/') . $location;
+}
+
+// Returns the body, or null on failure, a disallowed redirect or an oversize response
+function fetch_upstream($url, $accept) {
+    $headers = implode("\r\n", [
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept: ' . $accept,
+        'Accept-Language: en-US,en;q=0.9',
+        'Sec-Fetch-Dest: document',
+        'Sec-Fetch-Mode: navigate',
+        'Sec-Fetch-Site: none',
+    ]);
+    for ($hop = 0; $hop <= MAX_REDIRECTS; $hop++) {
+        $ctx = stream_context_create([
+            'http' => [
+                'timeout'         => 10,
+                'follow_location' => 0,
+                'ignore_errors'   => true,
+                'header'          => $headers,
+            ],
+            'ssl' => ['verify_peer' => true, 'verify_peer_name' => true],
+        ]);
+        $body = @file_get_contents($url, false, $ctx, 0, MAX_BYTES + 1);
+        $response_headers = function_exists('http_get_last_response_headers')
+            ? (http_get_last_response_headers() ?? [])
+            : ($http_response_header ?? []);
+        $status = 0;
+        $location = null;
+        foreach ($response_headers as $line) {
+            if (preg_match('#^HTTP/\S+\s+(\d{3})#', $line, $m)) { $status = (int) $m[1]; $location = null; }
+            elseif (stripos($line, 'Location:') === 0) $location = trim(substr($line, 9));
+        }
+        if ($status >= 300 && $status < 400 && $location) {
+            $url = resolve_url($url, $location);
+            if (!is_allowed($url)) return null;
+            continue;
+        }
+        if ($body === false || $status < 200 || $status >= 400 || strlen($body) > MAX_BYTES) return null;
+        return $body;
+    }
+    return null;
+}
+
+function cache_file($format, $url) {
+    return rtrim(sys_get_temp_dir(), '/') . '/fanbase-proxy/' . sha1($format . '|' . $url) . '.json';
+}
+
+function respond($json, $format, $url) {
+    if ($json === false) fail(502, 'Could not encode response');
+    $file = cache_file($format, $url);
+    if (!is_dir(dirname($file))) @mkdir(dirname($file), 0700, true);
+    if (@file_put_contents($file . '.tmp', $json) !== false) @rename($file . '.tmp', $file);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: public, max-age=' . CACHE_TTL[$format]);
+    echo $json;
+    exit;
+}
+
+// ── Validate request ──────────────────────────────────────────────
+$url = (string) ($_GET['url'] ?? '');
+$format = strtolower((string) ($_GET['format'] ?? ''));
+if (!array_key_exists($format, CACHE_TTL)) fail(400, 'Unknown format');
+if (!filter_var($url, FILTER_VALIDATE_URL)) fail(400, 'Missing or invalid url parameter');
+if (!is_allowed($url)) fail(403, 'Domain not in allowlist');
+
+// ── Cache ─────────────────────────────────────────────────────────
+$cached = cache_file($format, $url);
+$age = is_file($cached) ? time() - filemtime($cached) : PHP_INT_MAX;
+if ($age < CACHE_TTL[$format]) {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: public, max-age=' . (CACHE_TTL[$format] - $age));
+    readfile($cached);
     exit;
 }
 
 // ── Fetch the upstream resource ───────────────────────────────────
-$accept = 'application/rss+xml, application/xml, text/xml, */*';
-if ($format === 'text' || $format === 'og') {
-    $accept = 'text/html, text/plain, */*';
-} elseif ($format === 'audio') {
-    $accept = 'audio/*,*/*;q=0.8';
-}
-
-$headers = [
-    'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-    'Accept: ' . $accept,
-    'Accept-Language: en-US,en;q=0.9',
-    'Sec-Fetch-Dest: document',
-    'Sec-Fetch-Mode: navigate',
-    'Sec-Fetch-Site: none',
-];
-if ($format === 'audio' && !empty($_SERVER['HTTP_RANGE'])) {
-    $headers[] = 'Range: ' . $_SERVER['HTTP_RANGE'];
-}
-
-$ctx = stream_context_create([
-    'http' => [
-        'timeout'          => 10,
-        'follow_location'  => 1,
-        'max_redirects'    => 3,
-        'ignore_errors'    => true,
-        'header'           => implode("\r\n", $headers),
-    ],
-    'ssl' => [
-        'verify_peer'      => true,
-        'verify_peer_name' => true,
-    ],
-]);
-
-$xml_raw = @file_get_contents($url, false, $ctx);
-if ($xml_raw === false) {
-    http_response_code(502);
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['error' => 'Failed to fetch feed']);
-    exit;
-}
-
-if ($format === 'audio') {
-    $response_headers = $http_response_header ?? [];
-    $status_code = 200;
-    $content_type = 'audio/mpeg';
-    $content_length = strlen($xml_raw);
-    $content_range = null;
-    $accept_ranges = 'bytes';
-
-    foreach ($response_headers as $header_line) {
-        if (preg_match('#^HTTP/\S+\s+(\d{3})#', $header_line, $m)) {
-            $status_code = (int)$m[1];
-        } elseif (stripos($header_line, 'Content-Type:') === 0) {
-            $content_type = trim(substr($header_line, 13));
-        } elseif (stripos($header_line, 'Content-Length:') === 0) {
-            $content_length = trim(substr($header_line, 15));
-        } elseif (stripos($header_line, 'Content-Range:') === 0) {
-            $content_range = trim(substr($header_line, 14));
-        } elseif (stripos($header_line, 'Accept-Ranges:') === 0) {
-            $accept_ranges = trim(substr($header_line, 14));
-        }
+$xml_raw = fetch_upstream($url, $format === ''
+    ? 'application/rss+xml, application/xml, text/xml, */*'
+    : 'text/html, text/plain, */*');
+if ($xml_raw === null) {
+    if (is_file($cached)) {
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: public, max-age=60');
+        readfile($cached);
+        exit;
     }
-
-    http_response_code($status_code);
-    header('Cache-Control: public, max-age=900');
-    header('Content-Type: ' . $content_type);
-    header('Content-Length: ' . $content_length);
-    header('Accept-Ranges: ' . $accept_ranges);
-    if ($content_range) {
-        header('Content-Range: ' . $content_range);
-    }
-    echo $xml_raw;
-    exit;
+    fail(502, 'Failed to fetch feed');
 }
-
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: public, max-age=900'); // 15-minute browser cache
 
 if ($format === 'text') {
-    echo json_encode([
-        'text' => $xml_raw,
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+    respond(json_encode(['text' => $xml_raw], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE), $format, $url);
 }
 
 if ($format === 'og') {
@@ -154,25 +179,19 @@ if ($format === 'og') {
     foreach ($patterns as $pat) {
         if (preg_match($pat, $xml_raw, $m)) {
             $candidate = html_entity_decode(trim($m[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            if (filter_var($candidate, FILTER_VALIDATE_URL)) {
+            if (preg_match('#^https?://#i', $candidate) && filter_var($candidate, FILTER_VALIDATE_URL)) {
                 $image = $candidate;
                 break;
             }
         }
     }
-    header('Cache-Control: public, max-age=3600'); // og:image changes rarely
-    echo json_encode(['image' => $image], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+    respond(json_encode(['image' => $image], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), $format, $url);
 }
 
 // ── Parse XML ─────────────────────────────────────────────────────
 libxml_use_internal_errors(true);
-$xml = simplexml_load_string($xml_raw, 'SimpleXMLElement', LIBXML_NOCDATA);
-if ($xml === false) {
-    http_response_code(502);
-    echo json_encode(['error' => 'Invalid XML in feed']);
-    exit;
-}
+$xml = simplexml_load_string($xml_raw, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NONET);
+if ($xml === false) fail(502, 'Invalid XML in feed');
 
 // ── Extract items (RSS 2.0 and Atom) ─────────────────────────────
 $ns_map = $xml->getNamespaces(true);
@@ -302,21 +321,24 @@ foreach ($entries as $entry) {
         }
     }
 
+    // Only web URLs reach the page (no javascript:, data:, …)
+    $web = fn($u) => ($u && preg_match('#^https?://#i', $u)) ? $u : null;
+
     $items[] = [
         'title'       => $title,
-        'link'        => $link,
+        'link'        => $web($link) ?? '',
         'pubDate'     => $pub_date,
         'description' => $description,
         'content'     => $content,
-        'thumbnail'   => $thumbnail ?: null,
-        'audioUrl'    => $audio_url,
+        'thumbnail'   => $web($thumbnail),
+        'audioUrl'    => $web($audio_url),
         'audioType'   => $audio_type,
     ];
 
     if (count($items) >= 20) break;
 }
 
-echo json_encode([
+respond(json_encode([
     'feedTitle' => $feed_title,
     'items'     => $items,
-], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE), $format, $url);
