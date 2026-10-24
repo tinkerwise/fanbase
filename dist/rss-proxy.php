@@ -19,11 +19,16 @@ const MAX_BYTES = 5 * 1024 * 1024;
 const MAX_REDIRECTS = 3;
 const CACHE_TTL = ['' => 900, 'text' => 900, 'og' => 86400];
 
+// What the last upstream fetch saw, reported with fetch failures so a
+// blocked or redirecting source can be diagnosed from the browser
+$UPSTREAM = null;
+
 function fail($code, $message) {
+    global $UPSTREAM;
     http_response_code($code);
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-store');
-    echo json_encode(['error' => $message]);
+    echo json_encode(array_filter(['error' => $message, 'upstream' => $UPSTREAM]), JSON_UNESCAPED_SLASHES);
     exit;
 }
 
@@ -71,6 +76,7 @@ function resolve_url($base, $location) {
 
 // Returns the body, or null on failure, a disallowed redirect or an oversize response
 function fetch_upstream($url, $accept) {
+    global $UPSTREAM;
     $headers = implode("\r\n", [
         'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
         'Accept: ' . $accept,
@@ -89,6 +95,7 @@ function fetch_upstream($url, $accept) {
             ],
             'ssl' => ['verify_peer' => true, 'verify_peer_name' => true],
         ]);
+        error_clear_last();
         $body = @file_get_contents($url, false, $ctx, 0, MAX_BYTES + 1);
         $response_headers = function_exists('http_get_last_response_headers')
             ? (http_get_last_response_headers() ?? [])
@@ -99,6 +106,13 @@ function fetch_upstream($url, $accept) {
             if (preg_match('#^HTTP/\S+\s+(\d{3})#', $line, $m)) { $status = (int) $m[1]; $location = null; }
             elseif (stripos($line, 'Location:') === 0) $location = trim(substr($line, 9));
         }
+        $UPSTREAM = [
+            'status' => $status,
+            'hop' => $hop,
+            'location' => $location,
+            'bytes' => $body === false ? null : strlen($body),
+            'error' => $body === false ? (error_get_last()['message'] ?? null) : null,
+        ];
         if ($status >= 300 && $status < 400 && $location) {
             $url = resolve_url($url, $location);
             if (!is_allowed($url)) return null;
