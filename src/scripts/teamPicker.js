@@ -6,7 +6,7 @@
 // banner when ?view= shows another team, and the picker's Browse mode,
 // which opens a team that way instead of making it yours.
 import { TEAM_CONFIG } from './teamConfig.js';
-import { TEAM, TEAM_ID, PICKED_TEAM_ID, MY_TEAM_ID, MY_TEAM, VIEWING, TEAM_KEY, TEAM_PAGE, viewUrl } from './config.js';
+import { TEAM, TEAM_ID, PICKED_TEAM_ID, MY_TEAM_ID, MY_TEAM, VIEWING, TEAM_KEY, TEAM_PAGE, ONBOARD_PENDING_KEY, viewUrl } from './config.js';
 import { esc } from './utils.js';
 
 const logoUrl = id => `https://www.mlbstatic.com/team-logos/${id}.svg`;
@@ -22,7 +22,11 @@ function currentPage() {
 }
 
 function pickTeam(id) {
-  try { localStorage.setItem(TEAM_KEY, String(id)); } catch { /* ignore */ }
+  try {
+    // A first team gets the welcome (onboarding.js) after the reload
+    if (!MY_TEAM_ID) localStorage.setItem(ONBOARD_PENDING_KEY, '1');
+    localStorage.setItem(TEAM_KEY, String(id));
+  } catch { /* ignore */ }
   // Drop a ?team= or ?view= override so the reload lands on the new pick
   const url = new URL(location.href);
   url.searchParams.delete('team');
