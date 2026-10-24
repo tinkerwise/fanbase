@@ -8,7 +8,7 @@
 // primary is black or near-navy: those teams use their secondary color.
 export const TEAM_CONFIG = {
   108: { id: 108, name: 'Angels',    fullName: 'Los Angeles Angels',    abbr: 'LAA', city: 'Los Angeles',   div: 'AL West',    color: '#BA0021' },
-  109: { id: 109, name: 'D-backs',   fullName: 'Arizona Diamondbacks',  abbr: 'ARI', city: 'Arizona',       div: 'NL West',    color: '#A71930' },
+  109: { id: 109, name: 'D-backs',   fullName: 'Arizona Diamondbacks',  abbr: 'AZ',  city: 'Arizona',       div: 'NL West',    color: '#A71930' },
   110: { id: 110, name: 'Orioles',   fullName: 'Baltimore Orioles',     abbr: 'BAL', city: 'Baltimore',     div: 'AL East',    color: '#DF4601' },
   111: { id: 111, name: 'Red Sox',   fullName: 'Boston Red Sox',        abbr: 'BOS', city: 'Boston',        div: 'AL East',    color: '#BD3039' },
   112: { id: 112, name: 'Cubs',      fullName: 'Chicago Cubs',          abbr: 'CHC', city: 'Chicago',       div: 'NL Central', color: '#0E3386', colorDark: '#CC3433' },
@@ -21,7 +21,7 @@ export const TEAM_CONFIG = {
   119: { id: 119, name: 'Dodgers',   fullName: 'Los Angeles Dodgers',   abbr: 'LAD', city: 'Los Angeles',   div: 'NL West',    color: '#005A9C' },
   120: { id: 120, name: 'Nationals', fullName: 'Washington Nationals',  abbr: 'WSH', city: 'Washington',    div: 'NL East',    color: '#AB0003' },
   121: { id: 121, name: 'Mets',      fullName: 'New York Mets',         abbr: 'NYM', city: 'New York',      div: 'NL East',    color: '#002D72', colorDark: '#FF5910' },
-  133: { id: 133, name: 'Athletics', fullName: 'Oakland Athletics',     abbr: 'OAK', city: 'Oakland',       div: 'AL West',    color: '#EFB21E' },
+  133: { id: 133, name: 'Athletics', fullName: 'Athletics',             abbr: 'ATH', city: 'Sacramento',     div: 'AL West',    color: '#EFB21E' },
   134: { id: 134, name: 'Pirates',   fullName: 'Pittsburgh Pirates',    abbr: 'PIT', city: 'Pittsburgh',    div: 'NL Central', color: '#FDB827' },
   135: { id: 135, name: 'Padres',    fullName: 'San Diego Padres',      abbr: 'SD',  city: 'San Diego',     div: 'NL West',    color: '#2F241D', colorDark: '#FFC425' },
   136: { id: 136, name: 'Mariners',  fullName: 'Seattle Mariners',      abbr: 'SEA', city: 'Seattle',       div: 'AL West',    color: '#0C2C56', colorDark: '#005C5C' },
@@ -38,3 +38,7 @@ export const TEAM_CONFIG = {
   147: { id: 147, name: 'Yankees',   fullName: 'New York Yankees',      abbr: 'NYY', city: 'New York',      div: 'AL East',    color: '#003087', colorDark: '#C4CED3' },
   158: { id: 158, name: 'Brewers',   fullName: 'Milwaukee Brewers',     abbr: 'MIL', city: 'Milwaukee',     div: 'NL Central', color: '#FFC52F' },
 };
+
+// Abbreviations MLB has since changed, so old ?team= / ?view= links still
+// resolve (config.js and Layout.astro's head script both check these)
+export const LEGACY_ABBR = { ARI: 109, OAK: 133 };

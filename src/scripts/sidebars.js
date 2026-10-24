@@ -506,8 +506,9 @@ export async function loadInjuryReport() {
 const YT_PLAYLISTS = [
   { id: 'PLL-lmlkrmJakABrOT6FmV0mU-5oIF8nGu', label: 'MLB Fastcast' },
   { id: 'PLL-lmlkrmJalPg-EgiZ92Eyg9YodLbQsE', label: 'MLB Top Plays' },
-  { id: 'PLoeYQM_iUEVwNa9HwsFfS0aWvshxoYnhy', label: 'Orioles Moments', random: true },
 ];
+// Orioles fans also get a random pick from this one
+const ORIOLES_PLAYLIST = { id: 'PLoeYQM_iUEVwNa9HwsFfS0aWvshxoYnhy', label: 'Orioles Moments', random: true };
 const ORIOLES_RECAP_PLAYLIST = 'PLoeYQM_iUEVyoMu-AIZFXs9ja6GMzF1Ce';
 
 async function fetchPlaylistVideo(pl) {
@@ -607,7 +608,7 @@ export async function loadVideos() {
   const wrap = $('videoWrap');
   try {
     const results = await Promise.allSettled(
-      [fetchOriolesRecapVideo(), ...YT_PLAYLISTS.map(fetchPlaylistVideo)]
+      [fetchOriolesRecapVideo(), ...[...YT_PLAYLISTS, ...(getActiveTeamId() === ORIOLES_ID ? [ORIOLES_PLAYLIST] : [])].map(fetchPlaylistVideo)]
     );
 
     const videos = results

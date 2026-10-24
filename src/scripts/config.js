@@ -1,4 +1,4 @@
-import { TEAM_CONFIG } from './teamConfig.js';
+import { TEAM_CONFIG, LEGACY_ABBR } from './teamConfig.js';
 
 export const PROXY =`${import.meta.env.BASE_URL}rss-proxy.php`;
 
@@ -7,14 +7,8 @@ export const DIVISION_NAMES = {
   203: 'NL West', 204: 'NL East', 205: 'NL Central',
 };
 
-export const TEAM_ABBREV = {
-  108: 'LAA', 109: 'ARI', 110: 'BAL', 111: 'BOS', 112: 'CHC',
-  113: 'CIN', 114: 'CLE', 115: 'COL', 116: 'DET', 117: 'HOU',
-  118: 'KC',  119: 'LAD', 120: 'WSH', 121: 'NYM', 133: 'OAK',
-  134: 'PIT', 135: 'SD',  136: 'SEA', 137: 'SF',  138: 'STL',
-  139: 'TB',  140: 'TEX', 141: 'TOR', 142: 'MIN', 143: 'PHI',
-  144: 'ATL', 145: 'CWS', 146: 'MIA', 147: 'NYY', 158: 'MIL',
-};
+// MLB id → abbreviation ('BAL'), from teamConfig.js
+export const TEAM_ABBREV = Object.fromEntries(Object.values(TEAM_CONFIG).map(t => [t.id, t.abbr]));
 
 export const TEAM_SLUG = {
   108: 'angels',    109: 'd-backs',      110: 'orioles',   111: 'red-sox',
@@ -57,7 +51,7 @@ export function teamIdFromParam(value) {
   if (!v) return null;
   if (TEAM_CONFIG[Number(v)]) return Number(v);
   const hit = Object.values(TEAM_CONFIG).find(t => t.abbr === v);
-  return hit ? hit.id : null;
+  return hit ? hit.id : LEGACY_ABBR[v] ?? null;
 }
 
 function resolveTeamId() {

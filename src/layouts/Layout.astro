@@ -1,7 +1,7 @@
 ---
 import { statSync } from 'node:fs';
 import path from 'node:path';
-import { TEAM_CONFIG } from '../scripts/teamConfig.js';
+import { TEAM_CONFIG, LEGACY_ABBR } from '../scripts/teamConfig.js';
 
 interface Props {
   title?: string;
@@ -51,7 +51,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
       one until it has enough contrast: 3:1 for fills and borders, 4.5:1 for
       text. City Connect and Opacy keep the accent their CSS was designed with.
     -->
-    <script is:inline define:vars={{ teamColors }}>
+    <script is:inline define:vars={{ teamColors, legacyAbbr: LEGACY_ABBR }}>
       (function () {
         var root = document.documentElement;
         var ORIOLES = 110;
@@ -64,7 +64,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
           if (!q) return null;
           if (teamColors[q]) return Number(q);
           for (var k in teamColors) if (teamColors[k][2] === q) return Number(k);
-          return null;
+          return legacyAbbr[q] || null;
         }
         var params = new URLSearchParams(location.search);
         var mine = null;
