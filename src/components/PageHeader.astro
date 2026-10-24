@@ -1,0 +1,25 @@
+---
+// Header for secondary pages: logo plus a "← Fanbase / Page" breadcrumb.
+// teamPicker.js adds the team button to .header-right.
+interface Props {
+  current: string;
+}
+const { current } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo" href={base}>
+      <img class="logo-img" src={`${base}logo.png`} alt="Fanbase logo" height="36" />
+      <span class="logo-wordmark" aria-label="Fanbase">
+        <span class="logo-word">Fan</span>
+        <strong class="logo-word logo-word-accent">base</strong>
+      </span>
+    </a>
+    <nav class="header-right header-breadcrumb" aria-label="Breadcrumb">
+      <a class="breadcrumb-link" href={base}>← Fanbase</a>
+      <span class="breadcrumb-sep" aria-hidden="true">/</span>
+      <span class="breadcrumb-current">{current}</span>
+    </nav>
+  </div>
+</header>

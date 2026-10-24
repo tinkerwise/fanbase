@@ -1,26 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-const base = import.meta.env.BASE_URL;
+import PageHeader from '../../components/PageHeader.astro';
 ---
 
-<Layout title="Schedule | Yard Report">
-  <!-- Header -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="logo" href={base}>
-        <img class="logo-img" src={`${base}logo.png`} alt="Yard Report logo" height="36" />
-        <span class="logo-wordmark" aria-label="Yard Report">
-          <span class="logo-word">Yard</span>
-          <strong class="logo-word logo-word-accent">Report</strong>
-        </span>
-      </a>
-      <nav class="header-right header-breadcrumb" aria-label="Breadcrumb">
-        <a class="breadcrumb-link" href={base}>← Yard Report</a>
-        <span class="breadcrumb-sep" aria-hidden="true">/</span>
-        <span class="breadcrumb-current">Schedule</span>
-      </nav>
-    </div>
-  </header>
+<Layout title="Schedule | Fanbase">
+  <PageHeader current="Schedule" />
 
   <main class="schedule-page">
     <div class="schedule-container">

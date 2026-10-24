@@ -1,5 +1,5 @@
 // ── Shared utilities ──────────────────────────────────────────────
-import { MLB } from './config.js';
+import { MLB, PROXY } from './config.js';
 
 export function $(id) { return document.getElementById(id); }
 
@@ -225,4 +225,153 @@ export async function fetchVenueDetails(venueId) {
   } catch {
     return null;
   }
+}
+
+
+// og:image fallback for articles whose RSS feed supplies no thumbnail —
+// shared by the main feed (lazy, on scroll) and the bounded sidebar news
+// lists (ASG, Draft), so both benefit from one cache.
+const ogCache = new Map();
+export async function fetchOgImage(articleUrl) {
+  if (ogCache.has(articleUrl)) return ogCache.get(articleUrl);
+  try {
+    const key = 'fb_og:' + articleUrl;
+    const stored = sessionStorage.getItem(key);
+    if (stored !== null) { const v = stored || null; ogCache.set(articleUrl, v); return v; }
+  } catch {}
+  try {
+    const data = await fetch(`${PROXY}?url=${encodeURIComponent(articleUrl)}&format=og`)
+      .then(r => r.ok ? r.json() : { image: null });
+    const img = typeof data.image === 'string' && data.image ? data.image : null;
+    ogCache.set(articleUrl, img);
+    try { sessionStorage.setItem('fb_og:' + articleUrl, img ?? ''); } catch {}
+    return img;
+  } catch { return null; }
+}
+
+// Compact thumbnail + headline card for narrow sidebar news lists (ASG,
+// Draft) — same visual language as the homepage's video-item cards.
+export function renderNewsThumbCard(article) {
+  const thumb = article.thumbnail || PLACEHOLDER_IMG;
+  const favicon = faviconUrl(article.link);
+  return `<a class="news-thumb-card" href="${esc(article.link)}" target="_blank" rel="noopener">
+    <img class="news-thumb-img" src="${esc(thumb)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER_IMG}'">
+    <div class="news-thumb-info">
+      <span class="news-thumb-source">
+        <img class="news-thumb-favicon" src="${esc(favicon)}" alt="" onerror="this.style.display='none'">
+        ${esc(article.sourceName)} · ${relativeDate(article.pubDate)}
+      </span>
+      <span class="news-thumb-title">${esc(article.title)}</span>
+    </div>
+  </a>`;
+}
+
+export function stripAccents(str) {
+  return String(str ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+export function savantUrl(playerId) {
+  return `https://baseballsavant.mlb.com/savant-player/${playerId}`;
+}
+
+export function mlbPlayerUrl(playerId) {
+  return `https://www.mlb.com/player/${playerId}`;
+}
+
+// Full active-player list, fetched once and cached — backs both
+// fetchPlayerIdMap (name → id lookups) and fetchPlayerIndex (name-mention
+// scanning, e.g. trade-rumor headlines) so pages needing either only pay for
+// one request between them.
+let playerListPromise = null;
+function fetchPlayerList() {
+  if (!playerListPromise) {
+    playerListPromise = fetch(`${MLB}/sports/1/players?season=${new Date().getFullYear()}`)
+      .then(r => r.json())
+      .then(data => data.people ?? [])
+      .catch(() => []);
+  }
+  return playerListPromise;
+}
+
+// Resolves player full names to MLB person ids for pages that only have a
+// name (e.g. hand-curated roster/draft JSON with no id on file).
+let playerIdMapPromise = null;
+export function fetchPlayerIdMap() {
+  if (!playerIdMapPromise) {
+    playerIdMapPromise = fetchPlayerList().then(people => {
+      const map = new Map();
+      for (const p of people) {
+        if (p.fullName && p.id) map.set(stripAccents(p.fullName).toLowerCase(), p.id);
+      }
+      return map;
+    });
+  }
+  return playerIdMapPromise;
+}
+
+// Fallback for names fetchPlayerIdMap won't have: /sports/1/players only
+// covers active MLB players, so minor leaguers, very recent draftees, and
+// retired players all miss it. people/search covers all of those. Used as
+// a per-name lookup (not bulk), so callers should try the map first and
+// only fall back to this for names that come back empty.
+const searchIdCache = new Map();
+export function searchPlayerId(name) {
+  const key = stripAccents(name ?? '').toLowerCase();
+  if (searchIdCache.has(key)) return searchIdCache.get(key);
+  const promise = fetch(`${MLB}/people/search?names=${encodeURIComponent(name)}`)
+    .then(r => r.json())
+    .then(data => data.people?.[0]?.id ?? null)
+    .catch(() => null);
+  searchIdCache.set(key, promise);
+  return promise;
+}
+
+// ── Cot's Contracts (Baseball Prospectus) — AL East page covers the Orioles ──
+export const COTS_URL = 'https://legacy.baseballprospectus.com/compensation/cots/al_east.php';
+export const COTS_PAGE_URL = 'https://legacy.baseballprospectus.com/compensation/cots/';
+
+function parseCotsSalary(text) {
+  const t = (text ?? '').trim();
+  if (!t || t === '-' || t === ' ') return '';
+  return t;
+}
+
+// Full {id, fullName, teamId} rows for scanning free text (e.g. trade-rumor
+// headlines) for player mentions and knowing which team they're currently on.
+export function fetchPlayerIndex() {
+  return fetchPlayerList().then(people =>
+    people
+      .filter(p => p.fullName && p.id)
+      .map(p => ({ id: p.id, fullName: p.fullName, teamId: p.currentTeam?.id ?? null }))
+  );
+}
+
+// Renders a player name as a Savant link when the (fast, bulk) id map has
+// it, or a lookup-pending span otherwise — pair with resolveNameLookups()
+// to patch those spans once the slower per-name search resolves, so minor
+// leaguers and retired players end up linked too, not just active MLB roster.
+export function playerNameOrLookup(name, idMap, className = 'roster-name') {
+  const id = lookupPlayerId(idMap, name);
+  if (id) return `<a class="${className}" href="${savantUrl(id)}" target="_blank" rel="noopener">${esc(name)}</a>`;
+  return `<span class="${className}" data-name-lookup="${esc(name)}">${esc(name)}</span>`;
+}
+
+export function resolveNameLookups(containerEl) {
+  const spans = containerEl.querySelectorAll('[data-name-lookup]');
+  spans.forEach(async span => {
+    const name = span.dataset.nameLookup;
+    const id = await searchPlayerId(name);
+    if (!id || !span.isConnected) return;
+    const link = document.createElement('a');
+    link.className = span.className;
+    link.href = savantUrl(id);
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = name;
+    span.replaceWith(link);
+  });
+}
+
+export function lookupPlayerId(map, name) {
+  return map.get(stripAccents(name ?? '').toLowerCase()) ?? null;
 }

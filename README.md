@@ -1,4 +1,4 @@
-# Yard Report
+# Fanbase
 
 A multi-team MLB fan dashboard built with [Astro](https://astro.build). Pick any of 30 teams from the header and every widget — news feed, scores, standings, roster, walkup songs — updates to match. Orioles-first editorial defaults, but fully functional for any franchise.
 

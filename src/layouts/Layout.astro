@@ -6,12 +6,26 @@ import { TEAM_CONFIG } from '../scripts/teamConfig.js';
 interface Props {
   title?: string;
 }
-const { title = 'Yard Report' } = Astro.props;
+const { title = 'Fanbase' } = Astro.props;
 // id → [light-theme color, dark-theme color, abbr] for the head script below
 const teamColors = Object.fromEntries(
   Object.values(TEAM_CONFIG).map(t => [t.id, [t.color, t.colorDark ?? t.color, t.abbr]])
 );
 const base = import.meta.env.BASE_URL;
+const pathname = Astro.url.pathname;
+// Grouped by how often each page is used: today, your team's season, then
+// league-wide events. A divider separates the groups.
+const NAV_LINKS = [
+  { href: base, label: 'Home', group: 'today' },
+  { href: `${base}schedule/`, label: 'Schedule', group: 'team' },
+  { href: `${base}depth-chart/`, label: 'Depth Chart', group: 'team' },
+  { href: `${base}trades/`, label: 'Trades', group: 'league' },
+  { href: `${base}draft/`, label: 'Draft', group: 'league' },
+  { href: `${base}postseason/`, label: 'Postseason', group: 'league' },
+];
+function isActiveLink(href: string) {
+  return href === base ? pathname === base : pathname.startsWith(href);
+}
 const stylePath = path.join(process.cwd(), 'public', 'style.css');
 const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
 ---
@@ -131,6 +145,20 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
     </script>
   </head>
   <body>
+    <nav class="site-nav" aria-label="Site navigation">
+      {NAV_LINKS.map((link, i) => (
+        <Fragment>
+          {i > 0 && NAV_LINKS[i - 1].group !== link.group && <span class="site-nav-sep" aria-hidden="true"></span>}
+          <a
+            href={link.href}
+            class={`site-nav-link${isActiveLink(link.href) ? ' site-nav-link--active' : ''}`}
+            aria-current={isActiveLink(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        </Fragment>
+      ))}
+    </nav>
     <slot />
     <script is:inline define:vars={{ base }}>
       // While viewing another team (?view=), keep it on every link within the

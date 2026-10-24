@@ -1,0 +1,130 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout title="Depth Chart | Fanbase">
+  <PageHeader current="Depth Chart" />
+
+  <main class="depth-chart-page">
+    <div class="depth-chart-wrap">
+
+      <h1 class="depth-chart-title"><span data-team-text="nick">Team</span> Depth Chart</h1>
+
+      <!-- ── Field (generic dimensions, not any one park's) ───────── -->
+      <div class="depth-chart-field-container">
+
+        <svg class="depth-chart-svg" viewBox="0 0 620 560" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="grassGrad" cx="50%" cy="78%" r="72%">
+              <stop offset="0%"   stop-color="#1d5118"/>
+              <stop offset="55%"  stop-color="#143c11"/>
+              <stop offset="100%" stop-color="#0c2609"/>
+            </radialGradient>
+            <radialGradient id="dirtGrad" cx="50%" cy="52%" r="58%">
+              <stop offset="0%"   stop-color="#7a4828"/>
+              <stop offset="100%" stop-color="#4d2e18"/>
+            </radialGradient>
+            <radialGradient id="moundGrad" cx="40%" cy="35%" r="65%">
+              <stop offset="0%"   stop-color="#6a3e22"/>
+              <stop offset="100%" stop-color="#3e2410"/>
+            </radialGradient>
+            <!-- Mowing pattern stripes -->
+            <pattern id="mowStripes" x="0" y="0" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(-42)">
+              <rect width="17" height="34" fill="rgba(255,255,255,0.018)"/>
+            </pattern>
+          </defs>
+
+          <!-- ── Sky background ── -->
+          <rect width="620" height="560" fill="var(--bg, #0a0f14)"/>
+
+          <!-- ── Fair territory grass ── -->
+          <path class="depth-chart-grass" d="M 310,508 L 0,200 C 72,40 158,16 310,14 C 452,20 558,62 620,229 Z"/>
+          <path fill="url(#mowStripes)" d="M 310,508 L 0,200 C 72,40 158,16 310,14 C 452,20 558,62 620,229 Z"/>
+
+          <!-- ── Warning track ── -->
+          <path class="depth-chart-track" d="
+            M 0,200
+            C 72,40 158,16 310,14
+            C 452,20 558,62 620,229
+            L 604,240
+            C 546,76 450,32 310,30
+            C 170,32 86,58 16,212
+            Z"/>
+
+          <!-- ── Infield dirt ── -->
+          <circle class="depth-chart-dirt" cx="310" cy="388" r="120"/>
+
+          <!-- ── Basepaths ── -->
+          <polygon class="depth-chart-basepath" points="310,508 450,368 310,228 170,368"/>
+
+          <!-- ── Pitcher's mound ── -->
+          <ellipse class="depth-chart-mound" cx="310" cy="390" rx="14" ry="11"/>
+
+          <!-- ── Bases ── -->
+          <rect class="depth-chart-base" x="444" y="362" width="12" height="12" transform="rotate(45,450,368)"/>
+          <rect class="depth-chart-base" x="304" y="222" width="12" height="12" transform="rotate(45,310,228)"/>
+          <rect class="depth-chart-base" x="164" y="362" width="12" height="12" transform="rotate(45,170,368)"/>
+
+          <!-- ── Home plate ── -->
+          <polygon class="depth-chart-home-plate" points="310,502 302,510 302,517 318,517 318,510"/>
+
+          <!-- ── Pitcher's rubber ── -->
+          <rect class="depth-chart-rubber" x="303" y="387" width="14" height="5" rx="1"/>
+
+          <!-- ── Foul lines ── -->
+          <line class="depth-chart-foul" x1="310" y1="508" x2="0"   y2="200"/>
+          <line class="depth-chart-foul" x1="310" y1="508" x2="620" y2="229"/>
+
+          <!-- ── Outfield wall ── -->
+          <path class="depth-chart-wall" d="M 0,200 C 72,40 158,16 310,14 C 452,20 558,62 620,229"/>
+
+          <!-- ── Foul poles ── -->
+          <line class="depth-chart-pole" x1="0"   y1="180" x2="0"   y2="216"/>
+          <line class="depth-chart-pole" x1="620" y1="209" x2="620" y2="245"/>
+
+        </svg>
+
+        <!-- ── Position chips overlay ── -->
+        <div class="depth-chart-overlay" id="dcOverlay">
+          <!-- Outfield -->
+          <div class="depth-chart-chip" id="depth-chart-LF"  style="left:17%;top:32%"></div>
+          <div class="depth-chart-chip" id="depth-chart-CF"  style="left:50%;top:11%"></div>
+          <div class="depth-chart-chip" id="depth-chart-RF"  style="left:79%;top:34%"></div>
+          <!-- Infield -->
+          <div class="depth-chart-chip" id="depth-chart-3B"  style="left:24%;top:66%"></div>
+          <div class="depth-chart-chip" id="depth-chart-SS"  style="left:38%;top:58%"></div>
+          <div class="depth-chart-chip" id="depth-chart-2B"  style="left:62%;top:54%"></div>
+          <div class="depth-chart-chip" id="depth-chart-1B"  style="left:76%;top:66%"></div>
+          <!-- Battery + DH -->
+          <div class="depth-chart-chip depth-chart-chip--dh" id="depth-chart-DH"  style="left:13%;top:80%"></div>
+          <div class="depth-chart-chip" id="depth-chart-C"   style="left:50%;top:88%"></div>
+        </div>
+      </div>
+
+      <!-- ── IL section ── -->
+      <div class="depth-chart-il-section-wrap" id="dcIlSection"></div>
+
+      <!-- ── Pitching section ── -->
+      <div class="depth-chart-pitching" id="dcPitching">
+        <div class="depth-chart-pit-col" id="dcRotation">
+          <div class="depth-chart-pit-label">Rotation</div>
+        </div>
+        <div class="depth-chart-pit-divider"></div>
+        <div class="depth-chart-pit-col" id="dcBullpen">
+          <div class="depth-chart-pit-label">Bullpen</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="depth-chart-page-footer">
+      <a class="widget-link" href="https://www.mlb.com/orioles/roster/depth-chart" data-team-href="https://www.mlb.com/{page}/roster/depth-chart" target="_blank" rel="noopener">Full depth chart on MLB.com ↗</a>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import '../../scripts/depth-chart.js';
+</script>

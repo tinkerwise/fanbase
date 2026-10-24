@@ -6,7 +6,7 @@
 // banner when ?view= shows another team, and the picker's Browse mode,
 // which opens a team that way instead of making it yours.
 import { TEAM_CONFIG } from './teamConfig.js';
-import { TEAM, TEAM_ID, PICKED_TEAM_ID, MY_TEAM_ID, MY_TEAM, VIEWING, TEAM_KEY, viewUrl } from './config.js';
+import { TEAM, TEAM_ID, PICKED_TEAM_ID, MY_TEAM_ID, MY_TEAM, VIEWING, TEAM_KEY, TEAM_PAGE, viewUrl } from './config.js';
 import { esc } from './utils.js';
 
 const logoUrl = id => `https://www.mlbstatic.com/team-logos/${id}.svg`;
@@ -164,12 +164,13 @@ function addViewBanner() {
 
 // Static markup carries placeholders the build can't know:
 // data-team-text="nick|name|fullName|city|abbr" swaps text, data-team-href
-// takes a URL template with {abbr} {slug} {id} filled from the active team,
+// takes a URL template with {abbr} {slug} {page} {id} filled from the active
+// team ({page} is its mlb.com path, e.g. 'redsox'),
 // and img[data-team-logo] gets the team's logo.
 function fillPlaceholders() {
   if (!PICKED_TEAM_ID) return;
   const slug = TEAM.fullName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  const vars = { abbr: TEAM.abbr.toLowerCase(), slug, id: TEAM_ID };
+  const vars = { abbr: TEAM.abbr.toLowerCase(), slug, page: TEAM_PAGE[TEAM_ID], id: TEAM_ID };
   document.querySelectorAll('[data-team-text]').forEach(el => {
     el.textContent = TEAM[el.dataset.teamText] ?? el.textContent;
   });

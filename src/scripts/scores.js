@@ -227,7 +227,7 @@ function spotifyEmbedUrl(songUrl) {
     const type = parts[0]; // 'track', 'playlist', 'album', 'search', …
     const id   = parts[1];
     if (!type || !id) return '';
-    return `https://open.spotify.com/embed/${type}/${id}?utm_source=yardreport`;
+    return `https://open.spotify.com/embed/${type}/${id}?utm_source=fanbase`;
   } catch {
     return '';
   }
