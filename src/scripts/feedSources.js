@@ -8,6 +8,8 @@
 // a 403), so its sources don't use RSS: `cms` names a selection in MLB's
 // content API ('t110-news-list' is a team's news, 'mlb-news-list' the
 // league's), which sends CORS headers and is read straight from the browser.
+// ESPN does the same to the host (an empty 202), so `espn` sources read
+// ESPN's public news API ('baseball/mlb') the same way.
 import { PROXY, TEAM_PAGE, TEAM_ABBREV, ORIOLES_ID, getActiveTeamId } from './config.js';
 import { TEAM_CONFIG } from './teamConfig.js';
 
@@ -66,8 +68,29 @@ async function fetchMlbCms(selection) {
   };
 }
 
+const ESPN_API = 'https://site.api.espn.com/apis/site/v2/sports';
+
+async function fetchEspnNews(league) {
+  const data = await fetch(`${ESPN_API}/${league}/news?limit=50`).then(r => r.json());
+  return {
+    items: (data.articles ?? [])
+      .filter(a => a.type !== 'Media' && a.links?.web?.href)
+      .sort((a, b) => (b.published ?? '').localeCompare(a.published ?? ''))
+      .slice(0, 20)
+      .map(a => ({
+        title: a.headline ?? '',
+        link: a.links.web.href,
+        pubDate: a.published ?? '',
+        description: a.description ?? '',
+        content: '',
+        thumbnail: a.images?.[0]?.url ?? null,
+      })),
+  };
+}
+
 /** A source's items, in rss-proxy.php's shape: { items: [{ title, link, pubDate, description, content, thumbnail }] } */
 export function fetchFeedItems(source) {
   if (source.cms) return fetchMlbCms(source.cms);
+  if (source.espn) return fetchEspnNews(source.espn);
   return fetch(`${PROXY}?url=${encodeURIComponent(source.url)}`).then(r => r.json());
 }

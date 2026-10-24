@@ -7,7 +7,7 @@
   { "id": "masn",         "name": "MASN Sports",          "url": "https://www.masnsports.com/feed",                                 "color": "#dc2626", "category": "orioles", "teamId": 110 },
   { "id": "mlb",          "name": "MLB.com",              "url": "https://www.mlb.com/news",         "cms": "mlb-news-list",        "color": "#002d72", "category": "mlb",     "teamId": 0   },
   { "id": "mlbtr",        "name": "MLB Trade Rumors",     "url": "https://www.mlbtraderumors.com/baltimore-orioles/feed",           "color": "#eab308", "category": "mlb",     "teamId": 0,   "teamFeed": true,  "teamFeedType": "mlbtr"  },
-  { "id": "espn",         "name": "ESPN MLB",             "url": "https://www.espn.com/espn/rss/mlb/news",                          "color": "#cc0000", "category": "mlb",     "teamId": 0   },
+  { "id": "espn",         "name": "ESPN MLB",             "url": "https://www.espn.com/mlb/",       "espn": "baseball/mlb",        "color": "#cc0000", "category": "mlb",     "teamId": 0   },
   { "id": "fangraphs",    "name": "FanGraphs",            "url": "https://blogs.fangraphs.com/feed/",                               "color": "#22c55e", "category": "mlb",     "teamId": 0   },
   { "id": "bp",           "name": "Baseball Prospectus",  "url": "https://www.baseballprospectus.com/feed/",                        "color": "#1e40af", "category": "mlb",     "teamId": 0   },
   { "id": "ba",           "name": "Baseball America",     "url": "https://www.baseballamerica.com/feed/",                           "color": "#b91c1c", "category": "mlb",     "teamId": 0   },
