@@ -259,11 +259,19 @@ function setupEvents() {
     if (e.key === 'Escape') closeReader();
   });
 
-  // Auto-refresh scores and transactions every 5 minutes
-  setInterval(() => {
+  // Auto-refresh scores and transactions every 5 minutes while the tab is
+  // visible; a tab that comes back after longer refreshes at once
+  const REFRESH_MS = 5 * 60 * 1000;
+  let lastRefresh = Date.now();
+  const refresh = () => {
+    lastRefresh = Date.now();
     loadScores();
     loadTransactions();
-  }, 5 * 60 * 1000);
+  };
+  setInterval(() => { if (!document.hidden) refresh(); }, REFRESH_MS);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && Date.now() - lastRefresh >= REFRESH_MS) refresh();
+  });
 
   // ── Easter Eggs ──────────────────────────────────────────────────
   $('searchInput').addEventListener('keydown', e => {

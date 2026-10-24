@@ -4502,3 +4502,7 @@ a.il-name:hover { color: var(--accent); }
 .not-found-text { margin: 0 0 8px; color: var(--text-2); }
 .not-found-text a { color: var(--accent-text); }
 .not-found-text kbd { padding: 1px 5px; border: 1px solid var(--border-light); border-radius: 4px; font: inherit; font-size: 0.85em; }
+
+/* Keep the footer below the fold while a page's content loads in, so it
+   doesn't count as layout shift (CLS) as sections fill */
+.page-layout, body > main { min-height: 100vh; }

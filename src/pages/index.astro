@@ -7,7 +7,7 @@ import Layout from '../layouts/Layout.astro';
   <header class="site-header">
     <div class="header-inner">
       <a class="logo" href="https://www.briancsmith.org/fanbase">
-        <img class="logo-img" src={`${import.meta.env.BASE_URL}logo.png`} alt="Fanbase logo" height="36" />
+        <img class="logo-img" src={`${import.meta.env.BASE_URL}logo.png`} alt="Fanbase logo" width="88" height="62" />
         <span class="logo-wordmark" aria-label="Fanbase">
           <span class="logo-word">Fan</span>
           <strong class="logo-word logo-word-accent">base</strong>
@@ -15,6 +15,7 @@ import Layout from '../layouts/Layout.astro';
       </a>
       <div class="header-right">
         <span class="cache-label" id="cacheLabel"></span>
+        <button class="btn-search" type="button" aria-label="Search" title="Search (/ or ⌘K)" data-open-search><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
         <button class="btn-refresh" id="refreshBtn" aria-label="Refresh news">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>

@@ -182,14 +182,17 @@ export function closeSearch() {
   document.body.style.overflow = '';
 }
 
+// Headers render the button statically (PageHeader.astro, index.astro) so
+// nothing shifts; this only adds one where a page has no button of its own.
 function addHeaderButton() {
+  if (document.querySelector('.btn-search')) return;
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'btn-search';
   btn.setAttribute('aria-label', 'Search');
   btn.title = 'Search (/ or ⌘K)';
   btn.innerHTML = SEARCH_ICON;
-  btn.addEventListener('click', openSearch);
+  btn.dataset.openSearch = '';
   // Home: beside Refresh. Other pages: at the end of the header.
   const refresh = document.getElementById('refreshBtn');
   if (refresh) refresh.before(btn);
