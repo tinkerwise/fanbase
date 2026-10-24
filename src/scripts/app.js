@@ -2,8 +2,8 @@ import { loadPrefs, savePrefs, getDisabledSources, saveDisabledSources } from '.
 import { state } from './state.js';
 import { applyTheme } from './theme.js';
 import { $, syncOriolesLogos } from './utils.js';
-import { initTeamPicker } from './teamPicker.js';
-import { getActiveTeamId, ORIOLES_ID, TEAM_ABBREV, isFirstVisit } from './config.js';
+import { requireTeam } from './teamPicker.js';
+import { getActiveTeamId, ORIOLES_ID } from './config.js';
 import { TEAM_CONFIG } from './teamConfig.js';
 import { loadScores } from './scores.js';
 import {
@@ -302,31 +302,11 @@ function setupEvents() {
   });
 }
 
-// ── Team pill update ──────────────────────────────────────────────
-function updateTeamPill() {
-  const activeTeamId = getActiveTeamId();
-  const teamName = TEAM_CONFIG[activeTeamId]?.name ?? TEAM_ABBREV[activeTeamId] ?? 'Team';
-  const logo = document.getElementById('teamPillLogo');
-  const label = document.getElementById('teamPillLabel');
-  if (logo) logo.src = `https://www.mlbstatic.com/team-logos/${activeTeamId}.svg`;
-  if (label) label.textContent = teamName;
-}
-
 // ── Init ──────────────────────────────────────────────────────────
 async function init() {
-  initTeamPicker();
-  updateTeamPill();
   setupEvents();
-
-  // First-visit / no-team-selected state
-  if (isFirstVisit()) {
-    document.body.classList.add('fanbase--no-team');
-    // Default the feed to the MLB tab so new users see general news right away
-    state.activeCategory = 'mlb';
-    document.querySelectorAll('#categoryFilters .pill').forEach(p => {
-      p.classList.toggle('active', p.dataset.category === 'mlb');
-    });
-  }
+  // No team yet: the picker is open, so don't load anything until one's chosen
+  if (!requireTeam()) return;
 
   await Promise.allSettled([
     loadScores(),

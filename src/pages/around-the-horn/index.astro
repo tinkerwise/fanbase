@@ -18,6 +18,8 @@ import Layout from '../../layouts/Layout.astro';
   </main>
 
   <script type="module">
+    import { requireTeam } from '../../scripts/teamPicker.js';
+
     const grid = document.getElementById('athStoryGrid');
     const title = document.getElementById('athPageTitle');
     const subtitle = document.getElementById('athPageSubtitle');
@@ -74,7 +76,9 @@ import Layout from '../../layouts/Layout.astro';
 
     const bundle = bundles[slug];
 
-    if (!bundle) {
+    if (!requireTeam()) {
+      // No team yet: the picker is open instead
+    } else if (!bundle) {
       title.textContent = 'Story bundle unavailable';
       subtitle.textContent = 'Open an Around the Horn card from the homepage first so this page can load the saved related-coverage bundle.';
       grid.innerHTML = '<div class="feed-msg">No saved Around the Horn bundle was found for this story yet.</div>';

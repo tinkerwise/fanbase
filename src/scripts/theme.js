@@ -2,7 +2,7 @@
 // The head script in Layout.astro applies the theme and team accent before
 // first paint; these apply a change made in Settings or by an easter egg.
 import { loadPrefs, savePrefs } from './storage.js';
-import { getActiveTeamId, ORIOLES_ID } from './config.js';
+import { PICKED_TEAM_ID, ORIOLES_ID } from './config.js';
 
 export function applyTheme(theme) {
   const resolved = theme === 'system'
@@ -24,7 +24,7 @@ export function syncThemeColor(theme) {
 }
 
 // Apply saved theme immediately on import
-const _isOrioles = getActiveTeamId() === ORIOLES_ID;
+const _isOrioles = PICKED_TEAM_ID === ORIOLES_ID;
 let _savedTheme = loadPrefs().theme || 'light';
 
 // City Connect is Orioles-only; silently fall back to light for other teams

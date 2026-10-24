@@ -58,7 +58,8 @@ const base = import.meta.env.BASE_URL;
 
 <script type="module">
   import '../../scripts/theme.js';
-  import { MLB, ORIOLES_ID, SEASON, TEAM_ABBREV } from '../../scripts/config.js';
+  import { MLB, TEAM_ID, SEASON, TEAM_ABBREV } from '../../scripts/config.js';
+  import { requireTeam } from '../../scripts/teamPicker.js';
   import { esc, teamLogoSrc } from '../../scripts/utils.js';
   import { fetchWeatherForGames, getGameWeather } from '../../scripts/weather.js';
 
@@ -84,7 +85,7 @@ const base = import.meta.env.BASE_URL;
   function gameOfficialDate(g) { return g.officialDate || g.gameDate.slice(0, 10); }
 
   // ── Game helpers ──────────────────────────────────────────────
-  function oriIsHome(g)  { return g.teams.home.team.id === ORIOLES_ID; }
+  function oriIsHome(g)  { return g.teams.home.team.id === TEAM_ID; }
   function oriSide(g)    { return oriIsHome(g) ? g.teams.home : g.teams.away; }
   function oppSide(g)    { return oriIsHome(g) ? g.teams.away : g.teams.home; }
   function getOpponent(g) { return oppSide(g).team; }
@@ -387,7 +388,7 @@ const base = import.meta.env.BASE_URL;
   async function loadSchedule() {
     const grid = document.getElementById('scheduleGrid');
     try {
-      const url = `${MLB}/schedule?sportId=1&teamId=${ORIOLES_ID}&season=${SEASON}`
+      const url = `${MLB}/schedule?sportId=1&teamId=${TEAM_ID}&season=${SEASON}`
         + `&gameType=R,F,D,L,W`
         + `&hydrate=team,linescore,decisions,probablePitcher(note),broadcasts(all),venue`
         + `&startDate=${SEASON}-01-01&endDate=${SEASON}-12-31`;
@@ -410,5 +411,5 @@ const base = import.meta.env.BASE_URL;
     }
   }
 
-  loadSchedule();
+  if (requireTeam()) loadSchedule();
 </script>

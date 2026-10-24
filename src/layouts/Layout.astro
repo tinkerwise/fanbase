@@ -7,10 +7,11 @@ interface Props {
   title?: string;
 }
 const { title = 'Yard Report' } = Astro.props;
-// id → [light-theme color, dark-theme color] for the head script below
+// id → [light-theme color, dark-theme color, abbr] for the head script below
 const teamColors = Object.fromEntries(
-  Object.values(TEAM_CONFIG).map(t => [t.id, [t.color, t.colorDark ?? t.color]])
+  Object.values(TEAM_CONFIG).map(t => [t.id, [t.color, t.colorDark ?? t.color, t.abbr]])
 );
+const base = import.meta.env.BASE_URL;
 const stylePath = path.join(process.cwd(), 'public', 'style.css');
 const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
 ---
@@ -41,7 +42,18 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
         var root = document.documentElement;
         var ORIOLES = 110;
         var prefs = {};
-        var id = null;
+        // Resolves the team the same way config.js does: ?team= (abbr or id)
+        // saves a pick, ?view= shows another team without saving, else the
+        // saved pick. No team yet: Orioles colors behind the picker.
+        function find(q) {
+          q = String(q || '').trim().toUpperCase();
+          if (!q) return null;
+          if (teamColors[q]) return Number(q);
+          for (var k in teamColors) if (teamColors[k][2] === q) return Number(k);
+          return null;
+        }
+        var params = new URLSearchParams(location.search);
+        var mine = null;
         try {
           // Older builds stored the team as fanbase_team and prefs as yr_prefs
           // (storage.js migrates the rest of the yr_* keys).
@@ -49,10 +61,21 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
           if (legacyTeam !== null && localStorage.getItem('fb_team') === null) {
             localStorage.setItem('fb_team', legacyTeam);
           }
-          id = Number(localStorage.getItem('fb_team'));
+          var shared = find(params.get('team'));
+          if (shared) {
+            localStorage.setItem('fb_team', String(shared));
+            // Saved, so drop the param: a reload or bookmark is a plain link
+            params.delete('team');
+            var qs = params.toString();
+            history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+          }
+          mine = find(localStorage.getItem('fb_team'));
           prefs = JSON.parse(localStorage.getItem('fb_prefs') || localStorage.getItem('yr_prefs')) || {};
         } catch (e) {}
-        if (!teamColors[id]) id = ORIOLES;
+        var view = find(params.get('view'));
+        var id = view || mine;
+        if (view && view !== mine) root.setAttribute('data-viewing', '');
+        var colorId = id || ORIOLES;
 
         var theme = prefs.theme || 'light';
         if (theme === 'system') theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
@@ -96,8 +119,8 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
         // Backgrounds checked against: dark --surface, light --bg, and the
         // two Orioles easter-egg themes' --bg
         var WHITE = [255, 255, 255], BLACK = [0, 0, 0];
-        var css = ':root' + vars(teamColors[id][1], [23, 23, 23], WHITE) +
-          '[data-theme="light"]' + vars(teamColors[id][0], [245, 245, 245], BLACK) +
+        var css = ':root' + vars(teamColors[colorId][1], [23, 23, 23], WHITE) +
+          '[data-theme="light"]' + vars(teamColors[colorId][0], [245, 245, 245], BLACK) +
           '[data-theme="city-connect"]' + vars('#c84b11', [255, 255, 255], BLACK) +
           '[data-theme="opacy"]' + vars('#ff6b1a', [26, 10, 0], WHITE);
         var style = document.createElement('style');
@@ -109,5 +132,25 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
   </head>
   <body>
     <slot />
+    <script is:inline define:vars={{ base }}>
+      // While viewing another team (?view=), keep it on every link within the
+      // site, including links pages add later, until "Back to …" drops it
+      (function () {
+        var view = new URLSearchParams(location.search).get('view');
+        if (!view || !document.documentElement.hasAttribute('data-viewing')) return;
+        function carry(a) {
+          if (!a || !a.href || a.hasAttribute('data-no-view')) return;
+          var u = new URL(a.href, location.href);
+          if (u.origin !== location.origin || u.pathname.indexOf(base) !== 0) return;
+          if (u.searchParams.has('view') || u.searchParams.has('team') || /\.[a-z0-9]+$/i.test(u.pathname)) return;
+          u.searchParams.set('view', view);
+          a.href = u.href;
+        }
+        document.querySelectorAll('a[href]').forEach(carry);
+        ['click', 'auxclick', 'contextmenu', 'focusin'].forEach(function (t) {
+          document.addEventListener(t, function (e) { carry(e.target.closest && e.target.closest('a[href]')); }, true);
+        });
+      })();
+    </script>
   </body>
 </html>

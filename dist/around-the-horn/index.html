@@ -1,17 +1,28 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="Multi-team MLB news aggregator"><title>Around the Horn | Yard Report</title><link rel="icon" type="image/jpeg" href="/fanbase/favicon.jpg"><link rel="apple-touch-icon" href="/fanbase/favicon.jpg"><link rel="stylesheet" href="/fanbase/style.css?v=1792847930395"><!--
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="Multi-team MLB news aggregator"><title>Around the Horn | Yard Report</title><link rel="icon" type="image/jpeg" href="/fanbase/favicon.jpg"><link rel="apple-touch-icon" href="/fanbase/favicon.jpg"><link rel="stylesheet" href="/fanbase/style.css?v=1792848428708"><!--
       Theme and team accent, applied before first paint so the page never
       flashes the default. Mirrors theme.js (City Connect is Orioles-only and
       turns on automatically on Fridays). Brand colors are stored as-is in
       teamConfig.js; this lightens (dark theme) or darkens (light theme) each
       one until it has enough contrast: 3:1 for fills and borders, 4.5:1 for
       text. City Connect and Opacy keep the accent their CSS was designed with.
-    --><script>(function(){const teamColors = {"108":["#BA0021","#BA0021"],"109":["#A71930","#A71930"],"110":["#DF4601","#DF4601"],"111":["#BD3039","#BD3039"],"112":["#0E3386","#CC3433"],"113":["#C6011F","#C6011F"],"114":["#E31937","#E31937"],"115":["#8B5EA5","#8B5EA5"],"116":["#FA4616","#FA4616"],"117":["#EB6E1F","#EB6E1F"],"118":["#004687","#BD9B60"],"119":["#005A9C","#005A9C"],"120":["#AB0003","#AB0003"],"121":["#002D72","#FF5910"],"133":["#EFB21E","#EFB21E"],"134":["#FDB827","#FDB827"],"135":["#2F241D","#FFC425"],"136":["#0C2C56","#005C5C"],"137":["#FD5A1E","#FD5A1E"],"138":["#C41E3A","#C41E3A"],"139":["#8FBCE6","#8FBCE6"],"140":["#C0111F","#C0111F"],"141":["#134A8E","#134A8E"],"142":["#D31145","#D31145"],"143":["#E81828","#E81828"],"144":["#CE1141","#CE1141"],"145":["#27251F","#C4CED4"],"146":["#00A3E0","#00A3E0"],"147":["#003087","#C4CED3"],"158":["#FFC52F","#FFC52F"]};
+    --><script>(function(){const teamColors = {"108":["#BA0021","#BA0021","LAA"],"109":["#A71930","#A71930","ARI"],"110":["#DF4601","#DF4601","BAL"],"111":["#BD3039","#BD3039","BOS"],"112":["#0E3386","#CC3433","CHC"],"113":["#C6011F","#C6011F","CIN"],"114":["#E31937","#E31937","CLE"],"115":["#8B5EA5","#8B5EA5","COL"],"116":["#FA4616","#FA4616","DET"],"117":["#EB6E1F","#EB6E1F","HOU"],"118":["#004687","#BD9B60","KC"],"119":["#005A9C","#005A9C","LAD"],"120":["#AB0003","#AB0003","WSH"],"121":["#002D72","#FF5910","NYM"],"133":["#EFB21E","#EFB21E","OAK"],"134":["#FDB827","#FDB827","PIT"],"135":["#2F241D","#FFC425","SD"],"136":["#0C2C56","#005C5C","SEA"],"137":["#FD5A1E","#FD5A1E","SF"],"138":["#C41E3A","#C41E3A","STL"],"139":["#8FBCE6","#8FBCE6","TB"],"140":["#C0111F","#C0111F","TEX"],"141":["#134A8E","#134A8E","TOR"],"142":["#D31145","#D31145","MIN"],"143":["#E81828","#E81828","PHI"],"144":["#CE1141","#CE1141","ATL"],"145":["#27251F","#C4CED4","CWS"],"146":["#00A3E0","#00A3E0","MIA"],"147":["#003087","#C4CED3","NYY"],"158":["#FFC52F","#FFC52F","MIL"]};
 
       (function () {
         var root = document.documentElement;
         var ORIOLES = 110;
         var prefs = {};
-        var id = null;
+        // Resolves the team the same way config.js does: ?team= (abbr or id)
+        // saves a pick, ?view= shows another team without saving, else the
+        // saved pick. No team yet: Orioles colors behind the picker.
+        function find(q) {
+          q = String(q || '').trim().toUpperCase();
+          if (!q) return null;
+          if (teamColors[q]) return Number(q);
+          for (var k in teamColors) if (teamColors[k][2] === q) return Number(k);
+          return null;
+        }
+        var params = new URLSearchParams(location.search);
+        var mine = null;
         try {
           // Older builds stored the team as fanbase_team and prefs as yr_prefs
           // (storage.js migrates the rest of the yr_* keys).
@@ -19,10 +30,21 @@
           if (legacyTeam !== null && localStorage.getItem('fb_team') === null) {
             localStorage.setItem('fb_team', legacyTeam);
           }
-          id = Number(localStorage.getItem('fb_team'));
+          var shared = find(params.get('team'));
+          if (shared) {
+            localStorage.setItem('fb_team', String(shared));
+            // Saved, so drop the param: a reload or bookmark is a plain link
+            params.delete('team');
+            var qs = params.toString();
+            history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+          }
+          mine = find(localStorage.getItem('fb_team'));
           prefs = JSON.parse(localStorage.getItem('fb_prefs') || localStorage.getItem('yr_prefs')) || {};
         } catch (e) {}
-        if (!teamColors[id]) id = ORIOLES;
+        var view = find(params.get('view'));
+        var id = view || mine;
+        if (view && view !== mine) root.setAttribute('data-viewing', '');
+        var colorId = id || ORIOLES;
 
         var theme = prefs.theme || 'light';
         if (theme === 'system') theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
@@ -66,8 +88,8 @@
         // Backgrounds checked against: dark --surface, light --bg, and the
         // two Orioles easter-egg themes' --bg
         var WHITE = [255, 255, 255], BLACK = [0, 0, 0];
-        var css = ':root' + vars(teamColors[id][1], [23, 23, 23], WHITE) +
-          '[data-theme="light"]' + vars(teamColors[id][0], [245, 245, 245], BLACK) +
+        var css = ':root' + vars(teamColors[colorId][1], [23, 23, 23], WHITE) +
+          '[data-theme="light"]' + vars(teamColors[colorId][0], [245, 245, 245], BLACK) +
           '[data-theme="city-connect"]' + vars('#c84b11', [255, 255, 255], BLACK) +
           '[data-theme="opacy"]' + vars('#ff6b1a', [26, 10, 0], WHITE);
         var style = document.createElement('style');
@@ -75,12 +97,24 @@
         style.textContent = css;
         document.head.appendChild(style);
       })();
-    })();</script></head><body><main class="ath-page"><div class="ath-page-shell"><a class="ath-page-back" href="/fanbase/">← Back to Yard Report</a><header class="ath-page-head"><span class="ath-page-kicker">Around the Horn</span><h1 class="ath-page-title" id="athPageTitle">Loading story…</h1><p class="ath-page-subtitle" id="athPageSubtitle">Gathering related coverage from the saved bundle.</p></header><section class="ath-story-grid" id="athStoryGrid"><div class="feed-msg">Loading bundle…</div></section></div></main><script type="module">var e=document.getElementById(`athStoryGrid`),t=document.getElementById(`athPageTitle`),n=document.getElementById(`athPageSubtitle`),r=`fb_ath_bundles`,i=new URLSearchParams(window.location.search).get(`topic`)||``;function a(e=``){return String(e).replace(/[&<>"']/g,e=>({"&":`&amp;`,"<":`&lt;`,">":`&gt;`,'"':`&quot;`,"'":`&#39;`})[e])}function o(e){try{let{hostname:t}=new URL(e);return`https://www.google.com/s2/favicons?domain=${t}&sz=32`}catch{return``}}function s(e){let t=new Date(e);if(Number.isNaN(t.getTime()))return``;let n=Date.now()-t.getTime(),r=Math.floor(n/6e4);if(r<60)return`${Math.max(r,1)}m ago`;let i=Math.floor(r/60);if(i<24)return`${i}h ago`;let a=Math.floor(i/24);return a<7?`${a}d ago`:t.toLocaleDateString(`en-US`,{month:`short`,day:`numeric`})}function c(e){let t=o(e.link),n=(e.description||``).slice(0,180);return`<article class="ath-story-card">
-        <div class="ath-story-meta">
-          ${t?`<img class="source-ico" src="${a(t)}" alt="" onerror="this.style.display='none'">`:``}
-          <span class="source-name">${a(e.source?.name||`Source`)}</span>
-          <span class="article-date">${a(s(e.pubDate))}</span>
-        </div>
-        <h2 class="ath-story-title"><a href="${a(e.link)}" target="_blank" rel="noopener noreferrer">${a(e.title||`Untitled`)}</a></h2>
-        ${n?`<p class="ath-story-desc">${a(n)}</p>`:``}
-      </article>`}var l={};try{l=JSON.parse(sessionStorage.getItem(r)||`{}`)}catch{l={}}var u=l[i];u?(t.textContent=u.label||`Around the Horn`,n.textContent=`${u.sourceCount||0} sources • ${(u.articles||[]).length} related articles`,e.innerHTML=(u.articles||[]).map(c).join(``)||`<div class="feed-msg">No related articles found.</div>`):(t.textContent=`Story bundle unavailable`,n.textContent=`Open an Around the Horn card from the homepage first so this page can load the saved related-coverage bundle.`,e.innerHTML=`<div class="feed-msg">No saved Around the Horn bundle was found for this story yet.</div>`);</script></body></html>
+    })();</script></head><body><main class="ath-page"><div class="ath-page-shell"><a class="ath-page-back" href="/fanbase/">← Back to Yard Report</a><header class="ath-page-head"><span class="ath-page-kicker">Around the Horn</span><h1 class="ath-page-title" id="athPageTitle">Loading story…</h1><p class="ath-page-subtitle" id="athPageSubtitle">Gathering related coverage from the saved bundle.</p></header><section class="ath-story-grid" id="athStoryGrid"><div class="feed-msg">Loading bundle…</div></section></div></main><script type="module" src="/fanbase/assets/index.astro_astro_type_script_index_0_lang.CPTlZKbP.js"></script><script>(function(){const base = "/fanbase/";
+
+      // While viewing another team (?view=), keep it on every link within the
+      // site, including links pages add later, until "Back to …" drops it
+      (function () {
+        var view = new URLSearchParams(location.search).get('view');
+        if (!view || !document.documentElement.hasAttribute('data-viewing')) return;
+        function carry(a) {
+          if (!a || !a.href || a.hasAttribute('data-no-view')) return;
+          var u = new URL(a.href, location.href);
+          if (u.origin !== location.origin || u.pathname.indexOf(base) !== 0) return;
+          if (u.searchParams.has('view') || u.searchParams.has('team') || /\.[a-z0-9]+$/i.test(u.pathname)) return;
+          u.searchParams.set('view', view);
+          a.href = u.href;
+        }
+        document.querySelectorAll('a[href]').forEach(carry);
+        ['click', 'auxclick', 'contextmenu', 'focusin'].forEach(function (t) {
+          document.addEventListener(t, function (e) { carry(e.target.closest && e.target.closest('a[href]')); }, true);
+        });
+      })();
+    })();</script></body></html>
