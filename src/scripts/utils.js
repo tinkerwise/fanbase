@@ -58,7 +58,13 @@ export function extractThumbnail(article) {
 export function esc(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/** `url` if it's an http(s) URL, else ''. Feed links are third-party
+ * data: never put one in an href or window.open without this. */
+export function safeUrl(url) {
+  return /^https?:\/\//i.test(String(url ?? '').trim()) ? String(url).trim() : '';
 }
 
 export function relativeDate(dateStr) {
@@ -92,7 +98,7 @@ export function sanitizeHtml(html) {
 }
 
 export function buildReaderDoc(article, htmlContent) {
-  const base = article.link ? `<base href="${esc(article.link)}" target="_blank">` : '';
+  const base = safeUrl(article.link) ? `<base href="${esc(safeUrl(article.link))}" target="_blank">` : '';
   return `<!doctype html><html lang="en"><head><meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     ${base}
@@ -254,7 +260,7 @@ export async function fetchOgImage(articleUrl) {
 export function renderNewsThumbCard(article) {
   const thumb = article.thumbnail || PLACEHOLDER_IMG;
   const favicon = faviconUrl(article.link);
-  return `<a class="news-thumb-card" href="${esc(article.link)}" target="_blank" rel="noopener">
+  return `<a class="news-thumb-card" href="${esc(safeUrl(article.link) || '#')}" target="_blank" rel="noopener">
     <img class="news-thumb-img" src="${esc(thumb)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER_IMG}'">
     <div class="news-thumb-info">
       <span class="news-thumb-source">

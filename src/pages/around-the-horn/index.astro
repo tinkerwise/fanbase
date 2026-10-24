@@ -62,7 +62,7 @@ import Layout from '../../layouts/Layout.astro';
           <span class="source-name">${esc(article.source?.name || 'Source')}</span>
           <span class="article-date">${esc(relativeDate(article.pubDate))}</span>
         </div>
-        <h2 class="ath-story-title"><a href="${esc(article.link)}" target="_blank" rel="noopener noreferrer">${esc(article.title || 'Untitled')}</a></h2>
+        <h2 class="ath-story-title"><a href="${esc(/^https?:\/\//i.test(article.link || '') ? article.link : '#')}" target="_blank" rel="noopener noreferrer">${esc(article.title || 'Untitled')}</a></h2>
         ${desc ? `<p class="ath-story-desc">${esc(desc)}</p>` : ''}
       </article>`;
     }

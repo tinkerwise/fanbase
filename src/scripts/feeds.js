@@ -29,6 +29,7 @@ import {
   buildReaderDoc,
   cleanFeedText,
   teamLogoSrc,
+  safeUrl,
 } from './utils.js';
 
 // ── Source registry (populated on first load) ─────────────────────
@@ -756,7 +757,7 @@ export function renderArticles() {
       if (el.dataset.paywall) {
         markRead(article.link);
         renderArticles();
-        window.open(article.link, '_blank', 'noopener,noreferrer');
+        if (safeUrl(article.link)) window.open(article.link, '_blank', 'noopener,noreferrer');
         return;
       }
       openReader(article);
@@ -792,7 +793,7 @@ export function openReader(article) {
   $('readerDate').textContent = relativeDate(article.pubDate);
 
   const readerLink = $('readerLink');
-  readerLink.href = article.link;
+  readerLink.href = safeUrl(article.link) || '#';
   const favicon = faviconUrl(article.link);
   readerLink.innerHTML = favicon
     ? `<img class="source-favicon" src="${esc(favicon)}" alt="" width="16" height="16" onerror="this.style.display='none'"> Open original ↗`
@@ -815,7 +816,7 @@ export function openReader(article) {
     frame.classList.add('hidden');
     fallback.classList.remove('hidden');
     $('readerExcerpt').textContent = article.description || '';
-    $('readerFullLink').href = article.link;
+    $('readerFullLink').href = safeUrl(article.link) || '#';
   }
 
   $('readerOverlay').classList.remove('hidden');

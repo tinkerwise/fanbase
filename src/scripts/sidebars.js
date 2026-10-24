@@ -21,7 +21,9 @@ import {
   cleanFeedText,
   relativeDate,
   teamLogoSrc,
+  safeUrl,
 } from './utils.js';
+import { extractVideoId, bindVideoClicks } from './videoTheater.js';
 import { fetchWeatherForGames, getGameWeather } from './weather.js';
 import { ensureWalkupSongsLoaded, getWalkupSongUrls } from './walkup-songs.js';
 import { WALKUP_ICON_SVG } from './scores.js';
@@ -508,10 +510,6 @@ const YT_PLAYLISTS = [
 ];
 const ORIOLES_RECAP_PLAYLIST = 'PLoeYQM_iUEVyoMu-AIZFXs9ja6GMzF1Ce';
 
-function extractVideoId(link) {
-  return link.match(/v=([^&]+)/)?.[1] || link.match(/youtu\.be\/([^?&]+)/)?.[1] || '';
-}
-
 async function fetchPlaylistVideo(pl) {
   const url = `${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${pl.id}`)}`;
   const data = await fetch(url).then(r => r.json());
@@ -634,14 +632,7 @@ export async function loadVideos() {
       </div>`;
     }).join('')}</div>`;
 
-    wrap.querySelectorAll('.video-item').forEach(el => {
-      el.style.cursor = 'pointer';
-      el.addEventListener('click', () => {
-        const id = el.dataset.videoId;
-        if (id) openVideoTheater(id);
-        else window.open(el.dataset.videoUrl, '_blank');
-      });
-    });
+    bindVideoClicks(wrap, '.video-item');
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">Unavailable</span>';
   }
@@ -733,11 +724,11 @@ export async function loadPodcast() {
         <span>Buster Olney</span>
       </div>
       <audio class="podcast-player" controls preload="metadata">
-        <source src="${audioUrl}" type="${audioType}">
+        <source src="${esc(safeUrl(audioUrl))}" type="${esc(audioType)}">
         Your browser does not support the audio element.
       </audio>
       <div class="podcast-links">
-        <a class="podcast-link" href="${esc(rawLink || PODCAST_SHOW_URL)}" target="_blank" rel="noopener">Episode details ↗</a>
+        <a class="podcast-link" href="${esc(safeUrl(rawLink) || PODCAST_SHOW_URL)}" target="_blank" rel="noopener">Episode details ↗</a>
         <a class="podcast-link" href="${PODCAST_SHOW_URL}" target="_blank" rel="noopener">Show archive ↗</a>
       </div>
       ${hoverPanel}
@@ -752,39 +743,6 @@ export async function loadPodcast() {
       </div>
     </div>`;
   }
-}
-
-// ── Video Theater Overlay ─────────────────────────────────────────
-function openVideoTheater(videoId) {
-  let overlay = document.getElementById('videoTheater');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'videoTheater';
-    overlay.className = 'video-theater';
-    overlay.innerHTML = `
-      <div class="video-theater-backdrop"></div>
-      <div class="video-theater-content">
-        <button class="video-theater-close" aria-label="Close">&times;</button>
-        <div class="video-theater-player"></div>
-      </div>`;
-    document.body.appendChild(overlay);
-    overlay.querySelector('.video-theater-backdrop').addEventListener('click', closeVideoTheater);
-    overlay.querySelector('.video-theater-close').addEventListener('click', closeVideoTheater);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideoTheater(); });
-  }
-  const player = overlay.querySelector('.video-theater-player');
-  player.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
-    frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeVideoTheater() {
-  const overlay = document.getElementById('videoTheater');
-  if (!overlay) return;
-  overlay.classList.remove('active');
-  overlay.querySelector('.video-theater-player').innerHTML = '';
-  document.body.style.overflow = '';
 }
 
 // ── Yard Leaders ──────────────────────────────────────────────────

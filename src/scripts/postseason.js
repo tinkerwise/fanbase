@@ -8,6 +8,7 @@ import { MLB, TEAM_ID, TEAM_NICK, PROXY, SEASON, TEAM_ABBREV, TEAM_SLUG } from '
 import { requireTeam } from './teamPicker.js';
 import { loadFeedSources } from './feedSources.js';
 import { $, esc, teamLogoSrc, cleanFeedText, extractThumbnail, renderNewsThumbCard, fetchOgImage, decodeHtmlEntities, formatGameTime, localDateStr, savantUrl } from './utils.js';
+import { extractVideoId, bindVideoClicks } from './videoTheater.js';
 import { getScoreChipStatus } from './scores.js';
 import { fetchStandings, fetchLeagueLeaders } from './mlbApi.js';
 
@@ -772,10 +773,6 @@ const YT_PLAYLISTS = [
 ];
 const PS_VIDEO_RE = /postseason|playoff|wild card|ALDS|NLDS|ALCS|NLCS|world series|october|clinch/i;
 
-function extractVideoId(link) {
-  return link.match(/v=([^&]+)/)?.[1] || link.match(/youtu\.be\/([^?&]+)/)?.[1] || '';
-}
-
 async function fetchPlaylistVideos(pl) {
   try {
     const url = `${PROXY}?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?playlist_id=${pl.id}`)}`;
@@ -808,37 +805,6 @@ function renderVideoItem(item) {
   </div>`;
 }
 
-function openVideoTheater(videoId) {
-  let overlay = document.getElementById('videoTheater');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'videoTheater';
-    overlay.className = 'video-theater';
-    overlay.innerHTML = `
-      <div class="video-theater-backdrop"></div>
-      <div class="video-theater-content">
-        <button class="video-theater-close" aria-label="Close">&times;</button>
-        <div class="video-theater-player"></div>
-      </div>`;
-    document.body.appendChild(overlay);
-    overlay.querySelector('.video-theater-backdrop').addEventListener('click', closeVideoTheater);
-    overlay.querySelector('.video-theater-close').addEventListener('click', closeVideoTheater);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideoTheater(); });
-  }
-  overlay.querySelector('.video-theater-player').innerHTML =
-    `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeVideoTheater() {
-  const overlay = document.getElementById('videoTheater');
-  if (!overlay) return;
-  overlay.classList.remove('active');
-  overlay.querySelector('.video-theater-player').innerHTML = '';
-  document.body.style.overflow = '';
-}
-
 async function loadMedia() {
   const wrap = $('psMedia');
   if (!wrap) return;
@@ -851,14 +817,7 @@ async function loadMedia() {
   }
   wrap.innerHTML = `<div class="media-list">${items.map(renderVideoItem).join('')}</div>
     <a class="widget-link" href="https://www.mlb.com/postseason" target="_blank" rel="noopener">More postseason video ↗</a>`;
-  wrap.querySelectorAll('.media-item--video').forEach(el => {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', () => {
-      const id = el.dataset.videoId;
-      if (id) openVideoTheater(id);
-      else window.open(el.dataset.videoUrl, '_blank');
-    });
-  });
+  bindVideoClicks(wrap, '.media-item--video');
 }
 
 // ── History ───────────────────────────────────────────────────────
