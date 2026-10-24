@@ -4319,3 +4319,24 @@ a.il-name:hover { color: var(--accent); }
 /* Keep the footer below the fold while a page's content loads in, so it
    doesn't count as layout shift (CLS) as sections fill */
 .page-layout, body > main { min-height: 100vh; }
+
+/* Phones: keep the header inside the viewport. The site nav already marks
+   the current page and the logo links home, so the breadcrumb text goes;
+   the team button shows just the logo (the name stays when no team is
+   picked: "Pick team" has no logo). */
+@media (max-width: 600px) {
+  .header-breadcrumb .breadcrumb-link,
+  .header-breadcrumb .breadcrumb-sep,
+  .header-breadcrumb .breadcrumb-current { display: none; }
+  .header-right { gap: 6px; }
+  .header-inner > .btn-search { margin-left: 6px; }
+  .btn-team-picker { min-width: 44px; min-height: 44px; }
+  .team-picker-active-logo + .team-picker-active-name { display: none; }
+}
+/* Narrowest phones (320px): Home's header holds four 44px buttons, so the
+   logo gives up some padding and the wordmark shrinks a little */
+@media (max-width: 360px) {
+  .header-inner { padding: 0 8px; gap: 6px; }
+  .logo { gap: 6px; padding-left: 0; padding-right: 4px; }
+  .logo-wordmark { font-size: 1.2rem; }
+}
