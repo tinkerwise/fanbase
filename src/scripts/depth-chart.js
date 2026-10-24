@@ -82,12 +82,31 @@ function renderIlSection(players) {
     const pos   = p.position?.abbreviation ?? '';
     return `<div class="depth-chart-il-row">
       <span class="depth-chart-il-row-pos">${esc(pos)}</span>
-      <a class="depth-chart-il-row-name" href="${esc(savantUrl(p.person.id))}" target="_blank" rel="noopener">${esc(p.person.fullName)}</a>
+      <a class="depth-chart-il-row-name" href="${esc(savantUrl(p.person.id))}" target="_blank" rel="noopener" data-pid="${p.person.id}">${esc(p.person.fullName)}</a>
       <span class="depth-chart-il-pill">${esc(label)}</span>
     </div>`;
   }).join('');
 
   el.innerHTML = `<div class="depth-chart-il-section-label">Injured List</div>${rows}`;
+}
+
+// Site search links here with ?player=<id>: mark that player, or say
+// they're not on the chart (minor leaguers, recent call-ups)
+function highlightPlayer(players) {
+  const id = new URLSearchParams(location.search).get('player');
+  if (!id) return;
+  const el = document.querySelector(`[data-pid="${CSS.escape(id)}"]`);
+  if (el) {
+    el.classList.add('depth-chart-hl');
+    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    el.focus({ preventScroll: true });
+    return;
+  }
+  const name = players.find(p => String(p.person.id) === id)?.person.fullName;
+  const note = document.createElement('p');
+  note.className = 'depth-chart-notice';
+  note.innerHTML = `${name ? esc(name) : 'That player'} isn't on the depth chart right now. <a href="${esc(savantUrl(id))}" target="_blank" rel="noopener">View on Baseball Savant ↗</a>`;
+  document.querySelector('.depth-chart-title')?.after(note);
 }
 
 async function loadDepthChart() {
@@ -127,6 +146,8 @@ async function loadDepthChart() {
     // Pitching
     renderPitchCol('dcRotation', 'Rotation', byPos['SP'] ?? []);
     renderPitchCol('dcBullpen',  'Bullpen',  [...(byPos['RP'] ?? []), ...(byPos['P'] ?? [])]);
+
+    highlightPlayer(players);
 
   } catch {
     overlay.innerHTML = '<span class="depth-chart-unavail">Unavailable</span>';

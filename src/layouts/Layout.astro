@@ -160,6 +160,9 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
       ))}
     </nav>
     <slot />
+    <script>
+      import '../scripts/search.js';
+    </script>
     <script is:inline define:vars={{ base }}>
       // While viewing another team (?view=), keep it on every link within the
       // site, including links pages add later, until "Back to …" drops it
