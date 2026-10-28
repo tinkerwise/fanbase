@@ -58,7 +58,7 @@ function body() {
   }
   return `<h2 class="ob-title" id="obTitle">Get around</h2>
     <ul class="ob-tips">
-      <li><b>Get around</b> with the tabs at the bottom; <b>More</b> has Postseason, Trades, Draft, Search and Settings. On a computer they're under the header.</li>
+      <li><b>Get around</b> with the tabs at the bottom: Home, <b>The Dugout</b> (all your team's news), Schedule and Roster. <b>More</b> has Postseason, Trades, Draft, Search and Settings. On a computer they're under the header.</li>
       <li><b>Search</b> any team, player or page, or press <kbd>/</kbd> or <kbd>⌘K</kbd>. <button class="ob-link" type="button" data-ob="search">Try it</button></li>
       <li><b>Other teams:</b> the team button, top right, lets you browse any club without switching yours.</li>
       <li>${homeScreenTip()}</li>

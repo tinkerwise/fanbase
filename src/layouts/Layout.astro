@@ -18,10 +18,11 @@ const pathname = Astro.url.pathname;
 // header by the script after <slot />), the bottom tab bar on phones and
 // tablets (`tab`), and its More sheet (everything else). Groups: today,
 // your team, league-wide events; a divider separates them on desktop.
-// Roster is the depth-chart page (field, rotation, bullpen, injured list).
+// The Dugout is the news page (/news/); Roster is the depth-chart page
+// (field, rotation, bullpen, injured list).
 const NAV_LINKS = [
   { href: base, label: 'Home', icon: 'home', group: 'today', tab: true },
-  { href: `${base}news/`, label: 'News', icon: 'news', group: 'today', tab: true },
+  { href: `${base}news/`, label: 'The Dugout', icon: 'dugout', group: 'today', tab: true },
   { href: `${base}schedule/`, label: 'Schedule', icon: 'schedule', group: 'team', tab: true },
   { href: `${base}depth-chart/`, label: 'Roster', icon: 'roster', group: 'team', tab: true },
   { href: `${base}postseason/`, label: 'Postseason', icon: 'postseason', group: 'league' },
@@ -31,7 +32,7 @@ const NAV_LINKS = [
 // 24x24 stroke icons (Tailgate's set, so the two sites match)
 const NAV_ICONS: Record<string, string> = {
   home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
-  news: '<path d="M4 5h13v14H5a1 1 0 0 1-1-1z"/><path d="M17 8h3v10a1 1 0 0 1-1 1h-2"/><path d="M7 9h7M7 13h7M7 17h4"/>',
+  dugout: '<path d="M4 5h13v14H5a1 1 0 0 1-1-1z"/><path d="M17 8h3v10a1 1 0 0 1-1 1h-2"/><path d="M7 9h7M7 13h7M7 17h4"/>',
   schedule: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   roster: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.5h6V4"/><circle cx="9.5" cy="10.5" r="1.6"/><path d="m13 13 3 3m0-3-3 3"/>',
   postseason: '<path d="M3 4h5v6H3M3 14h5v6H3"/><path d="M8 7h4v10H8"/><path d="M12 12h4"/><path d="M16 9h5v6h-5z"/>',
@@ -213,7 +214,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.search} />
           Search
         </button>
-        <!-- Pages with a refresh (Home, News) unhide this and handle it -->
+        <!-- Pages with a refresh (Home, The Dugout) unhide this and handle it -->
         <button type="button" class="more-sheet-link" data-refresh hidden>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.refresh} />
           Refresh

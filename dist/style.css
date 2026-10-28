@@ -4408,6 +4408,7 @@ body::before {
     font-family: inherit; font-weight: 600; font-size: 0.68rem; line-height: 1.1; color: var(--text-2); text-decoration: none;
   }
   .tab-bar-link svg { width: 22px; height: 22px; }
+  .tab-bar-link span { white-space: nowrap; }
   .tab-bar-link--active { color: var(--accent-text); }
   .tab-bar-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
   .more-sheet:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 95; }
@@ -4437,6 +4438,10 @@ body::before {
   .tab-bar { padding-left: max(6px, calc(50% - 280px)); padding-right: max(6px, calc(50% - 280px)); }
   .more-sheet-panel { left: 50%; right: auto; width: 560px; transform: translateX(-50%); }
 }
+/* Narrowest phones (320px): five 62px tabs; keep "The Dugout" on one line */
+@media (max-width: 360px) {
+  .tab-bar-link { font-size: 0.62rem; }
+}
 /* Phones: Search, Refresh and Settings live in More, so the header keeps
    just the logo and team button */
 @media (max-width: 600px) {
@@ -4456,3 +4461,4 @@ body::before {
 }
 
 .depth-chart-sub { margin: -6px 0 12px; font-size: 0.85rem; color: var(--text-2); }
+.news-page-sub { margin: 2px 0 0; font-size: 0.85rem; color: var(--text-2); }

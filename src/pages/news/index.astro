@@ -5,12 +5,15 @@ import NewsFeed from '../../components/NewsFeed.astro';
 import ReaderOverlay from '../../components/ReaderOverlay.astro';
 ---
 
-<Layout title="News | Fanbase">
-  <PageHeader current="News" />
+<Layout title="The Dugout | Fanbase">
+  <PageHeader current="The Dugout" />
 
   <main class="news-page">
     <div class="news-page-head">
-      <h1 class="news-page-title"><span data-team-text="nick">Team</span> News</h1>
+      <div>
+        <h1 class="news-page-title">The Dugout</h1>
+        <p class="news-page-sub">Every <span data-team-text="nick">team</span> story from all your news sources</p>
+      </div>
       <div class="search-wrap news-page-search">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>

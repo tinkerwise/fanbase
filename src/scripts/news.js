@@ -1,4 +1,4 @@
-// ── News page ─────────────────────────────────────────────────────
+// ── The Dugout (news page, /news/) ─────────────────────────────────
 // The news feed on its own: Home's middle column without the sidebars.
 import './theme.js';
 import { requireTeam } from './teamPicker.js';

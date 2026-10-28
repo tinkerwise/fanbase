@@ -1,7 +1,7 @@
 // ── News feed controls ────────────────────────────────────────────
 // Wires the NewsFeed.astro toolbar (search, category pills, source filter,
 // sort, date range, show read, view toggle) and the reader overlay. Shared
-// by Home (app.js) and the News page (news.js). Settings changes made on
+// by Home (app.js) and The Dugout (news.js). Settings changes made on
 // any page reach the feed through the events settings.js dispatches.
 import { savePrefs } from './storage.js';
 import { state } from './state.js';
@@ -17,7 +17,7 @@ import {
 import { triggerOriolesMagic } from './easter-eggs.js';
 
 export function setupFeedControls() {
-  // Search (Home has it in the left sidebar, News above the feed)
+  // Search (Home has it in the left sidebar, The Dugout above the feed)
   let searchTimer;
   $('searchInput')?.addEventListener('input', e => {
     clearTimeout(searchTimer);
