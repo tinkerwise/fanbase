@@ -180,7 +180,8 @@ The prompts most likely to cause churn are broad redesigns or “clean this all 
 
 **Current Site Snapshot**
 
-- Navigation: bottom tab bar (Home, Dugout, Schedule, Roster, More) on phones and tablets; icon + label row under the header on desktop (Home, Dugout | Schedule, Roster, Front Office | Postseason)
+- Navigation: bottom tab bar (Home, Dugout, Schedule, Roster, More) on phones and tablets; icon + label row under the header on desktop (Home, Dugout | Schedule, Roster, Front Office | Postseason, plus Hardball in the offseason)
+- Hardball (#20, `/hardball/`): the MLB/MLBPA labor page (status, both-sides issue cards, labor news, timeline, explainer). Content is hand-curated in `public/hardball.json`: keep every position sourced and dated, and bump `lastUpdated`. `src/scripts/season.js` surfaces it (desktop row, top of More, Home banner) from the end of the postseason to Opening Day per the Stats API, or whenever the JSON status is expired/lockout; `visibility` forces it on or off
 - Front Office (#14): Injury Report, Transactions, Payroll & Contracts and 40-Man Roster widgets, plus links to Roster, Trades and Draft. It's a group in Home's right sidebar (collapsed on phones) and a page at `/front-office/`. Trades and Draft live under it: off the desktop row, indented under it in More. Calendar modes for Trades and Draft are tracked in #15-#18
 - Dugout is the full news feed on its own page; Home shows the same feed in its middle column
 - Feed supports Orioles, MLB, and MiLB categories

@@ -33,8 +33,9 @@ function fail($code, $message) {
 }
 
 // ── Allowlist ─────────────────────────────────────────────────────
-// Hosts in public/feeds.json, plus youtube.com (video playlists) and
-// mlb.com pages (walk-up music). og:image lookups fetch article pages, so
+// Hosts in public/feeds.json, plus youtube.com (video playlists), mlb.com
+// pages (walk-up music) and news.google.com (Hardball's labor search,
+// public/hardball.json). og:image lookups fetch article pages, so
 // they're limited to the same hosts. Subdomains match (blogs.fangraphs.com).
 const ALLOWED_DOMAINS = [
     'mlb.com',
@@ -50,6 +51,7 @@ const ALLOWED_DOMAINS = [
     'eutawstreetreport.com',
     'masnsports.com',
     'youtube.com',
+    'news.google.com',
 ];
 
 function is_allowed($url) {
