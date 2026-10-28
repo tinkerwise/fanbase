@@ -180,6 +180,7 @@ The prompts most likely to cause churn are broad redesigns or “clean this all 
 **Current Site Snapshot**
 
 - Navigation: bottom tab bar (Home, Dugout, Schedule, Roster, More) on phones and tablets; icon + label row under the header on desktop
+- Hardball (#20, `/hardball/`): the MLB/MLBPA labor page (status, both-sides issue cards, labor news, timeline, explainer). Content is hand-curated in `public/hardball.json`: keep every position sourced and dated, and bump `lastUpdated`. `src/scripts/season.js` surfaces it (desktop row, top of More, Home banner) from the end of the postseason to Opening Day per the Stats API, or whenever the JSON status is expired/lockout; `visibility` forces it on or off
 - Dugout is the full news feed on its own page; Home shows the same feed in its middle column
 - Feed supports Orioles, MLB, and MiLB categories
 - Around the Horn surfaces three featured baseball story cards with a dedicated follow-through page
