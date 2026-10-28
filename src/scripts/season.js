@@ -6,10 +6,13 @@
 // <html data-hardball>, which shows the [data-offseason-only] nav entries
 // and Home's banner (style.css). The answer is cached in localStorage so
 // Layout.astro's head script can apply it before first paint next time.
+// Cleanup (#22), the offseason free-agency page, follows the calendar
+// alone: <html data-offseason> shows its [data-cleanup-only] nav entries.
 // Every page loads this (Layout.astro).
 import { MLB } from './config.js';
 
 const PROMINENT_KEY = 'fb_hardball';
+const OFFSEASON_KEY = 'fb_offseason';
 const DATES_KEY = 'fb_season_dates';
 const DAY = 24 * 3600 * 1000;
 
@@ -28,20 +31,51 @@ function readJson(key) {
 
 // Opening Day and the last day of the postseason for `year`, cached a day
 async function seasonDates(year) {
-  const cached = readJson(DATES_KEY);
+  const cached = readJson(`${DATES_KEY}_${year}`);
   if (cached?.year === year && Date.now() - cached.at < DAY) return cached;
   const data = await fetch(`${MLB}/seasons/${year}?sportId=1`).then(r => r.json());
   const s = data.seasons?.[0];
   if (!s?.regularSeasonStartDate || !s?.postSeasonEndDate) throw new Error('No season dates');
   const dates = { year, start: s.regularSeasonStartDate, end: s.postSeasonEndDate, at: Date.now() };
-  try { localStorage.setItem(DATES_KEY, JSON.stringify(dates)); } catch { /* storage blocked */ }
+  try { localStorage.setItem(`${DATES_KEY}_${year}`, JSON.stringify(dates)); } catch { /* storage blocked */ }
   return dates;
+}
+
+/** YYYY-MM-DD for `now` in local time (toISOString is UTC, a day ahead on US evenings) */
+export function localDate(now = new Date()) {
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
+function addDay(iso, days) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return localDate(new Date(y, m - 1, d + days));
+}
+
+/**
+ * The offseason `now` falls in, or the one coming up: { start, end, season }
+ * where start is the day after the postseason, end is Opening Day, and
+ * season is the year that just finished (2026 for the 2026-27 offseason).
+ */
+export async function offseasonWindow(now = new Date()) {
+  const today = localDate(now);
+  const year = now.getFullYear();
+  try {
+    const cur = await seasonDates(year);
+    if (today < cur.start) {
+      const prev = await seasonDates(year - 1);
+      return { start: addDay(prev.end, 1), end: cur.start, season: year - 1 };
+    }
+    const next = await seasonDates(year + 1).catch(() => null);
+    return { start: addDay(cur.end, 1), end: next?.start ?? `${year + 1}-03-26`, season: year };
+  } catch {
+    const season = now.getMonth() >= 10 ? year : year - 1;
+    return { start: `${season}-11-01`, end: `${season + 1}-03-26`, season };
+  }
 }
 
 /** True between the end of the postseason and Opening Day */
 export async function isOffseason(now = new Date()) {
-  // Local date (toISOString would be UTC, a day ahead on US evenings)
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const today = localDate(now);
   try {
     const { start, end } = await seasonDates(now.getFullYear());
     return today < start || today > end;
@@ -100,6 +134,10 @@ async function fillBanner() {
   if (count) count.textContent = countdownText(nextKeyDate(data));
 }
 
+isOffseason().then(on => {
+  document.documentElement.toggleAttribute('data-offseason', on);
+  try { localStorage.setItem(OFFSEASON_KEY, on ? '1' : '0'); } catch { /* storage blocked */ }
+});
 isHardballProminent().then(on => {
   apply(on);
   if (on) fillBanner().catch(() => { /* keep the static banner text */ });
