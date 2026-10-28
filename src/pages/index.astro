@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import NewsFeed from '../components/NewsFeed.astro';
 import ReaderOverlay from '../components/ReaderOverlay.astro';
+import FrontOfficeWidgets from '../components/FrontOfficeWidgets.astro';
+import FrontOfficeLinks from '../components/FrontOfficeLinks.astro';
 ---
 
 <Layout title="Fanbase">
@@ -133,73 +135,21 @@ import ReaderOverlay from '../components/ReaderOverlay.astro';
         </div>
       </div>
 
-      <!-- Front Office -->
-      <div class="sidebar-group">
-        <div class="sidebar-group-label">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-          Front Office
+      <!-- Front Office: team widgets, then the Roster, Trades and Draft pages
+           (Tailgate #22). On phones the label toggles the group, which starts
+           collapsed (Tailgate #37, app.js). The heading links to the full
+           Front Office page. -->
+      <div class="sidebar-group sidebar-group--fo">
+        <div class="sidebar-group-label" id="frontOfficeToggle" aria-controls="frontOfficeBody">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <a class="sidebar-group-title" href={`${import.meta.env.BASE_URL}front-office/`}>Front Office</a>
+          <span class="sidebar-group-hint">Injuries, payroll, roster, trades &amp; draft</span>
+          <svg class="sidebar-group-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </div>
-
-        <!-- Injury Report -->
-        <div class="sidebar-section collapsible collapsed" data-section="il">
-          <h3 class="section-label section-toggle" data-target="il">
-            <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6m-3-3v6"/><circle cx="12" cy="12" r="10"/></svg>
-            Injury Report
-            <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-          </h3>
-          <div class="section-body" id="ilWrap">
-            <span class="sidebar-msg">Loading…</span>
-          </div>
+        <div class="sidebar-group-body" id="frontOfficeBody">
+          <FrontOfficeWidgets collapsible />
+          <FrontOfficeLinks />
         </div>
-
-        <!-- Transactions -->
-        <div class="sidebar-section collapsible collapsed" data-section="transactions">
-          <h3 class="section-label section-toggle" data-target="transactions">
-            <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-            Transactions
-            <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-          </h3>
-          <div class="section-body" id="transactionsWrap">
-            <span class="sidebar-msg">Loading…</span>
-          </div>
-        </div>
-
-        <!-- Contracts -->
-        <div class="sidebar-section collapsible collapsed" data-section="contracts">
-          <h3 class="section-label section-toggle" data-target="contracts">
-            <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Contracts
-            <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-          </h3>
-          <div class="section-body" id="contractsWrap">
-            <span class="sidebar-msg">Loading…</span>
-          </div>
-        </div>
-
-        <!-- 40-Man Roster -->
-        <div class="sidebar-section collapsible collapsed" data-section="roster">
-          <h3 class="section-label section-toggle" data-target="roster">
-            <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-            40-Man Roster
-            <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-          </h3>
-          <div class="section-body" id="rosterWrap">
-            <span class="sidebar-msg">Loading…</span>
-          </div>
-        </div>
-
-        <!-- Depth Chart -->
-        <div class="sidebar-section collapsible collapsed" data-section="depthChart">
-          <h3 class="section-label section-toggle" data-target="depthChart">
-            <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 0-3 3m3-3 3 3M6 12H3m3 0-3 3m3-3-3-3M18 12h3m-3 0 3 3m-3-3 3-3M12 18v3"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-            Depth Chart
-            <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-          </h3>
-          <div class="section-body" id="depthChartWrap">
-            <span class="sidebar-msg">Coming soon</span>
-          </div>
-        </div>
-
       </div>
 
     </aside>
