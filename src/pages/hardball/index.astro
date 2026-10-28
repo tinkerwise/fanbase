@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+---
+
+<Layout title="Hardball | Fanbase">
+  <PageHeader current="Hardball" />
+
+  <main class="hb-page">
+    <header class="hb-head">
+      <p class="hb-kicker">MLB labor and the CBA</p>
+      <h1 class="hb-title">Hardball</h1>
+      <p class="hb-lede">The owners and the players' union are negotiating the next collective bargaining agreement. Here's where things stand, what each side wants, and the latest news.</p>
+    </header>
+
+    <!-- Status: filled from public/hardball.json (hardball.js) -->
+    <section class="hb-status" id="hbStatus" aria-live="polite">
+      <span class="sidebar-msg">Loading…</span>
+    </section>
+
+    <section class="hb-section" aria-labelledby="hbIssuesTitle">
+      <h2 class="hb-section-title" id="hbIssuesTitle">The issues</h2>
+      <p class="hb-section-sub">Each side's position as it has stated or proposed it, with the date it was reported.</p>
+      <div class="hb-issues" id="hbIssues"></div>
+    </section>
+
+    <div class="hb-columns">
+      <section class="hb-section" aria-labelledby="hbNewsTitle">
+        <h2 class="hb-section-title" id="hbNewsTitle">Latest labor news</h2>
+        <div class="hb-news" id="hbNews"><span class="sidebar-msg">Loading…</span></div>
+      </section>
+
+      <section class="hb-section" aria-labelledby="hbTimelineTitle">
+        <h2 class="hb-section-title" id="hbTimelineTitle">Timeline</h2>
+        <ol class="hb-timeline" id="hbTimeline"></ol>
+      </section>
+    </div>
+
+    <section class="hb-section" aria-labelledby="hbExplainerTitle">
+      <h2 class="hb-section-title" id="hbExplainerTitle">The basics</h2>
+      <div class="hb-explainer" id="hbExplainer"></div>
+    </section>
+
+    <p class="hb-footnote" id="hbFootnote"></p>
+  </main>
+</Layout>
+
+<script>
+  import '../../scripts/hardball.js';
+</script>

@@ -1,0 +1,439 @@
+{
+  "_readme": "Content for /hardball/ (issue #20), the MLB/MLBPA labor page. Hand-curated: update lastUpdated whenever you edit. Every position needs a source (url) and the date it was reported, and is worded as that side stated it: no editorializing. status.code is one of talks | expired | lockout | tentative | ratified; expired and lockout keep Hardball prominent in the nav and on Home whatever the calendar says. visibility: auto (offseason from MLB's season dates, plus expired/lockout) | show | hide. Timeline items with key: true count down on the page when they're upcoming. The news section is automatic: labor keywords over the league-wide feeds plus newsSources (Google News search RSS, whose titles end in \" - Publisher\": titleHasSource moves that into the source label).",
+  "lastUpdated": "2026-10-28",
+  "visibility": "auto",
+  "status": {
+    "code": "talks",
+    "headline": "Talks continue, far apart on a salary cap",
+    "summary": "MLB and the MLB Players Association have traded proposals since May. The owners want a salary cap and a salary floor; the union opposes one. The current agreement expires December 1 at 11:59 p.m. ET. The union's interim head, Bruce Meyer, has said a lockout is \"all but guaranteed\" when it does; Commissioner Rob Manfred has said MLB is planning on playing baseball in 2027.",
+    "asOf": "2026-10-28",
+    "sources": [
+      {
+        "label": "CBS Sports: CBA negotiations timeline",
+        "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+      },
+      {
+        "label": "Yahoo Sports: Meyer on a lockout",
+        "url": "https://sports.yahoo.com/articles/head-mlb-players-association-delivers-132600283.html"
+      },
+      {
+        "label": "HITC: Manfred, Aug 24",
+        "url": "https://www.hitc.com/mlb-commissioner-rob-manfred-provides-update-on-potential-lockout-in-2027/"
+      }
+    ]
+  },
+  "parties": {
+    "mlb": {
+      "name": "MLB",
+      "full": "Major League Baseball (the 30 owners)",
+      "lead": "Commissioner Rob Manfred"
+    },
+    "mlbpa": {
+      "name": "MLBPA",
+      "full": "MLB Players Association (the players' union)",
+      "lead": "Interim executive director Bruce Meyer"
+    }
+  },
+  "issues": [
+    {
+      "id": "salary-cap",
+      "title": "Salary cap and floor",
+      "summary": "A hard limit on what each team can spend on players, and a minimum it must spend. MLB is the only major North American league without a cap.",
+      "status": "open",
+      "mlb": {
+        "position": "Proposed a $245.3 million cap and a $171.2 million floor for 2027 (both including benefits), with revenue split 50-50 between clubs and players and an escrow system like the NBA's and NHL's. Says a cap fixes \"the payroll disparity that leaves too many fans without hope of their team competing for a World Series title.\"",
+        "date": "2026-05-28",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlb-proposes-salary-cap-floor-cba-negotiations-mlbpa/"
+          },
+          {
+            "label": "Yahoo Sports (Jun 25)",
+            "url": "https://sports.yahoo.com/mlb/article/mlb-makes-big-push-for-salary-cap-floor-with-public-statement-outlining-labor-negotiations-with-mlbpa-195702767.html"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Opposes any cap. Meyer has called it \"institutionalized collusion\" and estimated MLB's proposal would have cost players more than half a billion dollars in 2026. The union has accused MLB of trying to \"reduce player compensation by billions of dollars.\"",
+        "date": "2026-06-01",
+        "sources": [
+          {
+            "label": "CBS Sports timeline",
+            "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+          },
+          {
+            "label": "Yahoo Sports (Jun 25)",
+            "url": "https://sports.yahoo.com/mlb/article/mlb-makes-big-push-for-salary-cap-floor-with-public-statement-outlining-labor-negotiations-with-mlbpa-195702767.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spending-minimum",
+      "title": "Making low-payroll teams spend",
+      "summary": "Both sides say they want competitive balance; they disagree on how to get teams to spend.",
+      "status": "open",
+      "mlb": {
+        "position": "Its answer is the salary floor in the cap system. Responding to the union's plan, MLB spokesman Glen Caplin said it would \"exacerbate\" competitive balance problems rather than address them.",
+        "date": "2026-05-27",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlbpa-mlb-proposal-collective-bargaining-agreement-lockout/"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Proposed a \"competitive integrity tax\" on teams that don't reach a minimum payroll, and penalties for teams that don't spend revenue-sharing money on players.",
+        "date": "2026-05-27",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlbpa-mlb-proposal-collective-bargaining-agreement-lockout/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "luxury-tax",
+      "title": "Luxury tax (competitive balance tax)",
+      "summary": "Today's system: teams that spend past a threshold pay a tax. It's the closest thing MLB has to a cap.",
+      "status": "open",
+      "mlb": {
+        "position": "Manfred has said the luxury tax failed to address competitive concerns, which is why the league is asking for a cap instead.",
+        "date": "2026-06-03",
+        "sources": [
+          {
+            "label": "CBS Sports timeline",
+            "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Proposed raising the first tax threshold from $244 million to $300 million. MLB said that would weaken the tax, freeing about $70 million for the Dodgers' payroll as one example.",
+        "date": "2026-05-27",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlbpa-mlb-proposal-collective-bargaining-agreement-lockout/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue-sharing",
+      "title": "Revenue sharing",
+      "summary": "How much money big-market teams pass to small-market teams.",
+      "status": "open",
+      "mlb": {
+        "position": "Proposed centralizing local revenues and sharing them equally among the 30 clubs, as part of the cap system's 50-50 split with players.",
+        "date": "2026-05-28",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlb-proposes-salary-cap-floor-cba-negotiations-mlbpa/"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Proposed sharing more local broadcast revenue and less game-day revenue, guaranteeing small-market clubs at least $240 million a season, and extra money for low-revenue teams that win or reach the postseason.",
+        "date": "2026-05-27",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlbpa-mlb-proposal-collective-bargaining-agreement-lockout/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "draft",
+      "title": "The draft and an international draft",
+      "summary": "How amateur players enter pro baseball, in the U.S. and abroad.",
+      "status": "open",
+      "mlb": {
+        "position": "Proposed cutting the draft from 20 rounds to 12 with a $200 million hard bonus system, making high school players ineligible (college players eligible at 20), and an international draft with its own $200 million bonus cap.",
+        "date": "2026-06-18",
+        "sources": [
+          {
+            "label": "CBS Sports timeline",
+            "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Proposed keeping 20 rounds and high school eligibility, adding college sophomores, bigger bonus pools with no hard slots, allowing draft-pick trades, and moving the draft back to June. Said MLB's draft plans would cut more than $1 billion in compensation over five years.",
+        "date": "2026-07-21",
+        "sources": [
+          {
+            "label": "CBS Sports timeline",
+            "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "free-agency",
+      "title": "Free agency and service time",
+      "summary": "When players can test the open market, and what limits apply to their contracts.",
+      "status": "open",
+      "mlb": {
+        "position": "Agreed to free agency after five years for players 30 and older and to ending the qualifying offer, but only with a cap. Also proposed maximum contract lengths (five years, six to re-sign with a player's own team) capped at a share of the salary cap, ending deferred money, and free-agent \"quiet periods\" around the Winter Meetings.",
+        "date": "2026-06-25",
+        "sources": [
+          {
+            "label": "CBS Sports timeline",
+            "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Proposed free agency after five years instead of six for players 30 and older, ending the qualifying offer, and more compensation for low-revenue teams that lose free agents.",
+        "date": "2026-05-27",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlbpa-mlb-proposal-collective-bargaining-agreement-lockout/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "minimum-salary",
+      "title": "Minimum salary",
+      "summary": "What the lowest-paid players earn. Today's minimum is $780,000.",
+      "status": "open",
+      "mlb": {
+        "position": "Proposed $1 million for players with at least two years of service and $900,000 for those with less, plus a $100,000 bonus from the pre-arbitration pool, as part of the cap system.",
+        "date": "2026-06-25",
+        "sources": [
+          {
+            "label": "CBS Sports timeline",
+            "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Proposed raising the minimum to $1.5 million.",
+        "date": "2026-05-27",
+        "sources": [
+          {
+            "label": "CBS Sports",
+            "url": "https://www.cbssports.com/mlb/news/mlbpa-mlb-proposal-collective-bargaining-agreement-lockout/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "schedule",
+      "title": "Season length and playoffs",
+      "summary": "How many games are played, and how the postseason works.",
+      "status": "open",
+      "mlb": {
+        "position": "Proposed a 154-game season starting in 2029 (down from 162) with a standard weekly off day, best-of-seven Division Series, and letting higher seeds pick their Wild Card and Division Series opponents. All contingent on a cap.",
+        "date": "2026-10-08",
+        "sources": [
+          {
+            "label": "CBS Sports timeline",
+            "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+          },
+          {
+            "label": "CNBC",
+            "url": "https://www.cnbc.com/2026/10/08/major-league-baseball-proposes-shorter-season-amid-salary-cap-push.html"
+          }
+        ]
+      },
+      "mlbpa": {
+        "position": "Said all of MLB's proposals remain \"contingent on players' agreement to a salary cap,\" adding: \"Players will weigh in on these proposals and we will respond at the bargaining table.\"",
+        "date": "2026-10-08",
+        "sources": [
+          {
+            "label": "amNY (Reuters)",
+            "url": "https://www.amny.com/sports/mlb-154-game-proposal-10-8-26/"
+          }
+        ]
+      }
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2021-12-02",
+      "title": "Last lockout begins",
+      "detail": "Owners lock out the players when the previous CBA expires. It lasts 99 days, ending March 10, 2022, and pushes back the start of the 2022 season.",
+      "source": {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/2021%E2%80%9322_Major_League_Baseball_lockout"
+      }
+    },
+    {
+      "date": "2025-11-12",
+      "title": "First labor meeting",
+      "detail": "MLB and the MLBPA hold a preliminary meeting on labor issues.",
+      "source": {
+        "label": "MLB Trade Rumors",
+        "url": "https://www.mlbtraderumors.com/collective-bargaining-agreement"
+      }
+    },
+    {
+      "date": "2026-02-18",
+      "title": "Union changes leaders",
+      "detail": "Tony Clark resigns as MLBPA executive director; lead negotiator Bruce Meyer is elected interim executive director.",
+      "source": {
+        "label": "CNN",
+        "url": "https://www.cnn.com/2026/02/18/sport/mlbpa-elects-bruce-meyer-to-be-new-executive-director"
+      }
+    },
+    {
+      "date": "2026-05-12",
+      "title": "Formal talks open",
+      "detail": "First official bargaining session, in New York. Both sides outline their positions; no proposals yet.",
+      "source": {
+        "label": "MLB Trade Rumors",
+        "url": "https://www.mlbtraderumors.com/2026/05/mlb-mlbpa-begin-cba-negotiations.html"
+      }
+    },
+    {
+      "date": "2026-05-27",
+      "title": "Union's first proposals",
+      "detail": "A competitive integrity tax, a $1.5 million minimum salary, a $300 million first luxury-tax threshold, and free agency at five years for players 30 and older.",
+      "source": {
+        "label": "CBS Sports",
+        "url": "https://www.cbssports.com/mlb/news/mlbpa-mlb-proposal-collective-bargaining-agreement-lockout/"
+      }
+    },
+    {
+      "date": "2026-05-28",
+      "title": "MLB proposes a salary cap",
+      "detail": "A $245.3 million cap and $171.2 million floor for 2027, a 50-50 revenue split and an escrow system.",
+      "source": {
+        "label": "CBS Sports",
+        "url": "https://www.cbssports.com/mlb/news/mlb-proposes-salary-cap-floor-cba-negotiations-mlbpa/"
+      }
+    },
+    {
+      "date": "2026-06-18",
+      "title": "MLB's draft proposals",
+      "detail": "A 12-round draft with a hard bonus system, and an international draft.",
+      "source": {
+        "label": "CBS Sports timeline",
+        "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+      }
+    },
+    {
+      "date": "2026-06-25",
+      "title": "MLB's free agency and salary proposals",
+      "detail": "Contract-length limits, a higher minimum salary and earlier free agency for some players, all tied to a cap. MLB launches its \"Leveling the Playing Field\" campaign.",
+      "source": {
+        "label": "Yahoo Sports",
+        "url": "https://sports.yahoo.com/mlb/article/mlb-makes-big-push-for-salary-cap-floor-with-public-statement-outlining-labor-negotiations-with-mlbpa-195702767.html"
+      }
+    },
+    {
+      "date": "2026-07-14",
+      "title": "All-Star Game press conferences",
+      "detail": "Manfred and Meyer speak in Philadelphia; no new terms.",
+      "source": {
+        "label": "CBS Sports timeline",
+        "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+      }
+    },
+    {
+      "date": "2026-07-21",
+      "title": "Union's draft proposals",
+      "detail": "Keep 20 rounds and high school eligibility, bigger bonus pools, draft-pick trades.",
+      "source": {
+        "label": "CBS Sports timeline",
+        "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+      }
+    },
+    {
+      "date": "2026-08-27",
+      "title": "MLB's roster proposals",
+      "detail": "Weekly rosters, 14 pitchers, shorter IL stints and free-agent quiet periods, tied to a cap.",
+      "source": {
+        "label": "CBS Sports timeline",
+        "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "title": "MLB proposes a 154-game season",
+      "detail": "A shorter season from 2029 and playoff changes, contingent on a cap.",
+      "source": {
+        "label": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/08/major-league-baseball-proposes-shorter-season-amid-salary-cap-push.html"
+      }
+    },
+    {
+      "date": "2026-12-01",
+      "time": "23:59",
+      "key": true,
+      "title": "CBA expires",
+      "detail": "11:59 p.m. ET. The old terms can stay in place while talks go on, but either side can act: owners can lock out the players, or players can strike.",
+      "source": {
+        "label": "CBS Sports timeline",
+        "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
+      }
+    },
+    {
+      "date": "2027-02-19",
+      "key": true,
+      "title": "Spring training scheduled to open",
+      "detail": "Camps open on schedule only if there's a deal or no work stoppage."
+    },
+    {
+      "date": "2027-03-25",
+      "key": true,
+      "title": "Opening Day scheduled",
+      "detail": "Reporting has pointed to mid-March as the point where a delay to the season becomes likely without a deal.",
+      "source": {
+        "label": "CBS Sports: state of labor",
+        "url": "https://www.cbssports.com/mlb/news/mlbs-state-of-labor-what-to-know-about-2026-cba-including-odds-of-salary-cap-international-draft-lockout"
+      }
+    }
+  ],
+  "explainer": [
+    {
+      "q": "What is the CBA?",
+      "a": "The collective bargaining agreement is the contract between the owners and the players' union. It sets the rules for salaries, free agency, the draft, the luxury tax, revenue sharing and much more. The current one runs out on December 1, 2026."
+    },
+    {
+      "q": "What happens on December 1?",
+      "a": "Nothing changes automatically: the old rules can continue while the sides keep talking. But once it expires, owners can lock out the players (no games, practices or signings) or players can strike. Baseball's last work stoppage was the 2021-22 lockout; the one before that was the 1994-95 strike, which canceled the 1994 World Series."
+    },
+    {
+      "q": "What's the difference between a lockout and a strike?",
+      "a": "A lockout is the owners shutting the players out until there's a deal. A strike is the players refusing to work. In a lockout, teams can't sign, trade or even talk with players on their 40-man rosters."
+    },
+    {
+      "q": "What's a salary cap, and why is it the big fight?",
+      "a": "A cap is a hard limit on team payrolls; a floor is a minimum. MLB has neither: instead, teams over a threshold pay a luxury tax. The owners say a cap would let more teams compete; the union says it limits what players can earn on the open market."
+    },
+    {
+      "q": "What's the luxury tax?",
+      "a": "Officially the competitive balance tax. Teams whose payroll passes a threshold pay a percentage of the overage, with higher rates and penalties as they go higher and for repeat offenders. It discourages spending without forbidding it."
+    },
+    {
+      "q": "What's service time, and why does it matter?",
+      "a": "It's how long a player has been in the majors. Players reach salary arbitration after about three years and free agency after six. Changing those numbers changes when players can earn market salaries."
+    },
+    {
+      "q": "What happened last time?",
+      "a": "The previous agreement expired December 1, 2021, and owners locked out the players the next day. The lockout lasted 99 days, delayed spring training and pushed Opening Day back to April 7, 2022."
+    }
+  ],
+  "newsSources": [
+    {
+      "id": "gnews",
+      "name": "Google News",
+      "url": "https://news.google.com/rss/search?q=MLB+%28CBA+OR+lockout+OR+MLBPA+OR+%22collective+bargaining%22+OR+%22salary+cap%22%29+when%3A14d&hl=en-US&gl=US&ceid=US:en",
+      "titleHasSource": true
+    },
+    {
+      "id": "mlbtr-cba",
+      "name": "MLB Trade Rumors",
+      "url": "https://www.mlbtraderumors.com/collective-bargaining-agreement/feed"
+    }
+  ]
+}
