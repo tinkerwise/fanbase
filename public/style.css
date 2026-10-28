@@ -18,6 +18,14 @@
 }
 
 :root {
+  /* Screen edges content shouldn't sit under: the iPhone status bar,
+     notch/Dynamic Island and home indicator. Non-zero mostly when the site
+     runs as a Home Screen web app, where viewport-fit=cover and the
+     black-translucent status bar (Layout.astro) let it draw under them. */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
   /* Defaults (Orioles); Layout.astro's head script overrides these per team */
   --accent: #df4601;
   --accent-text: #df4601;
@@ -2958,8 +2966,7 @@ a.il-name:hover { color: var(--accent); }
     z-index: 50;
   }
 
-  /* Safe areas for notched phones */
-  .site-header { padding-top: env(safe-area-inset-top, 0); }
+  /* Safe areas for notched phones (top inset: see the end of this file) */
   .page-layout { padding-bottom: calc(48px + env(safe-area-inset-bottom, 0)); }
 }
 
@@ -4340,3 +4347,36 @@ a.il-name:hover { color: var(--accent); }
   .logo { gap: 6px; padding-left: 0; padding-right: 4px; }
   .logo-wordmark { font-size: 1.2rem; }
 }
+
+/* ── Home Screen web app: status bar, notch and home indicator ──
+   The nav starts below the status bar, the sticky header stops under it,
+   and a dark strip sits behind the clock (the black-translucent status bar
+   draws white text, unreadable over a light page). Landscape pads the
+   sides for the notch. Overlays pad all four edges so their close buttons
+   never land under the clock. In a Safari tab the top inset is 0. */
+body {
+  padding-top: var(--safe-top);
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+}
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  height: var(--safe-top);
+  background: #111;
+  pointer-events: none;
+}
+.site-header { top: var(--safe-top); }
+.reader-overlay,
+.video-theater {
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+}
+.settings-overlay,
+.walkup-player-overlay {
+  padding: calc(12px + var(--safe-top)) max(12px, var(--safe-right)) calc(12px + var(--safe-bottom)) max(12px, var(--safe-left));
+}
+.team-picker-overlay {
+  padding: calc(16px + var(--safe-top)) max(16px, var(--safe-right)) calc(16px + var(--safe-bottom)) max(16px, var(--safe-left));
+}
+.settings-panel, .team-picker-modal { max-height: min(88vh, 100%); }
+
