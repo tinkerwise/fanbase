@@ -4,13 +4,14 @@ import PageHeader from '../../components/PageHeader.astro';
 const base = import.meta.env.BASE_URL;
 ---
 
-<Layout title="Depth Chart | Fanbase">
-  <PageHeader current="Depth Chart" />
+<Layout title="Roster | Fanbase">
+  <PageHeader current="Roster" />
 
   <main class="depth-chart-page">
     <div class="depth-chart-wrap">
 
-      <h1 class="depth-chart-title"><span data-team-text="nick">Team</span> Depth Chart</h1>
+      <h1 class="depth-chart-title"><span data-team-text="nick">Team</span> Roster</h1>
+      <p class="depth-chart-sub">Depth chart, rotation, bullpen and injured list</p>
 
       <!-- ── Field (generic dimensions, not any one park's) ───────── -->
       <div class="depth-chart-field-container">

@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import NewsFeed from '../../components/NewsFeed.astro';
+import ReaderOverlay from '../../components/ReaderOverlay.astro';
+---
+
+<Layout title="News | Fanbase">
+  <PageHeader current="News" />
+
+  <main class="news-page">
+    <div class="news-page-head">
+      <h1 class="news-page-title"><span data-team-text="nick">Team</span> News</h1>
+      <div class="search-wrap news-page-search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input class="search-input" id="searchInput" type="search" placeholder="Search all articles…" autocomplete="off" />
+      </div>
+    </div>
+    <div class="feed-area news-page-feed">
+      <NewsFeed />
+    </div>
+  </main>
+
+  <ReaderOverlay />
+</Layout>
+
+<script>
+  import '../../scripts/news.js';
+</script>

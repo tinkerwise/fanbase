@@ -88,9 +88,7 @@ export async function loadFeeds() {
     state.articles = [];
     renderSourceFilters();
     $('articleList').innerHTML =
-      '<div class="feed-msg">No sources selected. <button class="feed-msg-link" id="feedMsgSettingsBtn">Open Settings</button> to enable sources.</div>';
-    document.getElementById('feedMsgSettingsBtn')?.addEventListener('click', () =>
-      document.getElementById('settingsBtn')?.click());
+      '<div class="feed-msg">No sources selected. <button class="feed-msg-link" type="button" data-open-settings>Open Settings</button> to enable sources.</div>';
     return [];
   }
 

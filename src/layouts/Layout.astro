@@ -2,6 +2,7 @@
 import { statSync } from 'node:fs';
 import path from 'node:path';
 import { TEAM_CONFIG, LEGACY_ABBR } from '../scripts/teamConfig.js';
+import SettingsPanel from '../components/SettingsPanel.astro';
 
 interface Props {
   title?: string;
@@ -13,19 +14,40 @@ const teamColors = Object.fromEntries(
 );
 const base = import.meta.env.BASE_URL;
 const pathname = Astro.url.pathname;
-// Grouped by how often each page is used: today, your team's season, then
-// league-wide events. A divider separates the groups.
+// One list, three menus: the desktop row (icon + label, moved below the
+// header by the script after <slot />), the bottom tab bar on phones and
+// tablets (`tab`), and its More sheet (everything else). Groups: today,
+// your team, league-wide events; a divider separates them on desktop.
+// Roster is the depth-chart page (field, rotation, bullpen, injured list).
 const NAV_LINKS = [
-  { href: base, label: 'Home', group: 'today' },
-  { href: `${base}schedule/`, label: 'Schedule', group: 'team' },
-  { href: `${base}depth-chart/`, label: 'Depth Chart', group: 'team' },
-  { href: `${base}trades/`, label: 'Trades', group: 'league' },
-  { href: `${base}draft/`, label: 'Draft', group: 'league' },
-  { href: `${base}postseason/`, label: 'Postseason', group: 'league' },
+  { href: base, label: 'Home', icon: 'home', group: 'today', tab: true },
+  { href: `${base}news/`, label: 'News', icon: 'news', group: 'today', tab: true },
+  { href: `${base}schedule/`, label: 'Schedule', icon: 'schedule', group: 'team', tab: true },
+  { href: `${base}depth-chart/`, label: 'Roster', icon: 'roster', group: 'team', tab: true },
+  { href: `${base}postseason/`, label: 'Postseason', icon: 'postseason', group: 'league' },
+  { href: `${base}trades/`, label: 'Trades', icon: 'trades', group: 'league' },
+  { href: `${base}draft/`, label: 'Draft', icon: 'draft', group: 'league' },
 ];
+// 24x24 stroke icons (Tailgate's set, so the two sites match)
+const NAV_ICONS: Record<string, string> = {
+  home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  news: '<path d="M4 5h13v14H5a1 1 0 0 1-1-1z"/><path d="M17 8h3v10a1 1 0 0 1-1 1h-2"/><path d="M7 9h7M7 13h7M7 17h4"/>',
+  schedule: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  roster: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.5h6V4"/><circle cx="9.5" cy="10.5" r="1.6"/><path d="m13 13 3 3m0-3-3 3"/>',
+  postseason: '<path d="M3 4h5v6H3M3 14h5v6H3"/><path d="M8 7h4v10H8"/><path d="M12 12h4"/><path d="M16 9h5v6h-5z"/>',
+  trades: '<path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>',
+  draft: '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+  more: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  refresh: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+};
 function isActiveLink(href: string) {
   return href === base ? pathname === base : pathname.startsWith(href);
 }
+const TAB_LINKS = NAV_LINKS.filter(l => l.tab);
+const MORE_LINKS = NAV_LINKS.filter(l => !l.tab);
+const moreActive = MORE_LINKS.some(l => isActiveLink(l.href));
 const stylePath = path.join(process.cwd(), 'public', 'style.css');
 const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
 ---
@@ -147,6 +169,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
     </script>
   </head>
   <body>
+    <!-- Desktop: icon + label row (moved below the header after <slot />) -->
     <nav class="site-nav" aria-label="Site navigation">
       {NAV_LINKS.map((link, i) => (
         <Fragment>
@@ -156,12 +179,84 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
             class={`site-nav-link${isActiveLink(link.href) ? ' site-nav-link--active' : ''}`}
             aria-current={isActiveLink(link.href) ? 'page' : undefined}
           >
+            <svg class="site-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS[link.icon]} />
             {link.label}
           </a>
         </Fragment>
       ))}
     </nav>
+    <!-- Phones and tablets: bottom tab bar; More opens a sheet with the rest -->
+    <nav class="tab-bar" aria-label="Site navigation">
+      {TAB_LINKS.map(link => (
+        <a href={link.href} class={`tab-bar-link${isActiveLink(link.href) ? ' tab-bar-link--active' : ''}`} aria-current={isActiveLink(link.href) ? 'page' : undefined}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS[link.icon]} />
+          <span>{link.label}</span>
+        </a>
+      ))}
+      <button type="button" class={`tab-bar-link${moreActive ? ' tab-bar-link--active' : ''}`} id="tabMoreBtn" aria-expanded="false" aria-controls="moreSheet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.more} />
+        <span>More</span>
+      </button>
+    </nav>
+    <div class="more-sheet" id="moreSheet" hidden>
+      <div class="more-sheet-scrim" data-more-close></div>
+      <div class="more-sheet-panel" role="dialog" aria-modal="true" aria-label="More">
+        <span class="more-sheet-grip" aria-hidden="true"></span>
+        {MORE_LINKS.map(link => (
+          <a href={link.href} class={`more-sheet-link${isActiveLink(link.href) ? ' more-sheet-link--active' : ''}`} aria-current={isActiveLink(link.href) ? 'page' : undefined}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS[link.icon]} />
+            {link.label}
+          </a>
+        ))}
+        <span class="more-sheet-sep" aria-hidden="true"></span>
+        <button type="button" class="more-sheet-link" data-open-search>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.search} />
+          Search
+        </button>
+        <!-- Pages with a refresh (Home, News) unhide this and handle it -->
+        <button type="button" class="more-sheet-link" data-refresh hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.refresh} />
+          Refresh
+        </button>
+        <button type="button" class="more-sheet-link" data-open-settings>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.settings} />
+          Settings
+        </button>
+      </div>
+    </div>
+    <script is:inline>
+      // More sheet: opens from the tab bar, closes on the scrim, Escape, or
+      // any action in it (pages navigate away on their own)
+      (function () {
+        var btn = document.getElementById('tabMoreBtn');
+        var sheet = document.getElementById('moreSheet');
+        if (!btn || !sheet) return;
+        function setOpen(open) {
+          sheet.hidden = !open;
+          btn.setAttribute('aria-expanded', String(open));
+          if (open) { var first = sheet.querySelector('.more-sheet-link'); if (first) first.focus(); }
+        }
+        btn.addEventListener('click', function () { setOpen(sheet.hidden); });
+        sheet.addEventListener('click', function (e) {
+          if (e.target.closest('[data-more-close], [data-open-search], [data-refresh], [data-open-settings]')) setOpen(false);
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !sheet.hidden) { setOpen(false); btn.focus(); }
+        });
+      })();
+    </script>
     <slot />
+    <script is:inline>
+      // Desktop menu sits below the banner: on Home under the scores bar,
+      // elsewhere under the header. Moved before first paint so nothing
+      // jumps. Phones and tablets hide it (they have the tab bar).
+      (function () {
+        var nav = document.querySelector('.site-nav');
+        var after = document.querySelector('.scores-bar') || document.querySelector('.site-header');
+        if (nav && after) after.after(nav);
+      })();
+    </script>
+    <SettingsPanel />
     <footer class="site-footer">
       <button class="feedback-link" type="button" data-feedback>Send feedback</button>
     </footer>
@@ -169,6 +264,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
       import '../scripts/search.js';
       import '../scripts/onboarding.js';
       import '../scripts/feedback.js';
+      import '../scripts/settings.js';
     </script>
     <script is:inline define:vars={{ base }}>
       // While viewing another team (?view=), keep it on every link within the
