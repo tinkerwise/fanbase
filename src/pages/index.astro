@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import NewsFeed from '../components/NewsFeed.astro';
+import ReaderOverlay from '../components/ReaderOverlay.astro';
 ---
 
 <Layout title="Fanbase">
@@ -25,7 +27,7 @@ import Layout from '../layouts/Layout.astro';
           </svg>
           <span>Refresh</span>
         </button>
-        <button class="btn-settings" id="settingsBtn" aria-label="Settings">
+        <button class="btn-settings" id="settingsBtn" type="button" aria-label="Settings" data-open-settings>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
           </svg>
@@ -99,66 +101,7 @@ import Layout from '../layouts/Layout.astro';
 
     <!-- Feed -->
     <main class="feed-area">
-      <div class="feed-toolbar">
-        <div class="toolbar-left">
-          <div class="pill-group" id="categoryFilters">
-            <button class="pill active" data-category="all">All</button>
-            <button class="pill pill--category" id="teamPill" data-category="orioles">
-              <img class="pill-logo pill-logo--orioles" id="teamPillLogo" data-team-logo src="https://www.mlbstatic.com/team-logos/110.svg" alt="" width="16" height="16" loading="lazy" decoding="async">
-              <span id="teamPillLabel" data-team-text="nick">Orioles</span>
-            </button>
-            <button class="pill pill--category" data-category="mlb">
-              <img class="pill-logo pill-logo--league" src="https://www.mlbstatic.com/team-logos/apple-touch-icons-180x180/mlb.png" alt="" width="16" height="16" loading="lazy" decoding="async">
-              <span>MLB</span>
-            </button>
-            <button class="pill pill--category" data-category="milb">
-              <img class="pill-logo pill-logo--league" src="https://images.ctfassets.net/iiozhi00a8lc/FQFMhkcaWMUaZuBbUjKk7/41b464e7f0302715f99258b73960a78f/milb.png" alt="" width="16" height="16" loading="lazy" decoding="async">
-              <span>MiLB</span>
-            </button>
-          </div>
-        </div>
-        <div class="toolbar-controls">
-          <div class="source-filter-wrap">
-            <button class="btn-source-filter" id="sourceFilterBtn" aria-pressed="false">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              <span class="source-filter-label">Sources</span>
-            </button>
-            <div class="source-popover hidden" id="sourcePopover">
-              <div class="pill-group" id="sourceFilters">
-                <button class="pill active" data-source="all">All</button>
-              </div>
-            </div>
-          </div>
-          <button class="btn-source-filter btn-feed-toggle" id="showReadBtn" type="button" aria-pressed="false">
-            Show read
-          </button>
-          <select class="sort-select" id="sortSelect">
-            <option value="date">Newest first</option>
-            <option value="dateGroup">By date</option>
-            <option value="source">By source</option>
-          </select>
-          <select class="sort-select" id="dateRangeSelect">
-            <option value="3">3 days</option>
-            <option value="7" selected>7 days</option>
-            <option value="14">14 days</option>
-            <option value="30">30 days</option>
-          </select>
-          <div class="view-toggle" id="viewToggle">
-            <button class="view-btn active" data-view="grid" title="Grid view">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-            </button>
-            <button class="view-btn" data-view="list" title="List view">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="4" height="4" rx="1"/><rect x="7" y="2" width="8" height="2" rx="0.5"/><rect x="1" y="6" width="4" height="4" rx="1"/><rect x="7" y="7" width="8" height="2" rx="0.5"/><rect x="1" y="11" width="4" height="4" rx="1"/><rect x="7" y="12" width="8" height="2" rx="0.5"/></svg>
-            </button>
-            <button class="view-btn" data-view="compact" title="Compact view">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="2" rx="0.5"/><rect x="1" y="7" width="14" height="2" rx="0.5"/><rect x="1" y="12" width="14" height="2" rx="0.5"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="article-list" id="articleList">
-        <div class="feed-msg">Loading news…</div>
-      </div>
+      <NewsFeed />
     </main>
 
     <!-- Right Sidebar -->
@@ -263,89 +206,7 @@ import Layout from '../layouts/Layout.astro';
 
   </div>
 
-  <!-- Settings Overlay -->
-  <div class="settings-overlay hidden" id="settingsOverlay">
-    <div class="settings-panel">
-      <div class="settings-header">
-        <h2 class="settings-title">Settings</h2>
-        <button class="btn-close-settings" id="settingsClose" aria-label="Close settings">✕</button>
-      </div>
-      <div class="settings-body">
-        <div class="settings-group">
-          <label class="settings-label">Theme</label>
-          <div class="theme-toggle" id="themeToggle">
-            <button class="theme-btn" data-theme="light">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-              Light
-            </button>
-            <button class="theme-btn" data-theme="dark">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-              Dark
-            </button>
-            <button class="theme-btn" data-theme="system">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-              System
-            </button>
-            <button class="theme-btn theme-btn--cc" data-theme="city-connect">
-              <svg width="14" height="14" viewBox="0 0 100 100" aria-hidden="true">
-                <circle cx="50" cy="50" r="50" fill="#1E3D29"/>
-                <text x="56" y="80" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-weight="bold" font-size="86" fill="#C84B11">B</text>
-              </svg>
-              City Connect
-            </button>
-          </div>
-        </div>
-        <div class="settings-group">
-          <label class="settings-label">Default View</label>
-          <div class="theme-toggle" id="defaultViewToggle">
-            <button class="theme-btn" data-defview="grid">Grid</button>
-            <button class="theme-btn" data-defview="list">List</button>
-            <button class="theme-btn" data-defview="compact">Compact</button>
-          </div>
-        </div>
-        <div class="settings-group">
-          <label class="settings-label">Sources</label>
-          <p class="settings-sources-note">Saved locally. Clearing browser data resets to defaults.</p>
-          <div id="settingsSourcesList" class="settings-sources-list">
-            <span class="settings-sources-empty">Open settings to load sources.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Reader Modal -->
-  <div class="reader-overlay hidden" id="readerOverlay">
-    <div class="reader-modal">
-      <div class="reader-bar">
-        <div class="reader-meta">
-          <span class="reader-source-badge" id="readerBadge"></span>
-          <span class="reader-date" id="readerDate"></span>
-        </div>
-        <div class="reader-actions">
-          <a class="btn-original-reader" id="readerLink" href="#" target="_blank" rel="noopener noreferrer">
-            Open original ↗
-          </a>
-          <button class="btn-close-reader" id="readerClose" aria-label="Close reader">✕</button>
-        </div>
-      </div>
-      <h1 class="reader-title" id="readerTitle"></h1>
-      <div class="reader-body">
-        <iframe
-          class="reader-frame hidden"
-          id="readerFrame"
-          sandbox="allow-same-origin allow-popups allow-forms"
-          title="Article content"
-        ></iframe>
-        <div class="reader-fallback" id="readerFallback">
-          <p class="reader-excerpt" id="readerExcerpt"></p>
-          <a class="btn-read-full" id="readerFullLink" href="#" target="_blank" rel="noopener noreferrer">
-            Read full article ↗
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <ReaderOverlay />
 </Layout>
 
 <script>

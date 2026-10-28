@@ -12,6 +12,10 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# The news page moved to /dugout/ (query string, e.g. ?view=nyy, is kept).
+# astro.config.mjs also builds a /news/ page that forwards, as a fallback.
+RewriteRule ^news/?$ /fanbase/dugout/ [R=301,L]
+
 <IfModule mod_headers.c>
   # Baseline hardening for static files. PHP scripts send their own headers
   # (feedback-admin.php has a stricter CSP and X-Frame-Options DENY), so

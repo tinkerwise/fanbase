@@ -2958,7 +2958,7 @@ a.il-name:hover { color: var(--accent); }
   .bundle-sources .source-ico { width: 13px; height: 13px; }
   .ath-page { padding: 28px 14px 48px; }
 
-  /* Source popover – full width bottom sheet style */
+  /* Source popover – full width bottom sheet style, above the tab bar */
   .source-popover {
     position: fixed; top: auto; bottom: 0; left: 0; right: 0;
     border-radius: 12px 12px 0 0; max-width: none;
@@ -2966,8 +2966,7 @@ a.il-name:hover { color: var(--accent); }
     z-index: 50;
   }
 
-  /* Safe areas for notched phones (top inset: see the end of this file) */
-  .page-layout { padding-bottom: calc(48px + env(safe-area-inset-bottom, 0)); }
+  .source-popover { bottom: var(--tab-bar-h); }
 }
 
 /* Extra-narrow phones: single-column ATH grid */
@@ -3611,7 +3610,9 @@ a.il-name:hover { color: var(--accent); }
 .thanks-send:disabled { opacity: 0.6; cursor: default; }
 .thanks-sent { margin: 8px 0; font-size: 1rem; font-weight: 600; text-align: center; }
 
-/* ── Site nav (Layout.astro): today · your team · league, scrolls sideways on phones ── */
+/* ── Site nav (Layout.astro) ──
+   Desktop: icon + label row below the header (today · your team · league).
+   Phones and tablets get the bottom tab bar instead (below). */
 .site-nav {
   display: flex;
   align-items: center;
@@ -3630,6 +3631,7 @@ a.il-name:hover { color: var(--accent); }
   height: 100%;
   display: flex;
   align-items: center;
+  gap: 6px;
   font-size: 0.74rem;
   font-weight: 600;
   color: var(--text-2);
@@ -3641,6 +3643,8 @@ a.il-name:hover { color: var(--accent); }
 .site-nav-link:hover { color: var(--text); }
 .site-nav-link--active { color: var(--accent-text); border-bottom-color: var(--accent); }
 .site-nav-sep { flex: none; width: 1px; height: 14px; margin: 0 4px; background: var(--border); }
+.site-nav-icon { width: 15px; height: 15px; flex: none; opacity: 0.75; }
+.site-nav-link--active .site-nav-icon { opacity: 1; }
 
 /* ── Depth Chart, Trades, Draft and Postseason pages ──
    Ported from Yard Report's style.css with the page ports' class renames:
@@ -4380,3 +4384,81 @@ body::before {
 }
 .settings-panel, .team-picker-modal { max-height: min(88vh, 100%); }
 
+/* ── Bottom tab bar + More sheet (Layout.astro), phones and tablets ──
+   Up to 1024px, so every iPad in portrait gets it; wider screens use the
+   desktop row under the header. The bar (96) sits above the More sheet
+   (95) so More stays tappable to close it, and below the reader (100),
+   Settings (110) and other overlays. --tab-bar-h is its height including
+   the home indicator; the body pads by it so nothing ends up behind it. */
+.tab-bar, .more-sheet { display: none; }
+@media (max-width: 1024px) {
+  /* 48px tabs + 10px padding + 1px top border, plus the home indicator */
+  :root { --tab-bar-h: calc(59px + var(--safe-bottom)); }
+  .site-nav { display: none; }
+  body { padding-bottom: var(--tab-bar-h); }
+  .tab-bar {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 96;
+    background: var(--card); border-top: 1px solid var(--border);
+    padding: 5px max(6px, var(--safe-right)) calc(5px + var(--safe-bottom)) max(6px, var(--safe-left));
+  }
+  .tab-bar-link {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    min-height: 48px; padding: 2px 0; border: 0; border-radius: 10px; background: none; cursor: pointer;
+    font-family: inherit; font-weight: 600; font-size: 0.68rem; line-height: 1.1; color: var(--text-2); text-decoration: none;
+  }
+  .tab-bar-link svg { width: 22px; height: 22px; }
+  .tab-bar-link span { white-space: nowrap; }
+  .tab-bar-link--active { color: var(--accent-text); }
+  .tab-bar-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .more-sheet:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 95; }
+  .more-sheet-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45); }
+  .more-sheet-panel {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    max-height: calc(100% - var(--safe-top) - 12px); overflow-y: auto;
+    background: var(--card); border-radius: 16px 16px 0 0; box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.25);
+    padding: 8px max(14px, var(--safe-right)) calc(10px + var(--tab-bar-h)) max(14px, var(--safe-left));
+    display: grid; gap: 2px;
+  }
+  .more-sheet-grip { justify-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--border-light); margin-bottom: 8px; }
+  .more-sheet-sep { height: 1px; margin: 6px 8px; background: var(--border); }
+  .more-sheet-link {
+    display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 8px; border: 0; border-radius: 10px;
+    background: none; color: var(--text); text-decoration: none; font: inherit; font-weight: 600; font-size: 0.95rem;
+    text-align: left; cursor: pointer;
+  }
+  .more-sheet-link[hidden] { display: none; }
+  .more-sheet-link svg { width: 20px; height: 20px; flex: none; color: var(--accent-text); }
+  .more-sheet-link--active { background: var(--accent-dim); }
+  .more-sheet-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+}
+/* Tablets: a phone-width bar and sheet, centered, rather than five tabs
+   spread across 800px */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .tab-bar { padding-left: max(6px, calc(50% - 280px)); padding-right: max(6px, calc(50% - 280px)); }
+  .more-sheet-panel { left: 50%; right: auto; width: 560px; transform: translateX(-50%); }
+}
+/* Narrowest phones (320px): five 62px tabs; keep every label on one line */
+@media (max-width: 360px) {
+  .tab-bar-link { font-size: 0.62rem; }
+}
+/* Phones: Search, Refresh and Settings live in More, so the header keeps
+   just the logo and team button */
+@media (max-width: 600px) {
+  .site-header .btn-search,
+  .site-header .btn-refresh,
+  .site-header .btn-settings { display: none; }
+}
+
+/* ── Dugout, the news page (src/pages/dugout/) ── */
+.dugout-page { max-width: 1100px; margin: 0 auto; padding: 20px 16px 32px; }
+.dugout-page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.dugout-page-title { margin: 0; font-size: 1.4rem; font-weight: 800; }
+.dugout-page-search { flex: 1 1 260px; max-width: 360px; margin: 0; }
+@media (max-width: 600px) {
+  .dugout-page { padding: 14px 12px 24px; }
+  .dugout-page-search { max-width: none; }
+}
+
+.depth-chart-sub { margin: -6px 0 12px; font-size: 0.85rem; color: var(--text-2); }
+.dugout-page-sub { margin: 2px 0 0; font-size: 0.85rem; color: var(--text-2); }

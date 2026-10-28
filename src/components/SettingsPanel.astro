@@ -1,0 +1,54 @@
+---
+// Settings overlay, on every page (Layout.astro). Opened by any
+// [data-open-settings] button: the header gear or More in the tab bar.
+// settings.js wires it up.
+---
+<div class="settings-overlay hidden" id="settingsOverlay">
+  <div class="settings-panel">
+    <div class="settings-header">
+      <h2 class="settings-title">Settings</h2>
+      <button class="btn-close-settings" id="settingsClose" aria-label="Close settings">✕</button>
+    </div>
+    <div class="settings-body">
+      <div class="settings-group">
+        <label class="settings-label">Theme</label>
+        <div class="theme-toggle" id="themeToggle">
+          <button class="theme-btn" data-theme="light">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            Light
+          </button>
+          <button class="theme-btn" data-theme="dark">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            Dark
+          </button>
+          <button class="theme-btn" data-theme="system">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            System
+          </button>
+          <button class="theme-btn theme-btn--cc" data-theme="city-connect">
+            <svg width="14" height="14" viewBox="0 0 100 100" aria-hidden="true">
+              <circle cx="50" cy="50" r="50" fill="#1E3D29"/>
+              <text x="56" y="80" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-weight="bold" font-size="86" fill="#C84B11">B</text>
+            </svg>
+            City Connect
+          </button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <label class="settings-label">Default View</label>
+        <div class="theme-toggle" id="defaultViewToggle">
+          <button class="theme-btn" data-defview="grid">Grid</button>
+          <button class="theme-btn" data-defview="list">List</button>
+          <button class="theme-btn" data-defview="compact">Compact</button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <label class="settings-label">Sources</label>
+        <p class="settings-sources-note">Saved locally. Clearing browser data resets to defaults.</p>
+        <div id="settingsSourcesList" class="settings-sources-list">
+          <span class="settings-sources-empty">Open settings to load sources.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

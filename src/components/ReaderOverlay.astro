@@ -1,0 +1,35 @@
+---
+// Reader view for an article (feeds.js openReader), on the pages with a
+// news feed (Home, Dugout).
+---
+<div class="reader-overlay hidden" id="readerOverlay">
+  <div class="reader-modal">
+    <div class="reader-bar">
+      <div class="reader-meta">
+        <span class="reader-source-badge" id="readerBadge"></span>
+        <span class="reader-date" id="readerDate"></span>
+      </div>
+      <div class="reader-actions">
+        <a class="btn-original-reader" id="readerLink" href="#" target="_blank" rel="noopener noreferrer">
+          Open original ↗
+        </a>
+        <button class="btn-close-reader" id="readerClose" aria-label="Close reader">✕</button>
+      </div>
+    </div>
+    <h1 class="reader-title" id="readerTitle"></h1>
+    <div class="reader-body">
+      <iframe
+        class="reader-frame hidden"
+        id="readerFrame"
+        sandbox="allow-same-origin allow-popups allow-forms"
+        title="Article content"
+      ></iframe>
+      <div class="reader-fallback" id="readerFallback">
+        <p class="reader-excerpt" id="readerExcerpt"></p>
+        <a class="btn-read-full" id="readerFullLink" href="#" target="_blank" rel="noopener noreferrer">
+          Read full article ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

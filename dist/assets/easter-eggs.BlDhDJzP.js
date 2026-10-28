@@ -1,0 +1,13 @@
+import{n as e,o as t,t as n}from"./theme.CGl16IXc.js";function r(){let e=document.createElement(`div`);e.className=`magic-confetti`,document.body.appendChild(e);let t=new Audio(`/fanbase/audio/orioles_magic_short.mp3`);t.volume=.7;let n=null,r=null,i=null,a=!1;function o(){if(!e.isConnected)return;let t=window.innerWidth/2,n=window.innerHeight/2,r=[`#df4601`,`#000`,`#fff`,`#f59e0b`,`#ff6b1a`];for(let i=0;i<48;i++){let i=document.createElement(`div`);i.className=`confetti-burst`;let a=Math.random()*Math.PI*2,o=160+Math.random()*420,s=Math.cos(a)*o,c=Math.sin(a)*o;i.style.left=t+`px`,i.style.top=n+`px`,i.style.setProperty(`--dx`,s+`px`),i.style.setProperty(`--dy`,c+`px`),i.style.animationDelay=Math.random()*.18+`s`,i.style.animationDuration=.9+Math.random()*1.2+`s`,i.style.background=r[Math.floor(Math.random()*r.length)],i.style.width=4+Math.random()*8+`px`,i.style.height=4+Math.random()*8+`px`,i.addEventListener(`animationend`,()=>i.remove(),{once:!0}),e.appendChild(i)}}let s=()=>{a||(a=!0,clearTimeout(r),clearInterval(n),clearTimeout(i),t.pause(),t.currentTime=0,e.classList.add(`magic-fade-out`),setTimeout(()=>e.remove(),600),document.removeEventListener(`keydown`,c))},c=e=>{e.key===`Escape`&&s()};document.addEventListener(`keydown`,c),e.addEventListener(`click`,s),t.addEventListener(`ended`,s),t.play().catch(()=>{i=setTimeout(s,5e3)}),r=setTimeout(()=>{o(),n=setInterval(o,650)},600)}function i(){let e=document.querySelector(`.logo`);if(!e)return;e.classList.add(`sna-chant`);let t=document.createElement(`div`);t.className=`sna-overlay`,t.innerHTML=`
+    <div class="sna-text">
+      <span>OH</span><span>OH</span><span>OH</span>
+      <span>OH</span><span>OH</span>
+      <span class="sna-big">OH-OH</span>
+    </div>`,document.body.appendChild(t),setTimeout(()=>{t.remove(),e.classList.remove(`sna-chant`)},4e3)}function a(){let r=document.documentElement;r.getAttribute(`data-theme`)===`opacy`?n(t().theme||`dark`):(r.setAttribute(`data-theme`,`opacy`),e(`opacy`))}function o(){let e=document.createElement(`div`);e.className=`city-connect-banner`,e.innerHTML=`
+    <div class="cc-banner-text">
+      <span class="cc-banner-city">BALTIMORE</span>
+      <span class="cc-banner-team">ORIOLES</span>
+      <span class="cc-banner-stoop">FROM THE STOOP</span>
+      <span class="cc-banner-yard">TO THE YARD</span>
+      <span class="cc-banner-code">410</span>
+    </div>`,document.body.appendChild(e);let t=()=>{e.classList.add(`city-connect-banner-out`),setTimeout(()=>e.remove(),500),document.removeEventListener(`keydown`,n)},n=e=>{e.key===`Escape`&&t()};document.addEventListener(`keydown`,n),e.addEventListener(`click`,t),setTimeout(t,3500)}export{i,o as n,r,a as t};
