@@ -5,23 +5,23 @@ import NewsFeed from '../../components/NewsFeed.astro';
 import ReaderOverlay from '../../components/ReaderOverlay.astro';
 ---
 
-<Layout title="The Dugout | Fanbase">
-  <PageHeader current="The Dugout" />
+<Layout title="Dugout | Fanbase">
+  <PageHeader current="Dugout" />
 
-  <main class="news-page">
-    <div class="news-page-head">
+  <main class="dugout-page">
+    <div class="dugout-page-head">
       <div>
-        <h1 class="news-page-title">The Dugout</h1>
-        <p class="news-page-sub">Every <span data-team-text="nick">team</span> story from all your news sources</p>
+        <h1 class="dugout-page-title">Dugout</h1>
+        <p class="dugout-page-sub">Every <span data-team-text="nick">team</span> story from all your news sources</p>
       </div>
-      <div class="search-wrap news-page-search">
+      <div class="search-wrap dugout-page-search">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
         </svg>
         <input class="search-input" id="searchInput" type="search" placeholder="Search all articles…" autocomplete="off" />
       </div>
     </div>
-    <div class="feed-area news-page-feed">
+    <div class="feed-area dugout-page-feed">
       <NewsFeed />
     </div>
   </main>
@@ -30,5 +30,5 @@ import ReaderOverlay from '../../components/ReaderOverlay.astro';
 </Layout>
 
 <script>
-  import '../../scripts/news.js';
+  import '../../scripts/dugout.js';
 </script>

@@ -15,7 +15,7 @@ import { esc, teamLogoSrc } from './utils.js';
 const BASE = import.meta.env.BASE_URL;
 const PAGES = [
   ['Home', '', 'scores standings leaders dashboard'],
-  ['The Dugout', 'news/', 'news articles stories headlines feed dugout'],
+  ['Dugout', 'dugout/', 'news articles stories headlines feed'],
   ['Schedule', 'schedule/', 'games calendar record'],
   ['Roster', 'depth-chart/', 'depth chart lineup rotation bullpen injured list il'],
   ['Around the Horn', 'around-the-horn/', 'league news stories'],

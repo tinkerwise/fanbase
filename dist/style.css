@@ -4438,7 +4438,7 @@ body::before {
   .tab-bar { padding-left: max(6px, calc(50% - 280px)); padding-right: max(6px, calc(50% - 280px)); }
   .more-sheet-panel { left: 50%; right: auto; width: 560px; transform: translateX(-50%); }
 }
-/* Narrowest phones (320px): five 62px tabs; keep "The Dugout" on one line */
+/* Narrowest phones (320px): five 62px tabs; keep every label on one line */
 @media (max-width: 360px) {
   .tab-bar-link { font-size: 0.62rem; }
 }
@@ -4450,15 +4450,15 @@ body::before {
   .site-header .btn-settings { display: none; }
 }
 
-/* ── News page (src/pages/news/) ── */
-.news-page { max-width: 1100px; margin: 0 auto; padding: 20px 16px 32px; }
-.news-page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-.news-page-title { margin: 0; font-size: 1.4rem; font-weight: 800; }
-.news-page-search { flex: 1 1 260px; max-width: 360px; margin: 0; }
+/* ── Dugout, the news page (src/pages/dugout/) ── */
+.dugout-page { max-width: 1100px; margin: 0 auto; padding: 20px 16px 32px; }
+.dugout-page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.dugout-page-title { margin: 0; font-size: 1.4rem; font-weight: 800; }
+.dugout-page-search { flex: 1 1 260px; max-width: 360px; margin: 0; }
 @media (max-width: 600px) {
-  .news-page { padding: 14px 12px 24px; }
-  .news-page-search { max-width: none; }
+  .dugout-page { padding: 14px 12px 24px; }
+  .dugout-page-search { max-width: none; }
 }
 
 .depth-chart-sub { margin: -6px 0 12px; font-size: 0.85rem; color: var(--text-2); }
-.news-page-sub { margin: 2px 0 0; font-size: 0.85rem; color: var(--text-2); }
+.dugout-page-sub { margin: 2px 0 0; font-size: 0.85rem; color: var(--text-2); }

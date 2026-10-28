@@ -122,6 +122,12 @@ export default defineConfig({
   site: 'https://www.briancsmith.org',
   base: '/fanbase/',
   output: 'static',
+  // The news page moved from /news/ to /dugout/. .htaccess answers /news/
+  // with a 301 on the live server; this builds a /news/ page that forwards
+  // too, for the dev server or a host that ignores .htaccess.
+  redirects: {
+    '/news': '/fanbase/dugout/',
+  },
   build: {
     assets: 'assets',
   },

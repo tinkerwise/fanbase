@@ -18,11 +18,12 @@ const pathname = Astro.url.pathname;
 // header by the script after <slot />), the bottom tab bar on phones and
 // tablets (`tab`), and its More sheet (everything else). Groups: today,
 // your team, league-wide events; a divider separates them on desktop.
-// The Dugout is the news page (/news/); Roster is the depth-chart page
+// Dugout is the news page (/dugout/; /news/ redirects); Roster is the
+// depth-chart page
 // (field, rotation, bullpen, injured list).
 const NAV_LINKS = [
   { href: base, label: 'Home', icon: 'home', group: 'today', tab: true },
-  { href: `${base}news/`, label: 'The Dugout', icon: 'dugout', group: 'today', tab: true },
+  { href: `${base}dugout/`, label: 'Dugout', icon: 'dugout', group: 'today', tab: true },
   { href: `${base}schedule/`, label: 'Schedule', icon: 'schedule', group: 'team', tab: true },
   { href: `${base}depth-chart/`, label: 'Roster', icon: 'roster', group: 'team', tab: true },
   { href: `${base}postseason/`, label: 'Postseason', icon: 'postseason', group: 'league' },
@@ -214,7 +215,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.search} />
           Search
         </button>
-        <!-- Pages with a refresh (Home, The Dugout) unhide this and handle it -->
+        <!-- Pages with a refresh (Home, Dugout) unhide this and handle it -->
         <button type="button" class="more-sheet-link" data-refresh hidden>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS.refresh} />
           Refresh
