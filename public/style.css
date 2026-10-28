@@ -4560,6 +4560,8 @@ html:not([data-hardball]) [data-offseason-only] { display: none !important; }
   .hb-page { padding: 14px 12px 24px; gap: 18px; }
   .hb-sides { grid-template-columns: 1fr; }
   .hb-faq summary { min-height: 44px; }
+}
+
 /* ── Front Office (#14) ──
    Home's sidebar group (Tailgate's layout): the four team widgets, then
    link rows to Roster, Trades and Draft. The "Front Office" heading links
