@@ -1,0 +1,82 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+---
+
+<Layout title="Cleanup | Fanbase">
+  <PageHeader current="Cleanup" />
+
+  <main class="cu-page">
+    <header class="cu-head">
+      <p class="cu-kicker">Free agency and trades · <span id="cuSeason">offseason</span></p>
+      <h1 class="cu-title">Cleanup</h1>
+      <p class="cu-lede">Who's available, what the <span data-team-text="nick">team</span> need, and every signing and trade, newest first.</p>
+    </header>
+
+    <!-- Labor: freeze notice during a lockout, linking to Hardball (cleanup.js) -->
+    <div class="cu-labor" id="cuLabor" hidden></div>
+
+    <section class="cu-section" aria-labelledby="cuFaTitle">
+      <div class="cu-section-head">
+        <h2 class="cu-section-title" id="cuFaTitle">Key free agents</h2>
+        <div class="cu-filters" id="cuFaFilters" role="group" aria-label="Filter free agents">
+          <button class="pill active" type="button" data-fa-filter="all">All</button>
+          <button class="pill" type="button" data-fa-filter="mine"><span data-team-text="nick">Team</span></button>
+          <button class="pill" type="button" data-fa-filter="P">Pitchers</button>
+          <button class="pill" type="button" data-fa-filter="C">Catchers</button>
+          <button class="pill" type="button" data-fa-filter="IF">Infield</button>
+          <button class="pill" type="button" data-fa-filter="OF">Outfield</button>
+        </div>
+      </div>
+      <div class="cu-own" id="cuOwnFa"></div>
+      <ol class="cu-fa-list" id="cuFaList"><li class="sidebar-msg">Loading…</li></ol>
+      <p class="cu-source" id="cuFaSource"></p>
+    </section>
+
+    <div class="cu-columns">
+      <section class="cu-section" aria-labelledby="cuNeedsTitle">
+        <h2 class="cu-section-title" id="cuNeedsTitle">Team needs</h2>
+        <div class="cu-needs" id="cuNeeds"><span class="sidebar-msg">Loading…</span></div>
+      </section>
+
+      <section class="cu-section" aria-labelledby="cuDatesTitle">
+        <h2 class="cu-section-title" id="cuDatesTitle">Key dates</h2>
+        <ol class="cu-dates" id="cuDates"></ol>
+      </section>
+    </div>
+
+    <section class="cu-section" aria-labelledby="cuSignTitle">
+      <div class="cu-section-head">
+        <h2 class="cu-section-title" id="cuSignTitle">Signings</h2>
+        <div class="cu-filters" role="tablist" aria-label="Signings">
+          <button class="pill active" type="button" role="tab" aria-selected="true" data-sign-scope="mine"><span data-team-text="nick">Team</span></button>
+          <button class="pill" type="button" role="tab" aria-selected="false" data-sign-scope="all">All MLB</button>
+        </div>
+      </div>
+      <ul class="cu-feed" id="cuSignings"><li class="sidebar-msg">Loading…</li></ul>
+    </section>
+
+    <section class="cu-section" aria-labelledby="cuTradeTitle">
+      <div class="cu-section-head">
+        <h2 class="cu-section-title" id="cuTradeTitle">Trades and acquisitions</h2>
+        <div class="cu-filters" role="tablist" aria-label="Trades and acquisitions">
+          <button class="pill active" type="button" role="tab" aria-selected="true" data-trade-scope="mine"><span data-team-text="nick">Team</span></button>
+          <button class="pill" type="button" role="tab" aria-selected="false" data-trade-scope="all">Around the league</button>
+        </div>
+      </div>
+      <ul class="cu-feed" id="cuTrades"><li class="sidebar-msg">Loading…</li></ul>
+    </section>
+
+    <section class="cu-section" aria-labelledby="cuRumorTitle">
+      <h2 class="cu-section-title" id="cuRumorTitle">Rumors</h2>
+      <div class="cu-block" id="cuOnBlock"></div>
+      <div class="cu-rumors" id="cuRumors"><span class="sidebar-msg">Loading…</span></div>
+    </section>
+
+    <p class="cu-footnote" id="cuFootnote"></p>
+  </main>
+</Layout>
+
+<script>
+  import '../../scripts/cleanup.js';
+</script>

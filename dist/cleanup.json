@@ -1,0 +1,487 @@
+{
+  "_readme": "Content for /cleanup/ (issue #22), the offseason free-agency and trades page. Hand-curated parts only; everything else (free-agent status, signings, trades, waiver claims, Rule 5, international signings, team needs from the roster) comes live from the MLB Stats API. Update lastUpdated when you edit. rankings.players: from the cited ranking, with `teams` = 2026 MLB team ids (blank when the source didn't name one; the free-agents API fills it in once the player files). When a ranked player signs, add `signed`: { team (id), terms (e.g. \"5 years, $210M\"), date, source: { label, url } }, the API knows the club and contract length but not dollars. teamNeeds: { \"<team id>\": { note, date, source: { label, url } } }, a one-line sourced note shown above the needs worked out from the roster. keyDates: date (YYYY-MM-DD) or dateText for windows not fixed yet; laborRisk marks events a lockout would cancel or delay.",
+  "lastUpdated": "2026-10-28",
+  "season": "2026-27",
+  "rankings": {
+    "source": {
+      "label": "MLB.com: Ranking the free agents for 2026-27 (Mark Feinsand)",
+      "url": "https://www.mlb.com/news/ranking-the-free-agents-for-2026-27-offseason",
+      "date": "2026-10-26"
+    },
+    "players": [
+      {
+        "rank": 1,
+        "name": "Tarik Skubal",
+        "pos": "LHP",
+        "age": 30,
+        "teams": [
+          116,
+          119
+        ],
+        "from": "Tigers and Dodgers",
+        "signed": null
+      },
+      {
+        "rank": 2,
+        "name": "Michael King",
+        "pos": "RHP",
+        "age": 32,
+        "teams": [
+          135
+        ],
+        "from": "Padres",
+        "signed": null
+      },
+      {
+        "rank": 3,
+        "name": "Freddy Peralta",
+        "pos": "RHP",
+        "age": 30,
+        "teams": [
+          121,
+          139
+        ],
+        "from": "Mets and Rays",
+        "signed": null
+      },
+      {
+        "rank": 4,
+        "name": "Teruaki Sato",
+        "pos": "3B/OF",
+        "age": 28,
+        "teams": [],
+        "from": "Hanshin Tigers (NPB)",
+        "signed": null
+      },
+      {
+        "rank": 5,
+        "name": "Seiya Suzuki",
+        "pos": "OF",
+        "age": 32,
+        "teams": [
+          112
+        ],
+        "from": "Cubs",
+        "signed": null
+      },
+      {
+        "rank": 6,
+        "name": "Randy Arozarena",
+        "pos": "OF",
+        "age": 32,
+        "teams": [
+          136
+        ],
+        "from": "Mariners",
+        "signed": null
+      },
+      {
+        "rank": 7,
+        "name": "Brandon Lowe",
+        "pos": "2B",
+        "age": 32,
+        "teams": [
+          134
+        ],
+        "from": "Pirates",
+        "signed": null
+      },
+      {
+        "rank": 8,
+        "name": "Clay Holmes",
+        "pos": "RHP",
+        "age": 34,
+        "teams": [
+          121,
+          112
+        ],
+        "from": "Mets and Cubs",
+        "signed": null
+      },
+      {
+        "rank": 9,
+        "name": "Adrian Morejon",
+        "pos": "LHP",
+        "age": 28,
+        "teams": [
+          135
+        ],
+        "from": "Padres",
+        "signed": null
+      },
+      {
+        "rank": 10,
+        "name": "Trevor Rogers",
+        "pos": "LHP",
+        "age": 29,
+        "teams": [
+          110
+        ],
+        "from": "Orioles",
+        "signed": null
+      },
+      {
+        "rank": 11,
+        "name": "Jake Bauers",
+        "pos": "1B/OF",
+        "age": 31,
+        "teams": [
+          158
+        ],
+        "from": "Brewers",
+        "signed": null
+      },
+      {
+        "rank": 12,
+        "name": "Luis Arraez",
+        "pos": "2B",
+        "age": 30,
+        "teams": [
+          137,
+          143
+        ],
+        "from": "Giants and Phillies",
+        "signed": null
+      },
+      {
+        "rank": 13,
+        "name": "Ryan Jeffers",
+        "pos": "C",
+        "age": 30,
+        "teams": [
+          142
+        ],
+        "from": "Twins",
+        "signed": null
+      },
+      {
+        "rank": 14,
+        "name": "Sonny Gray",
+        "pos": "RHP",
+        "age": 37,
+        "teams": [],
+        "from": "",
+        "signed": null
+      },
+      {
+        "rank": 15,
+        "name": "Jazz Chisholm Jr.",
+        "pos": "2B",
+        "age": 29,
+        "teams": [
+          147
+        ],
+        "from": "Yankees",
+        "signed": null
+      },
+      {
+        "rank": 16,
+        "name": "Tyler Mahle",
+        "pos": "RHP",
+        "age": 32,
+        "teams": [
+          137,
+          144
+        ],
+        "from": "Giants and Braves",
+        "signed": null
+      },
+      {
+        "rank": 17,
+        "name": "David Bednar",
+        "pos": "RHP",
+        "age": 32,
+        "teams": [
+          147
+        ],
+        "from": "Yankees",
+        "signed": null
+      },
+      {
+        "rank": 18,
+        "name": "Nick Martinez",
+        "pos": "RHP",
+        "age": 36,
+        "teams": [
+          139
+        ],
+        "from": "Rays",
+        "signed": null
+      },
+      {
+        "rank": 19,
+        "name": "Casey Mize",
+        "pos": "RHP",
+        "age": 30,
+        "teams": [
+          116,
+          135
+        ],
+        "from": "Tigers and Padres",
+        "signed": null
+      },
+      {
+        "rank": 20,
+        "name": "Ian Happ",
+        "pos": "LF",
+        "age": 32,
+        "teams": [],
+        "from": "",
+        "signed": null
+      },
+      {
+        "rank": 21,
+        "name": "Gleyber Torres",
+        "pos": "2B",
+        "age": 30,
+        "teams": [],
+        "from": "",
+        "signed": null
+      },
+      {
+        "rank": 22,
+        "name": "Kaima Taira",
+        "pos": "RHP",
+        "age": 27,
+        "teams": [],
+        "from": "Seibu Lions (NPB)",
+        "signed": null
+      },
+      {
+        "rank": 23,
+        "name": "Foster Griffin",
+        "pos": "LHP",
+        "age": 31,
+        "teams": [
+          120,
+          114
+        ],
+        "from": "Nationals and Guardians",
+        "signed": null
+      },
+      {
+        "rank": 24,
+        "name": "Kevin Gausman",
+        "pos": "RHP",
+        "age": 36,
+        "teams": [
+          141,
+          112
+        ],
+        "from": "Blue Jays and Cubs",
+        "signed": null
+      },
+      {
+        "rank": 25,
+        "name": "Shota Imanaga",
+        "pos": "LHP",
+        "age": 33,
+        "teams": [
+          112
+        ],
+        "from": "Cubs",
+        "signed": null
+      },
+      {
+        "rank": 26,
+        "name": "Michael Soroka",
+        "pos": "RHP",
+        "age": 29,
+        "teams": [
+          109
+        ],
+        "from": "Diamondbacks",
+        "signed": null
+      },
+      {
+        "rank": 27,
+        "name": "Ty France",
+        "pos": "1B",
+        "age": 32,
+        "teams": [
+          135
+        ],
+        "from": "Padres",
+        "signed": null
+      },
+      {
+        "rank": 28,
+        "name": "Alec Bohm",
+        "pos": "1B/3B",
+        "age": 30,
+        "teams": [
+          143
+        ],
+        "from": "Phillies",
+        "signed": null
+      },
+      {
+        "rank": 29,
+        "name": "Raisel Iglesias",
+        "pos": "RHP",
+        "age": 37,
+        "teams": [
+          144
+        ],
+        "from": "Braves",
+        "signed": null
+      },
+      {
+        "rank": 30,
+        "name": "Robbie Ray",
+        "pos": "LHP",
+        "age": 35,
+        "teams": [
+          137,
+          135
+        ],
+        "from": "Giants and Padres",
+        "signed": null
+      }
+    ]
+  },
+  "teamNeeds": {},
+  "keyDates": [
+    {
+      "dateText": "Oct 28–31",
+      "sort": "2026-10-31",
+      "title": "World Series ends",
+      "detail": "The offseason starts the next day. Players with expiring contracts become free agents, but for five days they can re-sign only with their own team.",
+      "source": {
+        "label": "Just Baseball: 2026-27 offseason key dates",
+        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+      }
+    },
+    {
+      "dateText": "Nov 1–5",
+      "sort": "2026-11-05",
+      "title": "Free agency opens",
+      "detail": "Day 5 after the World Series, about 5 p.m. ET: free agents can sign anywhere. Same deadline for contract options and qualifying offers ($23.15 million this year).",
+      "source": {
+        "label": "Just Baseball: 2026-27 offseason key dates",
+        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+      }
+    },
+    {
+      "date": "2026-11-09",
+      "dateEnd": "2026-11-12",
+      "title": "GM Meetings",
+      "detail": "Las Vegas.",
+      "source": {
+        "label": "Just Baseball: 2026-27 offseason key dates",
+        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+      }
+    },
+    {
+      "dateText": "Nov 11–15",
+      "sort": "2026-11-15",
+      "title": "Qualifying offer decisions",
+      "detail": "Players have 10 days to accept or reject a qualifying offer.",
+      "source": {
+        "label": "Just Baseball: 2026-27 offseason key dates",
+        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+      }
+    },
+    {
+      "date": "2026-11-17",
+      "title": "40-man roster deadline",
+      "detail": "6 p.m. ET: teams add prospects to the 40-man roster to protect them from the Rule 5 Draft.",
+      "source": {
+        "label": "MLive/Yahoo: 2026-27 offseason calendar",
+        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+      }
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Non-tender deadline",
+      "detail": "Teams must offer contracts to arbitration-eligible and pre-arbitration players or let them become free agents.",
+      "source": {
+        "label": "Just Baseball: 2026-27 offseason key dates",
+        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+      }
+    },
+    {
+      "date": "2026-12-01",
+      "title": "CBA expires",
+      "detail": "11:59 p.m. ET. A lockout would freeze major-league signings and trades: see Hardball.",
+      "source": {
+        "label": "Just Baseball: 2026-27 offseason key dates",
+        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+      },
+      "hardball": true
+    },
+    {
+      "date": "2026-12-07",
+      "dateEnd": "2026-12-09",
+      "title": "Winter Meetings",
+      "detail": "San Diego, as scheduled. Widely expected to be canceled if there's a lockout.",
+      "source": {
+        "label": "Just Baseball: 2026-27 offseason key dates",
+        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+      },
+      "laborRisk": true
+    },
+    {
+      "date": "2026-12-09",
+      "title": "Rule 5 Draft",
+      "detail": "Scheduled for the last day of the Winter Meetings. The major-league phase was canceled during the 2021-22 lockout.",
+      "source": {
+        "label": "MLive/Yahoo: 2026-27 offseason calendar",
+        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+      },
+      "laborRisk": true
+    },
+    {
+      "dateText": "January",
+      "sort": "2027-01-10",
+      "title": "Salary arbitration figures exchanged",
+      "detail": "Teams and arbitration-eligible players swap salary figures; hearings follow if they don't settle. Dates depend on the labor situation.",
+      "source": {
+        "label": "MLive/Yahoo: 2026-27 offseason calendar",
+        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+      },
+      "laborRisk": true
+    },
+    {
+      "date": "2027-01-15",
+      "title": "International signing period opens",
+      "detail": "Teams can sign international amateur players. The next CBA could change the timing and rules.",
+      "source": {
+        "label": "MLive/Yahoo: 2026-27 offseason calendar",
+        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+      },
+      "laborRisk": true
+    },
+    {
+      "dateText": "February",
+      "sort": "2027-02-12",
+      "title": "Pitchers and catchers report",
+      "detail": "Each team sets its own date; an on-time start depends on a labor agreement.",
+      "source": {
+        "label": "MLive/Yahoo: 2026-27 offseason calendar",
+        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+      },
+      "laborRisk": true
+    },
+    {
+      "date": "2027-02-19",
+      "title": "Spring training games begin",
+      "detail": "",
+      "source": {
+        "label": "MLive/Yahoo: 2026-27 offseason calendar",
+        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+      },
+      "laborRisk": true
+    },
+    {
+      "date": "2027-03-25",
+      "title": "Opening Day",
+      "detail": "The season opener is March 24 (a Netflix game); most teams open March 25.",
+      "source": {
+        "label": "MLive/Yahoo: 2026-27 offseason calendar",
+        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+      },
+      "laborRisk": true
+    }
+  ]
+}

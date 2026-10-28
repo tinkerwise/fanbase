@@ -4561,3 +4561,97 @@ html:not([data-hardball]) [data-offseason-only] { display: none !important; }
   .hb-sides { grid-template-columns: 1fr; }
   .hb-faq summary { min-height: 44px; }
 }
+
+/* ── Cleanup (#22): offseason free agency and trades ──
+   Its nav entries show only in the offseason (<html data-offseason>,
+   season.js / Layout's head script); the URL always works. */
+html:not([data-offseason]) [data-cleanup-only] { display: none !important; }
+
+.cu-page { max-width: 1100px; margin: 0 auto; padding: 20px 16px 32px; display: flex; flex-direction: column; gap: 22px; }
+.cu-kicker { margin: 0 0 2px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-text); }
+.cu-title { margin: 0; font-size: 1.7rem; font-weight: 800; }
+.cu-lede { margin: 6px 0 0; max-width: 70ch; color: var(--text-2); line-height: 1.5; }
+
+.cu-labor { padding: 12px 14px; border-radius: var(--radius); border: 1px solid var(--border); border-left: 4px solid var(--accent); background: var(--card); font-size: 0.88rem; line-height: 1.5; }
+.cu-labor[data-tone="stop"] { border-left-color: #dc2626; background: rgba(220, 38, 38, 0.08); }
+.cu-labor[data-tone="warn"] { border-left-color: #d97706; background: rgba(217, 119, 6, 0.08); }
+.cu-labor a { color: var(--accent-text); font-weight: 700; }
+
+.cu-section { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.cu-section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.cu-section-title { margin: 0; font-size: 1.05rem; font-weight: 800; }
+.cu-sub { margin: 0 0 6px; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); }
+.cu-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.cu-note { margin: 6px 0 0; font-size: 0.8rem; color: var(--text-3); }
+.cu-dim { color: var(--text-3); font-weight: 500; }
+.cu-source, .cu-footnote { margin: 0; font-size: 0.76rem; color: var(--text-3); line-height: 1.5; }
+.cu-source a, .cu-footnote a, .cu-item-meta a, .cu-need a { color: var(--accent-text); }
+
+.cu-own { padding: 12px 14px; background: var(--accent-dim); border-radius: var(--radius); }
+.cu-own:empty { display: none; }
+.cu-own .cu-note { margin: 0; color: var(--text-2); }
+.cu-own-list { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 0.86rem; }
+
+.cu-fa-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; }
+.cu-fa { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; min-width: 0; }
+.cu-fa--mine { border-color: var(--accent); background: var(--accent-dim); }
+.cu-fa-rank { flex: none; width: 24px; text-align: right; font-weight: 800; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.cu-fa-main { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.cu-fa-name { font-weight: 700; font-size: 0.9rem; }
+.cu-fa-meta { font-size: 0.74rem; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cu-status { display: flex; align-items: center; gap: 5px; flex: none; max-width: 48%; font-size: 0.74rem; font-weight: 700; text-align: right; }
+.cu-status > span { display: flex; flex-direction: column; }
+.cu-status-terms { font-weight: 500; color: var(--text-2); }
+.cu-status--open { color: #15803d; }
+.cu-status--pending { color: var(--text-3); font-weight: 500; }
+.cu-status--signed { color: var(--text); }
+:root:not([data-theme="light"]) .cu-status--open { color: #4ade80; }
+.cu-logo { width: 20px; height: 20px; flex: none; object-fit: contain; }
+
+.cu-columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.cu-needs-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.cu-need { display: flex; align-items: baseline; gap: 8px; padding: 8px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; font-size: 0.86rem; line-height: 1.4; }
+.cu-need--soft { color: var(--text-2); }
+.cu-tag { display: inline-block; flex: none; padding: 1px 7px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.02em; color: var(--text-2); }
+.cu-tag--lost { background: rgba(220, 38, 38, 0.1); border-color: transparent; color: #b91c1c; }
+.cu-tag--risk { background: rgba(217, 119, 6, 0.12); border-color: transparent; color: #b45309; }
+.cu-tag--trade { background: var(--accent-dim); border-color: transparent; color: var(--accent-text); }
+:root:not([data-theme="light"]) .cu-tag--lost { color: #f87171; }
+:root:not([data-theme="light"]) .cu-tag--risk { color: #fbbf24; }
+
+.cu-dates { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.cu-date { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; }
+.cu-date--past { opacity: 0.55; }
+.cu-date-when { font-size: 0.78rem; font-weight: 800; color: var(--accent-text); }
+.cu-date-body { display: flex; flex-direction: column; gap: 2px; }
+.cu-date-title { font-weight: 700; font-size: 0.88rem; }
+.cu-date-title a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.cu-date-detail { font-size: 0.8rem; color: var(--text-2); line-height: 1.45; }
+
+.cu-feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.cu-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; }
+.cu-item--lost { background: var(--surface); }
+.cu-item-date { flex: none; width: 48px; font-size: 0.76rem; font-weight: 700; color: var(--text-3); padding-top: 2px; }
+.cu-item-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cu-item-title { font-weight: 700; font-size: 0.9rem; }
+.cu-item-meta, .cu-item-text { font-size: 0.82rem; color: var(--text-2); line-height: 1.45; overflow-wrap: anywhere; }
+.cu-item-text { color: var(--text); }
+.cu-more { align-self: flex-start; }
+
+.cu-block { display: flex; flex-direction: column; }
+.cu-block:empty { display: none; }
+.cu-block-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.cu-block-list a { display: inline-flex; gap: 6px; padding: 6px 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); color: var(--text); text-decoration: none; font-size: 0.84rem; }
+.cu-block-list a:hover { border-color: var(--accent); }
+.cu-rumors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+
+@media (max-width: 900px) {
+  .cu-fa-list, .cu-columns, .cu-rumors { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .cu-page { padding: 14px 12px 24px; gap: 18px; }
+  .cu-fa { flex-wrap: wrap; }
+  .cu-status { max-width: none; flex-basis: 100%; justify-content: flex-start; text-align: left; padding-left: 34px; }
+  .cu-date { grid-template-columns: 72px minmax(0, 1fr); }
+  .cu-filters .pill { min-height: 36px; }
+}

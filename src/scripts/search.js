@@ -20,6 +20,7 @@ const PAGES = [
   ['Roster', 'depth-chart/', 'depth chart lineup rotation bullpen injured list il'],
   ['Around the Horn', 'around-the-horn/', 'league news stories'],
   ['Hardball', 'hardball/', 'labor cba collective bargaining lockout strike union mlbpa salary cap negotiations'],
+  ['Cleanup', 'cleanup/', 'free agents free agency signings hot stove offseason trades acquisitions rumors winter meetings non-tender'],
   ['Trades', 'trades/', 'transactions trade deadline rumors signings'],
   ['Draft', 'draft/', 'prospects picks amateur'],
   ['Postseason', 'postseason/', 'playoffs bracket wild card world series'],
