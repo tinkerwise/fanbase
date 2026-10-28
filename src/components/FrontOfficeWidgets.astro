@@ -1,0 +1,32 @@
+---
+// Front Office widgets: Injury Report, Transactions, Payroll & Contracts,
+// 40-Man Roster. sidebars.js fills them by id. Home shows them as
+// collapsible rows in its sidebar (app.js wires the toggles); the Front
+// Office page (/front-office/) shows them open.
+interface Props {
+  collapsible?: boolean;
+}
+const { collapsible = false } = Astro.props;
+const WIDGETS = [
+  { section: 'il', label: 'Injury Report', wrap: 'ilWrap',
+    icon: '<path d="M9 12h6m-3-3v6"/><circle cx="12" cy="12" r="10"/>' },
+  { section: 'transactions', label: 'Transactions', wrap: 'transactionsWrap',
+    icon: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>' },
+  { section: 'contracts', label: 'Payroll & Contracts', wrap: 'contractsWrap',
+    icon: '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>' },
+  { section: 'roster', label: '40-Man Roster', wrap: 'rosterWrap',
+    icon: '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/>' },
+];
+---
+{WIDGETS.map(w => (
+  <div class={`sidebar-section${collapsible ? ' collapsible collapsed' : ' fo-widget'}`} data-section={w.section}>
+    <h3 class={`section-label${collapsible ? ' section-toggle' : ''}`} data-target={collapsible ? w.section : undefined}>
+      <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={w.icon} />
+      {w.label}
+      {collapsible && <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>}
+    </h3>
+    <div class="section-body" id={w.wrap}>
+      <span class="sidebar-msg">Loading…</span>
+    </div>
+  </div>
+))}

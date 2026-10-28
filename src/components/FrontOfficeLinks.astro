@@ -1,0 +1,40 @@
+---
+// The Front Office pages: Roster (the depth chart), Trades and Draft.
+// Rows in Home's sidebar group, laid out like the widget toggles (same icon
+// column and text start); cards with a line of description on the Front
+// Office page.
+interface Props {
+  variant?: 'rows' | 'cards';
+}
+const { variant = 'rows' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const LINKS = [
+  { href: `${base}depth-chart/`, label: 'Roster', desc: 'Depth chart, rotation, bullpen and injured list',
+    icon: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.5h6V4"/><circle cx="9.5" cy="10.5" r="1.6"/><path d="m13 13 3 3m0-3-3 3"/>' },
+  { href: `${base}trades/`, label: 'Trades', desc: 'Moves, rumors, who’s on the block',
+    icon: '<path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>' },
+  { href: `${base}draft/`, label: 'Draft', desc: 'Picks, prospects and draft history',
+    icon: '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>' },
+];
+---
+{variant === 'rows' ? LINKS.map(l => (
+  <div class="sidebar-section">
+    <a class="section-label section-link" href={l.href}>
+      <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={l.icon} />
+      {l.label}
+    </a>
+  </div>
+)) : (
+  <nav class="fo-cards" aria-label="Front Office pages">
+    {LINKS.map(l => (
+      <a class="fo-card" href={l.href}>
+        <svg class="fo-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={l.icon} />
+        <span class="fo-card-text">
+          <span class="fo-card-label">{l.label}</span>
+          <span class="fo-card-desc">{l.desc}</span>
+        </span>
+        <svg class="fo-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </a>
+    ))}
+  </nav>
+)}
