@@ -17,6 +17,7 @@ const PAGES = [
   ['Home', '', 'scores standings leaders dashboard'],
   ['Dugout', 'dugout/', 'news articles stories headlines feed'],
   ['Schedule', 'schedule/', 'games calendar record'],
+  ['Front Office', 'front-office/', 'injury report il transactions payroll contracts luxury tax salary 40-man roster'],
   ['Roster', 'depth-chart/', 'depth chart lineup rotation bullpen injured list il'],
   ['Around the Horn', 'around-the-horn/', 'league news stories'],
   ['Hardball', 'hardball/', 'labor cba collective bargaining lockout strike union mlbpa salary cap negotiations'],

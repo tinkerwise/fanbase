@@ -11,6 +11,7 @@ import {
   getActiveTeamId,
   isFirstVisit,
 } from './config.js';
+import { TEAM_CONFIG } from './teamConfig.js';
 import { state } from './state.js';
 import {
   $,
@@ -917,23 +918,32 @@ function renderLeaders() {
   });
 }
 
-// ── Contracts & Payroll ───────────────────────────────────────────
+// ── Payroll & Contracts ───────────────────────────────────────────
+// MLB has no salary cap: payroll and the luxury tax (competitive balance
+// tax) are what matter, so this links to FanGraphs RosterResource and
+// Spotrac's payroll and tax pages. Spotrac's team slugs are full names
+// (boston-red-sox); FanGraphs uses nicknames, with "diamondbacks" for AZ.
+const FANGRAPHS_SLUG = { 109: 'diamondbacks' };
+
 export function loadContracts() {
   const wrap = $('contractsWrap');
   if (!wrap) return;
   const activeTeamId = getActiveTeamId();
-  const teamSlug = TEAM_SLUG[activeTeamId] ?? 'orioles';
-  const teamPage = TEAM_PAGE[activeTeamId] ?? 'orioles';
-  const teamAbbrev = TEAM_ABBREV[activeTeamId] ?? 'Orioles';
-  const spotracSlug = teamPage.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const team = TEAM_CONFIG[activeTeamId] ?? TEAM_CONFIG[ORIOLES_ID];
+  const fgSlug = FANGRAPHS_SLUG[team.id] ?? TEAM_SLUG[team.id];
+  const spotracSlug = team.fullName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   wrap.innerHTML = `
-    <p class="contracts-blurb">Salary, contract type, and payroll data for the ${new Date().getFullYear()} ${teamAbbrev} roster.</p>
-    <a class="widget-link-card" href="https://www.fangraphs.com/roster-resource/payroll/${teamSlug}" target="_blank" rel="noopener">
+    <p class="contracts-blurb">Salaries, contracts and luxury-tax payroll for the ${new Date().getFullYear()} ${esc(team.name)}.</p>
+    <a class="widget-link-card" href="https://www.fangraphs.com/roster-resource/payroll/${encodeURIComponent(fgSlug)}" target="_blank" rel="noopener">
       <span class="widget-link-card-label">Contracts &amp; Payroll</span>
-      <span class="widget-link-card-sub">FanGraphs Roster Resource ↗</span>
+      <span class="widget-link-card-sub">FanGraphs RosterResource ↗</span>
     </a>
     <a class="widget-link-card" href="https://www.spotrac.com/mlb/${spotracSlug}/payroll/" target="_blank" rel="noopener">
-      <span class="widget-link-card-label">Spotrac Payroll</span>
-      <span class="widget-link-card-sub">Salaries, options &amp; totals ↗</span>
+      <span class="widget-link-card-label">Payroll</span>
+      <span class="widget-link-card-sub">Spotrac: salaries, options &amp; totals ↗</span>
+    </a>
+    <a class="widget-link-card" href="https://www.spotrac.com/mlb/${spotracSlug}/tax/" target="_blank" rel="noopener">
+      <span class="widget-link-card-label">Luxury Tax</span>
+      <span class="widget-link-card-sub">Spotrac: competitive balance tax payroll ↗</span>
     </a>`;
 }

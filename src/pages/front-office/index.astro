@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import FrontOfficeWidgets from '../../components/FrontOfficeWidgets.astro';
+import FrontOfficeLinks from '../../components/FrontOfficeLinks.astro';
+---
+
+<Layout title="Front Office | Fanbase">
+  <PageHeader current="Front Office" />
+
+  <main class="fo-page">
+    <div class="fo-page-head">
+      <h1 class="fo-page-title"><span data-team-text="nick">Team</span> Front Office</h1>
+      <p class="fo-page-sub">Injuries, transactions, payroll and the 40-man roster, plus the roster, trades and draft.</p>
+    </div>
+
+    <FrontOfficeLinks variant="cards" />
+
+    <div class="fo-widgets">
+      <FrontOfficeWidgets />
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import '../../scripts/front-office.js';
+</script>

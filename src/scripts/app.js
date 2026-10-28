@@ -58,6 +58,40 @@ function setupEvents() {
     });
   });
 
+  // Front Office (Tailgate #37): on phones it's a long stack of rows, so its
+  // label becomes a toggle and the group starts collapsed. Wider screens
+  // keep the plain label and the group always open. The "Front Office" text
+  // itself links to the full page.
+  const foToggle = $('frontOfficeToggle');
+  const foGroup = foToggle?.closest('.sidebar-group');
+  if (foToggle && foGroup) {
+    const phone = window.matchMedia('(max-width: 600px)');
+    const setOpen = open => {
+      foGroup.classList.toggle('sidebar-group--collapsed', !open);
+      foToggle.setAttribute('aria-expanded', String(open));
+    };
+    const applyMode = () => {
+      if (phone.matches) {
+        foToggle.setAttribute('role', 'button');
+        foToggle.tabIndex = 0;
+        setOpen(false);
+      } else {
+        foToggle.removeAttribute('role');
+        foToggle.removeAttribute('tabindex');
+        foToggle.removeAttribute('aria-expanded');
+        foGroup.classList.remove('sidebar-group--collapsed');
+      }
+    };
+    applyMode();
+    phone.addEventListener('change', applyMode);
+    const toggle = () => { if (phone.matches) setOpen(foGroup.classList.contains('sidebar-group--collapsed')); };
+    foToggle.addEventListener('click', e => { if (!e.target.closest('a')) toggle(); });
+    foToggle.addEventListener('keydown', e => {
+      if (e.target.closest('a')) return;
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  }
+
   // Auto-refresh scores and transactions every 5 minutes while the tab is
   // visible; a tab that comes back after longer refreshes at once
   const REFRESH_MS = 5 * 60 * 1000;
