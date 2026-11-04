@@ -365,3 +365,37 @@ export function resolveNameLookups(containerEl) {
 export function lookupPlayerId(map, name) {
   return map.get(stripAccents(name ?? '').toLowerCase()) ?? null;
 }
+
+/** A feed item's title and source label: Google News titles end in " - Publisher", which replaces the feed's name */
+export function storyByline(source, rawTitle) {
+  const title = cleanFeedText(rawTitle ?? '');
+  const byline = source.titleHasSource && title.match(/^(.*\S)\s+-\s+(.+)$/);
+  return byline ? { title: byline[1], sourceName: byline[2] } : { title, sourceName: source.name };
+}
+
+/**
+ * Newest-first stories with no repeated headlines and at most `perSource`
+ * from each source, so a busy feed can't crowd out the rest. If that leaves
+ * room, the next newest fill it. Stories need title, pubDate and sourceName.
+ */
+export function mixSources(stories, max, perSource = 3) {
+  const seen = new Set();
+  const counts = new Map();
+  const picked = [];
+  const rest = [];
+  const sorted = [...stories].sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  for (const story of sorted) {
+    const key = story.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const count = counts.get(story.sourceName) ?? 0;
+    if (count < perSource) {
+      counts.set(story.sourceName, count + 1);
+      picked.push(story);
+    } else {
+      rest.push(story);
+    }
+  }
+  return [...picked.slice(0, max), ...rest.slice(0, Math.max(0, max - picked.length))]
+    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+}

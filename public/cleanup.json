@@ -1,5 +1,5 @@
 {
-  "_readme": "Content for /cleanup/ (issue #22), the offseason free-agency and trades page. Hand-curated parts only; everything else (free-agent status, signings, trades, waiver claims, Rule 5, international signings, team needs from the roster) comes live from the MLB Stats API. Update lastUpdated when you edit. rankings.players: from the cited ranking, with `teams` = 2026 MLB team ids (blank when the source didn't name one; the free-agents API fills it in once the player files). When a ranked player signs, add `signed`: { team (id), terms (e.g. \"5 years, $210M\"), date, source: { label, url } }, the API knows the club and contract length but not dollars. teamNeeds: { \"<team id>\": { note, date, source: { label, url } } }, a one-line sourced note shown above the needs worked out from the roster. keyDates: date (YYYY-MM-DD) or dateText for windows not fixed yet; laborRisk marks events a lockout would cancel or delay; teamNotes: { \"<team id>\": \"note\" } adds a line for that team's fans only, until the date passes.",
+  "_readme": "Content for /cleanup/ (issue #22), the offseason free-agency and trades page. Hand-curated parts only; everything else (free-agent status, signings, trades, waiver claims, Rule 5, international signings, team needs from the roster) comes live from the MLB Stats API. Update lastUpdated when you edit. rankings.players: from the cited ranking, with `teams` = 2026 MLB team ids (blank when the source didn't name one; the free-agents API fills it in once the player files). When a ranked player signs, add `signed`: { team (id), terms (e.g. \"5 years, $210M\"), date, source: { label, url } }, the API knows the club and contract length but not dollars. teamNeeds: { \"<team id>\": { note, date, source: { label, url } } }, a one-line sourced note shown above the needs worked out from the roster. newsSources: feeds added to the team's usual sources for Rumors; {team} in a url becomes the team's full name, titleHasSource moves a Google News title's \" - Publisher\" into the source label. keyDates: date (YYYY-MM-DD) or dateText for windows not fixed yet; laborRisk marks events a lockout would cancel or delay; teamNotes: { \"<team id>\": \"note\" } adds a line for that team's fans only, until the date passes.",
   "lastUpdated": "2026-11-03",
   "season": "2026-27",
   "rankings": {
@@ -341,6 +341,34 @@
     ]
   },
   "teamNeeds": {},
+  "newsSources": [
+    {
+      "id": "gnews",
+      "name": "Google News",
+      "url": "https://news.google.com/rss/search?q=%22{team}%22+%28%22free+agent%22+OR+trade+OR+signing+OR+signs+OR+rumors%29+when%3A14d&hl=en-US&gl=US&ceid=US:en",
+      "titleHasSource": true
+    },
+    {
+      "id": "cbs",
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/rss/headlines/mlb/"
+    },
+    {
+      "id": "yahoo",
+      "name": "Yahoo Sports",
+      "url": "https://sports.yahoo.com/mlb/rss/"
+    },
+    {
+      "id": "justbaseball",
+      "name": "Just Baseball",
+      "url": "https://www.justbaseball.com/feed/"
+    },
+    {
+      "id": "mlbtr-all",
+      "name": "MLB Trade Rumors",
+      "url": "https://www.mlbtraderumors.com/feed"
+    }
+  ],
   "keyDates": [
     {
       "dateText": "Oct 28–31",
