@@ -378,12 +378,14 @@ function renderDates(cleanup, hardball) {
     const when = d.dateText ?? (d.dateEnd ? `${fmtDate(d.date)}–${fmtDate(d.dateEnd)}` : fmtDate(d.date));
     const last = d.dateEnd ?? d.date ?? d.sort;
     const past = last < TODAY;
+    const teamNote = past ? '' : d.teamNotes?.[TEAM_ID];
     const title = d.hardball ? `<a href="${import.meta.env.BASE_URL}hardball/">${esc(d.title)}</a>` : esc(d.title);
     return `<li class="cu-date${past ? ' cu-date--past' : ''}">
       <span class="cu-date-when">${esc(when)}</span>
       <span class="cu-date-body">
         <span class="cu-date-title">${title}${d.laborRisk && !past ? ` <span class="cu-tag cu-tag--risk">${freeze ? 'On hold' : 'Lockout risk'}</span>` : ''}</span>
         ${d.detail ? `<span class="cu-date-detail">${esc(d.detail)}</span>` : ''}
+        ${teamNote ? `<span class="cu-date-detail cu-date-note">${esc(teamNote)}</span>` : ''}
       </span>
     </li>`;
   }).join('');

@@ -4690,6 +4690,7 @@ html:not([data-offseason]) [data-cleanup-only] { display: none !important; }
 .cu-date-title { font-weight: 700; font-size: 0.88rem; }
 .cu-date-title a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .cu-date-detail { font-size: 0.8rem; color: var(--text-2); line-height: 1.45; }
+.cu-date-note { color: var(--text); font-weight: 600; }
 
 .cu-feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .cu-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; }

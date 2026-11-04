@@ -1,6 +1,6 @@
 {
-  "_readme": "Content for /cleanup/ (issue #22), the offseason free-agency and trades page. Hand-curated parts only; everything else (free-agent status, signings, trades, waiver claims, Rule 5, international signings, team needs from the roster) comes live from the MLB Stats API. Update lastUpdated when you edit. rankings.players: from the cited ranking, with `teams` = 2026 MLB team ids (blank when the source didn't name one; the free-agents API fills it in once the player files). When a ranked player signs, add `signed`: { team (id), terms (e.g. \"5 years, $210M\"), date, source: { label, url } }, the API knows the club and contract length but not dollars. teamNeeds: { \"<team id>\": { note, date, source: { label, url } } }, a one-line sourced note shown above the needs worked out from the roster. keyDates: date (YYYY-MM-DD) or dateText for windows not fixed yet; laborRisk marks events a lockout would cancel or delay.",
-  "lastUpdated": "2026-10-28",
+  "_readme": "Content for /cleanup/ (issue #22), the offseason free-agency and trades page. Hand-curated parts only; everything else (free-agent status, signings, trades, waiver claims, Rule 5, international signings, team needs from the roster) comes live from the MLB Stats API. Update lastUpdated when you edit. rankings.players: from the cited ranking, with `teams` = 2026 MLB team ids (blank when the source didn't name one; the free-agents API fills it in once the player files). When a ranked player signs, add `signed`: { team (id), terms (e.g. \"5 years, $210M\"), date, source: { label, url } }, the API knows the club and contract length but not dollars. teamNeeds: { \"<team id>\": { note, date, source: { label, url } } }, a one-line sourced note shown above the needs worked out from the roster. keyDates: date (YYYY-MM-DD) or dateText for windows not fixed yet; laborRisk marks events a lockout would cancel or delay; teamNotes: { \"<team id>\": \"note\" } adds a line for that team's fans only, until the date passes.",
+  "lastUpdated": "2026-11-03",
   "season": "2026-27",
   "rankings": {
     "source": {
@@ -373,31 +373,33 @@
       }
     },
     {
-      "dateText": "Nov 11–15",
-      "sort": "2026-11-15",
+      "date": "2026-11-17",
       "title": "Qualifying offer decisions",
-      "detail": "Players have 10 days to accept or reject a qualifying offer.",
+      "detail": "4 p.m. ET: players who received a qualifying offer ($23.15 million for one year) must accept or reject it.",
+      "teamNotes": {
+        "110": "Trevor Rogers has to decide whether to take the Orioles' qualifying offer."
+      },
       "source": {
-        "label": "Just Baseball: 2026-27 offseason key dates",
-        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+        "label": "MLB Trade Rumors: Eight players receive qualifying offers",
+        "url": "https://www.mlbtraderumors.com/2026/11/eight-players-receive-qualifying-offers.html"
       }
     },
     {
       "date": "2026-11-17",
-      "title": "40-man roster deadline",
+      "title": "Rule 5 protection deadline",
       "detail": "6 p.m. ET: teams add prospects to the 40-man roster to protect them from the Rule 5 Draft.",
       "source": {
-        "label": "MLive/Yahoo: 2026-27 offseason calendar",
-        "url": "https://sports.yahoo.com/articles/mlb-2026-27-offseason-calendar-173640717.html"
+        "label": "CBS Sports: MLB offseason dates",
+        "url": "https://www.cbssports.com/mlb/news/mlb-offseason-dates-free-agency-start-lockout/"
       }
     },
     {
       "date": "2026-11-20",
-      "title": "Non-tender deadline",
-      "detail": "Teams must offer contracts to arbitration-eligible and pre-arbitration players or let them become free agents.",
+      "title": "Tender deadline",
+      "detail": "5 p.m. ET: teams must offer contracts to arbitration-eligible and pre-arbitration players or let them become free agents.",
       "source": {
-        "label": "Just Baseball: 2026-27 offseason key dates",
-        "url": "https://www.justbaseball.com/mlb/offseason-schedule-key-dates-lockout/"
+        "label": "MLB Trade Rumors: The 2026-27 offseason begins",
+        "url": "https://www.mlbtraderumors.com/2026/10/the-2026-27-offseason-begins.html"
       }
     },
     {
