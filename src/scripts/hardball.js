@@ -5,7 +5,7 @@
 // league-wide feeds plus hardball.json's newsSources. League-wide only, so
 // it works before a team is picked.
 import './theme.js';
-import { esc, safeUrl, renderNewsThumbCard, cleanFeedText, extractThumbnail } from './utils.js';
+import { esc, safeUrl, renderNewsThumbCard, cleanFeedText, extractThumbnail, storyByline, mixSources } from './utils.js';
 import { fetchFeedItems } from './feedSources.js';
 import { loadHardball, nextKeyDate, countdownText } from './season.js';
 
@@ -110,27 +110,23 @@ async function loadNews(data) {
   const wrap = $('hbNews');
   try {
     const feeds = await fetch(`${import.meta.env.BASE_URL}feeds.json`).then(r => r.json());
-    const sources = [...feeds.filter(f => f.teamId === 0), ...(data.newsSources ?? [])];
+    // teamFeed entries belong to the active team (feedSources.js), and this page is league-wide
+    const sources = [...feeds.filter(f => f.teamId === 0 && !f.teamFeed), ...(data.newsSources ?? [])];
     const results = await Promise.allSettled(sources.map(async source => ({ source, data: await fetchFeedItems(source) })));
     const seen = new Set();
     const stories = [];
     for (const r of results) {
       if (r.status !== 'fulfilled') continue;
       for (const item of r.value.data.items ?? []) {
-        let title = cleanFeedText(item.title ?? '');
-        let sourceName = r.value.source.name;
-        // Google News titles end in " - Publisher": show the publisher instead
-        const byline = r.value.source.titleHasSource && title.match(/^(.*\S)\s+-\s+([^-]+)$/);
-        if (byline) [, title, sourceName] = byline;
+        const { title, sourceName } = storyByline(r.value.source, item.title);
         const link = safeUrl(item.link);
         if (!link || seen.has(link) || !LABOR_RE.test(`${title} ${cleanFeedText(item.description ?? '')}`)) continue;
         seen.add(link);
         stories.push({ title, link, pubDate: item.pubDate, sourceName, thumbnail: extractThumbnail(item) });
       }
     }
-    stories.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     wrap.innerHTML = stories.length
-      ? stories.slice(0, MAX_NEWS).map(renderNewsThumbCard).join('')
+      ? mixSources(stories, MAX_NEWS).map(renderNewsThumbCard).join('')
       : '<span class="sidebar-msg">No labor stories in the feeds right now.</span>';
   } catch {
     wrap.innerHTML = '<span class="sidebar-msg">News is unavailable right now.</span>';

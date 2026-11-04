@@ -1,5 +1,5 @@
 {
-  "_readme": "Content for /hardball/ (issue #20), the MLB/MLBPA labor page. Hand-curated: update lastUpdated whenever you edit. Every position needs a source (url) and the date it was reported, and is worded as that side stated it: no editorializing. status.code is one of talks | expired | lockout | tentative | ratified; expired and lockout keep Hardball prominent in the nav and on Home whatever the calendar says. visibility: auto (offseason from MLB's season dates, plus expired/lockout) | show | hide. Timeline items with key: true count down on the page when they're upcoming. The news section is automatic: labor keywords over the league-wide feeds plus newsSources (Google News search RSS, whose titles end in \" - Publisher\": titleHasSource moves that into the source label).",
+  "_readme": "Content for /hardball/ (issue #20), the MLB/MLBPA labor page. Hand-curated: update lastUpdated whenever you edit. Every position needs a source (url) and the date it was reported, and is worded as that side stated it: no editorializing. status.code is one of talks | expired | lockout | tentative | ratified; expired and lockout keep Hardball prominent in the nav and on Home whatever the calendar says. visibility: auto (offseason from MLB's season dates, plus expired/lockout) | show | hide. Timeline items with key: true count down on the page when they're upcoming. The news section is automatic: labor keywords over the league-wide feeds plus newsSources (direct RSS feeds and Google News search RSS, whose titles end in \" - Publisher\": titleHasSource moves that into the source label).",
   "lastUpdated": "2026-10-28",
   "visibility": "auto",
   "status": {
@@ -434,6 +434,26 @@
       "id": "mlbtr-cba",
       "name": "MLB Trade Rumors",
       "url": "https://www.mlbtraderumors.com/collective-bargaining-agreement/feed"
+    },
+    {
+      "id": "cbs",
+      "name": "CBS Sports",
+      "url": "https://www.cbssports.com/rss/headlines/mlb/"
+    },
+    {
+      "id": "yahoo",
+      "name": "Yahoo Sports",
+      "url": "https://sports.yahoo.com/mlb/rss/"
+    },
+    {
+      "id": "justbaseball",
+      "name": "Just Baseball",
+      "url": "https://www.justbaseball.com/feed/"
+    },
+    {
+      "id": "mlbtr-all",
+      "name": "MLB Trade Rumors",
+      "url": "https://www.mlbtraderumors.com/feed"
     }
   ]
 }

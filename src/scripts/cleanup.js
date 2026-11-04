@@ -14,7 +14,7 @@ import './theme.js';
 import { MLB, TEAM_ID, TEAM } from './config.js';
 import { TEAM_CONFIG } from './teamConfig.js';
 import { requireTeam } from './teamPicker.js';
-import { esc, safeUrl, cleanFeedText, extractThumbnail, renderNewsThumbCard, teamLogoSrc } from './utils.js';
+import { esc, safeUrl, cleanFeedText, extractThumbnail, renderNewsThumbCard, teamLogoSrc, storyByline, mixSources } from './utils.js';
 import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { loadHardball, offseasonWindow, localDate } from './season.js';
 
@@ -327,9 +327,12 @@ async function buildMoves(transactions) {
 }
 
 // ── Rumors and On the Block ───────────────────────────────────────
-async function renderRumors(roster) {
+async function renderRumors(roster, newsSources = []) {
   try {
-    const sources = await loadFeedSources();
+    const sources = [
+      ...await loadFeedSources(),
+      ...newsSources.map(s => ({ ...s, url: s.url.replace('{team}', encodeURIComponent(TEAM.fullName)) })),
+    ];
     const results = await Promise.allSettled(sources.map(async s => ({ source: s, data: await fetchFeedItems(s) })));
     const teamRe = new RegExp(`\\b(${[TEAM.name, TEAM.city, TEAM.fullName].filter(Boolean).map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b`, 'i');
     const seen = new Set();
@@ -338,17 +341,16 @@ async function renderRumors(roster) {
       if (r.status !== 'fulfilled') continue;
       const teamSource = r.value.source.teamFeed || r.value.source.teamId === TEAM_ID;
       for (const item of r.value.data.items ?? []) {
-        const title = cleanFeedText(item.title ?? '');
+        const { title, sourceName } = storyByline(r.value.source, item.title);
         const text = `${title} ${cleanFeedText(item.description ?? '')}`;
         const link = safeUrl(item.link);
         if (!link || seen.has(link) || !HOT_STOVE_RE.test(title) || !(teamSource || teamRe.test(text))) continue;
         seen.add(link);
-        stories.push({ title, text, link, pubDate: item.pubDate, sourceName: r.value.source.name, thumbnail: extractThumbnail(item) });
+        stories.push({ title, text, link, pubDate: item.pubDate, sourceName, thumbnail: extractThumbnail(item) });
       }
     }
-    stories.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     $('cuRumors').innerHTML = stories.length
-      ? stories.slice(0, 10).map(renderNewsThumbCard).join('')
+      ? mixSources(stories, 10).map(renderNewsThumbCard).join('')
       : '<span class="sidebar-msg">No hot stove headlines about the team right now.</span>';
 
     // On the Block: 40-man players named in trade headlines
@@ -462,7 +464,7 @@ async function init() {
 
   $('cuFootnote').innerHTML = `Signings, trades and claims come from MLB's transaction data; contract dollars aren't in it, so they're added for ranked free agents from reporting. Curated content last updated ${esc(fmtDate(cleanup.lastUpdated ?? TODAY, { year: 'numeric' }))}.`;
 
-  renderRumors(rosterR.value?.roster ?? []);
+  renderRumors(rosterR.value?.roster ?? [], cleanup.newsSources);
 }
 
 init();
