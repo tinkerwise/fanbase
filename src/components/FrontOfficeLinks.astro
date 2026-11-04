@@ -1,5 +1,7 @@
 ---
-// The Front Office pages: Roster (the depth chart), Trades and Draft.
+// The Front Office pages: Roster (the depth chart), Trades and Draft, plus
+// the separate league-wide Front Office site (its own repo, deployed under
+// frontoffice/).
 // Rows in Home's sidebar group, laid out like the widget toggles (same icon
 // column and text start); cards with a line of description on the Front
 // Office page.
@@ -15,6 +17,8 @@ const LINKS = [
     icon: '<path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>' },
   { href: `${base}draft/`, label: 'Draft', desc: 'Picks, prospects and draft history',
     icon: '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>' },
+  { href: `${base}frontoffice/`, label: 'Front Office →', desc: 'GMs, transactions, payroll and draft data for all 30 teams',
+    icon: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>' },
 ];
 ---
 {variant === 'rows' ? LINKS.map(l => (
