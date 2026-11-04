@@ -255,7 +255,7 @@ export function renderNewsThumbCard(article) {
   const thumb = article.thumbnail || PLACEHOLDER_IMG;
   const favicon = faviconUrl(article.link);
   return `<a class="news-thumb-card" href="${esc(safeUrl(article.link) || '#')}" target="_blank" rel="noopener">
-    <img class="news-thumb-img" src="${esc(thumb)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER_IMG}'">
+    <img class="news-thumb-img" src="${esc(thumb)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'">
     <div class="news-thumb-info">
       <span class="news-thumb-source">
         <img class="news-thumb-favicon" src="${esc(favicon)}" alt="" onerror="this.style.display='none'">
