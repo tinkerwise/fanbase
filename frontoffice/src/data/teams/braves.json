@@ -1,0 +1,35 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Alex Anthopoulos", "title": "General Manager & President of Baseball Operations", "since": "2017" },
+    { "name": "Brian Snitker",    "title": "Manager",                                            "since": "2016" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 88,  "l": 73,  "note": "World Series Champions" },
+    { "year": 2022, "w": 101, "l": 61,  "note": "NL East champs; NLDS exit" },
+    { "year": 2023, "w": 104, "l": 58,  "note": "NL East champs; Acuña MVP; NLDS exit" },
+    { "year": 2024, "w": 89,  "l": 73,  "note": "Wild Card; Strider/Acuña injuries" },
+    { "year": 2025, "w": 92,  "l": 70,  "note": "NL East contenders; $250M+ payroll push" },
+    { "year": 2026, "w": 91,  "l": 71,  "note": "NL contenders; ~$247M payroll" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$247M payroll; CBT repeater; owner McGuirk targeting top-5 salary; ha-seong Kim signing a key add",
+    "topContracts": [
+      { "name": "Ronald Acuña Jr.", "aav": 17.0, "through": 2028, "note": "Extension; elite value" },
+      { "name": "Austin Riley",     "aav": 22.0, "through": 2032 },
+      { "name": "Matt Olson",       "aav": 22.0, "through": 2028 },
+      { "name": "Ha-seong Kim",     "aav": 20.0, "through": 2026 },
+      { "name": "Spencer Strider",  "aav": 12.5, "through": 2028 },
+      { "name": "Sean Murphy",      "aav": 12.2, "through": 2028 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Dylan Lesko",        "pos": "RHP", "school": "Pooler HS (GA)",    "status": "Traded (White Sox)" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Owen Murphy",        "pos": "RHP", "school": "Downers Grove (IL)","status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "Jurrangelo Cijntje", "pos": "LHP", "school": "Curaçao",           "status": "Minors" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "Atlanta Braves front office Alex Anthopoulos GM",
+  "mlbTeamPage": "braves"
+}

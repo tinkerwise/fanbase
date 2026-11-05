@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "JJ Picollo",      "title": "EVP & General Manager", "since": "2022" },
+    { "name": "Matt Quatraro",   "title": "Manager",               "since": "2023" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 74,  "l": 88,  "note": "Missed playoffs" },
+    { "year": 2022, "w": 65,  "l": 97,  "note": "Rebuilding; Witt Jr. debut" },
+    { "year": 2023, "w": 56,  "l": 106, "note": "Lean year; $110M+ free agent class" },
+    { "year": 2024, "w": 86,  "l": 76,  "note": "Wild Card; ALCS — best since 2015" },
+    { "year": 2025, "w": 82,  "l": 80,  "note": "Missed playoffs; Picollo extended '30" },
+    { "year": 2026, "w": 85,  "l": 77,  "note": "Wild Card race; Witt extension kicks in" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$182M payroll; Bobby Witt Jr.'s 11-yr/$288.7M extension is franchise cornerstone",
+    "topContracts": [
+      { "name": "Bobby Witt Jr.",    "aav": 26.2, "through": 2034 },
+      { "name": "Salvador Perez",    "aav": 12.5, "through": 2027 },
+      { "name": "Seth Lugo",         "aav": 15.0, "through": 2026 },
+      { "name": "Michael Wacha",     "aav": 12.0, "through": 2026 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Gavin Cross",       "pos": "OF",  "school": "Virginia Tech",     "status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Blake Mitchell",    "pos": "SS",  "school": "Sinton HS (TX)",    "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",              "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Zion Rose",        "pos": "OF",  "school": "Louisville",        "status": "Rookie" }] }
+  ],
+  "newsQuery": "Kansas City Royals front office JJ Picollo GM",
+  "mlbTeamPage": "royals"
+}

@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Jeremy Zoll",    "title": "General Manager (Acting Head of Baseball Ops)", "since": "2026" },
+    { "name": "Derek Falvey",   "title": "President of Baseball Operations (departed Jan 2026)", "since": "2016" },
+    { "name": "Rocco Baldelli", "title": "Manager",                                        "since": "2019" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 78,  "l": 84,  "note": "Missed playoffs" },
+    { "year": 2023, "w": 87,  "l": 75,  "note": "AL Central champs; ALDS exit" },
+    { "year": 2024, "w": 82,  "l": 80,  "note": "Correa health/trade concerns" },
+    { "year": 2025, "w": 80,  "l": 82,  "note": "Falvey's last season; transition year" },
+    { "year": 2026, "w": 77,  "l": 85,  "note": "Zoll takes over; youth movement" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$100M payroll; Falvey departed January 2026, Zoll youngest head of baseball ops in MLB",
+    "topContracts": [
+      { "name": "Carlos Correa",   "aav": 35.1, "through": 2034, "note": "Restructured; Astros cover portion" },
+      { "name": "Pablo López",     "aav": 22.0, "through": 2028 },
+      { "name": "Ryan Jeffers",    "aav": 8.0,  "through": 2028 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Brooks Lee",         "pos": "SS",  "school": "Cal Poly",          "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Walker Jenkins",     "pos": "OF",  "school": "South Brunswick HS","status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Vahn Lackey",       "pos": "C",   "school": "Georgia Tech",       "status": "Rookie" }] }
+  ],
+  "newsQuery": "Minnesota Twins front office Jeremy Zoll GM baseball operations",
+  "mlbTeamPage": "twins"
+}

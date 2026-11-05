@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Craig Breslow", "title": "Chief Baseball Officer", "since": "2023" },
+    { "name": "Alex Cora",     "title": "Manager",               "since": "2018" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 78,  "l": 84,  "note": "Missed playoffs" },
+    { "year": 2023, "w": 78,  "l": 84,  "note": "Missed playoffs" },
+    { "year": 2024, "w": 81,  "l": 81,  "note": "Breslow's first full season" },
+    { "year": 2025, "w": 89,  "l": 73,  "note": "Wild Card berth" },
+    { "year": 2026, "w": 91,  "l": 71,  "note": "AL East contender" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "Payroll ~$197M; willing to exceed CBT threshold for right pieces",
+    "topContracts": [
+      { "name": "Garrett Crochet",    "aav": 28.3, "through": 2031 },
+      { "name": "Ranger Suárez",      "aav": 26.0, "through": 2030 },
+      { "name": "Trevor Story",       "aav": 23.3, "through": 2027 },
+      { "name": "Willson Contreras",  "aav": 21.3, "through": 2027 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2023, "picks": [{ "round": 1, "name": "Kyle Teel",      "pos": "C",   "school": "Virginia",          "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "Braden Montgomery","pos": "OF", "school": "Texas A&M",         "status": "Minors" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "Chase Dollander", "pos": "RHP","school": "Tennessee",          "status": "Minors" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "TBD",             "pos": "—",  "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "Boston Red Sox front office Craig Breslow GM",
+  "mlbTeamPage": "redsox"
+}

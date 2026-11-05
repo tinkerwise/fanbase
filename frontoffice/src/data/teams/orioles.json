@@ -1,0 +1,124 @@
+{
+  "id": 110,
+  "slug": "orioles",
+  "name": "Orioles",
+  "fullName": "Baltimore Orioles",
+  "abbr": "BAL",
+  "city": "Baltimore",
+  "div": "AL East",
+  "color": "#DF4601",
+  "colorSecondary": "#000000",
+  "ballpark": "Oriole Park at Camden Yards",
+  "ballparkYear": 1992,
+  "owner": "David Rubenstein",
+  "ownerSince": "2024",
+  "brass": [
+    {
+      "name": "David Rubenstein",
+      "title": "Chairman & Managing Partner",
+      "since": "2024",
+      "note": "Carlyle Group co-founder; led the group that purchased the Orioles from the Angelos family for ~$1.7 billion in 2024."
+    },
+    {
+      "name": "Mike Elias",
+      "title": "Executive Vice President & General Manager",
+      "since": "November 2018",
+      "note": "Hired from the Houston Astros, where he was Assistant GM. Oversaw the rebuild that produced 101 wins in 2023 and the AL East title."
+    },
+    {
+      "name": "Sig Mejdal",
+      "title": "Vice President, Analytics & Development",
+      "since": "November 2018",
+      "note": "Analytics pioneer who joined Elias from Houston. Architect of the data-driven scouting and development model."
+    },
+    {
+      "name": "Matt Blood",
+      "title": "Vice President, Player Development",
+      "since": "2019",
+      "note": "Oversees the minor league system, which has been one of the deepest in baseball under the Elias era."
+    },
+    {
+      "name": "Brad Ciolek",
+      "title": "Director, Amateur Scouting",
+      "since": "2019",
+      "note": "Led the draft rooms that selected Adley Rutschman (#1 overall, 2019), Colton Cowser, and Coby Mayo."
+    },
+    {
+      "name": "Brandon Hyde",
+      "title": "Manager",
+      "since": "October 2018",
+      "note": "Third-base coach in Chicago before Elias hired him. Posted 40+ wins in each of his first four seasons; 101-61 in 2023."
+    },
+    {
+      "name": "Chris Holt",
+      "title": "Pitching Coach",
+      "since": "2022",
+      "note": ""
+    },
+    {
+      "name": "Ryan Fuller",
+      "title": "Hitting Coach",
+      "since": "2022",
+      "note": ""
+    }
+  ],
+  "eraRecord": [
+    { "year": 2019, "w": 54,  "l": 108, "pct": ".333", "finish": "5th AL East", "note": "Year 1 Elias: worst record in baseball, first pick (Adley Rutschman)" },
+    { "year": 2020, "w": 25,  "l": 35,  "pct": ".417", "finish": "4th AL East", "note": "COVID-shortened 60-game season" },
+    { "year": 2021, "w": 52,  "l": 110, "pct": ".321", "finish": "5th AL East", "note": "Second 100-loss season; loaded up on top draft picks" },
+    { "year": 2022, "w": 83,  "l": 79,  "pct": ".512", "finish": "3rd AL East", "note": "Rebuild pays off; first winning season since 2016" },
+    { "year": 2023, "w": 101, "l": 61,  "pct": ".623", "finish": "1st AL East", "note": "AL East champions; youngest AL team, 101 wins" },
+    { "year": 2024, "w": 91,  "l": 71,  "pct": ".562", "finish": "2nd AL East", "note": "AL Wild Card; Elias era second playoff appearance" },
+    { "year": 2025, "w": 88,  "l": 74,  "pct": ".543", "finish": "3rd AL East", "note": "Missed playoffs on final weekend; Gunnar Henderson AL MVP runner-up" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 241000000,
+    "note": "Orioles operate significantly below the luxury tax threshold; the new Rubenstein ownership has signaled willingness to spend.",
+    "topContracts": [
+      { "player": "Corbin Burnes", "pos": "SP", "aav": 21700000, "years": "2024–2028", "total": 108500000 },
+      { "player": "Gunnar Henderson", "pos": "SS", "aav": 19500000, "years": "2024–2031", "total": 156000000 },
+      { "player": "Adley Rutschman", "pos": "C",  "aav": 14200000, "years": "2024–2029", "total": 85000000 },
+      { "player": "Cedric Mullins",   "pos": "CF", "aav": 12500000, "years": "2023–2027", "total": 62500000 },
+      { "player": "Ryan Mountcastle", "pos": "1B", "aav": 9700000,  "years": "2024–2027", "total": 38800000 }
+    ]
+  },
+  "recentDraftClasses": [
+    {
+      "year": 2019,
+      "picks": [
+        { "round": 1, "overall": 1,  "name": "Adley Rutschman",  "pos": "C",  "school": "Oregon State",     "status": "MLB — C, Orioles" },
+        { "round": 2, "overall": 39, "name": "Gunnar Henderson",  "pos": "SS", "school": "John Carroll HS",  "status": "MLB — SS, Orioles" }
+      ]
+    },
+    {
+      "year": 2020,
+      "picks": [
+        { "round": 1, "overall": 2, "name": "Heston Kjerstad",  "pos": "OF", "school": "Arkansas",       "status": "MLB — OF, Orioles" },
+        { "round": 2, "overall": 44,"name": "Jordan Westburg",  "pos": "SS", "school": "Mississippi St.", "status": "MLB — 2B/3B, Orioles" }
+      ]
+    },
+    {
+      "year": 2021,
+      "picks": [
+        { "round": 1, "overall": 1, "name": "Jackson Holliday",  "pos": "SS", "school": "Stillwater HS",  "status": "MLB — INF, Orioles" },
+        { "round": 3, "overall": 76,"name": "Coby Mayo",         "pos": "3B", "school": "Parkland HS",    "status": "MLB — 3B, Orioles (debuted 2024)" }
+      ]
+    },
+    {
+      "year": 2022,
+      "picks": [
+        { "round": 1, "overall": 5, "name": "Colton Cowser",     "pos": "OF", "school": "Sam Houston St.", "status": "MLB — OF, Orioles" },
+        { "round": 2, "overall": 44,"name": "Connor Norby",       "pos": "2B", "school": "East Carolina",   "status": "MLB — 2B, Orioles" }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        { "round": 1, "overall": 22, "name": "Emmanuel Ramirez", "pos": "RHP", "school": "Saddleback JC",    "status": "MiLB — A+/AA" },
+        { "round": 2, "overall": 53, "name": "Joey Ortiz",        "pos": "SS",  "school": "New Mexico St.",   "status": "MLB — INF" }
+      ]
+    }
+  ],
+  "newsQuery": "Baltimore Orioles front office",
+  "mlbTeamPage": "orioles"
+}

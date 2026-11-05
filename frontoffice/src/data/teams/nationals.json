@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Paul Toboni",      "title": "President of Baseball Operations", "since": "2025" },
+    { "name": "Anirudh Kilambi",  "title": "General Manager",                  "since": "2025" },
+    { "name": "Dave Martinez",    "title": "Manager",                          "since": "2018" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 65,  "l": 97,  "note": "Post-2019 champs decline" },
+    { "year": 2022, "w": 55,  "l": 107, "note": "Soto trade; full rebuild" },
+    { "year": 2023, "w": 71,  "l": 91,  "note": "Building through draft; García/Ruiz core" },
+    { "year": 2024, "w": 74,  "l": 88,  "note": "Slow build continues" },
+    { "year": 2025, "w": 78,  "l": 84,  "note": "Toboni/Kilambi new leadership (from Red Sox)" },
+    { "year": 2026, "w": 76,  "l": 86,  "note": "~$116M payroll; prospects maturing" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$116M payroll (25th in MLB); Toboni hired from Boston to accelerate rebuild timeline",
+    "topContracts": [
+      { "name": "Luis Garcia",    "aav": 7.8,  "through": 2027 },
+      { "name": "Keibert Ruiz",   "aav": 6.3,  "through": 2030 },
+      { "name": "CJ Abrams",      "aav": 5.0,  "through": 2027 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Brady House",        "pos": "SS",  "school": "Winder-Barrow HS", "status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Dylan Crews",        "pos": "OF",  "school": "LSU",              "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] }
+  ],
+  "newsQuery": "Washington Nationals front office Paul Toboni Anirudh Kilambi GM rebuild",
+  "mlbTeamPage": "nationals"
+}

@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Paul DePodesta",  "title": "President of Baseball Operations", "since": "2025" },
+    { "name": "Josh Byrnes",     "title": "General Manager",                  "since": "2025" },
+    { "name": "Bud Black",       "title": "Manager",                          "since": "2017" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 74,  "l": 87,  "note": "Bill Schmidt GM era" },
+    { "year": 2022, "w": 68,  "l": 94,  "note": "Missed playoffs" },
+    { "year": 2023, "w": 59,  "l": 103, "note": "Coors Field losing its luster" },
+    { "year": 2024, "w": 61,  "l": 101, "note": "Continued decline" },
+    { "year": 2025, "w": 43,  "l": 119, "note": "Historically bad; Schmidt steps down; DePodesta/Byrnes hired" },
+    { "year": 2026, "w": 55,  "l": 107, "note": "New regime Year 1; 2026 draft #10 overall (TBD)" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "Among lowest payrolls in MLB; DePodesta/Byrnes focused on culture and player development reset",
+    "topContracts": [
+      { "name": "Kris Bryant",      "aav": 26.3, "through": 2028, "note": "Injury-plagued; limited games" },
+      { "name": "Ryan McMahon",     "aav": 15.5, "through": 2028 },
+      { "name": "Germán Márquez",   "aav": 12.0, "through": 2027, "note": "Returning from TJ" }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Benny Montgomery",   "pos": "OF",  "school": "Red Land HS (PA)", "status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Chase Dollander",    "pos": "RHP", "school": "Tennessee",        "status": "Traded (BOS)" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",               "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",               "status": "—" }] }
+  ],
+  "newsQuery": "Colorado Rockies front office Paul DePodesta Josh Byrnes GM rebuild",
+  "mlbTeamPage": "rockies"
+}

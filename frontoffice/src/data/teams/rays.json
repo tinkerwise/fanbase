@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Erik Neander",    "title": "President of Baseball Operations", "since": "2016" },
+    { "name": "Hamilton Marx",   "title": "Assistant General Manager",        "since": "2025" },
+    { "name": "Kevin Cash",      "title": "Manager",                          "since": "2015" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 86,  "l": 76,  "note": "Wild Card; ALDS exit" },
+    { "year": 2023, "w": 99,  "l": 63,  "note": "AL East champs; ALDS exit" },
+    { "year": 2024, "w": 80,  "l": 82,  "note": "Bendix to Marlins; Neander solo" },
+    { "year": 2025, "w": 76,  "l": 86,  "note": "Ownership transition (Silverman/Auld out)" },
+    { "year": 2026, "w": 78,  "l": 84,  "note": "Rebuilding under new owner Zalupski" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "Traditionally lowest-third payroll; no formal GM title since Bendix's departure",
+    "topContracts": [
+      { "name": "Zach Eflin",    "aav": 20.0, "through": 2027 },
+      { "name": "Pete Fairbanks","aav": 10.0, "through": 2026 },
+      { "name": "Brandon Lowe",  "aav": 11.0, "through": 2026 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Curtis Mead",        "pos": "3B",  "school": "Australia",        "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Theo Gillen",        "pos": "OF",  "school": "Vanderbilt",       "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Grady Emerson",      "pos": "SS",  "school": "Ft. Worth Christian HS", "status": "Rookie" }] }
+  ],
+  "newsQuery": "Tampa Bay Rays front office Erik Neander baseball operations",
+  "mlbTeamPage": "rays"
+}

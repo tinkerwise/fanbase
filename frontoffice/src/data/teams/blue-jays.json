@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Mark Shapiro",  "title": "President & CEO",               "since": "2015" },
+    { "name": "Ross Atkins",   "title": "EVP, Baseball Operations & GM", "since": "2015" },
+    { "name": "John Schneider","title": "Manager",                       "since": "2022" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 92,  "l": 70,  "note": "Wild Card; ALCS" },
+    { "year": 2023, "w": 89,  "l": 73,  "note": "Wild Card; ALDS exit" },
+    { "year": 2024, "w": 74,  "l": 88,  "note": "Missed playoffs; rebuilding" },
+    { "year": 2025, "w": 82,  "l": 80,  "note": "Near miss; Guerrero extension signed" },
+    { "year": 2026, "w": 90,  "l": 72,  "note": "Wild Card contender" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "Payroll ~$282M (4th highest); Guerrero 14-yr/$500M extension anchors roster",
+    "topContracts": [
+      { "name": "Vladimir Guerrero Jr.", "aav": 40.2, "through": 2039 },
+      { "name": "Dylan Cease",           "aav": 26.8, "through": 2030 },
+      { "name": "George Springer",       "aav": 25.0, "through": 2026 },
+      { "name": "Kevin Gausman",         "aav": 22.0, "through": 2027 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Gabriel Moreno",  "pos": "C",   "school": "HS (Venezuela)",  "status": "MLB — Traded to ARI" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Ricky Tiedemann", "pos": "LHP", "school": "Golden West JC",  "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "Austin Brice",    "pos": "RHP", "school": "Georgia",         "status": "Minors" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",             "pos": "—",   "school": "—",               "status": "—" }] }
+  ],
+  "newsQuery": "Toronto Blue Jays front office Ross Atkins GM",
+  "mlbTeamPage": "bluejays"
+}

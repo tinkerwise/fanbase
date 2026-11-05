@@ -1,0 +1,31 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Ben Cherington",  "title": "President of Baseball Operations & GM", "since": "2019" },
+    { "name": "Don Kelly",       "title": "Manager",                               "since": "2024" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 62,  "l": 100, "note": "Rebuild year; Hayes/Cruz core" },
+    { "year": 2023, "w": 76,  "l": 86,  "note": "Skenes/Paul drafted" },
+    { "year": 2024, "w": 76,  "l": 86,  "note": "Skenes debut (MLB record debutant); Kelly hired" },
+    { "year": 2025, "w": 71,  "l": 91,  "note": "7th straight losing season; Hayes traded to CIN" },
+    { "year": 2026, "w": 75,  "l": 87,  "note": "~$101M payroll (team record); Cherington retained" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$101M payroll (team record); Nutting ownership keeps budget tight despite revenue growth",
+    "topContracts": [
+      { "name": "Paul Skenes",    "aav": 5.8,  "through": 2029, "note": "Pre-arb; franchise pillar" },
+      { "name": "Oneil Cruz",     "aav": 4.5,  "through": 2027 },
+      { "name": "Brandon Lowe",   "aav": 10.0, "through": 2026, "note": "Acquired from Rays" }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Termarr Johnson",   "pos": "2B",  "school": "Mays HS (GA)",      "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Paul Skenes",       "pos": "RHP", "school": "LSU",               "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "Jace LaViolette",   "pos": "OF",  "school": "Texas A&M",         "status": "Minors" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Derek Curiel",      "pos": "OF",  "school": "LSU",               "status": "Rookie" }] }
+  ],
+  "newsQuery": "Pittsburgh Pirates front office Ben Cherington GM Paul Skenes",
+  "mlbTeamPage": "pirates"
+}

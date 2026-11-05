@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Brian Cashman",  "title": "Senior VP & General Manager", "since": "1998" },
+    { "name": "Aaron Boone",    "title": "Manager",                     "since": "2018" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 99,  "l": 63,  "note": "AL East champs; ALCS" },
+    { "year": 2023, "w": 82,  "l": 80,  "note": "Missed playoffs" },
+    { "year": 2024, "w": 94,  "l": 68,  "note": "AL Pennant; World Series loss" },
+    { "year": 2025, "w": 85,  "l": 77,  "note": "Wild Card; early exit" },
+    { "year": 2026, "w": 88,  "l": 74,  "note": "AL Wild Card" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "Payroll ~$300M; 3rd-time CBT payor; owner targeting ~$300M ceiling",
+    "topContracts": [
+      { "name": "Aaron Judge",    "aav": 40.0, "through": 2031 },
+      { "name": "Gerrit Cole",    "aav": 36.0, "through": 2028 },
+      { "name": "Max Fried",      "aav": 27.3, "through": 2032 },
+      { "name": "Carlos Rodón",   "aav": 27.0, "through": 2028 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Trey Sweeney",   "pos": "SS",  "school": "Eastern Illinois", "status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "George Lombard Jr.", "pos": "OF", "school": "Louisville",    "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "Delmarr Galton", "pos": "OF",  "school": "Texas Tech",       "status": "Minors" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "Jac Caglianone", "pos": "LHP/1B","school": "Florida",        "status": "Minors" }] }
+  ],
+  "newsQuery": "New York Yankees front office Brian Cashman GM",
+  "mlbTeamPage": "yankees"
+}

@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Layout title="404 — Not Found">
+  <div style="padding:60px 24px;text-align:center">
+    <div style="font-size:4rem;font-weight:800;color:var(--accent)">404</div>
+    <div style="font-size:1.1rem;color:var(--text-2);margin:12px 0 24px">Page not found.</div>
+    <a href={base} style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--accent);color:var(--on-accent);border-radius:6px;font-weight:600">← Home</a>
+  </div>
+</Layout>

@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Peter Bendix",    "title": "President of Baseball Operations", "since": "2023" },
+    { "name": "Skip Schumaker",  "title": "Manager",                          "since": "2023" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 67,  "l": 95,  "note": "Kim Ng era begins" },
+    { "year": 2022, "w": 69,  "l": 93,  "note": "Missed playoffs" },
+    { "year": 2023, "w": 84,  "l": 78,  "note": "Wild Card; NLDS exit; Ng and Bendix transition" },
+    { "year": 2024, "w": 62,  "l": 100, "note": "Bendix inherits depleted roster" },
+    { "year": 2025, "w": 79,  "l": 83,  "note": "Surprising improvement; Bendix stabilized" },
+    { "year": 2026, "w": 74,  "l": 88,  "note": "Low payroll; building through development" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$78M payroll (2nd-lowest MLB); Bendix using Rays model of development over spending",
+    "topContracts": [
+      { "name": "Sandy Alcantara",  "aav": 20.0, "through": 2027 },
+      { "name": "Jesus Sanchez",    "aav": 8.0,  "through": 2027 },
+      { "name": "Jazz Chisholm Jr.","aav": 7.5,  "through": 2026, "note": "Likely departed" }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Cam Schlittler",     "pos": "RHP", "school": "Cardinal Mooney HS","status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Noble Meyer",        "pos": "RHP", "school": "Jesuit HS (OR)",    "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "Miami Marlins front office Peter Bendix baseball operations",
+  "mlbTeamPage": "marlins"
+}

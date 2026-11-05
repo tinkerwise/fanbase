@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "AJ Preller",      "title": "President of Baseball Operations & GM", "since": "2014" },
+    { "name": "Mike Shildt",     "title": "Manager",                               "since": "2023" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 89,  "l": 73,  "note": "Wild Card; NLCS run; Soto/Bell acquired" },
+    { "year": 2023, "w": 82,  "l": 80,  "note": "Missed; Soto extension stalled" },
+    { "year": 2024, "w": 93,  "l": 69,  "note": "Wild Card; NLCS — Soto traded to NYY" },
+    { "year": 2025, "w": 85,  "l": 77,  "note": "Wild Card; Preller extended Feb 2026" },
+    { "year": 2026, "w": 87,  "l": 75,  "note": "~$260M payroll (6th); NL Wild Card" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$259.6M payroll (6th in MLB); heavy extension commitments to Machado/Tatis anchor roster",
+    "topContracts": [
+      { "name": "Manny Machado",    "aav": 31.0, "through": 2030 },
+      { "name": "Xander Bogaerts",  "aav": 25.4, "through": 2031 },
+      { "name": "Michael King",     "aav": 25.0, "through": 2029 },
+      { "name": "Fernando Tatis Jr.","aav": 24.2, "through": 2032 },
+      { "name": "Yu Darvish",       "aav": 21.7, "through": 2027 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Jackson Merrill",    "pos": "SS",  "school": "Severna Park HS",  "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Dylan Lesko",        "pos": "RHP", "school": "Pooler HS (GA)",   "status": "Traded (from ATL)" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] }
+  ],
+  "newsQuery": "San Diego Padres front office AJ Preller GM baseball operations",
+  "mlbTeamPage": "padres"
+}

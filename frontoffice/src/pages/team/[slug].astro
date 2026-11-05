@@ -1,0 +1,250 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { TEAM_CONFIG, SLUG_TO_ID } from '../../scripts/teamConfig.js';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
+// Generate static paths for all 30 teams
+export function getStaticPaths() {
+  return Object.values(TEAM_CONFIG).map(t => ({ params: { slug: t.slug } }));
+}
+
+const { slug } = Astro.params;
+const teamId = SLUG_TO_ID[slug];
+const team = TEAM_CONFIG[teamId];
+
+// Load the curated JSON for this team
+let teamData: any = null;
+try {
+  const jsonPath = path.join(process.cwd(), 'src', 'data', 'teams', `${slug}.json`);
+  teamData = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+} catch {
+  teamData = { stub: true, brass: [], eraRecord: [], payroll: {}, recentDraftClasses: [] };
+}
+
+const base = import.meta.env.BASE_URL;
+const isStub = !!teamData.stub;
+
+// Build curated content
+const brass: any[] = teamData.brass ?? [];
+const eraRecord: any[] = teamData.eraRecord ?? [];
+const payroll: any = teamData.payroll ?? {};
+const rawContracts: any[] = payroll.topContracts ?? [];
+const draftClasses: any[] = teamData.recentDraftClasses ?? [];
+
+// Normalize: support both {player,aav(dollars),years,total} and {name,aav(millions),through}
+function normalizeContract(c: any) {
+  const aav   = c.aav > 10000 ? c.aav : Math.round(c.aav * 1_000_000);
+  const total = c.total > 10000 ? c.total : (c.total ? Math.round(c.total * 1_000_000) : 0);
+  const years = c.years ?? (c.through ? `${new Date().getFullYear()}–${c.through}` : '—');
+  return { player: c.player ?? c.name ?? '—', pos: c.pos ?? '—', aav, years, total };
+}
+const topContracts = rawContracts.map(normalizeContract);
+
+// Normalize luxury-tax threshold: support both full-dollar (241000000) and millions (244)
+const luxThreshold = payroll.luxuryTaxThreshold > 10000
+  ? payroll.luxuryTaxThreshold
+  : (payroll.luxuryTaxThreshold ?? 244) * 1_000_000;
+
+function fmtMoney(n: number) {
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
+  return `$${(n / 1e3).toFixed(0)}K`;
+}
+function esc(s: string) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+---
+<Layout title={`${team.fullName} Front Office`} teamId={teamId}>
+
+  <!-- Team hero band -->
+  <div class="team-hero">
+    <img class="team-hero-logo" src={`https://www.mlb.com/assets/images/team/logos/${teamId}/default_chyron.png`} alt={`${team.name} logo`} width="56" height="56" />
+    <div class="team-hero-info">
+      <div class="team-hero-name">{team.fullName}</div>
+      <div class="team-hero-meta">{team.div} · {teamData.ballpark ?? ''}{teamData.owner ? ` · Owner: ${teamData.owner}` : ''}</div>
+      <div class="team-hero-badges">
+        <span class="badge">{team.div}</span>
+        {isStub && <span class="badge stub">Stub — partial data</span>}
+        {!isStub && <span class="badge">Full data</span>}
+      </div>
+    </div>
+  </div>
+
+  <!-- Page tabs -->
+  <div class="page-header" style="padding-top:0">
+    <nav class="page-tabs">
+      <a class="page-tab active" href="#brass">The Brass</a>
+      <a class="page-tab" href="#record">Track Record</a>
+      <a class="page-tab" href="#moves">The Moves</a>
+      <a class="page-tab" href="#draft">Draft Room</a>
+      <a class="page-tab" href="#payroll">Payroll</a>
+      <a class="page-tab" href="#news">News</a>
+    </nav>
+  </div>
+
+  <!-- ── Section 1: The Brass ──────────────────────────────────── -->
+  <section id="brass">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <h2>The Brass</h2>
+    </div>
+    {isStub ? (
+      <p class="empty-msg">Front office data not yet curated for the {team.fullName}. Check back soon.</p>
+    ) : (
+      <div class="brass-grid">
+        {brass.map((person: any) => (
+          <div class="brass-card">
+            <div class="brass-name">{person.name}</div>
+            <div class="brass-title">{person.title}</div>
+            {person.since && <div class="brass-meta">Since {person.since}</div>}
+            {person.note && <div class="brass-note">{person.note}</div>}
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <!-- ── Section 2: Track Record ─────────────────────────────── -->
+  <section id="record" style="border-top:1px solid var(--border);margin-top:8px">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <h2>Track Record — {teamData.gm ?? brass.find((p: any) => p.title?.includes('General Manager') || p.title?.includes('GM'))?.name ?? 'Current GM'} Era</h2>
+    </div>
+    {!eraRecord.length ? (
+      <p class="empty-msg">Season-by-season records not yet available.</p>
+    ) : (
+      <div class="record-table-wrap">
+        <table class="record-table">
+          <thead>
+            <tr><th>Year</th><th>W</th><th>L</th><th>Pct</th><th>Finish</th><th>Note</th></tr>
+          </thead>
+          <tbody>
+            {eraRecord.map((row: any) => (
+              <tr>
+                <td class="year">{row.year}</td>
+                <td class="wins">{row.w}</td>
+                <td class="losses">{row.l}</td>
+                <td>{row.pct}</td>
+                <td>{row.finish}</td>
+                <td class="note">{row.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </section>
+
+  <!-- ── Section 3: The Moves (live MLB transactions) ────────── -->
+  <section id="moves" style="border-top:1px solid var(--border);margin-top:8px">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+      <h2>The Moves <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— live from MLB API</span></h2>
+    </div>
+    <div id="txWrap" data-team-id={teamId}>
+      <span class="load-msg"><span class="spinner"></span>Loading transactions…</span>
+    </div>
+  </section>
+
+  <!-- ── Section 4: Draft Room ──────────────────────────────── -->
+  <section id="draft" style="border-top:1px solid var(--border);margin-top:8px">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+      <h2>Draft Room <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— curated picks + live recent round</span></h2>
+    </div>
+    {draftClasses.length > 0 ? (
+      <div class="draft-wrap">
+        {draftClasses.reverse().map((cls: any) => (
+          <>
+            <div class="draft-year-label">{cls.year} Draft Class</div>
+            {(cls.picks ?? []).map((pick: any) => (
+              <div class="draft-pick">
+                <span class="pick-round">Rd {pick.round} · #{pick.overall}</span>
+                <span class="pick-name">{pick.name}</span>
+                <span class="pick-pos">{pick.pos}</span>
+                <span class="pick-school">{pick.school}</span>
+                <span class="pick-status">{pick.status}</span>
+              </div>
+            ))}
+          </>
+        ))}
+      </div>
+    ) : (
+      <div id="draftWrap" data-team-id={teamId}>
+        <span class="load-msg"><span class="spinner"></span>Loading draft data…</span>
+      </div>
+    )}
+    <!-- Live recent draft picks appended here -->
+    {draftClasses.length > 0 && (
+      <div id="draftWrap" data-team-id={teamId} class="draft-wrap"></div>
+    )}
+  </section>
+
+  <!-- ── Section 5: Payroll ─────────────────────────────────── -->
+  <section id="payroll" style="border-top:1px solid var(--border);margin-top:8px">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <h2>Payroll &amp; Contracts</h2>
+    </div>
+    <div class="payroll-wrap">
+      {topContracts.length > 0 ? (
+        <>
+          {/* Luxury tax bar */}
+          {(() => {
+            const total = topContracts.reduce((s: number, c: any) => s + (c.aav ?? 0), 0);
+            const pct = Math.min(100, Math.round(total / luxThreshold * 100));
+            const over = total > luxThreshold;
+            return (
+              <div class="payroll-bar-wrap">
+                <div class="payroll-bar-label">
+                  <span>Top-contract payroll sum: <strong>{fmtMoney(total)}</strong></span>
+                  <span class={over ? 'tax-over' : 'tax-ok'}>{over ? '▲ Over' : '✓ Under'} luxury tax</span>
+                </div>
+                <div class="payroll-bar-track">
+                  <div class={`payroll-bar-fill${over ? ' over' : ''}`} style={`width:${pct}%`}></div>
+                </div>
+                <div class="payroll-threshold">Luxury tax threshold: {fmtMoney(luxThreshold)}</div>
+              </div>
+            );
+          })()}
+          {payroll.note && <p style="font-size:.8rem;color:var(--text-2);margin-bottom:12px">{payroll.note}</p>}
+          <table class="contracts-table">
+            <thead><tr><th>Player</th><th>Pos</th><th>AAV</th><th>Years</th><th>Total</th></tr></thead>
+            <tbody>
+              {topContracts.map((c: any) => (
+                <tr>
+                  <td class="player">{c.player}</td>
+                  <td>{c.pos}</td>
+                  <td class="aav">{fmtMoney(c.aav)}</td>
+                  <td>{c.years}</td>
+                  <td>{fmtMoney(c.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      ) : (
+        <div id="payrollWrap" data-team-id={teamId}>
+          <span class="load-msg"><span class="spinner"></span>Loading payroll…</span>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ── Section 6: News ────────────────────────────────────── -->
+  <section id="news" style="border-top:1px solid var(--border);margin-top:8px">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z"/><path d="M2 2h2v20H2z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+      <h2>Front Office News <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— via Google News RSS</span></h2>
+    </div>
+    <div id="newsWrap" data-query={teamData.newsQuery ?? `${team.fullName} front office GM`}>
+      <span class="load-msg"><span class="spinner"></span>Loading news…</span>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  import '../../scripts/teamPage.js';
+</script>

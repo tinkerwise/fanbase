@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Perry Minasian", "title": "General Manager",  "since": "2020" },
+    { "name": "Ron Washington", "title": "Manager",          "since": "2023" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 77,  "l": 85,  "note": "Shohei Ohtani MVP season; missed playoffs" },
+    { "year": 2022, "w": 73,  "l": 89,  "note": "Trout/Ohtani couldn't overcome roster gaps" },
+    { "year": 2023, "w": 73,  "l": 89,  "note": "Ohtani's final season; elbow surgery" },
+    { "year": 2024, "w": 63,  "l": 99,  "note": "Post-Ohtani rebuild; Trout injured again" },
+    { "year": 2025, "w": 68,  "l": 94,  "note": "Payroll drops; youth integration" },
+    { "year": 2026, "w": 72,  "l": 90,  "note": "Minasian contract extension through 2026" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$126M; Trout earns $37M+/yr through 2030 but has played limited games due to knee injuries",
+    "topContracts": [
+      { "name": "Mike Trout",       "aav": 37.7, "through": 2030 },
+      { "name": "Anthony Rendon",   "aav": 38.6, "through": 2026, "note": "Mostly injured/inactive" },
+      { "name": "Tyler Anderson",   "aav": 13.0, "through": 2025 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Zach Neto",         "pos": "SS",  "school": "Campbell",          "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Caden Dana",        "pos": "RHP", "school": "Sinaloa HS (CA)",   "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "Los Angeles Angels front office Perry Minasian GM Mike Trout",
+  "mlbTeamPage": "angels"
+}

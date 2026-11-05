@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Matt Arnold",    "title": "President of Baseball Operations & GM", "since": "2022" },
+    { "name": "Pat Murphy",     "title": "Manager",                               "since": "2024" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 95,  "l": 67,  "note": "NL Central champs; NLCS exit" },
+    { "year": 2022, "w": 86,  "l": 76,  "note": "Wild Card" },
+    { "year": 2023, "w": 92,  "l": 70,  "note": "NL Central champs; NLDS exit" },
+    { "year": 2024, "w": 93,  "l": 69,  "note": "NL Central champs; Arnold 2x Exec of Year" },
+    { "year": 2025, "w": 89,  "l": 73,  "note": "Wild Card; Arnold Executive of Year again" },
+    { "year": 2026, "w": 88,  "l": 74,  "note": "NL Central contenders; Yelich NL Comeback Player" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "Small-market model; among NL's most efficient; Yelich re-emerged as productive DH in 2025",
+    "topContracts": [
+      { "name": "Christian Yelich",  "aav": 26.0, "through": 2028 },
+      { "name": "Brandon Woodruff",  "aav": 15.0, "through": 2027, "note": "Injury history" },
+      { "name": "Andrew Vaughn",     "aav": 8.0,  "through": 2028 },
+      { "name": "Sal Frelick",       "aav": 1.5,  "through": 2028 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Sal Frelick",        "pos": "OF",  "school": "Boston College",    "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Joey Wiemer",        "pos": "OF",  "school": "Cincinnati",        "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Trey Ebel",          "pos": "SS",  "school": "Corona HS (CA)",    "status": "Rookie" }] }
+  ],
+  "newsQuery": "Milwaukee Brewers front office Matt Arnold GM baseball operations",
+  "mlbTeamPage": "brewers"
+}

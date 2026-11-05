@@ -1,0 +1,18 @@
+{
+  "name": "frontoffice",
+  "version": "1.0.0",
+  "description": "MLB Front Office Intelligence — briancsmith.org/frontoffice/",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "bash scripts/deploy.sh"
+  },
+  "dependencies": {
+    "astro": "^7.4.2"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true
+  }
+}

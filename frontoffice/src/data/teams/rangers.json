@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Chris Young",        "title": "President of Baseball Operations", "since": "2024" },
+    { "name": "Ross Fenstermaker",  "title": "General Manager",                  "since": "2024" },
+    { "name": "Bruce Bochy",        "title": "Manager",                          "since": "2023" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 68,  "l": 94,  "note": "Missed playoffs" },
+    { "year": 2023, "w": 90,  "l": 72,  "note": "World Series Champions" },
+    { "year": 2024, "w": 78,  "l": 84,  "note": "Injuries derailed repeat bid" },
+    { "year": 2025, "w": 82,  "l": 80,  "note": "Young/Fenstermaker new leadership" },
+    { "year": 2026, "w": 86,  "l": 76,  "note": "~$200M payroll; AL West contender" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$200M payroll; Seager/Semien anchor $150M+ in veteran commitments",
+    "topContracts": [
+      { "name": "Corey Seager",    "aav": 32.5, "through": 2031 },
+      { "name": "Marcus Semien",   "aav": 29.0, "through": 2027 },
+      { "name": "Jacob deGrom",    "aav": 37.0, "through": 2027, "note": "Largely on IL" },
+      { "name": "Jordan Montgomery","aav": 25.0, "through": 2029 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Kumar Rocker",       "pos": "RHP", "school": "Vanderbilt",        "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Wyatt Langford",     "pos": "OF",  "school": "Florida",           "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "Texas Rangers front office Chris Young Ross Fenstermaker GM",
+  "mlbTeamPage": "rangers"
+}

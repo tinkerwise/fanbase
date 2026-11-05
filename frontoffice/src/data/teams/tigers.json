@@ -1,0 +1,34 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Scott Harris",  "title": "President of Baseball Operations", "since": "2022" },
+    { "name": "Sam Menzin",    "title": "General Manager",                  "since": "2022" },
+    { "name": "AJ Hinch",      "title": "Manager",                          "since": "2021" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 66,  "l": 96,  "note": "Harris era begins" },
+    { "year": 2023, "w": 78,  "l": 84,  "note": "Building toward contention" },
+    { "year": 2024, "w": 86,  "l": 76,  "note": "Wild Card; ALDS exit (Skubal cy-young)" },
+    { "year": 2025, "w": 93,  "l": 69,  "note": "AL Central contenders; Valdez acquired" },
+    { "year": 2026, "w": 89,  "l": 73,  "note": "AL Contender" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$185M payroll; significant investment in rotation (Skubal arbitration record $32M)",
+    "topContracts": [
+      { "name": "Tarik Skubal",    "aav": 32.0, "through": 2026 },
+      { "name": "Framber Valdez",  "aav": 38.3, "through": 2027 },
+      { "name": "Javier Báez",     "aav": 24.0, "through": 2028 },
+      { "name": "Gleyber Torres",  "aav": 22.0, "through": 2026 },
+      { "name": "Jack Flaherty",   "aav": 20.0, "through": 2026 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Justyn-Henry Malloy","pos": "OF/3B","school": "Arizona State",   "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Max Clark",          "pos": "OF",  "school": "Franklin (IN) HS",  "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "Gehrig Octane",      "pos": "RHP", "school": "UC San Diego",      "status": "Minors" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "Detroit Tigers front office Scott Harris GM baseball operations",
+  "mlbTeamPage": "tigers"
+}

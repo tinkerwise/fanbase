@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Mike Hazen",      "title": "President of Baseball Operations & GM", "since": "2016" },
+    { "name": "Torey Lovullo",   "title": "Manager",                               "since": "2017" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 52,  "l": 110, "note": "Bottom of NL West" },
+    { "year": 2022, "w": 74,  "l": 88,  "note": "Building toward contention" },
+    { "year": 2023, "w": 84,  "l": 78,  "note": "World Series — lose to Rangers" },
+    { "year": 2024, "w": 89,  "l": 73,  "note": "Wild Card; franchise-record payroll ($200M)" },
+    { "year": 2025, "w": 87,  "l": 75,  "note": "Wild Card contender; $210M+ payroll" },
+    { "year": 2026, "w": 83,  "l": 79,  "note": "~$143M payroll after offseason payroll trim" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$143M payroll; stepped back from franchise-record spending; Burnes anchors elite rotation",
+    "topContracts": [
+      { "name": "Corbin Burnes",   "aav": 35.0, "through": 2030 },
+      { "name": "Ketel Marte",     "aav": 24.0, "through": 2028 },
+      { "name": "Lourdes Gurriel Jr.","aav": 14.0,"through": 2027 },
+      { "name": "Paul Sewald",     "aav": 12.0, "through": 2027 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Druw Jones",          "pos": "OF",  "school": "Wesleyan HS (GA)","status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Tommy Troy",          "pos": "SS",  "school": "Stanford",         "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                 "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                 "pos": "—",   "school": "—",                "status": "—" }] }
+  ],
+  "newsQuery": "Arizona Diamondbacks front office Mike Hazen GM baseball operations",
+  "mlbTeamPage": "dbacks"
+}

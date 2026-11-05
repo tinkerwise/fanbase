@@ -1,0 +1,35 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Dave Dombrowski",    "title": "President of Baseball Operations", "since": "2019" },
+    { "name": "Preston Mattingly",  "title": "General Manager",                  "since": "2024" },
+    { "name": "Sam Fuld",           "title": "President, Business Operations (returning 2026)", "since": "2021" },
+    { "name": "Rob Thomson",        "title": "Manager",                          "since": "2022" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 87,  "l": 75,  "note": "Wild Card; NL Pennant (World Series loss)" },
+    { "year": 2023, "w": 90,  "l": 72,  "note": "NL East champs; NLCS exit" },
+    { "year": 2024, "w": 95,  "l": 67,  "note": "NL East champs; NLDS exit" },
+    { "year": 2025, "w": 97,  "l": 65,  "note": "NL East champs; Schwarber/Wheeler anchored" },
+    { "year": 2026, "w": 93,  "l": 69,  "note": "~$315M payroll; NL contenders" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$315M payroll (3rd in MLB); Schwarber returned on 5-yr/$150M deal; CBT repeater",
+    "topContracts": [
+      { "name": "Zack Wheeler",      "aav": 42.0, "through": 2027 },
+      { "name": "Kyle Schwarber",    "aav": 30.0, "through": 2030 },
+      { "name": "Trea Turner",       "aav": 27.3, "through": 2032 },
+      { "name": "Bryce Harper",      "aav": 25.4, "through": 2031 },
+      { "name": "Aaron Nola",        "aav": 24.6, "through": 2030 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Andrew Painter",     "pos": "RHP", "school": "Calvary Christian", "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Aidan Miller",       "pos": "SS",  "school": "Palm Beach Lakes", "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] }
+  ],
+  "newsQuery": "Philadelphia Phillies front office Dave Dombrowski Preston Mattingly GM",
+  "mlbTeamPage": "phillies"
+}

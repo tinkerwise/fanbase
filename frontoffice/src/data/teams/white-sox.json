@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Chris Getz",    "title": "General Manager",    "since": "2022" },
+    { "name": "Will Venable",  "title": "Manager",            "since": "2024" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 93,  "l": 69,  "note": "AL Central champs" },
+    { "year": 2022, "w": 81,  "l": 81,  "note": "Missed playoffs" },
+    { "year": 2023, "w": 61,  "l": 101, "note": "Rebuild begins" },
+    { "year": 2024, "w": 41,  "l": 121, "note": "MLB record losses; Grifol fired" },
+    { "year": 2025, "w": 73,  "l": 89,  "note": "Rebuild year; #1 draft pick secured" },
+    { "year": 2026, "w": 84,  "l": 78,  "note": "Wild Card — ALDS loss vs. Guardians" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$117M payroll (24th in MLB); 2026 surprise playoff run after 3 straight 100-loss seasons",
+    "topContracts": [
+      { "name": "Munetaka Murakami", "aav": 17.0, "through": 2027 },
+      { "name": "Andrew Benintendi", "aav": 16.0, "through": 2027 },
+      { "name": "Garrett Crochet",   "aav": 0.0,  "through": 2024, "note": "Traded to Red Sox" }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Colson Montgomery",  "pos": "SS",  "school": "Southridge HS (IN)", "status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Dylan Lesko",        "pos": "RHP", "school": "Pooler (GA)",        "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "Hagen Smith",        "pos": "LHP", "school": "Arkansas",           "status": "Majors" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Roch Cholowsky",     "pos": "SS",  "school": "UCLA",               "status": "Rookie" }] }
+  ],
+  "newsQuery": "Chicago White Sox front office Chris Getz GM rebuild",
+  "mlbTeamPage": "whitesox"
+}

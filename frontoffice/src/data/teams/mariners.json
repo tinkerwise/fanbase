@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Jerry Dipoto",  "title": "President of Baseball Operations", "since": "2015" },
+    { "name": "Justin Hollander","title": "General Manager",               "since": "2024" },
+    { "name": "Dan Wilson",    "title": "Manager",                          "since": "2024" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 90,  "l": 72,  "note": "Wild Card; first playoffs since 2001" },
+    { "year": 2023, "w": 88,  "l": 74,  "note": "Wild Card; ALDS exit" },
+    { "year": 2024, "w": 85,  "l": 77,  "note": "Missed; Wilson's first year" },
+    { "year": 2025, "w": 87,  "l": 75,  "note": "Wild Card" },
+    { "year": 2026, "w": 89,  "l": 73,  "note": "AL West contender; ~$165M payroll" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$165M payroll (franchise record); ~$30M in offseason flexibility used on rotation depth",
+    "topContracts": [
+      { "name": "Luis Castillo",     "aav": 24.2, "through": 2027 },
+      { "name": "Julio Rodríguez",   "aav": 20.2, "through": 2034 },
+      { "name": "Andrés Muñoz",      "aav": 16.0, "through": 2030 },
+      { "name": "Cal Raleigh",       "aav": 14.0, "through": 2029 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Harry Ford",         "pos": "C",   "school": "North Cobb HS (GA)","status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Cole Young",         "pos": "SS",  "school": "South Fayette HS", "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Ace Reese",          "pos": "3B",  "school": "Mississippi State", "status": "Rookie" }] }
+  ],
+  "newsQuery": "Seattle Mariners front office Jerry Dipoto GM baseball operations",
+  "mlbTeamPage": "mariners"
+}

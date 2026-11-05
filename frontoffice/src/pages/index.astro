@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { TEAM_CONFIG, DIVISIONS } from '../scripts/teamConfig.js';
+
+const base = import.meta.env.BASE_URL;
+
+// Group teams by division for display
+const byDiv: Record<string, typeof TEAM_CONFIG[number][]> = {};
+Object.values(TEAM_CONFIG).forEach(t => {
+  if (!byDiv[t.div]) byDiv[t.div] = [];
+  byDiv[t.div].push(t);
+});
+DIVISIONS.forEach(d => byDiv[d]?.sort((a, b) => a.name.localeCompare(b.name)));
+---
+<Layout title="Home">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-kicker">MLB Front Office Intelligence</div>
+    <h1 class="page-title">Pick a team — or browse the <a class="accent" href={`${base}league/`}>league</a></h1>
+  </div>
+
+  <div class="home-grid">
+    <!-- Team picker -->
+    <div class="home-main">
+      <div class="team-grid-wrap">
+        {DIVISIONS.map(div => {
+          const teams = byDiv[div] ?? [];
+          if (!teams.length) return null;
+          return (
+            <>
+              <div class="div-label">{div}</div>
+              <div class="team-grid">
+                {teams.map(t => (
+                  <a class="team-card" href={`${base}team/${t.slug}/`}>
+                    <img src={`https://www.mlb.com/assets/images/team/logos/${t.id}/default_chyron.png`} alt={t.name} width="24" height="24" loading="lazy" decoding="async" />
+                    {t.name}
+                  </a>
+                ))}
+              </div>
+            </>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Right sidebar: recent league activity + salary snapshot -->
+    <div class="home-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-section-head">Recent Executive Moves</div>
+        <div id="leagueActivity">
+          <span class="load-msg"><span class="spinner"></span>Loading…</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-head">Payroll Snapshot</div>
+        <div id="payrollSnapshot">
+          <span class="load-msg"><span class="spinner"></span>Loading…</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-head">League Page</div>
+        <a class="nav-link" style="border-left:2px solid var(--accent);background:var(--accent-dim)" href={`${base}league/`}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          Salary Rankings &amp; Transactions →
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import '../scripts/home.js';
+</script>

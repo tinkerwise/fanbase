@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Buster Posey",   "title": "President of Baseball Operations", "since": "2024" },
+    { "name": "Zack Minasian",  "title": "General Manager",                  "since": "2024" },
+    { "name": "Tony Vitello",   "title": "Manager",                          "since": "2025" }
+  ],
+  "eraRecord": [
+    { "year": 2021, "w": 107, "l": 55,  "note": "NL West — NLDS exit (vs. Dodgers)" },
+    { "year": 2022, "w": 81,  "l": 81,  "note": "Missed playoffs" },
+    { "year": 2023, "w": 79,  "l": 83,  "note": "Missed playoffs; Zaidi era winds down" },
+    { "year": 2024, "w": 80,  "l": 82,  "note": "Posey/Minasian take over" },
+    { "year": 2025, "w": 73,  "l": 89,  "note": "Vitello's first season; youth movement" },
+    { "year": 2026, "w": 65,  "l": 97,  "note": "4th in NL West; rebuilding through draft" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$175M payroll (franchise record); Posey investing heavily in baseball operations budget",
+    "topContracts": [
+      { "name": "Tyler Mahle",    "aav": 10.0, "through": 2026, "note": "Incentive-heavy deal" },
+      { "name": "Matt Chapman",   "aav": 20.0, "through": 2025, "note": "Departed" },
+      { "name": "Jung Hoo Lee",   "aav": 18.0, "through": 2030 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Reggie Crawford",    "pos": "LHP/OF","school": "Connecticut",     "status": "Minors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Bryce Eldridge",     "pos": "1B/RHP","school": "James Madison HS","status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2026, "picks": [{ "round": 1, "name": "Jackson Flora",      "pos": "RHP", "school": "UC Santa Barbara", "status": "Rookie" }] }
+  ],
+  "newsQuery": "San Francisco Giants front office Buster Posey Zack Minasian GM",
+  "mlbTeamPage": "giants"
+}

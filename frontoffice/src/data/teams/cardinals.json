@@ -1,0 +1,33 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Chaim Bloom",     "title": "President of Baseball Operations", "since": "2026" },
+    { "name": "John Mozeliak",   "title": "President of Baseball Operations (through 2025)", "since": "2007" },
+    { "name": "Mike Girsch",     "title": "VP Special Projects (former GM)",  "since": "2017" },
+    { "name": "Oliver Marmol",   "title": "Manager",                          "since": "2022" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 93,  "l": 69,  "note": "NL Central champs; NLCS exit" },
+    { "year": 2023, "w": 71,  "l": 91,  "note": "Unexpected decline; Goldschmidt/Arenado aging" },
+    { "year": 2024, "w": 83,  "l": 79,  "note": "Bloom joins as successor" },
+    { "year": 2025, "w": 76,  "l": 86,  "note": "Mozeliak's final season; Gray/Arenado dealt" },
+    { "year": 2026, "w": 72,  "l": 90,  "note": "Bloom's rebuild begins; ~$124M payroll" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$124M payroll; Bloom shed Goldschmidt, Gray ($20M paid to BOS), Contreras deals; reset underway",
+    "topContracts": [
+      { "name": "Nolan Arenado",     "aav": 35.0, "through": 2027, "note": "Status uncertain; trade sought" },
+      { "name": "Steven Matz",       "aav": 10.5, "through": 2026 },
+      { "name": "Lars Nootbaar",     "aav": 8.0,  "through": 2027 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Zack Thompson",     "pos": "LHP", "school": "Kentucky",          "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Brycen Mautz",      "pos": "RHP", "school": "UC Santa Barbara",  "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "St Louis Cardinals front office Chaim Bloom rebuild GM baseball operations",
+  "mlbTeamPage": "cardinals"
+}

@@ -1,0 +1,36 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Andrew Friedman", "title": "President of Baseball Operations", "since": "2014" },
+    { "name": "Brandon Gomes",   "title": "EVP & General Manager",            "since": "2022" },
+    { "name": "Dave Roberts",    "title": "Manager",                          "since": "2016" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 111, "l": 51,  "note": "NL West; NLCS exit" },
+    { "year": 2023, "w": 100, "l": 62,  "note": "NL West; NLDS exit; Ohtani pursuit begins" },
+    { "year": 2024, "w": 98,  "l": 64,  "note": "World Series Champions; Ohtani/Yamamoto debut" },
+    { "year": 2025, "w": 105, "l": 57,  "note": "NL West; Kyle Tucker signed; dominant roster" },
+    { "year": 2026, "w": 102, "l": 60,  "note": "~$400M+ payroll; NL dynasty continues" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$400-413M payroll (1st in MLB by $100M+); tax bill ~$161M; Ohtani deal mostly deferred",
+    "topContracts": [
+      { "name": "Kyle Tucker",        "aav": 57.2, "through": 2029 },
+      { "name": "Shohei Ohtani",      "aav": 46.1, "through": 2033, "note": "Mostly deferred; $70M/yr total" },
+      { "name": "Blake Snell",        "aav": 33.0, "through": 2030 },
+      { "name": "Mookie Betts",       "aav": 30.0, "through": 2033 },
+      { "name": "Tyler Glasnow",      "aav": 30.0, "through": 2030 },
+      { "name": "Freddie Freeman",    "aav": 27.0, "through": 2028 },
+      { "name": "Yoshinobu Yamamoto", "aav": 27.0, "through": 2031 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2022, "picks": [{ "round": 1, "name": "Nick Frasso",        "pos": "RHP", "school": "Loyola Marymount", "status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Dalton Rushing",     "pos": "C",   "school": "Louisville",       "status": "Minors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] }
+  ],
+  "newsQuery": "Los Angeles Dodgers front office Andrew Friedman Brandon Gomes GM",
+  "mlbTeamPage": "dodgers"
+}

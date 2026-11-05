@@ -1,0 +1,32 @@
+{
+  "stub": false,
+  "brass": [
+    { "name": "Nick Krall",      "title": "General Manager",   "since": "2019" },
+    { "name": "David Bell",      "title": "Manager",           "since": "2019" }
+  ],
+  "eraRecord": [
+    { "year": 2022, "w": 62,  "l": 100, "note": "Young core; rebuild year" },
+    { "year": 2023, "w": 82,  "l": 80,  "note": "Greene/McLain emerge; near .500" },
+    { "year": 2024, "w": 77,  "l": 85,  "note": "Missed playoffs; Elly De La Cruz star" },
+    { "year": 2025, "w": 79,  "l": 83,  "note": "Hayes acquired from Pittsburgh" },
+    { "year": 2026, "w": 81,  "l": 81,  "note": "Suárez signing boosted payroll; .500 target" }
+  ],
+  "payroll": {
+    "luxuryTaxThreshold": 244,
+    "note": "~$116M payroll; ownership extended to sign Eugenio Suárez ($15M) as highest-paid player",
+    "topContracts": [
+      { "name": "Eugenio Suárez",  "aav": 15.0, "through": 2026 },
+      { "name": "Hunter Greene",   "aav": 8.0,  "through": 2027 },
+      { "name": "Ke'Bryan Hayes",  "aav": 7.0,  "through": 2029, "note": "Acquired from Pittsburgh" },
+      { "name": "José Trevino",    "aav": 5.3,  "through": 2026 }
+    ]
+  },
+  "recentDraftClasses": [
+    { "year": 2021, "picks": [{ "round": 1, "name": "Elly De La Cruz",   "pos": "SS",  "school": "HS (Dominican Rep.)","status": "Majors" }] },
+    { "year": 2023, "picks": [{ "round": 1, "name": "Rhett Lowder",      "pos": "RHP", "school": "Wake Forest",       "status": "Majors" }] },
+    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] },
+    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] }
+  ],
+  "newsQuery": "Cincinnati Reds front office Nick Krall GM Hunter Greene",
+  "mlbTeamPage": "reds"
+}
