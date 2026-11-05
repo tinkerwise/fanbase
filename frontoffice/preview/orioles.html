@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Baltimore Orioles — Front Office</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0d0d0d;color:#f0f0f0;min-height:100vh;line-height:1.5}
+:root{--accent:#df4601;--accent-text:#df4601;--accent-rgb:223,70,1;--accent-dim:rgba(223,70,1,.13);--on-accent:#fff;--bg:#0d0d0d;--surface:#171717;--card:#1c1c1c;--border:#272727;--border-light:#333;--text:#f0f0f0;--text-2:#a3a3a3;--text-3:#6b7280;--header-h:58px;--nav-w:220px;--radius:8px;--radius-sm:5px}
+[data-theme=light]{--bg:#f5f5f5;--surface:#fff;--card:#fff;--border:#e0e0e0;--border-light:#d0d0d0;--text:#1a1a1a;--text-2:#555;--text-3:#888;background:#f5f5f5;color:#1a1a1a}
+a{color:var(--accent-text);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-header{position:sticky;top:0;z-index:200;height:58px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px}
+.header-logo{display:flex;align-items:center;gap:8px;color:var(--text);font-weight:700;font-size:1.1rem;flex-shrink:0}
+.header-logo svg{color:var(--accent)}
+.header-logo-sub{font-size:.7rem;font-weight:400;color:var(--text-2);display:block}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.theme-btn-wrap{display:flex;gap:6px}
+.theme-btn{padding:5px 12px;border:1px solid var(--border);border-radius:99px;font-size:.78rem;color:var(--text-2)}
+.theme-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.page-wrap{display:grid;grid-template-columns:var(--nav-w) 1fr;min-height:calc(100vh - 58px);max-width:1400px;margin:0 auto}
+.side-nav{position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;padding:16px 0;border-right:1px solid var(--border)}
+.main-content{min-width:0}
+.nav-section{margin-bottom:24px}
+.nav-section-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);padding:0 14px 6px}
+.nav-link{display:flex;align-items:center;gap:8px;padding:7px 14px;font-size:.875rem;color:var(--text-2);border-left:2px solid transparent;transition:background .12s,color .12s}
+.nav-link:hover{background:var(--accent-dim);color:var(--accent);text-decoration:none}
+.nav-link.active{color:var(--accent-text);border-left-color:var(--accent);background:var(--accent-dim);font-weight:500}
+.team-hero{background:linear-gradient(135deg,rgba(223,70,1,.15) 0%,var(--surface) 70%);border-bottom:1px solid var(--border);padding:20px 24px;display:flex;align-items:center;gap:16px}
+.team-hero-logo{width:56px;height:56px;object-fit:contain}
+.team-hero-name{font-size:1.4rem;font-weight:800;color:var(--text);letter-spacing:-.02em}
+.team-hero-meta{font-size:.8rem;color:var(--text-2);margin-top:2px}
+.team-hero-badges{display:flex;gap:6px;margin-top:6px}
+.badge{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:99px;background:var(--accent-dim);color:var(--accent-text);border:1px solid rgba(223,70,1,.3)}
+.page-header{padding:0 24px;border-bottom:1px solid var(--border)}
+.page-tabs{display:flex;gap:2px;margin-top:0;overflow-x:auto}
+.page-tab{padding:10px 16px;font-size:.85rem;font-weight:500;color:var(--text-2);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.page-tab:hover{color:var(--text);text-decoration:none}
+.page-tab.active{color:var(--accent-text);border-bottom-color:var(--accent)}
+.section-head{display:flex;align-items:center;gap:8px;padding:16px 24px 10px}
+.section-head h2{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2)}
+.section-head svg{color:var(--accent)}
+.brass-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding:0 24px 16px}
+.brass-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.brass-name{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:2px}
+.brass-title{font-size:.78rem;font-weight:600;color:var(--accent-text);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.brass-meta{font-size:.75rem;color:var(--text-3);margin-bottom:6px}
+.brass-note{font-size:.8rem;color:var(--text-2);line-height:1.5}
+.record-table-wrap{padding:0 24px 16px;overflow-x:auto}
+.record-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.record-table th{text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);padding:8px 10px;border-bottom:1px solid var(--border)}
+.record-table td{padding:10px;border-bottom:1px solid var(--border-light);color:var(--text-2)}
+.record-table td.year{color:var(--text);font-weight:700}
+.record-table td.wins{color:#22c55e;font-weight:700}
+.record-table td.losses{color:var(--text-3)}
+.record-table td.note{font-size:.78rem;color:var(--text-3)}
+.tx-list{padding:0 24px 16px;display:flex;flex-direction:column;gap:8px}
+.tx-item{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.82rem}
+.tx-type{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:3px;white-space:nowrap;flex-shrink:0;align-self:center}
+.tx-type.sign{background:rgba(34,197,94,.15);color:#22c55e}
+.tx-type.trade{background:rgba(59,130,246,.15);color:#60a5fa}
+.tx-type.dfa{background:rgba(239,68,68,.15);color:#ef4444}
+.tx-type.other{background:var(--accent-dim);color:var(--accent-text)}
+.tx-desc{color:var(--text-2);flex:1;line-height:1.45}
+.tx-date{font-size:.7rem;color:var(--text-3);white-space:nowrap;flex-shrink:0}
+.draft-wrap{padding:0 24px 16px}
+.draft-year-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-text);padding:14px 0 6px;border-top:1px solid var(--border);margin-top:12px}
+.draft-year-label:first-child{margin-top:0;border-top:none;padding-top:0}
+.draft-pick{display:flex;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid var(--border-light);font-size:.82rem}
+.pick-round{font-size:.7rem;color:var(--text-3);width:60px;flex-shrink:0}
+.pick-name{font-weight:600;color:var(--text);min-width:140px}
+.pick-pos{font-size:.72rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--text-2);flex-shrink:0}
+.pick-school{color:var(--text-3);font-size:.78rem;flex:1}
+.pick-status{font-size:.75rem;color:var(--accent-text);white-space:nowrap}
+.payroll-wrap{padding:0 24px 16px}
+.payroll-bar-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px}
+.payroll-bar-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--text-2);margin-bottom:8px}
+.payroll-bar-label strong{color:var(--text)}
+.payroll-bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+.payroll-bar-fill{height:100%;background:var(--accent);border-radius:99px}
+.payroll-threshold{font-size:.72rem;color:var(--text-3);margin-top:6px}
+.contracts-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.contracts-table th{text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);padding:6px 8px;border-bottom:1px solid var(--border)}
+.contracts-table td{padding:9px 8px;border-bottom:1px solid var(--border-light);color:var(--text-2)}
+.contracts-table td.player{color:var(--text);font-weight:600}
+.contracts-table td.aav{color:var(--accent-text);font-weight:600}
+.news-list{padding:0 24px 16px;display:flex;flex-direction:column;gap:10px}
+.news-item{display:flex;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);transition:border-color .15s}
+.news-item:hover{border-color:var(--accent)}
+.news-thumb-placeholder{width:72px;height:52px;border-radius:4px;background:linear-gradient(135deg,var(--accent-dim),var(--surface));flex-shrink:0}
+.news-body{flex:1;min-width:0}
+.news-title{font-size:.875rem;font-weight:600;color:var(--text);line-height:1.4}
+.news-date{font-size:.7rem;color:var(--text-3);margin-top:4px}
+.section-divider{border-top:1px solid var(--border);margin-top:8px}
+.load-note{padding:10px 24px;font-size:.78rem;color:var(--text-3);font-style:italic}
+.site-footer{padding:16px 24px;text-align:center;font-size:.75rem;color:var(--text-3);border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a class="header-logo" href="index.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+    <span>Front<strong style="color:var(--accent)">Office</strong><span class="header-logo-sub">MLB Intelligence</span></span>
+  </a>
+  <div class="header-right">
+    <div class="theme-btn-wrap">
+      <button class="theme-btn active" onclick="setTheme('dark')">Dark</button>
+      <button class="theme-btn" onclick="setTheme('light')">Light</button>
+    </div>
+    <a style="font-size:.78rem;color:var(--text-2);padding:0 8px" href="https://www.briancsmith.org/fanbase/front-office/">← Fanbase</a>
+  </div>
+</header>
+
+<div class="page-wrap">
+  <nav class="side-nav">
+    <div class="nav-section">
+      <div class="nav-section-label">Pages</div>
+      <a class="nav-link" href="index.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+      <a class="nav-link" href="league.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>League</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label" style="font-size:.6rem">AL East</div>
+      <a class="nav-link active" href="orioles.html"><img src="https://www.mlb.com/assets/images/team/logos/110/default_chyron.png" width="15" height="15" style="object-fit:contain;display:inline;vertical-align:middle;margin-right:4px">Orioles</a>
+      <a class="nav-link" href="#"><img src="https://www.mlb.com/assets/images/team/logos/111/default_chyron.png" width="15" height="15" style="object-fit:contain;display:inline;vertical-align:middle;margin-right:4px">Red Sox</a>
+      <a class="nav-link" href="#"><img src="https://www.mlb.com/assets/images/team/logos/147/default_chyron.png" width="15" height="15" style="object-fit:contain;display:inline;vertical-align:middle;margin-right:4px">Yankees</a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <!-- Team Hero -->
+    <div class="team-hero">
+      <img class="team-hero-logo" src="https://www.mlb.com/assets/images/team/logos/110/default_chyron.png" alt="Orioles logo" width="56" height="56">
+      <div>
+        <div class="team-hero-name">Baltimore Orioles</div>
+        <div class="team-hero-meta">AL East · Oriole Park at Camden Yards · Owner: David Rubenstein</div>
+        <div class="team-hero-badges">
+          <span class="badge">AL East</span>
+          <span class="badge">Full data</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="page-header">
+      <nav class="page-tabs">
+        <a class="page-tab active" href="#brass">The Brass</a>
+        <a class="page-tab" href="#record">Track Record</a>
+        <a class="page-tab" href="#moves">The Moves</a>
+        <a class="page-tab" href="#draft">Draft Room</a>
+        <a class="page-tab" href="#payroll">Payroll</a>
+        <a class="page-tab" href="#news">News</a>
+      </nav>
+    </div>
+
+    <!-- The Brass -->
+    <section id="brass">
+      <div class="section-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <h2>The Brass</h2>
+      </div>
+      <div class="brass-grid">
+        <div class="brass-card">
+          <div class="brass-name">David Rubenstein</div>
+          <div class="brass-title">Chairman &amp; Managing Partner</div>
+          <div class="brass-meta">Since 2024</div>
+          <div class="brass-note">Carlyle Group co-founder; led the group that purchased the Orioles from the Angelos family for ~$1.7 billion in 2024.</div>
+        </div>
+        <div class="brass-card">
+          <div class="brass-name">Mike Elias</div>
+          <div class="brass-title">Executive VP &amp; General Manager</div>
+          <div class="brass-meta">Since November 2018</div>
+          <div class="brass-note">Hired from the Houston Astros, where he was Assistant GM. Oversaw the rebuild that produced 101 wins in 2023 and the AL East title.</div>
+        </div>
+        <div class="brass-card">
+          <div class="brass-name">Sig Mejdal</div>
+          <div class="brass-title">VP, Analytics &amp; Development</div>
+          <div class="brass-meta">Since November 2018</div>
+          <div class="brass-note">Analytics pioneer who joined Elias from Houston. Architect of the data-driven scouting and development model.</div>
+        </div>
+        <div class="brass-card">
+          <div class="brass-name">Matt Blood</div>
+          <div class="brass-title">VP, Player Development</div>
+          <div class="brass-meta">Since 2019</div>
+          <div class="brass-note">Oversees the minor league system, which has been one of the deepest in baseball under the Elias era.</div>
+        </div>
+        <div class="brass-card">
+          <div class="brass-name">Brad Ciolek</div>
+          <div class="brass-title">Director, Amateur Scouting</div>
+          <div class="brass-meta">Since 2019</div>
+          <div class="brass-note">Led the draft rooms that selected Adley Rutschman (#1 overall, 2019), Colton Cowser, and Coby Mayo.</div>
+        </div>
+        <div class="brass-card">
+          <div class="brass-name">Brandon Hyde</div>
+          <div class="brass-title">Manager</div>
+          <div class="brass-meta">Since October 2018</div>
+          <div class="brass-note">Third-base coach in Chicago before Elias hired him. Posted 40+ wins in each of his first four seasons; 101-61 in 2023.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Track Record -->
+    <section id="record" class="section-divider">
+      <div class="section-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <h2>Track Record — Mike Elias Era</h2>
+      </div>
+      <div class="record-table-wrap">
+        <table class="record-table">
+          <thead><tr><th>Year</th><th>W</th><th>L</th><th>Pct</th><th>Finish</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td class="year">2019</td><td class="wins">54</td><td class="losses">108</td><td>.333</td><td>5th AL East</td><td class="note">Year 1: worst record in baseball, first pick (Adley Rutschman)</td></tr>
+            <tr><td class="year">2020</td><td class="wins">25</td><td class="losses">35</td><td>.417</td><td>4th AL East</td><td class="note">COVID-shortened 60-game season</td></tr>
+            <tr><td class="year">2021</td><td class="wins">52</td><td class="losses">110</td><td>.321</td><td>5th AL East</td><td class="note">Second 100-loss season; loaded up on top draft picks</td></tr>
+            <tr><td class="year">2022</td><td class="wins">83</td><td class="losses">79</td><td>.512</td><td>3rd AL East</td><td class="note">Rebuild pays off; first winning season since 2016</td></tr>
+            <tr><td class="year">2023</td><td class="wins">101</td><td class="losses">61</td><td>.623</td><td>1st AL East</td><td class="note">AL East champions; youngest AL team, 101 wins</td></tr>
+            <tr><td class="year">2024</td><td class="wins">91</td><td class="losses">71</td><td>.562</td><td>2nd AL East</td><td class="note">AL Wild Card; second playoff appearance</td></tr>
+            <tr><td class="year">2025</td><td class="wins">88</td><td class="losses">74</td><td>.543</td><td>3rd AL East</td><td class="note">Missed playoffs on final weekend</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- The Moves (live placeholder) -->
+    <section id="moves" class="section-divider">
+      <div class="section-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+        <h2>The Moves <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— live from MLB API</span></h2>
+      </div>
+      <div class="load-note">Live transactions load from the MLB Stats API at runtime. Examples of what this section shows:</div>
+      <div class="tx-list">
+        <div class="tx-item"><span class="tx-type sign">Signed</span><span class="tx-desc">Baltimore Orioles signed RHP Cade Povich to a contract extension through 2029</span><span class="tx-date">2d ago</span></div>
+        <div class="tx-item"><span class="tx-type trade">Trade</span><span class="tx-desc">Baltimore Orioles acquired OF Tyler O'Neill from the Boston Red Sox in exchange for SS Connor Norby and RHP Bruce Zimmermann</span><span class="tx-date">5d ago</span></div>
+        <div class="tx-item"><span class="tx-type other">Move</span><span class="tx-desc">Baltimore Orioles placed SS Jackson Holliday on the 10-day IL (left wrist soreness)</span><span class="tx-date">1w ago</span></div>
+        <div class="tx-item"><span class="tx-type dfa">DFA</span><span class="tx-desc">Baltimore Orioles designated RHP Jake Reed for assignment</span><span class="tx-date">10d ago</span></div>
+      </div>
+    </section>
+
+    <!-- Draft Room -->
+    <section id="draft" class="section-divider">
+      <div class="section-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+        <h2>Draft Room <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— curated + live current year</span></h2>
+      </div>
+      <div class="draft-wrap">
+        <div class="draft-year-label">2021 Draft Class</div>
+        <div class="draft-pick"><span class="pick-round">Rd 1 · #1</span><span class="pick-name">Jackson Holliday</span><span class="pick-pos">SS</span><span class="pick-school">Stillwater HS</span><span class="pick-status">MLB — INF, Orioles</span></div>
+        <div class="draft-pick"><span class="pick-round">Rd 3 · #76</span><span class="pick-name">Coby Mayo</span><span class="pick-pos">3B</span><span class="pick-school">Parkland HS</span><span class="pick-status">MLB — 3B, Orioles</span></div>
+        <div class="draft-year-label">2020 Draft Class</div>
+        <div class="draft-pick"><span class="pick-round">Rd 1 · #2</span><span class="pick-name">Heston Kjerstad</span><span class="pick-pos">OF</span><span class="pick-school">Arkansas</span><span class="pick-status">MLB — OF, Orioles</span></div>
+        <div class="draft-pick"><span class="pick-round">Rd 2 · #44</span><span class="pick-name">Jordan Westburg</span><span class="pick-pos">SS</span><span class="pick-school">Mississippi St.</span><span class="pick-status">MLB — 2B/3B, Orioles</span></div>
+        <div class="draft-year-label">2019 Draft Class</div>
+        <div class="draft-pick"><span class="pick-round">Rd 1 · #1</span><span class="pick-name">Adley Rutschman</span><span class="pick-pos">C</span><span class="pick-school">Oregon State</span><span class="pick-status">MLB — C, Orioles</span></div>
+        <div class="draft-pick"><span class="pick-round">Rd 2 · #39</span><span class="pick-name">Gunnar Henderson</span><span class="pick-pos">SS</span><span class="pick-school">John Carroll HS</span><span class="pick-status">MLB — SS, Orioles</span></div>
+      </div>
+    </section>
+
+    <!-- Payroll -->
+    <section id="payroll" class="section-divider">
+      <div class="section-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <h2>Payroll &amp; Contracts</h2>
+      </div>
+      <div class="payroll-wrap">
+        <div class="payroll-bar-wrap">
+          <div class="payroll-bar-label">
+            <span>Top-contract payroll sum: <strong>$145.0M</strong></span>
+            <span style="color:#22c55e">✓ Under luxury tax</span>
+          </div>
+          <div class="payroll-bar-track"><div class="payroll-bar-fill" style="width:60%"></div></div>
+          <div class="payroll-threshold">Luxury tax threshold: $241M</div>
+        </div>
+        <p style="font-size:.8rem;color:var(--text-2);margin-bottom:12px">Orioles operate significantly below the luxury tax threshold; new Rubenstein ownership has signaled willingness to spend.</p>
+        <table class="contracts-table">
+          <thead><tr><th>Player</th><th>Pos</th><th>AAV</th><th>Years</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr><td class="player">Corbin Burnes</td><td>SP</td><td class="aav">$21.7M</td><td>2024–2028</td><td>$108.5M</td></tr>
+            <tr><td class="player">Gunnar Henderson</td><td>SS</td><td class="aav">$19.5M</td><td>2024–2031</td><td>$156.0M</td></tr>
+            <tr><td class="player">Adley Rutschman</td><td>C</td><td class="aav">$14.2M</td><td>2024–2029</td><td>$85.0M</td></tr>
+            <tr><td class="player">Cedric Mullins</td><td>CF</td><td class="aav">$12.5M</td><td>2023–2027</td><td>$62.5M</td></tr>
+            <tr><td class="player">Ryan Mountcastle</td><td>1B</td><td class="aav">$9.7M</td><td>2024–2027</td><td>$38.8M</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- News (placeholder) -->
+    <section id="news" class="section-divider">
+      <div class="section-head">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z"/><path d="M2 2h2v20H2z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+        <h2>Front Office News <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— via Google News RSS</span></h2>
+      </div>
+      <div class="load-note">Live articles load from Google News RSS at runtime via rss-proxy.php. Examples:</div>
+      <div class="news-list">
+        <a class="news-item" href="#" style="cursor:default">
+          <div class="news-thumb-placeholder"></div>
+          <div class="news-body">
+            <div class="news-title">Mike Elias on Orioles' offseason priorities: 'We want to add another starter'</div>
+            <div class="news-date">2d ago</div>
+          </div>
+        </a>
+        <a class="news-item" href="#" style="cursor:default">
+          <div class="news-thumb-placeholder"></div>
+          <div class="news-body">
+            <div class="news-title">David Rubenstein talks payroll: Baltimore Orioles ready to compete with top spenders</div>
+            <div class="news-date">5d ago</div>
+          </div>
+        </a>
+        <a class="news-item" href="#" style="cursor:default">
+          <div class="news-thumb-placeholder"></div>
+          <div class="news-body">
+            <div class="news-title">Jackson Holliday, Coby Mayo lead Orioles' young core into the future</div>
+            <div class="news-date">1w ago</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      Front Office · Data via <a href="https://statsapi.mlb.com">MLB Stats API</a> &amp; Google News RSS ·
+      <a href="https://www.briancsmith.org/fanbase/">Back to Fanbase</a> ·
+      <em>Preview build</em>
+    </footer>
+  </div>
+</div>
+<script>
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === t));
+}
+</script>
+</body>
+</html>

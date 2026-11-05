@@ -1,0 +1,182 @@
+{
+  "slug": "brewers",
+  "asOf": "2026-11-05",
+  "owner": "Mark Attanasio",
+  "ownerSince": "2005",
+  "brass": [
+    {
+      "name": "Matt Arnold",
+      "title": "President of Baseball Operations & General Manager",
+      "since": "November 2020"
+    },
+    {
+      "name": "Pat Murphy",
+      "title": "Manager",
+      "since": "November 2023"
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 89,
+      "l": 73,
+      "pct": ".549",
+      "finish": "2nd NL Central",
+      "note": "Lost NL Wild Card Game"
+    },
+    {
+      "year": 2020,
+      "w": 29,
+      "l": 31,
+      "pct": ".483",
+      "finish": "4th NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2021,
+      "w": 95,
+      "l": 67,
+      "pct": ".586",
+      "finish": "1st NL Central",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2022,
+      "w": 86,
+      "l": 76,
+      "pct": ".531",
+      "finish": "2nd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 92,
+      "l": 70,
+      "pct": ".568",
+      "finish": "1st NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2024,
+      "w": 93,
+      "l": 69,
+      "pct": ".574",
+      "finish": "1st NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2025,
+      "w": 97,
+      "l": 65,
+      "pct": ".599",
+      "finish": "1st NL Central",
+      "note": "Lost NL Championship Series"
+    },
+    {
+      "year": 2026,
+      "w": 103,
+      "l": 59,
+      "pct": ".636",
+      "finish": "1st NL Central",
+      "note": "Won World Series"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 27,
+          "name": "Eric Brown Jr.",
+          "pos": "OF",
+          "status": "Minors · Nashville Sounds"
+        },
+        {
+          "round": "2",
+          "overall": 63,
+          "name": "Jacob Misiorowski",
+          "pos": "P",
+          "status": "MLB debut 2025 · Milwaukee Brewers"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 18,
+          "name": "Brock Wilken",
+          "pos": "1B",
+          "status": "Minors · Nashville Sounds"
+        },
+        {
+          "round": "CB-A",
+          "overall": 33,
+          "name": "Josh Knoth",
+          "pos": "P",
+          "status": "Minors · Biloxi Shuckers"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 17,
+          "name": "Braylon Payne",
+          "pos": "OF",
+          "status": "Minors · Biloxi Shuckers"
+        },
+        {
+          "round": "CB-A",
+          "overall": 34,
+          "name": "Blake Burke",
+          "pos": "1B",
+          "status": "Minors · Nashville Sounds"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 20,
+          "name": "Andrew Fischer",
+          "pos": "3B",
+          "status": "Minors · Biloxi Shuckers"
+        },
+        {
+          "round": "1C",
+          "overall": 32,
+          "name": "Brady Ebel",
+          "pos": "SS",
+          "status": "Minors · Wisconsin Timber Rattlers"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Trey Ebel",
+          "pos": "SS",
+          "status": "Minors · Wilson Warbirds"
+        },
+        {
+          "round": "2",
+          "overall": 66,
+          "name": "Sawyer Strosnider",
+          "pos": "OF",
+          "status": "Minors · Wisconsin Timber Rattlers"
+        }
+      ]
+    }
+  ],
+  "ballpark": "American Family Field"
+}

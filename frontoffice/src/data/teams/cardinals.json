@@ -1,0 +1,183 @@
+{
+  "slug": "cardinals",
+  "asOf": "2026-11-05",
+  "owner": "William DeWitt Jr.",
+  "ownerSince": "1995",
+  "brass": [
+    {
+      "name": "Chaim Bloom",
+      "title": "President of Baseball Operations",
+      "since": "2026 season",
+      "note": "Succeeded John Mozeliak after the 2025 season."
+    },
+    {
+      "name": "Oliver Marmol",
+      "title": "Manager",
+      "since": "October 2021"
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 91,
+      "l": 71,
+      "pct": ".562",
+      "finish": "1st NL Central",
+      "note": "Lost NL Championship Series"
+    },
+    {
+      "year": 2020,
+      "w": 30,
+      "l": 28,
+      "pct": ".517",
+      "finish": "2nd NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2021,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "2nd NL Central",
+      "note": "Lost NL Wild Card Game"
+    },
+    {
+      "year": 2022,
+      "w": 93,
+      "l": 69,
+      "pct": ".574",
+      "finish": "1st NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2023,
+      "w": 71,
+      "l": 91,
+      "pct": ".438",
+      "finish": "5th NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 83,
+      "l": 79,
+      "pct": ".512",
+      "finish": "2nd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 78,
+      "l": 84,
+      "pct": ".481",
+      "finish": "4th NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 77,
+      "l": 85,
+      "pct": ".475",
+      "finish": "4th NL Central",
+      "note": "Missed postseason"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 22,
+          "name": "Cooper Hjerpe",
+          "pos": "P",
+          "status": "MLB debut 2026 · St. Louis Cardinals"
+        },
+        {
+          "round": "2",
+          "overall": 59,
+          "name": "Brycen Mautz",
+          "pos": "P",
+          "status": "MLB debut 2026 · St. Louis Cardinals"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 21,
+          "name": "Chase Davis",
+          "pos": "OF",
+          "status": "Minors · Memphis Redbirds"
+        },
+        {
+          "round": "3",
+          "overall": 90,
+          "name": "Travis Honeyman",
+          "pos": "OF",
+          "status": "Minors · Springfield Cardinals"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 7,
+          "name": "JJ Wetherholt",
+          "pos": "2B",
+          "status": "MLB debut 2026 · St. Louis Cardinals"
+        },
+        {
+          "round": "3",
+          "overall": 80,
+          "name": "Brian Holiday",
+          "pos": "P",
+          "status": "Minors · Peoria Chiefs"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 5,
+          "name": "Liam Doyle",
+          "pos": "P",
+          "status": "Minors · Springfield Cardinals"
+        },
+        {
+          "round": "2",
+          "overall": 55,
+          "name": "Ryan Mitchell",
+          "pos": "OF",
+          "status": "Minors · Palm Beach Cardinals"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 13,
+          "name": "Trevor Condon",
+          "pos": "OF",
+          "status": "Minors · Palm Beach Cardinals"
+        },
+        {
+          "round": "CB-A",
+          "overall": 32,
+          "name": "Tegan Kuhns",
+          "pos": "P",
+          "status": "Minors · FCL Cardinals"
+        }
+      ]
+    }
+  ],
+  "ballpark": "Busch Stadium"
+}

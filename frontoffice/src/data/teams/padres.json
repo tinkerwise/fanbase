@@ -1,0 +1,184 @@
+{
+  "slug": "padres",
+  "asOf": "2026-11-05",
+  "owner": "José E. Feliciano & Kwanza Jones",
+  "ownerSince": "2026",
+  "ownerNote": "MLB owners approved the sale Aug. 17, 2026.",
+  "brass": [
+    {
+      "name": "A.J. Preller",
+      "title": "President of Baseball Operations & General Manager",
+      "since": "August 2014",
+      "note": "Signed a multi-year extension in February 2026."
+    },
+    {
+      "name": "Craig Stammen",
+      "title": "Manager",
+      "since": "November 2025"
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 70,
+      "l": 92,
+      "pct": ".432",
+      "finish": "5th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 37,
+      "l": 23,
+      "pct": ".617",
+      "finish": "2nd NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2021,
+      "w": 79,
+      "l": 83,
+      "pct": ".488",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 89,
+      "l": 73,
+      "pct": ".549",
+      "finish": "2nd NL West",
+      "note": "Lost NL Championship Series"
+    },
+    {
+      "year": 2023,
+      "w": 82,
+      "l": 80,
+      "pct": ".506",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 93,
+      "l": 69,
+      "pct": ".574",
+      "finish": "2nd NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2025,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "2nd NL West",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2026,
+      "w": 91,
+      "l": 71,
+      "pct": ".562",
+      "finish": "2nd NL West",
+      "note": "Lost NL Division Series"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 15,
+          "name": "Dylan Lesko",
+          "pos": "P",
+          "status": "Minors · Charleston RiverDogs"
+        },
+        {
+          "round": "CB-A",
+          "overall": 39,
+          "name": "Robby Snelling",
+          "pos": "P",
+          "status": "MLB debut 2026 · Miami Marlins"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Dillon Head",
+          "pos": "CF",
+          "status": "Minors · Beloit Sky Carp"
+        },
+        {
+          "round": "3",
+          "overall": 96,
+          "name": "J.D. Gonzalez",
+          "pos": "C",
+          "status": "Minors · Gigantes de Carolina"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Kash Mayfield",
+          "pos": "P",
+          "status": "Minors · West Michigan Whitecaps"
+        },
+        {
+          "round": "2",
+          "overall": 52,
+          "name": "Boston Bateman",
+          "pos": "P",
+          "status": "Minors · Frederick Keys"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Kruz Schoolcraft",
+          "pos": "P",
+          "status": "Minors · Lake Elsinore Storm"
+        },
+        {
+          "round": "3",
+          "overall": 99,
+          "name": "Ryan Wideman",
+          "pos": "OF",
+          "status": "Minors · Fort Wayne TinCaps"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 21,
+          "name": "Coleman Borthwick",
+          "pos": "P",
+          "status": "Minors · Lake Elsinore Storm"
+        },
+        {
+          "round": "2",
+          "overall": 60,
+          "name": "Elliot Lascelles",
+          "pos": "SS",
+          "status": "Minors · Lake Elsinore Storm"
+        }
+      ]
+    }
+  ],
+  "ballpark": "Petco Park"
+}

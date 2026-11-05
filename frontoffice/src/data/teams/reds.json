@@ -1,0 +1,187 @@
+{
+  "slug": "reds",
+  "asOf": "2026-11-05",
+  "owner": "Phil Castellini",
+  "brass": [
+    {
+      "name": "Nick Krall",
+      "title": "President of Baseball Operations",
+      "since": "September 2023"
+    },
+    {
+      "name": "Brad Meador",
+      "title": "General Manager",
+      "since": "September 2023",
+      "note": "Reports to Nick Krall."
+    },
+    {
+      "name": "Terry Francona",
+      "title": "Manager",
+      "since": "October 2024"
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 75,
+      "l": 87,
+      "pct": ".463",
+      "finish": "4th NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 31,
+      "l": 29,
+      "pct": ".517",
+      "finish": "3rd NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2021,
+      "w": 83,
+      "l": 79,
+      "pct": ".512",
+      "finish": "3rd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 62,
+      "l": 100,
+      "pct": ".383",
+      "finish": "5th NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 82,
+      "l": 80,
+      "pct": ".506",
+      "finish": "3rd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 77,
+      "l": 85,
+      "pct": ".475",
+      "finish": "4th NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 83,
+      "l": 79,
+      "pct": ".512",
+      "finish": "3rd NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2026,
+      "w": 75,
+      "l": 87,
+      "pct": ".463",
+      "finish": "5th NL Central",
+      "note": "Missed postseason"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 18,
+          "name": "Cam Collier",
+          "pos": "3B",
+          "status": "Minors · Chattanooga Lookouts"
+        },
+        {
+          "round": "1C",
+          "overall": 32,
+          "name": "Sal Stewart",
+          "pos": "1B",
+          "status": "MLB debut 2025 · Cincinnati Reds"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 7,
+          "name": "Rhett Lowder",
+          "pos": "P",
+          "status": "MLB debut 2024 · Cincinnati Reds"
+        },
+        {
+          "round": "CB-A",
+          "overall": 38,
+          "name": "Ty Floyd",
+          "pos": "P",
+          "status": "Minors · Dayton Dragons"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 2,
+          "name": "Chase Burns",
+          "pos": "P",
+          "status": "MLB debut 2025 · Cincinnati Reds"
+        },
+        {
+          "round": "2",
+          "overall": 51,
+          "name": "Tyson Lewis",
+          "pos": "3B",
+          "status": "Minors · Dayton Dragons"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 9,
+          "name": "Steele Hall",
+          "pos": "SS",
+          "status": "Minors · Daytona Tortugas"
+        },
+        {
+          "round": "2",
+          "overall": 51,
+          "name": "Aaron Watson",
+          "pos": "P",
+          "status": "Minors · Daytona Tortugas"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 18,
+          "name": "Justin Lebron",
+          "pos": "SS",
+          "status": "Minors · Dayton Dragons"
+        },
+        {
+          "round": "2",
+          "overall": 58,
+          "name": "Eric Becker",
+          "pos": "SS",
+          "status": "Minors · Dayton Dragons"
+        }
+      ]
+    }
+  ],
+  "ballpark": "Great American Ball Park"
+}

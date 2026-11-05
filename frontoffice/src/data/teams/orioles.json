@@ -1,0 +1,196 @@
+{
+  "slug": "orioles",
+  "asOf": "2026-11-05",
+  "owner": "David Rubenstein",
+  "ownerSince": "2024",
+  "brass": [
+    {
+      "name": "Mike Elias",
+      "title": "President of Baseball Operations",
+      "since": "2025 season",
+      "note": "Promoted from general manager, a job he had held since November 2018."
+    },
+    {
+      "name": "Jared Banner",
+      "title": "General Manager",
+      "since": "October 2026",
+      "note": "Hired from the Cubs, where he was an assistant GM."
+    },
+    {
+      "name": "Sig Mejdal",
+      "title": "Assistant General Manager",
+      "since": "2018",
+      "note": "Moved in September 2026 from overseeing analytics to emerging technologies and innovative practices."
+    },
+    {
+      "name": "Craig Albernaz",
+      "title": "Manager",
+      "since": "October 2025",
+      "note": "Replaced Brandon Hyde, who was fired in May 2025. Tony Mansolino was interim manager for the rest of that season."
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 54,
+      "l": 108,
+      "pct": ".333",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 25,
+      "l": 35,
+      "pct": ".417",
+      "finish": "4th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 52,
+      "l": 110,
+      "pct": ".321",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 83,
+      "l": 79,
+      "pct": ".512",
+      "finish": "4th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 101,
+      "l": 61,
+      "pct": ".623",
+      "finish": "1st AL East",
+      "note": "Lost AL Division Series"
+    },
+    {
+      "year": 2024,
+      "w": 91,
+      "l": 71,
+      "pct": ".562",
+      "finish": "2nd AL East",
+      "note": "Lost AL Wild Card Series"
+    },
+    {
+      "year": 2025,
+      "w": 75,
+      "l": 87,
+      "pct": ".463",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 79,
+      "l": 82,
+      "pct": ".491",
+      "finish": "4th AL East",
+      "note": "Missed postseason"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 1,
+          "name": "Jackson Holliday",
+          "pos": "2B",
+          "status": "MLB debut 2024 · Baltimore Orioles"
+        },
+        {
+          "round": "CB-A",
+          "overall": 33,
+          "name": "Dylan Beavers",
+          "pos": "LF",
+          "status": "MLB debut 2025 · Baltimore Orioles"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 17,
+          "name": "Enrique Bradfield Jr.",
+          "pos": "OF",
+          "status": "Minors · Norfolk Tides"
+        },
+        {
+          "round": "2",
+          "overall": 53,
+          "name": "Mac Horvath",
+          "pos": "3B",
+          "status": "Minors · Montgomery Biscuits"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 22,
+          "name": "Vance Honeycutt",
+          "pos": "OF",
+          "status": "Minors · Peoria Javelinas"
+        },
+        {
+          "round": "PPI",
+          "overall": 32,
+          "name": "Griff O'Ferrall",
+          "pos": "SS",
+          "status": "Minors · Chesapeake Baysox"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 19,
+          "name": "Ike Irish",
+          "pos": "OF",
+          "status": "Minors · Frederick Keys"
+        },
+        {
+          "round": "1C",
+          "overall": 30,
+          "name": "Caden Bodine",
+          "pos": "C",
+          "status": "Minors · Durham Bulls"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 7,
+          "name": "Eric Booth Jr.",
+          "pos": "OF",
+          "status": "Minors · Delmarva Shorebirds"
+        },
+        {
+          "round": "2",
+          "overall": 46,
+          "name": "Ty Head",
+          "pos": "OF",
+          "status": "Minors · Frederick Keys"
+        }
+      ]
+    }
+  ],
+  "ballpark": "Oriole Park at Camden Yards"
+}

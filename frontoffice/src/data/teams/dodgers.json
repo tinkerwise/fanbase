@@ -1,0 +1,188 @@
+{
+  "slug": "dodgers",
+  "asOf": "2026-11-05",
+  "owner": "Mark Walter",
+  "ownerSince": "2012",
+  "brass": [
+    {
+      "name": "Andrew Friedman",
+      "title": "President of Baseball Operations",
+      "since": "2014"
+    },
+    {
+      "name": "Brandon Gomes",
+      "title": "General Manager",
+      "since": "January 2022",
+      "note": "Reports to Andrew Friedman."
+    },
+    {
+      "name": "Dave Roberts",
+      "title": "Manager",
+      "since": "November 2015"
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 106,
+      "l": 56,
+      "pct": ".654",
+      "finish": "1st NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2020,
+      "w": 43,
+      "l": 17,
+      "pct": ".717",
+      "finish": "1st NL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2021,
+      "w": 106,
+      "l": 56,
+      "pct": ".654",
+      "finish": "2nd NL West",
+      "note": "Lost NL Championship Series"
+    },
+    {
+      "year": 2022,
+      "w": 111,
+      "l": 51,
+      "pct": ".685",
+      "finish": "1st NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2023,
+      "w": 100,
+      "l": 62,
+      "pct": ".617",
+      "finish": "1st NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2024,
+      "w": 98,
+      "l": 64,
+      "pct": ".605",
+      "finish": "1st NL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2025,
+      "w": 93,
+      "l": 69,
+      "pct": ".574",
+      "finish": "1st NL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2026,
+      "w": 100,
+      "l": 62,
+      "pct": ".617",
+      "finish": "1st NL West",
+      "note": "Lost NL Championship Series"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "2",
+          "overall": 40,
+          "name": "Dalton Rushing",
+          "pos": "C",
+          "status": "MLB debut 2025 · Los Angeles Dodgers"
+        },
+        {
+          "round": "3",
+          "overall": 105,
+          "name": "Alex Freeland",
+          "pos": "2B",
+          "status": "MLB debut 2025 · Los Angeles Dodgers"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 36,
+          "name": "Kendall George",
+          "pos": "OF",
+          "status": "Minors · Tulsa Drillers"
+        },
+        {
+          "round": "2",
+          "overall": 60,
+          "name": "Jake Gelof",
+          "pos": "3B",
+          "status": "Minors · Tulsa Drillers"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 23,
+          "name": "Kellon Lindsey",
+          "pos": "2B",
+          "status": "Minors · Ontario Tower Buzzers"
+        },
+        {
+          "round": "3",
+          "overall": 98,
+          "name": "Chase Harlan",
+          "pos": "3B",
+          "status": "Minors · Great Lakes Loons"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 40,
+          "name": "Zach Root",
+          "pos": "P",
+          "status": "Minors · Tulsa Drillers"
+        },
+        {
+          "round": "CB-A",
+          "overall": 41,
+          "name": "Charles Davalan",
+          "pos": "OF",
+          "status": "Minors · Glendale Desert Dogs"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 40,
+          "name": "Bo Lowrance",
+          "pos": "SS",
+          "status": "Minors · ACL Dodgers"
+        },
+        {
+          "round": "4",
+          "overall": 132,
+          "name": "Russell Sandefer",
+          "pos": "P",
+          "status": "Minors · ACL Dodgers"
+        }
+      ]
+    }
+  ],
+  "ballpark": "UNIQLO Field at Dodger Stadium"
+}

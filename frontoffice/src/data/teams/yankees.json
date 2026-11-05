@@ -1,0 +1,181 @@
+{
+  "slug": "yankees",
+  "asOf": "2026-11-05",
+  "owner": "Hal Steinbrenner",
+  "brass": [
+    {
+      "name": "Brian Cashman",
+      "title": "General Manager",
+      "since": "February 1998"
+    },
+    {
+      "name": "Aaron Boone",
+      "title": "Manager",
+      "since": "December 2017"
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 103,
+      "l": 59,
+      "pct": ".636",
+      "finish": "1st AL East",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2020,
+      "w": 33,
+      "l": 27,
+      "pct": ".550",
+      "finish": "2nd AL East",
+      "note": "Lost AL Division Series"
+    },
+    {
+      "year": 2021,
+      "w": 92,
+      "l": 70,
+      "pct": ".568",
+      "finish": "3rd AL East",
+      "note": "Lost AL Wild Card Game"
+    },
+    {
+      "year": 2022,
+      "w": 99,
+      "l": 63,
+      "pct": ".611",
+      "finish": "1st AL East",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2023,
+      "w": 82,
+      "l": 80,
+      "pct": ".506",
+      "finish": "4th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 94,
+      "l": 68,
+      "pct": ".580",
+      "finish": "1st AL East",
+      "note": "Lost World Series"
+    },
+    {
+      "year": 2025,
+      "w": 94,
+      "l": 68,
+      "pct": ".580",
+      "finish": "2nd AL East",
+      "note": "Lost AL Division Series"
+    },
+    {
+      "year": 2026,
+      "w": 93,
+      "l": 68,
+      "pct": ".578",
+      "finish": "2nd AL East",
+      "note": "Lost AL Division Series"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Spencer Jones",
+          "pos": "CF",
+          "status": "MLB debut 2026 · New York Yankees"
+        },
+        {
+          "round": "2",
+          "overall": 61,
+          "name": "Drew Thorpe",
+          "pos": "P",
+          "status": "MLB debut 2024 · Chicago White Sox"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 26,
+          "name": "George Lombard Jr.",
+          "pos": "SS",
+          "status": "MLB debut 2026 · New York Yankees"
+        },
+        {
+          "round": "3",
+          "overall": 97,
+          "name": "Kyle Carr",
+          "pos": "P",
+          "status": "Minors · Scranton/Wilkes-Barre RailRiders"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 26,
+          "name": "Ben Hess",
+          "pos": "P",
+          "status": "Minors · Somerset Patriots"
+        },
+        {
+          "round": "2",
+          "overall": 53,
+          "name": "Bryce Cunningham",
+          "pos": "P",
+          "status": "Minors · Somerset Patriots"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 39,
+          "name": "Dax Kilby",
+          "pos": "SS",
+          "status": "Minors · Salt River Rafters"
+        },
+        {
+          "round": "3",
+          "overall": 103,
+          "name": "Kaeden Kent",
+          "pos": "SS",
+          "status": "Minors · Richmond Flying Squirrels"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 35,
+          "name": "Hunter Dietz",
+          "pos": "P",
+          "status": "Minors · FCL Yankees"
+        },
+        {
+          "round": "2",
+          "overall": 63,
+          "name": "Sean Duncan",
+          "pos": "P",
+          "status": "Minors · FCL Yankees"
+        }
+      ]
+    }
+  ],
+  "ballpark": "Yankee Stadium"
+}

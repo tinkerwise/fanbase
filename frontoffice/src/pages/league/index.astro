@@ -1,0 +1,51 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { TEAM_CONFIG, DIVISIONS } from '../../scripts/teamConfig.js';
+
+const base = import.meta.env.BASE_URL;
+const teams = Object.values(TEAM_CONFIG).sort((a, b) => a.name.localeCompare(b.name));
+---
+<Layout title="League">
+  <div class="page-header">
+    <div class="page-kicker">All 30 Teams</div>
+    <h1 class="page-title">League Overview</h1>
+    <nav class="page-tabs">
+      <a class="page-tab active" href="#transactions">Recent Transactions</a>
+      <a class="page-tab" href="#exec-moves">Executive Moves</a>
+    </nav>
+  </div>
+
+  <!-- ── Recent Transactions ──────────────────────────────────── -->
+  <section id="transactions">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+      <h2>Recent Transactions <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— live from MLB API, last 14 days</span></h2>
+    </div>
+    <!-- Team filter pills -->
+    <div style="padding:0 24px 10px;display:flex;flex-wrap:wrap;gap:6px" id="txFilter">
+      <button class="theme-btn active" data-filter="">All Teams</button>
+      {teams.map(t => (
+        <button class="theme-btn" data-filter={String(t.id)} title={t.fullName}>{t.abbr}</button>
+      ))}
+    </div>
+    <div id="leagueTxWrap">
+      <span class="load-msg"><span class="spinner"></span>Loading transactions…</span>
+    </div>
+  </section>
+
+  <!-- ── Executive Moves ────────────────────────────────────── -->
+  <section id="exec-moves" style="border-top:1px solid var(--border);margin-top:8px">
+    <div class="section-head">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <h2>Executive Moves &amp; News <span style="font-size:.7rem;font-weight:400;color:var(--text-3)">— Google News RSS</span></h2>
+    </div>
+    <div id="execNewsWrap">
+      <span class="load-msg"><span class="spinner"></span>Loading news…</span>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  import '../../scripts/leaguePage.js';
+</script>

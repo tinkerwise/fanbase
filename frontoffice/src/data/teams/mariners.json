@@ -1,0 +1,189 @@
+{
+  "slug": "mariners",
+  "asOf": "2026-11-05",
+  "owner": "John Stanton",
+  "ownerSince": "1992",
+  "brass": [
+    {
+      "name": "Jerry Dipoto",
+      "title": "President of Baseball Operations",
+      "since": "2022"
+    },
+    {
+      "name": "Justin Hollander",
+      "title": "General Manager",
+      "since": "October 2022",
+      "note": "Reports to Jerry Dipoto."
+    },
+    {
+      "name": "Jason Kanzler",
+      "title": "Manager",
+      "since": "November 2026",
+      "note": "Hired from the Cubs, where he was director of player development. Replaces Dan Wilson."
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 68,
+      "l": 94,
+      "pct": ".420",
+      "finish": "5th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 27,
+      "l": 33,
+      "pct": ".450",
+      "finish": "3rd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "2nd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "2nd AL West",
+      "note": "Lost AL Division Series"
+    },
+    {
+      "year": 2023,
+      "w": 88,
+      "l": 74,
+      "pct": ".543",
+      "finish": "3rd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 85,
+      "l": 77,
+      "pct": ".525",
+      "finish": "2nd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "1st AL West",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2026,
+      "w": 76,
+      "l": 86,
+      "pct": ".469",
+      "finish": "3rd AL West",
+      "note": "Missed postseason"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 21,
+          "name": "Cole Young",
+          "pos": "2B",
+          "status": "MLB debut 2025 · Seattle Mariners"
+        },
+        {
+          "round": "2",
+          "overall": 58,
+          "name": "Tyler Locklear",
+          "pos": "1B",
+          "status": "MLB debut 2024 · Arizona Diamondbacks"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 22,
+          "name": "Colt Emerson",
+          "pos": "SS",
+          "status": "MLB debut 2026 · Seattle Mariners"
+        },
+        {
+          "round": "PPI",
+          "overall": 29,
+          "name": "Jonny Farmelo",
+          "pos": "OF",
+          "status": "Minors · Arkansas Travelers"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 15,
+          "name": "Jurrangelo Cijntje",
+          "pos": "P",
+          "status": "Minors · Memphis Redbirds"
+        },
+        {
+          "round": "2",
+          "overall": 55,
+          "name": "Ryan Sloan",
+          "pos": "P",
+          "status": "Minors · Arkansas Travelers"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 3,
+          "name": "Kade Anderson",
+          "pos": "P",
+          "status": "MLB debut 2026 · Seattle Mariners"
+        },
+        {
+          "round": "CB-A",
+          "overall": 35,
+          "name": "Luke Stevenson",
+          "pos": "C",
+          "status": "Minors · Everett AquaSox"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 24,
+          "name": "Ace Reese",
+          "pos": "3B",
+          "status": "Minors · Inland Empire 66ers"
+        },
+        {
+          "round": "2",
+          "overall": 65,
+          "name": "Jake Brown",
+          "pos": "OF",
+          "status": "Minors · Inland Empire 66ers"
+        }
+      ]
+    }
+  ],
+  "ballpark": "T-Mobile Park"
+}

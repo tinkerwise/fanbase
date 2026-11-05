@@ -1,0 +1,188 @@
+{
+  "slug": "cubs",
+  "asOf": "2026-11-05",
+  "owner": "Tom Ricketts",
+  "ownerSince": "2009",
+  "brass": [
+    {
+      "name": "Jed Hoyer",
+      "title": "President of Baseball Operations",
+      "since": "November 2020"
+    },
+    {
+      "name": "Carter Hawkins",
+      "title": "General Manager",
+      "since": "October 2021",
+      "note": "Reports to Jed Hoyer."
+    },
+    {
+      "name": "Craig Counsell",
+      "title": "Manager",
+      "since": "November 2023"
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 84,
+      "l": 78,
+      "pct": ".519",
+      "finish": "3rd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 34,
+      "l": 26,
+      "pct": ".567",
+      "finish": "1st NL Central",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2021,
+      "w": 71,
+      "l": 91,
+      "pct": ".438",
+      "finish": "4th NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 74,
+      "l": 88,
+      "pct": ".457",
+      "finish": "3rd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 83,
+      "l": 79,
+      "pct": ".512",
+      "finish": "2nd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 83,
+      "l": 79,
+      "pct": ".512",
+      "finish": "3rd NL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 92,
+      "l": 70,
+      "pct": ".568",
+      "finish": "2nd NL Central",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2026,
+      "w": 89,
+      "l": 73,
+      "pct": ".549",
+      "finish": "2nd NL Central",
+      "note": "Lost NL Wild Card Series"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 7,
+          "name": "Cade Horton",
+          "pos": "P",
+          "status": "MLB debut 2025 · Chicago Cubs"
+        },
+        {
+          "round": "2",
+          "overall": 47,
+          "name": "Jackson Ferris",
+          "pos": "P",
+          "status": "Minors · Oklahoma City Comets"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 13,
+          "name": "Matt Shaw",
+          "pos": "RF",
+          "status": "MLB debut 2025 · Chicago Cubs"
+        },
+        {
+          "round": "2C",
+          "overall": 68,
+          "name": "Jaxon Wiggins",
+          "pos": "P",
+          "status": "Minors · Iowa Cubs"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 14,
+          "name": "Cam Smith",
+          "pos": "RF",
+          "status": "MLB debut 2025 · Houston Astros"
+        },
+        {
+          "round": "2",
+          "overall": 54,
+          "name": "Cole Mathis",
+          "pos": "3B",
+          "status": "Minors · Surprise Saguaros"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 17,
+          "name": "Ethan Conrad",
+          "pos": "OF",
+          "status": "Minors · South Bend Cubs"
+        },
+        {
+          "round": "2",
+          "overall": 56,
+          "name": "Kane Kepley",
+          "pos": "OF",
+          "status": "Minors · Knoxville Smokies"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 23,
+          "name": "Cade Townsend",
+          "pos": "P",
+          "status": "Minors · ACL Cubs"
+        },
+        {
+          "round": "2",
+          "overall": 62,
+          "name": "Caden Sorrell",
+          "pos": "OF",
+          "status": "Minors · South Bend Cubs"
+        }
+      ]
+    }
+  ],
+  "ballpark": "Wrigley Field"
+}

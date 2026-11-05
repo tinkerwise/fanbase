@@ -1,0 +1,183 @@
+{
+  "slug": "red-sox",
+  "asOf": "2026-11-05",
+  "owner": "John Henry",
+  "ownerSince": "2002",
+  "brass": [
+    {
+      "name": "Craig Breslow",
+      "title": "Chief Baseball Officer",
+      "since": "October 2023"
+    },
+    {
+      "name": "Chad Tracy",
+      "title": "Manager",
+      "since": "April 2026",
+      "note": "Took over after Alex Cora left; interim tag removed in September 2026."
+    }
+  ],
+  "eraRecord": [
+    {
+      "year": 2019,
+      "w": 84,
+      "l": 78,
+      "pct": ".519",
+      "finish": "3rd AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 24,
+      "l": 36,
+      "pct": ".400",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 92,
+      "l": 70,
+      "pct": ".568",
+      "finish": "2nd AL East",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2022,
+      "w": 78,
+      "l": 84,
+      "pct": ".481",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 78,
+      "l": 84,
+      "pct": ".481",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 81,
+      "l": 81,
+      "pct": ".500",
+      "finish": "3rd AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 89,
+      "l": 73,
+      "pct": ".549",
+      "finish": "3rd AL East",
+      "note": "Lost AL Wild Card Series"
+    },
+    {
+      "year": 2026,
+      "w": 87,
+      "l": 75,
+      "pct": ".537",
+      "finish": "3rd AL East",
+      "note": "Lost AL Wild Card Series"
+    }
+  ],
+  "recentDraftClasses": [
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 24,
+          "name": "Mikey Romero",
+          "pos": "3B",
+          "status": "Minors · Worcester Red Sox"
+        },
+        {
+          "round": "2",
+          "overall": 41,
+          "name": "Cutter Coffey",
+          "pos": "3B",
+          "status": "Minors · New Hampshire Fisher Cats"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 14,
+          "name": "Kyle Teel",
+          "pos": "C",
+          "status": "MLB debut 2025 · Chicago White Sox"
+        },
+        {
+          "round": "2",
+          "overall": 50,
+          "name": "Nazzan Zanetello",
+          "pos": "2B",
+          "status": "Minors · Mesa Solar Sox"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 12,
+          "name": "Braden Montgomery",
+          "pos": "RF",
+          "status": "MLB debut 2026 · Chicago White Sox"
+        },
+        {
+          "round": "2",
+          "overall": 50,
+          "name": "Payton Tolle",
+          "pos": "P",
+          "status": "MLB debut 2025 · Boston Red Sox"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 15,
+          "name": "Kyson Witherspoon",
+          "pos": "P",
+          "status": "Minors · Frederick Keys"
+        },
+        {
+          "round": "CB-A",
+          "overall": 33,
+          "name": "Marcus Phillips",
+          "pos": "P",
+          "status": "Minors · Greenville Drive"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 20,
+          "name": "Jake Schaffner",
+          "pos": "SS",
+          "status": "Minors · Greenville Drive"
+        },
+        {
+          "round": "CB-B",
+          "overall": 67,
+          "name": "Owen Hull",
+          "pos": "OF",
+          "status": "Minors · Greenville Drive"
+        }
+      ]
+    }
+  ],
+  "ballpark": "Fenway Park"
+}
