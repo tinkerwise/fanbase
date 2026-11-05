@@ -1,34 +1,183 @@
 {
-  "stub": false,
+  "slug": "astros",
+  "asOf": "2026-11-05",
+  "owner": "Jim Crane",
+  "ownerSince": "2011",
   "brass": [
-    { "name": "Dana Brown",    "title": "General Manager",    "since": "2023" },
-    { "name": "Joe Espada",    "title": "Manager",            "since": "2024" }
+    {
+      "name": "Randy Flores",
+      "title": "General Manager",
+      "since": "October 2026",
+      "note": "Hired from the Cardinals, where he was an assistant GM. Succeeds Dana Brown, dismissed Aug. 24, 2026."
+    },
+    {
+      "name": "Vacant",
+      "title": "Manager",
+      "note": "Joe Espada's contract was not renewed in October 2026. Search underway."
+    }
   ],
   "eraRecord": [
-    { "year": 2021, "w": 95,  "l": 67,  "note": "World Series champs" },
-    { "year": 2022, "w": 106, "l": 56,  "note": "AL West champs; World Series loss" },
-    { "year": 2023, "w": 90,  "l": 72,  "note": "AL West champs; ALCS exit" },
-    { "year": 2024, "w": 88,  "l": 74,  "note": "Wild Card; first ALCS miss since 2016" },
-    { "year": 2025, "w": 79,  "l": 83,  "note": "Missed playoffs; Brown/Espada retained" },
-    { "year": 2026, "w": 85,  "l": 77,  "note": "AL Wild Card contender" }
+    {
+      "year": 2019,
+      "w": 107,
+      "l": 55,
+      "pct": ".660",
+      "finish": "1st AL West",
+      "note": "Lost World Series"
+    },
+    {
+      "year": 2020,
+      "w": 29,
+      "l": 31,
+      "pct": ".483",
+      "finish": "2nd AL West",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2021,
+      "w": 95,
+      "l": 67,
+      "pct": ".586",
+      "finish": "1st AL West",
+      "note": "Lost World Series"
+    },
+    {
+      "year": 2022,
+      "w": 106,
+      "l": 56,
+      "pct": ".654",
+      "finish": "1st AL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2023,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "1st AL West",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2024,
+      "w": 88,
+      "l": 73,
+      "pct": ".547",
+      "finish": "1st AL West",
+      "note": "Lost AL Wild Card Series"
+    },
+    {
+      "year": 2025,
+      "w": 87,
+      "l": 75,
+      "pct": ".537",
+      "finish": "2nd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 81,
+      "l": 81,
+      "pct": ".500",
+      "finish": "1st AL West",
+      "note": "Lost AL Wild Card Series"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$254M payroll (7th); CBT repeater; Alvarez salary jumps to $26.8M",
-    "topContracts": [
-      { "name": "Yordan Alvarez",   "aav": 26.8, "through": 2031 },
-      { "name": "José Altuve",      "aav": 25.0, "through": 2026 },
-      { "name": "Christian Walker", "aav": 20.0, "through": 2027 },
-      { "name": "Carlos Correa",    "aav": 35.1, "through": 2034, "note": "Twins covering portion" },
-      { "name": "Hunter Brown",     "aav": 5.7,  "through": 2026 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Drew Gilbert",     "pos": "OF",  "school": "Tennessee",         "status": "Majors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Jacob Melton",     "pos": "OF",  "school": "Oregon State",      "status": "Minors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",              "pos": "—",   "school": "—",                 "status": "—" }] },
-    { "year": 2026, "picks": [{ "round": 1, "name": "Jack Radel",       "pos": "RHP", "school": "Notre Dame",        "status": "Rookie" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 28,
+          "name": "Drew Gilbert",
+          "pos": "CF",
+          "status": "MLB debut 2025 · San Francisco Giants"
+        },
+        {
+          "round": "2",
+          "overall": 64,
+          "name": "Jacob Melton",
+          "pos": "LF",
+          "status": "MLB debut 2025 · Tampa Bay Rays"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 28,
+          "name": "Brice Matthews",
+          "pos": "CF",
+          "status": "MLB debut 2025 · Houston Astros"
+        },
+        {
+          "round": "2",
+          "overall": 61,
+          "name": "Alonzo Tredwell",
+          "pos": "P",
+          "status": "Minors · Corpus Christi Hooks"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 28,
+          "name": "Walker Janek",
+          "pos": "C",
+          "status": "Minors · Corpus Christi Hooks"
+        },
+        {
+          "round": "3",
+          "overall": 101,
+          "name": "Ryan Forcucci",
+          "pos": "P",
+          "status": "Minors · FCL Astros"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 21,
+          "name": "Xavier Neyens",
+          "pos": "3B",
+          "status": "Minors · Asheville Tourists"
+        },
+        {
+          "round": "3",
+          "overall": 95,
+          "name": "Ethan Frey",
+          "pos": "OF",
+          "status": "Minors · Asheville Tourists"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 17,
+          "name": "Logan Hughes",
+          "pos": "OF",
+          "status": "Minors · Fayetteville Woodpeckers"
+        },
+        {
+          "round": "PPI",
+          "overall": 28,
+          "name": "Jack Radel",
+          "pos": "P",
+          "status": "Minors · FCL Astros"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Houston Astros front office Dana Brown GM",
-  "mlbTeamPage": "astros"
+  "ballpark": "Daikin Park"
 }

@@ -22,7 +22,7 @@ if (section) {
       a.href = `${base}team/${t.slug}/`;
       a.className = 'nav-link';
       if (location.pathname.includes(`/team/${t.slug}/`)) a.classList.add('active');
-      a.innerHTML = `<img src="https://www.mlb.com/assets/images/team/logos/${t.id}/default_chyron.png" width="15" height="15" alt="" style="object-fit:contain;border-radius:2px">${t.name}`;
+      a.innerHTML = `<img src="https://www.mlbstatic.com/team-logos/${t.id}.svg" width="15" height="15" alt="" style="object-fit:contain;border-radius:2px">${t.name}`;
       section.appendChild(a);
     });
   });

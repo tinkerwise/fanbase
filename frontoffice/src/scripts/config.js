@@ -14,15 +14,12 @@ export const ALL_TEAMS = Object.values(TEAM_CONFIG).sort((a, b) => {
 });
 
 export function teamLogoSrc(id, size = 24) {
-  return `https://www.mlb.com/assets/images/team/logos/${id}/default_chyron.png`;
+  return `https://www.mlbstatic.com/team-logos/${id}.svg`;
 }
 
-// Salary formatting
-export function fmtMoney(n) {
-  if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
-  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `$${(n / 1e3).toFixed(0)}K`;
-  return `$${n}`;
+// Transactions arrive oldest-first; pages show the newest.
+export function newestFirst(txs) {
+  return [...txs].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
 }
 
 export function relDate(dateStr) {

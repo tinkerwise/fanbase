@@ -1,35 +1,189 @@
 {
-  "stub": false,
+  "slug": "phillies",
+  "asOf": "2026-11-05",
+  "owner": "John Middleton",
+  "ownerSince": "1981",
   "brass": [
-    { "name": "Dave Dombrowski",    "title": "President of Baseball Operations", "since": "2019" },
-    { "name": "Preston Mattingly",  "title": "General Manager",                  "since": "2024" },
-    { "name": "Sam Fuld",           "title": "President, Business Operations (returning 2026)", "since": "2021" },
-    { "name": "Rob Thomson",        "title": "Manager",                          "since": "2022" }
+    {
+      "name": "Dave Dombrowski",
+      "title": "President of Baseball Operations",
+      "since": "2020"
+    },
+    {
+      "name": "Preston Mattingly",
+      "title": "General Manager",
+      "since": "November 2024",
+      "note": "Reports to Dave Dombrowski."
+    },
+    {
+      "name": "Don Mattingly",
+      "title": "Manager",
+      "since": "April 2026",
+      "note": "Interim after Rob Thomson was fired; signed a two-year deal Oct. 14, 2026."
+    }
   ],
   "eraRecord": [
-    { "year": 2022, "w": 87,  "l": 75,  "note": "Wild Card; NL Pennant (World Series loss)" },
-    { "year": 2023, "w": 90,  "l": 72,  "note": "NL East champs; NLCS exit" },
-    { "year": 2024, "w": 95,  "l": 67,  "note": "NL East champs; NLDS exit" },
-    { "year": 2025, "w": 97,  "l": 65,  "note": "NL East champs; Schwarber/Wheeler anchored" },
-    { "year": 2026, "w": 93,  "l": 69,  "note": "~$315M payroll; NL contenders" }
+    {
+      "year": 2019,
+      "w": 81,
+      "l": 81,
+      "pct": ".500",
+      "finish": "4th NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 28,
+      "l": 32,
+      "pct": ".467",
+      "finish": "3rd NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 82,
+      "l": 80,
+      "pct": ".506",
+      "finish": "2nd NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 87,
+      "l": 75,
+      "pct": ".537",
+      "finish": "3rd NL East",
+      "note": "Lost World Series"
+    },
+    {
+      "year": 2023,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "2nd NL East",
+      "note": "Lost NL Championship Series"
+    },
+    {
+      "year": 2024,
+      "w": 95,
+      "l": 67,
+      "pct": ".586",
+      "finish": "1st NL East",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2025,
+      "w": 96,
+      "l": 66,
+      "pct": ".593",
+      "finish": "1st NL East",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2026,
+      "w": 88,
+      "l": 74,
+      "pct": ".543",
+      "finish": "2nd NL East",
+      "note": "Lost NL Wild Card Series"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$315M payroll (3rd in MLB); Schwarber returned on 5-yr/$150M deal; CBT repeater",
-    "topContracts": [
-      { "name": "Zack Wheeler",      "aav": 42.0, "through": 2027 },
-      { "name": "Kyle Schwarber",    "aav": 30.0, "through": 2030 },
-      { "name": "Trea Turner",       "aav": 27.3, "through": 2032 },
-      { "name": "Bryce Harper",      "aav": 25.4, "through": 2031 },
-      { "name": "Aaron Nola",        "aav": 24.6, "through": 2030 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Andrew Painter",     "pos": "RHP", "school": "Calvary Christian", "status": "Majors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Aidan Miller",       "pos": "SS",  "school": "Palm Beach Lakes", "status": "Minors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 17,
+          "name": "Justin Crawford",
+          "pos": "CF",
+          "status": "MLB debut 2026 · Philadelphia Phillies"
+        },
+        {
+          "round": "3",
+          "overall": 93,
+          "name": "Gabriel Rincones Jr.",
+          "pos": "RF",
+          "status": "MLB debut 2026 · Philadelphia Phillies"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 27,
+          "name": "Aidan Miller",
+          "pos": "SS",
+          "status": "Minors · Surprise Saguaros"
+        },
+        {
+          "round": "3",
+          "overall": 98,
+          "name": "Devin Saltiban",
+          "pos": "OF",
+          "status": "Minors · Adelaide Giants"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 27,
+          "name": "Dante Nori",
+          "pos": "OF",
+          "status": "Minors · Surprise Saguaros"
+        },
+        {
+          "round": "2",
+          "overall": 63,
+          "name": "Griffin Burkholder",
+          "pos": "OF",
+          "status": "Minors · Jersey Shore BlueClaws"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 26,
+          "name": "Gage Wood",
+          "pos": "P",
+          "status": "Minors · Reading Fightin Phils"
+        },
+        {
+          "round": "2",
+          "overall": 63,
+          "name": "Cade Obermueller",
+          "pos": "P",
+          "status": "Minors · Jersey Shore BlueClaws"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 36,
+          "name": "Tyler Spangler",
+          "pos": "SS",
+          "status": "Minors · FCL Phillies"
+        },
+        {
+          "round": "2",
+          "overall": 64,
+          "name": "Caden Bogenpohl",
+          "pos": "OF",
+          "status": "Minors · Clearwater Threshers"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Philadelphia Phillies front office Dave Dombrowski Preston Mattingly GM",
-  "mlbTeamPage": "phillies"
+  "ballpark": "Citizens Bank Park"
 }

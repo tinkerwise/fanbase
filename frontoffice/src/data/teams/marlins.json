@@ -1,32 +1,188 @@
 {
-  "stub": false,
+  "slug": "marlins",
+  "asOf": "2026-11-05",
+  "owner": "Bruce Sherman",
+  "ownerSince": "2018",
   "brass": [
-    { "name": "Peter Bendix",    "title": "President of Baseball Operations", "since": "2023" },
-    { "name": "Skip Schumaker",  "title": "Manager",                          "since": "2023" }
+    {
+      "name": "Peter Bendix",
+      "title": "President of Baseball Operations",
+      "since": "November 2023"
+    },
+    {
+      "name": "Gabe Kapler",
+      "title": "General Manager",
+      "since": "November 2025",
+      "note": "Reports to Peter Bendix."
+    },
+    {
+      "name": "Clayton McCullough",
+      "title": "Manager",
+      "since": "November 2024"
+    }
   ],
   "eraRecord": [
-    { "year": 2021, "w": 67,  "l": 95,  "note": "Kim Ng era begins" },
-    { "year": 2022, "w": 69,  "l": 93,  "note": "Missed playoffs" },
-    { "year": 2023, "w": 84,  "l": 78,  "note": "Wild Card; NLDS exit; Ng and Bendix transition" },
-    { "year": 2024, "w": 62,  "l": 100, "note": "Bendix inherits depleted roster" },
-    { "year": 2025, "w": 79,  "l": 83,  "note": "Surprising improvement; Bendix stabilized" },
-    { "year": 2026, "w": 74,  "l": 88,  "note": "Low payroll; building through development" }
+    {
+      "year": 2019,
+      "w": 57,
+      "l": 105,
+      "pct": ".352",
+      "finish": "5th NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 31,
+      "l": 29,
+      "pct": ".517",
+      "finish": "2nd NL East",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2021,
+      "w": 67,
+      "l": 95,
+      "pct": ".414",
+      "finish": "4th NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 69,
+      "l": 93,
+      "pct": ".426",
+      "finish": "4th NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 84,
+      "l": 78,
+      "pct": ".519",
+      "finish": "3rd NL East",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2024,
+      "w": 62,
+      "l": 100,
+      "pct": ".383",
+      "finish": "5th NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 79,
+      "l": 83,
+      "pct": ".488",
+      "finish": "3rd NL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 80,
+      "l": 82,
+      "pct": ".494",
+      "finish": "3rd NL East",
+      "note": "Missed postseason"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$78M payroll (2nd-lowest MLB); Bendix using Rays model of development over spending",
-    "topContracts": [
-      { "name": "Sandy Alcantara",  "aav": 20.0, "through": 2027 },
-      { "name": "Jesus Sanchez",    "aav": 8.0,  "through": 2027 },
-      { "name": "Jazz Chisholm Jr.","aav": 7.5,  "through": 2026, "note": "Likely departed" }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Cam Schlittler",     "pos": "RHP", "school": "Cardinal Mooney HS","status": "Minors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Noble Meyer",        "pos": "RHP", "school": "Jesuit HS (OR)",    "status": "Minors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 6,
+          "name": "Jacob Berry",
+          "pos": "1B",
+          "status": "Minors · Omaha Storm Chasers"
+        },
+        {
+          "round": "2",
+          "overall": 46,
+          "name": "Jacob Miller",
+          "pos": "P",
+          "status": "Minors · Pensacola Blue Wahoos"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 10,
+          "name": "Noble Meyer",
+          "pos": "P",
+          "status": "Minors · Beloit Sky Carp"
+        },
+        {
+          "round": "CB-A",
+          "overall": 35,
+          "name": "Thomas White",
+          "pos": "P",
+          "status": "Minors · Jacksonville Jumbo Shrimp"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 16,
+          "name": "PJ Morlando",
+          "pos": "OF",
+          "status": "Minors · Jupiter Hammerheads"
+        },
+        {
+          "round": "2",
+          "overall": 56,
+          "name": "Carter Johnson",
+          "pos": "SS",
+          "status": "Minors · Glendale Desert Dogs"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 7,
+          "name": "Aiva Arquette",
+          "pos": "SS",
+          "status": "Minors · Pensacola Blue Wahoos"
+        },
+        {
+          "round": "CB-A",
+          "overall": 43,
+          "name": "Cam Cannarella",
+          "pos": "OF",
+          "status": "Minors · Jacksonville Jumbo Shrimp"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 14,
+          "name": "Jacob Lombard",
+          "pos": "SS",
+          "status": "Minors · Jupiter Hammerheads"
+        },
+        {
+          "round": "2",
+          "overall": 52,
+          "name": "Ethan Kleinschmit",
+          "pos": "P",
+          "status": "Minors · FCL Marlins"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Miami Marlins front office Peter Bendix baseball operations",
-  "mlbTeamPage": "marlins"
+  "ballpark": "loanDepot park"
 }

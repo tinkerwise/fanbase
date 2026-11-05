@@ -1,90 +1,8 @@
 // ── League page scripts ───────────────────────────────────────────
-import { MLB, SEASON, esc, relDate, fmtMoney } from './config.js';
+import { MLB, esc, relDate, newestFirst } from './config.js';
 import { TEAM_CONFIG } from './teamConfig.js';
 
 const base = import.meta.env.BASE_URL;
-
-// ── Salary Rankings ───────────────────────────────────────────────
-// Uses the MLB Stats API to fetch each team's 40-man roster with salary,
-// sums them up, and ranks all 30 teams.
-async function loadSalaryRankings() {
-  const wrap = document.getElementById('salaryRankWrap');
-  if (!wrap) return;
-
-  const LUX_TAX = 241_000_000;
-
-  // Curated known payroll figures (2026 estimates for top spenders).
-  // Fallback if API is slow or unavailable.
-  const KNOWN = {
-    119: 320_000_000, // Dodgers
-    147: 290_000_000, // Yankees
-    121: 340_000_000, // Mets
-    111: 210_000_000, // Red Sox
-    133: 85_000_000,  // Athletics
-    110: 145_000_000, // Orioles
-    114: 90_000_000,  // Guardians
-    117: 230_000_000, // Astros
-    134: 80_000_000,  // Pirates
-    145: 75_000_000,  // White Sox
-    115: 100_000_000, // Rockies
-  };
-
-  try {
-    // Try to fetch live payroll data via roster API
-    const teamIds = Object.keys(TEAM_CONFIG);
-    const results = await Promise.allSettled(
-      teamIds.map(id =>
-        fetch(`${MLB}/teams/${id}/roster?rosterType=active&season=${SEASON}&hydrate=person(salary)`)
-          .then(r => r.json())
-          .then(data => ({
-            id: Number(id),
-            payroll: (data.roster ?? []).reduce((s, p) => s + (Number(p.salary) || 0), 0),
-          }))
-      )
-    );
-
-    const rows = results.map((res, i) => {
-      const id = Number(teamIds[i]);
-      const team = TEAM_CONFIG[id];
-      if (!team) return null;
-      const payroll = res.status === 'fulfilled' && res.value.payroll > 0
-        ? res.value.payroll
-        : (KNOWN[id] ?? Math.floor(Math.random() * 100_000_000) + 80_000_000);
-      return { id, team, payroll };
-    }).filter(Boolean).sort((a, b) => b.payroll - a.payroll);
-
-    renderSalaryTable(wrap, rows, LUX_TAX);
-  } catch {
-    // Build from curated data
-    const rows = Object.values(TEAM_CONFIG).map(t => ({
-      id: t.id, team: t,
-      payroll: KNOWN[t.id] ?? 120_000_000,
-    })).sort((a, b) => b.payroll - a.payroll);
-    renderSalaryTable(wrap, rows, LUX_TAX);
-  }
-}
-
-function renderSalaryTable(wrap, rows, luxTax) {
-  const tableRows = rows.map((r, i) => {
-    const over = r.payroll > luxTax;
-    const logoUrl = `https://www.mlb.com/assets/images/team/logos/${r.id}/default_chyron.png`;
-    return `<tr>
-      <td class="rank-num">${i + 1}</td>
-      <td>
-        <img src="${logoUrl}" width="18" height="18" alt="" style="object-fit:contain;vertical-align:middle;margin-right:6px">
-        <a class="team-link" href="${base}team/${r.team.slug}/">${esc(r.team.fullName)}</a>
-      </td>
-      <td>${esc(r.team.div)}</td>
-      <td class="${over ? 'tax-over' : 'tax-ok'}">${fmtMoney(r.payroll)}</td>
-      <td class="${over ? 'tax-over' : ''}">${over ? `+${fmtMoney(r.payroll - luxTax)} over` : `${fmtMoney(luxTax - r.payroll)} under`}</td>
-    </tr>`;
-  }).join('');
-
-  wrap.innerHTML = `<table class="salary-table">
-    <thead><tr><th>#</th><th>Team</th><th>Division</th><th>Payroll</th><th>vs. Luxury Tax ($241M)</th></tr></thead>
-    <tbody>${tableRows}</tbody>
-  </table>`;
-}
 
 // ── League Transactions ───────────────────────────────────────────
 let allTxs = [];
@@ -99,7 +17,7 @@ async function loadLeagueTx() {
     const dateStr = since.toISOString().slice(0, 10);
     const today = new Date().toISOString().slice(0, 10);
     const data = await fetch(`${MLB}/transactions?sportId=1&startDate=${dateStr}&endDate=${today}`).then(r => r.json());
-    allTxs = data.transactions ?? [];
+    allTxs = newestFirst(data.transactions ?? []);
     renderLeagueTx();
   } catch {
     wrap.innerHTML = '<span class="empty-msg">Transactions unavailable.</span>';
@@ -119,7 +37,7 @@ function renderLeagueTx() {
   }
   const items = shown.map(tx => {
     const team = TEAM_CONFIG[tx.team?.id];
-    const logo = team ? `<img class="activity-logo" src="https://www.mlb.com/assets/images/team/logos/${team.id}/default_chyron.png" alt="${esc(team.abbr)}" width="22" height="22" loading="lazy">` : '';
+    const logo = team ? `<img class="activity-logo" src="https://www.mlbstatic.com/team-logos/${team.id}.svg" alt="${esc(team.abbr)}" width="22" height="22" loading="lazy">` : '';
     const desc = esc(tx.description ?? 'Transaction');
     const date = relDate(tx.date ?? tx.effectiveDate ?? '');
     const type = classifyTx(tx.description ?? '');
@@ -196,6 +114,5 @@ document.querySelectorAll('.page-tab').forEach(tab => {
   });
 });
 
-loadSalaryRankings();
 loadLeagueTx();
 loadExecNews();

@@ -1,33 +1,187 @@
 {
-  "stub": false,
+  "slug": "rangers",
+  "asOf": "2026-11-05",
+  "owner": "Ray Davis",
+  "ownerSince": "2010",
   "brass": [
-    { "name": "Chris Young",        "title": "President of Baseball Operations", "since": "2024" },
-    { "name": "Ross Fenstermaker",  "title": "General Manager",                  "since": "2024" },
-    { "name": "Bruce Bochy",        "title": "Manager",                          "since": "2023" }
+    {
+      "name": "Chris Young",
+      "title": "President of Baseball Operations"
+    },
+    {
+      "name": "Ross Fenstermaker",
+      "title": "General Manager",
+      "since": "November 2024",
+      "note": "Reports to Chris Young."
+    },
+    {
+      "name": "Skip Schumaker",
+      "title": "Manager",
+      "since": "October 2025"
+    }
   ],
   "eraRecord": [
-    { "year": 2022, "w": 68,  "l": 94,  "note": "Missed playoffs" },
-    { "year": 2023, "w": 90,  "l": 72,  "note": "World Series Champions" },
-    { "year": 2024, "w": 78,  "l": 84,  "note": "Injuries derailed repeat bid" },
-    { "year": 2025, "w": 82,  "l": 80,  "note": "Young/Fenstermaker new leadership" },
-    { "year": 2026, "w": 86,  "l": 76,  "note": "~$200M payroll; AL West contender" }
+    {
+      "year": 2019,
+      "w": 78,
+      "l": 84,
+      "pct": ".481",
+      "finish": "3rd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 22,
+      "l": 38,
+      "pct": ".367",
+      "finish": "5th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 60,
+      "l": 102,
+      "pct": ".370",
+      "finish": "5th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 68,
+      "l": 94,
+      "pct": ".420",
+      "finish": "4th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "2nd AL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2024,
+      "w": 78,
+      "l": 84,
+      "pct": ".481",
+      "finish": "3rd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 81,
+      "l": 81,
+      "pct": ".500",
+      "finish": "3rd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 80,
+      "l": 82,
+      "pct": ".494",
+      "finish": "2nd AL West",
+      "note": "Missed postseason"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$200M payroll; Seager/Semien anchor $150M+ in veteran commitments",
-    "topContracts": [
-      { "name": "Corey Seager",    "aav": 32.5, "through": 2031 },
-      { "name": "Marcus Semien",   "aav": 29.0, "through": 2027 },
-      { "name": "Jacob deGrom",    "aav": 37.0, "through": 2027, "note": "Largely on IL" },
-      { "name": "Jordan Montgomery","aav": 25.0, "through": 2029 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Kumar Rocker",       "pos": "RHP", "school": "Vanderbilt",        "status": "Majors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Wyatt Langford",     "pos": "OF",  "school": "Florida",           "status": "Majors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                 "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 3,
+          "name": "Kumar Rocker",
+          "pos": "P",
+          "status": "MLB debut 2024 · Texas Rangers"
+        },
+        {
+          "round": "4",
+          "overall": 109,
+          "name": "Brock Porter",
+          "pos": "P",
+          "status": "Minors · Frisco RoughRiders"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 4,
+          "name": "Wyatt Langford",
+          "pos": "LF",
+          "status": "MLB debut 2024 · Texas Rangers"
+        },
+        {
+          "round": "4",
+          "overall": 108,
+          "name": "Skylar Hales",
+          "pos": "P",
+          "status": "Minors · Memphis Redbirds"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 30,
+          "name": "Malcolm Moore",
+          "pos": "C",
+          "status": "Minors · Frisco RoughRiders"
+        },
+        {
+          "round": "2",
+          "overall": 65,
+          "name": "Dylan Dreiling",
+          "pos": "OF",
+          "status": "Minors · Frisco RoughRiders"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 12,
+          "name": "Gavin Fien",
+          "pos": "SS",
+          "status": "Minors · Fredericksburg Nationals"
+        },
+        {
+          "round": "2",
+          "overall": 52,
+          "name": "AJ Russell",
+          "pos": "P",
+          "status": "Minors · Hub City Spartanburgers"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 16,
+          "name": "Gio Rojas",
+          "pos": "P",
+          "status": "Minors · ACL Rangers"
+        },
+        {
+          "round": "2",
+          "overall": 54,
+          "name": "Connor Comeau",
+          "pos": "SS",
+          "status": "Minors · ACL Rangers"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Texas Rangers front office Chris Young Ross Fenstermaker GM",
-  "mlbTeamPage": "rangers"
+  "ballpark": "Globe Life Field"
 }

@@ -1,36 +1,188 @@
 {
-  "stub": false,
+  "slug": "dodgers",
+  "asOf": "2026-11-05",
+  "owner": "Mark Walter",
+  "ownerSince": "2012",
   "brass": [
-    { "name": "Andrew Friedman", "title": "President of Baseball Operations", "since": "2014" },
-    { "name": "Brandon Gomes",   "title": "EVP & General Manager",            "since": "2022" },
-    { "name": "Dave Roberts",    "title": "Manager",                          "since": "2016" }
+    {
+      "name": "Andrew Friedman",
+      "title": "President of Baseball Operations",
+      "since": "2014"
+    },
+    {
+      "name": "Brandon Gomes",
+      "title": "General Manager",
+      "since": "January 2022",
+      "note": "Reports to Andrew Friedman."
+    },
+    {
+      "name": "Dave Roberts",
+      "title": "Manager",
+      "since": "November 2015"
+    }
   ],
   "eraRecord": [
-    { "year": 2022, "w": 111, "l": 51,  "note": "NL West; NLCS exit" },
-    { "year": 2023, "w": 100, "l": 62,  "note": "NL West; NLDS exit; Ohtani pursuit begins" },
-    { "year": 2024, "w": 98,  "l": 64,  "note": "World Series Champions; Ohtani/Yamamoto debut" },
-    { "year": 2025, "w": 105, "l": 57,  "note": "NL West; Kyle Tucker signed; dominant roster" },
-    { "year": 2026, "w": 102, "l": 60,  "note": "~$400M+ payroll; NL dynasty continues" }
+    {
+      "year": 2019,
+      "w": 106,
+      "l": 56,
+      "pct": ".654",
+      "finish": "1st NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2020,
+      "w": 43,
+      "l": 17,
+      "pct": ".717",
+      "finish": "1st NL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2021,
+      "w": 106,
+      "l": 56,
+      "pct": ".654",
+      "finish": "2nd NL West",
+      "note": "Lost NL Championship Series"
+    },
+    {
+      "year": 2022,
+      "w": 111,
+      "l": 51,
+      "pct": ".685",
+      "finish": "1st NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2023,
+      "w": 100,
+      "l": 62,
+      "pct": ".617",
+      "finish": "1st NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2024,
+      "w": 98,
+      "l": 64,
+      "pct": ".605",
+      "finish": "1st NL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2025,
+      "w": 93,
+      "l": 69,
+      "pct": ".574",
+      "finish": "1st NL West",
+      "note": "Won World Series"
+    },
+    {
+      "year": 2026,
+      "w": 100,
+      "l": 62,
+      "pct": ".617",
+      "finish": "1st NL West",
+      "note": "Lost NL Championship Series"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$400-413M payroll (1st in MLB by $100M+); tax bill ~$161M; Ohtani deal mostly deferred",
-    "topContracts": [
-      { "name": "Kyle Tucker",        "aav": 57.2, "through": 2029 },
-      { "name": "Shohei Ohtani",      "aav": 46.1, "through": 2033, "note": "Mostly deferred; $70M/yr total" },
-      { "name": "Blake Snell",        "aav": 33.0, "through": 2030 },
-      { "name": "Mookie Betts",       "aav": 30.0, "through": 2033 },
-      { "name": "Tyler Glasnow",      "aav": 30.0, "through": 2030 },
-      { "name": "Freddie Freeman",    "aav": 27.0, "through": 2028 },
-      { "name": "Yoshinobu Yamamoto", "aav": 27.0, "through": 2031 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Nick Frasso",        "pos": "RHP", "school": "Loyola Marymount", "status": "Majors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Dalton Rushing",     "pos": "C",   "school": "Louisville",       "status": "Minors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "2",
+          "overall": 40,
+          "name": "Dalton Rushing",
+          "pos": "C",
+          "status": "MLB debut 2025 · Los Angeles Dodgers"
+        },
+        {
+          "round": "3",
+          "overall": 105,
+          "name": "Alex Freeland",
+          "pos": "2B",
+          "status": "MLB debut 2025 · Los Angeles Dodgers"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 36,
+          "name": "Kendall George",
+          "pos": "OF",
+          "status": "Minors · Tulsa Drillers"
+        },
+        {
+          "round": "2",
+          "overall": 60,
+          "name": "Jake Gelof",
+          "pos": "3B",
+          "status": "Minors · Tulsa Drillers"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 23,
+          "name": "Kellon Lindsey",
+          "pos": "2B",
+          "status": "Minors · Ontario Tower Buzzers"
+        },
+        {
+          "round": "3",
+          "overall": 98,
+          "name": "Chase Harlan",
+          "pos": "3B",
+          "status": "Minors · Great Lakes Loons"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 40,
+          "name": "Zach Root",
+          "pos": "P",
+          "status": "Minors · Tulsa Drillers"
+        },
+        {
+          "round": "CB-A",
+          "overall": 41,
+          "name": "Charles Davalan",
+          "pos": "OF",
+          "status": "Minors · Glendale Desert Dogs"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 40,
+          "name": "Bo Lowrance",
+          "pos": "SS",
+          "status": "Minors · ACL Dodgers"
+        },
+        {
+          "round": "4",
+          "overall": 132,
+          "name": "Russell Sandefer",
+          "pos": "P",
+          "status": "Minors · ACL Dodgers"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Los Angeles Dodgers front office Andrew Friedman Brandon Gomes GM",
-  "mlbTeamPage": "dodgers"
+  "ballpark": "UNIQLO Field at Dodger Stadium"
 }

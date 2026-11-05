@@ -1,32 +1,181 @@
 {
-  "stub": false,
+  "slug": "yankees",
+  "asOf": "2026-11-05",
+  "owner": "Hal Steinbrenner",
   "brass": [
-    { "name": "Brian Cashman",  "title": "Senior VP & General Manager", "since": "1998" },
-    { "name": "Aaron Boone",    "title": "Manager",                     "since": "2018" }
+    {
+      "name": "Brian Cashman",
+      "title": "General Manager",
+      "since": "February 1998"
+    },
+    {
+      "name": "Aaron Boone",
+      "title": "Manager",
+      "since": "December 2017"
+    }
   ],
   "eraRecord": [
-    { "year": 2022, "w": 99,  "l": 63,  "note": "AL East champs; ALCS" },
-    { "year": 2023, "w": 82,  "l": 80,  "note": "Missed playoffs" },
-    { "year": 2024, "w": 94,  "l": 68,  "note": "AL Pennant; World Series loss" },
-    { "year": 2025, "w": 85,  "l": 77,  "note": "Wild Card; early exit" },
-    { "year": 2026, "w": 88,  "l": 74,  "note": "AL Wild Card" }
+    {
+      "year": 2019,
+      "w": 103,
+      "l": 59,
+      "pct": ".636",
+      "finish": "1st AL East",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2020,
+      "w": 33,
+      "l": 27,
+      "pct": ".550",
+      "finish": "2nd AL East",
+      "note": "Lost AL Division Series"
+    },
+    {
+      "year": 2021,
+      "w": 92,
+      "l": 70,
+      "pct": ".568",
+      "finish": "3rd AL East",
+      "note": "Lost AL Wild Card Game"
+    },
+    {
+      "year": 2022,
+      "w": 99,
+      "l": 63,
+      "pct": ".611",
+      "finish": "1st AL East",
+      "note": "Lost AL Championship Series"
+    },
+    {
+      "year": 2023,
+      "w": 82,
+      "l": 80,
+      "pct": ".506",
+      "finish": "4th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 94,
+      "l": 68,
+      "pct": ".580",
+      "finish": "1st AL East",
+      "note": "Lost World Series"
+    },
+    {
+      "year": 2025,
+      "w": 94,
+      "l": 68,
+      "pct": ".580",
+      "finish": "2nd AL East",
+      "note": "Lost AL Division Series"
+    },
+    {
+      "year": 2026,
+      "w": 93,
+      "l": 68,
+      "pct": ".578",
+      "finish": "2nd AL East",
+      "note": "Lost AL Division Series"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "Payroll ~$300M; 3rd-time CBT payor; owner targeting ~$300M ceiling",
-    "topContracts": [
-      { "name": "Aaron Judge",    "aav": 40.0, "through": 2031 },
-      { "name": "Gerrit Cole",    "aav": 36.0, "through": 2028 },
-      { "name": "Max Fried",      "aav": 27.3, "through": 2032 },
-      { "name": "Carlos Rodón",   "aav": 27.0, "through": 2028 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Trey Sweeney",   "pos": "SS",  "school": "Eastern Illinois", "status": "Minors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "George Lombard Jr.", "pos": "OF", "school": "Louisville",    "status": "Minors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "Delmarr Galton", "pos": "OF",  "school": "Texas Tech",       "status": "Minors" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "Jac Caglianone", "pos": "LHP/1B","school": "Florida",        "status": "Minors" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Spencer Jones",
+          "pos": "CF",
+          "status": "MLB debut 2026 · New York Yankees"
+        },
+        {
+          "round": "2",
+          "overall": 61,
+          "name": "Drew Thorpe",
+          "pos": "P",
+          "status": "MLB debut 2024 · Chicago White Sox"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 26,
+          "name": "George Lombard Jr.",
+          "pos": "SS",
+          "status": "MLB debut 2026 · New York Yankees"
+        },
+        {
+          "round": "3",
+          "overall": 97,
+          "name": "Kyle Carr",
+          "pos": "P",
+          "status": "Minors · Scranton/Wilkes-Barre RailRiders"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 26,
+          "name": "Ben Hess",
+          "pos": "P",
+          "status": "Minors · Somerset Patriots"
+        },
+        {
+          "round": "2",
+          "overall": 53,
+          "name": "Bryce Cunningham",
+          "pos": "P",
+          "status": "Minors · Somerset Patriots"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 39,
+          "name": "Dax Kilby",
+          "pos": "SS",
+          "status": "Minors · Salt River Rafters"
+        },
+        {
+          "round": "3",
+          "overall": 103,
+          "name": "Kaeden Kent",
+          "pos": "SS",
+          "status": "Minors · Richmond Flying Squirrels"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 35,
+          "name": "Hunter Dietz",
+          "pos": "P",
+          "status": "Minors · FCL Yankees"
+        },
+        {
+          "round": "2",
+          "overall": 63,
+          "name": "Sean Duncan",
+          "pos": "P",
+          "status": "Minors · FCL Yankees"
+        }
+      ]
+    }
   ],
-  "newsQuery": "New York Yankees front office Brian Cashman GM",
-  "mlbTeamPage": "yankees"
+  "ballpark": "Yankee Stadium"
 }

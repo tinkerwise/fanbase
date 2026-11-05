@@ -1,33 +1,184 @@
 {
-  "stub": false,
+  "slug": "padres",
+  "asOf": "2026-11-05",
+  "owner": "José E. Feliciano & Kwanza Jones",
+  "ownerSince": "2026",
+  "ownerNote": "MLB owners approved the sale Aug. 17, 2026.",
   "brass": [
-    { "name": "AJ Preller",      "title": "President of Baseball Operations & GM", "since": "2014" },
-    { "name": "Mike Shildt",     "title": "Manager",                               "since": "2023" }
+    {
+      "name": "A.J. Preller",
+      "title": "President of Baseball Operations & General Manager",
+      "since": "August 2014",
+      "note": "Signed a multi-year extension in February 2026."
+    },
+    {
+      "name": "Craig Stammen",
+      "title": "Manager",
+      "since": "November 2025"
+    }
   ],
   "eraRecord": [
-    { "year": 2022, "w": 89,  "l": 73,  "note": "Wild Card; NLCS run; Soto/Bell acquired" },
-    { "year": 2023, "w": 82,  "l": 80,  "note": "Missed; Soto extension stalled" },
-    { "year": 2024, "w": 93,  "l": 69,  "note": "Wild Card; NLCS — Soto traded to NYY" },
-    { "year": 2025, "w": 85,  "l": 77,  "note": "Wild Card; Preller extended Feb 2026" },
-    { "year": 2026, "w": 87,  "l": 75,  "note": "~$260M payroll (6th); NL Wild Card" }
+    {
+      "year": 2019,
+      "w": 70,
+      "l": 92,
+      "pct": ".432",
+      "finish": "5th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 37,
+      "l": 23,
+      "pct": ".617",
+      "finish": "2nd NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2021,
+      "w": 79,
+      "l": 83,
+      "pct": ".488",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 89,
+      "l": 73,
+      "pct": ".549",
+      "finish": "2nd NL West",
+      "note": "Lost NL Championship Series"
+    },
+    {
+      "year": 2023,
+      "w": 82,
+      "l": 80,
+      "pct": ".506",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 93,
+      "l": 69,
+      "pct": ".574",
+      "finish": "2nd NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2025,
+      "w": 90,
+      "l": 72,
+      "pct": ".556",
+      "finish": "2nd NL West",
+      "note": "Lost NL Wild Card Series"
+    },
+    {
+      "year": 2026,
+      "w": 91,
+      "l": 71,
+      "pct": ".562",
+      "finish": "2nd NL West",
+      "note": "Lost NL Division Series"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$259.6M payroll (6th in MLB); heavy extension commitments to Machado/Tatis anchor roster",
-    "topContracts": [
-      { "name": "Manny Machado",    "aav": 31.0, "through": 2030 },
-      { "name": "Xander Bogaerts",  "aav": 25.4, "through": 2031 },
-      { "name": "Michael King",     "aav": 25.0, "through": 2029 },
-      { "name": "Fernando Tatis Jr.","aav": 24.2, "through": 2032 },
-      { "name": "Yu Darvish",       "aav": 21.7, "through": 2027 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Jackson Merrill",    "pos": "SS",  "school": "Severna Park HS",  "status": "Majors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Dylan Lesko",        "pos": "RHP", "school": "Pooler HS (GA)",   "status": "Traded (from ATL)" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 15,
+          "name": "Dylan Lesko",
+          "pos": "P",
+          "status": "Minors · Charleston RiverDogs"
+        },
+        {
+          "round": "CB-A",
+          "overall": 39,
+          "name": "Robby Snelling",
+          "pos": "P",
+          "status": "MLB debut 2026 · Miami Marlins"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Dillon Head",
+          "pos": "CF",
+          "status": "Minors · Beloit Sky Carp"
+        },
+        {
+          "round": "3",
+          "overall": 96,
+          "name": "J.D. Gonzalez",
+          "pos": "C",
+          "status": "Minors · Gigantes de Carolina"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Kash Mayfield",
+          "pos": "P",
+          "status": "Minors · West Michigan Whitecaps"
+        },
+        {
+          "round": "2",
+          "overall": 52,
+          "name": "Boston Bateman",
+          "pos": "P",
+          "status": "Minors · Frederick Keys"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 25,
+          "name": "Kruz Schoolcraft",
+          "pos": "P",
+          "status": "Minors · Lake Elsinore Storm"
+        },
+        {
+          "round": "3",
+          "overall": 99,
+          "name": "Ryan Wideman",
+          "pos": "OF",
+          "status": "Minors · Fort Wayne TinCaps"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 21,
+          "name": "Coleman Borthwick",
+          "pos": "P",
+          "status": "Minors · Lake Elsinore Storm"
+        },
+        {
+          "round": "2",
+          "overall": 60,
+          "name": "Elliot Lascelles",
+          "pos": "SS",
+          "status": "Minors · Lake Elsinore Storm"
+        }
+      ]
+    }
   ],
-  "newsQuery": "San Diego Padres front office AJ Preller GM baseball operations",
-  "mlbTeamPage": "padres"
+  "ballpark": "Petco Park"
 }

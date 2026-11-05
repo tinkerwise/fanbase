@@ -1,33 +1,188 @@
 {
-  "stub": false,
+  "slug": "giants",
+  "asOf": "2026-11-05",
+  "owner": "Greg Johnson",
+  "ownerSince": "2025",
   "brass": [
-    { "name": "Buster Posey",   "title": "President of Baseball Operations", "since": "2024" },
-    { "name": "Zack Minasian",  "title": "General Manager",                  "since": "2024" },
-    { "name": "Tony Vitello",   "title": "Manager",                          "since": "2025" }
+    {
+      "name": "Buster Posey",
+      "title": "President of Baseball Operations",
+      "since": "2024"
+    },
+    {
+      "name": "Zack Minasian",
+      "title": "General Manager",
+      "since": "November 2024",
+      "note": "Reports to Buster Posey."
+    },
+    {
+      "name": "Tony Vitello",
+      "title": "Manager",
+      "since": "October 2025"
+    }
   ],
   "eraRecord": [
-    { "year": 2021, "w": 107, "l": 55,  "note": "NL West — NLDS exit (vs. Dodgers)" },
-    { "year": 2022, "w": 81,  "l": 81,  "note": "Missed playoffs" },
-    { "year": 2023, "w": 79,  "l": 83,  "note": "Missed playoffs; Zaidi era winds down" },
-    { "year": 2024, "w": 80,  "l": 82,  "note": "Posey/Minasian take over" },
-    { "year": 2025, "w": 73,  "l": 89,  "note": "Vitello's first season; youth movement" },
-    { "year": 2026, "w": 65,  "l": 97,  "note": "4th in NL West; rebuilding through draft" }
+    {
+      "year": 2019,
+      "w": 77,
+      "l": 85,
+      "pct": ".475",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 29,
+      "l": 31,
+      "pct": ".483",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 107,
+      "l": 55,
+      "pct": ".660",
+      "finish": "1st NL West",
+      "note": "Lost NL Division Series"
+    },
+    {
+      "year": 2022,
+      "w": 81,
+      "l": 81,
+      "pct": ".500",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 79,
+      "l": 83,
+      "pct": ".488",
+      "finish": "4th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 80,
+      "l": 82,
+      "pct": ".494",
+      "finish": "4th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 81,
+      "l": 81,
+      "pct": ".500",
+      "finish": "3rd NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 65,
+      "l": 97,
+      "pct": ".401",
+      "finish": "4th NL West",
+      "note": "Missed postseason"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$175M payroll (franchise record); Posey investing heavily in baseball operations budget",
-    "topContracts": [
-      { "name": "Tyler Mahle",    "aav": 10.0, "through": 2026, "note": "Incentive-heavy deal" },
-      { "name": "Matt Chapman",   "aav": 20.0, "through": 2025, "note": "Departed" },
-      { "name": "Jung Hoo Lee",   "aav": 18.0, "through": 2030 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Reggie Crawford",    "pos": "LHP/OF","school": "Connecticut",     "status": "Minors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Bryce Eldridge",     "pos": "1B/RHP","school": "James Madison HS","status": "Minors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",                "status": "—" }] },
-    { "year": 2026, "picks": [{ "round": 1, "name": "Jackson Flora",      "pos": "RHP", "school": "UC Santa Barbara", "status": "Rookie" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 30,
+          "name": "Reggie Crawford",
+          "pos": "P",
+          "status": "Minors · Sacramento River Cats"
+        },
+        {
+          "round": "2",
+          "overall": 66,
+          "name": "Carson Whisenhunt",
+          "pos": "P",
+          "status": "MLB debut 2025 · San Francisco Giants"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 16,
+          "name": "Bryce Eldridge",
+          "pos": "DH",
+          "status": "MLB debut 2025 · San Francisco Giants"
+        },
+        {
+          "round": "2",
+          "overall": 52,
+          "name": "Walker Martin",
+          "pos": "3B",
+          "status": "Minors · Eugene Emeralds"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 13,
+          "name": "James Tibbs III",
+          "pos": "RF",
+          "status": "Minors · Oklahoma City Comets"
+        },
+        {
+          "round": "4",
+          "overall": 116,
+          "name": "Dakota Jordan",
+          "pos": "OF",
+          "status": "Minors · Scottsdale Scorpions"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 13,
+          "name": "Gavin Kilen",
+          "pos": "SS",
+          "status": "Minors · Richmond Flying Squirrels"
+        },
+        {
+          "round": "3",
+          "overall": 85,
+          "name": "Trevor Cohen",
+          "pos": "OF",
+          "status": "Minors · Richmond Flying Squirrels"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 4,
+          "name": "Jackson Flora",
+          "pos": "P",
+          "status": "Minors · Richmond Flying Squirrels"
+        },
+        {
+          "round": "CB-A",
+          "overall": 29,
+          "name": "Carson Bolemon",
+          "pos": "P",
+          "status": "Minors · ACL Giants"
+        }
+      ]
+    }
   ],
-  "newsQuery": "San Francisco Giants front office Buster Posey Zack Minasian GM",
-  "mlbTeamPage": "giants"
+  "ballpark": "Oracle Park"
 }

@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "refresh-data": "node scripts/refresh-team-data.mjs"
   },
   "dependencies": {
     "astro": "^7.4.2"

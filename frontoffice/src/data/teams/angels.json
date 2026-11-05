@@ -1,32 +1,184 @@
 {
-  "stub": false,
+  "slug": "angels",
+  "asOf": "2026-11-05",
+  "owner": "Arte Moreno",
+  "ownerSince": "2003",
+  "ownerNote": "Sale to Stan Kroenke's group agreed Sept. 1, 2026; awaiting owner approval.",
   "brass": [
-    { "name": "Perry Minasian", "title": "General Manager",  "since": "2020" },
-    { "name": "Ron Washington", "title": "Manager",          "since": "2023" }
+    {
+      "name": "John Mozeliak",
+      "title": "Interim General Manager",
+      "since": "June 2026",
+      "note": "Named after Perry Minasian was fired June 26, 2026. Under contract through December; not a candidate for the permanent job."
+    },
+    {
+      "name": "Vacant",
+      "title": "Manager",
+      "note": "Kurt Suzuki's 2027 option was declined Oct. 21, 2026. The next GM will run the search."
+    }
   ],
   "eraRecord": [
-    { "year": 2021, "w": 77,  "l": 85,  "note": "Shohei Ohtani MVP season; missed playoffs" },
-    { "year": 2022, "w": 73,  "l": 89,  "note": "Trout/Ohtani couldn't overcome roster gaps" },
-    { "year": 2023, "w": 73,  "l": 89,  "note": "Ohtani's final season; elbow surgery" },
-    { "year": 2024, "w": 63,  "l": 99,  "note": "Post-Ohtani rebuild; Trout injured again" },
-    { "year": 2025, "w": 68,  "l": 94,  "note": "Payroll drops; youth integration" },
-    { "year": 2026, "w": 72,  "l": 90,  "note": "Minasian contract extension through 2026" }
+    {
+      "year": 2019,
+      "w": 72,
+      "l": 90,
+      "pct": ".444",
+      "finish": "4th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 26,
+      "l": 34,
+      "pct": ".433",
+      "finish": "4th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 77,
+      "l": 85,
+      "pct": ".475",
+      "finish": "4th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 73,
+      "l": 89,
+      "pct": ".451",
+      "finish": "3rd AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 73,
+      "l": 89,
+      "pct": ".451",
+      "finish": "4th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 63,
+      "l": 99,
+      "pct": ".389",
+      "finish": "5th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 72,
+      "l": 90,
+      "pct": ".444",
+      "finish": "5th AL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 62,
+      "l": 100,
+      "pct": ".383",
+      "finish": "5th AL West",
+      "note": "Missed postseason"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$126M; Trout earns $37M+/yr through 2030 but has played limited games due to knee injuries",
-    "topContracts": [
-      { "name": "Mike Trout",       "aav": 37.7, "through": 2030 },
-      { "name": "Anthony Rendon",   "aav": 38.6, "through": 2026, "note": "Mostly injured/inactive" },
-      { "name": "Tyler Anderson",   "aav": 13.0, "through": 2025 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Zach Neto",         "pos": "SS",  "school": "Campbell",          "status": "Majors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Caden Dana",        "pos": "RHP", "school": "Sinaloa HS (CA)",   "status": "Majors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",               "pos": "—",   "school": "—",                 "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 13,
+          "name": "Zach Neto",
+          "pos": "SS",
+          "status": "MLB debut 2023 · Los Angeles Angels"
+        },
+        {
+          "round": "3",
+          "overall": 89,
+          "name": "Ben Joyce",
+          "pos": "P",
+          "status": "MLB debut 2023 · Los Angeles Angels"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 11,
+          "name": "Nolan Schanuel",
+          "pos": "1B",
+          "status": "MLB debut 2023 · Los Angeles Angels"
+        },
+        {
+          "round": "3",
+          "overall": 79,
+          "name": "Alberto Rios",
+          "pos": "C",
+          "status": "Minors · Tri-City Dust Devils"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 8,
+          "name": "Christian Moore",
+          "pos": "2B",
+          "status": "MLB debut 2025 · Los Angeles Angels"
+        },
+        {
+          "round": "2",
+          "overall": 45,
+          "name": "Chris Cortez",
+          "pos": "P",
+          "status": "Minors · Rocket City Trash Pandas"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 2,
+          "name": "Tyler Bremner",
+          "pos": "P",
+          "status": "Minors · Rocket City Trash Pandas"
+        },
+        {
+          "round": "2",
+          "overall": 47,
+          "name": "Chase Shores",
+          "pos": "P",
+          "status": "Minors · Tri-City Dust Devils"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 12,
+          "name": "Jared Grindlinger",
+          "pos": "OF",
+          "status": "Minors · ACL Angels"
+        },
+        {
+          "round": "2",
+          "overall": 45,
+          "name": "Jarren Advincula",
+          "pos": "2B",
+          "status": "Minors · ACL Angels"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Los Angeles Angels front office Perry Minasian GM Mike Trout",
-  "mlbTeamPage": "angels"
+  "ballpark": "Angel Stadium"
 }

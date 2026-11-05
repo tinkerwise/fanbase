@@ -1,32 +1,182 @@
 {
-  "stub": false,
+  "slug": "white-sox",
+  "asOf": "2026-11-05",
+  "owner": "Jerry Reinsdorf",
+  "ownerSince": "1981",
   "brass": [
-    { "name": "Chris Getz",    "title": "General Manager",    "since": "2022" },
-    { "name": "Will Venable",  "title": "Manager",            "since": "2024" }
+    {
+      "name": "Chris Getz",
+      "title": "General Manager",
+      "since": "August 2023"
+    },
+    {
+      "name": "Will Venable",
+      "title": "Manager",
+      "since": "October 2024"
+    }
   ],
   "eraRecord": [
-    { "year": 2021, "w": 93,  "l": 69,  "note": "AL Central champs" },
-    { "year": 2022, "w": 81,  "l": 81,  "note": "Missed playoffs" },
-    { "year": 2023, "w": 61,  "l": 101, "note": "Rebuild begins" },
-    { "year": 2024, "w": 41,  "l": 121, "note": "MLB record losses; Grifol fired" },
-    { "year": 2025, "w": 73,  "l": 89,  "note": "Rebuild year; #1 draft pick secured" },
-    { "year": 2026, "w": 84,  "l": 78,  "note": "Wild Card — ALDS loss vs. Guardians" }
+    {
+      "year": 2019,
+      "w": 72,
+      "l": 89,
+      "pct": ".447",
+      "finish": "3rd AL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 35,
+      "l": 25,
+      "pct": ".583",
+      "finish": "3rd AL Central",
+      "note": "Lost AL Wild Card Series"
+    },
+    {
+      "year": 2021,
+      "w": 93,
+      "l": 69,
+      "pct": ".574",
+      "finish": "1st AL Central",
+      "note": "Lost AL Division Series"
+    },
+    {
+      "year": 2022,
+      "w": 81,
+      "l": 81,
+      "pct": ".500",
+      "finish": "2nd AL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 61,
+      "l": 101,
+      "pct": ".377",
+      "finish": "4th AL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 41,
+      "l": 121,
+      "pct": ".253",
+      "finish": "5th AL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 60,
+      "l": 102,
+      "pct": ".370",
+      "finish": "5th AL Central",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 84,
+      "l": 78,
+      "pct": ".519",
+      "finish": "2nd AL Central",
+      "note": "Lost AL Division Series"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "~$117M payroll (24th in MLB); 2026 surprise playoff run after 3 straight 100-loss seasons",
-    "topContracts": [
-      { "name": "Munetaka Murakami", "aav": 17.0, "through": 2027 },
-      { "name": "Andrew Benintendi", "aav": 16.0, "through": 2027 },
-      { "name": "Garrett Crochet",   "aav": 0.0,  "through": 2024, "note": "Traded to Red Sox" }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Colson Montgomery",  "pos": "SS",  "school": "Southridge HS (IN)", "status": "Minors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Dylan Lesko",        "pos": "RHP", "school": "Pooler (GA)",        "status": "Minors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "Hagen Smith",        "pos": "LHP", "school": "Arkansas",           "status": "Majors" }] },
-    { "year": 2026, "picks": [{ "round": 1, "name": "Roch Cholowsky",     "pos": "SS",  "school": "UCLA",               "status": "Rookie" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 26,
+          "name": "Noah Schultz",
+          "pos": "P",
+          "status": "MLB debut 2026 · Chicago White Sox"
+        },
+        {
+          "round": "2",
+          "overall": 62,
+          "name": "Peyton Pallette",
+          "pos": "P",
+          "status": "MLB debut 2026 · Charlotte Knights"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 15,
+          "name": "Jacob Gonzalez",
+          "pos": "SS",
+          "status": "MLB debut 2026 · Pittsburgh Pirates"
+        },
+        {
+          "round": "2",
+          "overall": 51,
+          "name": "Grant Taylor",
+          "pos": "P",
+          "status": "MLB debut 2025 · Chicago White Sox"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 5,
+          "name": "Hagen Smith",
+          "pos": "P",
+          "status": "MLB debut 2026 · Chicago White Sox"
+        },
+        {
+          "round": "2",
+          "overall": 43,
+          "name": "Caleb Bonemer",
+          "pos": "3B",
+          "status": "Minors · Birmingham Barons"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 10,
+          "name": "Billy Carlson",
+          "pos": "SS",
+          "status": "Minors · Kannapolis Cannon Ballers"
+        },
+        {
+          "round": "2",
+          "overall": 44,
+          "name": "Jaden Fauske",
+          "pos": "OF",
+          "status": "Minors · Kannapolis Cannon Ballers"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 1,
+          "name": "Roch Cholowsky",
+          "pos": "SS",
+          "status": "Minors · Winston-Salem Dash"
+        },
+        {
+          "round": "CB-A",
+          "overall": 34,
+          "name": "Landon Thome",
+          "pos": "SS",
+          "status": "Minors · ACL White Sox"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Chicago White Sox front office Chris Getz GM rebuild",
-  "mlbTeamPage": "whitesox"
+  "ballpark": "Rate Field"
 }

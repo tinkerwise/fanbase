@@ -1,33 +1,187 @@
 {
-  "stub": false,
+  "slug": "rockies",
+  "asOf": "2026-11-05",
+  "owner": "Dick & Charlie Monfort",
   "brass": [
-    { "name": "Paul DePodesta",  "title": "President of Baseball Operations", "since": "2025" },
-    { "name": "Josh Byrnes",     "title": "General Manager",                  "since": "2025" },
-    { "name": "Bud Black",       "title": "Manager",                          "since": "2017" }
+    {
+      "name": "Paul DePodesta",
+      "title": "President of Baseball Operations",
+      "since": "2025"
+    },
+    {
+      "name": "Josh Byrnes",
+      "title": "General Manager",
+      "since": "December 2025",
+      "note": "Reports to Paul DePodesta."
+    },
+    {
+      "name": "Warren Schaeffer",
+      "title": "Manager",
+      "since": "May 2025"
+    }
   ],
   "eraRecord": [
-    { "year": 2021, "w": 74,  "l": 87,  "note": "Bill Schmidt GM era" },
-    { "year": 2022, "w": 68,  "l": 94,  "note": "Missed playoffs" },
-    { "year": 2023, "w": 59,  "l": 103, "note": "Coors Field losing its luster" },
-    { "year": 2024, "w": 61,  "l": 101, "note": "Continued decline" },
-    { "year": 2025, "w": 43,  "l": 119, "note": "Historically bad; Schmidt steps down; DePodesta/Byrnes hired" },
-    { "year": 2026, "w": 55,  "l": 107, "note": "New regime Year 1; 2026 draft #10 overall (TBD)" }
+    {
+      "year": 2019,
+      "w": 71,
+      "l": 91,
+      "pct": ".438",
+      "finish": "4th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 26,
+      "l": 34,
+      "pct": ".433",
+      "finish": "4th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2021,
+      "w": 74,
+      "l": 87,
+      "pct": ".460",
+      "finish": "4th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 68,
+      "l": 94,
+      "pct": ".420",
+      "finish": "5th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2023,
+      "w": 59,
+      "l": 103,
+      "pct": ".364",
+      "finish": "5th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2024,
+      "w": 61,
+      "l": 101,
+      "pct": ".377",
+      "finish": "5th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 43,
+      "l": 119,
+      "pct": ".265",
+      "finish": "5th NL West",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2026,
+      "w": 58,
+      "l": 104,
+      "pct": ".358",
+      "finish": "5th NL West",
+      "note": "Missed postseason"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "Among lowest payrolls in MLB; DePodesta/Byrnes focused on culture and player development reset",
-    "topContracts": [
-      { "name": "Kris Bryant",      "aav": 26.3, "through": 2028, "note": "Injury-plagued; limited games" },
-      { "name": "Ryan McMahon",     "aav": 15.5, "through": 2028 },
-      { "name": "Germán Márquez",   "aav": 12.0, "through": 2027, "note": "Returning from TJ" }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Benny Montgomery",   "pos": "OF",  "school": "Red Land HS (PA)", "status": "Minors" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Chase Dollander",    "pos": "RHP", "school": "Tennessee",        "status": "Traded (BOS)" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",               "status": "—" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",                "pos": "—",   "school": "—",               "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 10,
+          "name": "Gabriel Hughes",
+          "pos": "P",
+          "status": "MLB debut 2026 · Colorado Rockies"
+        },
+        {
+          "round": "1C",
+          "overall": 31,
+          "name": "Sterlin Thompson",
+          "pos": "RF",
+          "status": "MLB debut 2026 · Colorado Rockies"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 9,
+          "name": "Chase Dollander",
+          "pos": "P",
+          "status": "MLB debut 2025 · Colorado Rockies"
+        },
+        {
+          "round": "2",
+          "overall": 46,
+          "name": "Sean Sullivan",
+          "pos": "P",
+          "status": "MLB debut 2026 · Colorado Rockies"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 3,
+          "name": "Charlie Condon",
+          "pos": "1B",
+          "status": "Minors · Albuquerque Isotopes"
+        },
+        {
+          "round": "CB-A",
+          "overall": 38,
+          "name": "Brody Brecht",
+          "pos": "P",
+          "status": "Minors · Spokane Indians"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 4,
+          "name": "Ethan Holliday",
+          "pos": "SS",
+          "status": "Minors · Fresno Grizzlies"
+        },
+        {
+          "round": "2",
+          "overall": 45,
+          "name": "JB Middleton",
+          "pos": "P",
+          "status": "Minors · Fresno Grizzlies"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 10,
+          "name": "Tyler Bell",
+          "pos": "SS",
+          "status": "Minors · ACL Rockies"
+        },
+        {
+          "round": "CB-A",
+          "overall": 37,
+          "name": "Daniel Jackson",
+          "pos": "C",
+          "status": "Minors · Fresno Grizzlies"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Colorado Rockies front office Paul DePodesta Josh Byrnes GM rebuild",
-  "mlbTeamPage": "rockies"
+  "ballpark": "Coors Field"
 }

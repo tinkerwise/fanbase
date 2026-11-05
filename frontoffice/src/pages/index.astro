@@ -32,7 +32,7 @@ DIVISIONS.forEach(d => byDiv[d]?.sort((a, b) => a.name.localeCompare(b.name)));
               <div class="team-grid">
                 {teams.map(t => (
                   <a class="team-card" href={`${base}team/${t.slug}/`}>
-                    <img src={`https://www.mlb.com/assets/images/team/logos/${t.id}/default_chyron.png`} alt={t.name} width="24" height="24" loading="lazy" decoding="async" />
+                    <img src={`https://www.mlbstatic.com/team-logos/${t.id}.svg`} alt={t.name} width="24" height="24" loading="lazy" decoding="async" />
                     {t.name}
                   </a>
                 ))}
@@ -43,18 +43,11 @@ DIVISIONS.forEach(d => byDiv[d]?.sort((a, b) => a.name.localeCompare(b.name)));
       </div>
     </div>
 
-    <!-- Right sidebar: recent league activity + salary snapshot -->
+    <!-- Right sidebar: recent league activity -->
     <div class="home-sidebar">
       <div class="sidebar-section">
-        <div class="sidebar-section-head">Recent Executive Moves</div>
+        <div class="sidebar-section-head">Recent Transactions</div>
         <div id="leagueActivity">
-          <span class="load-msg"><span class="spinner"></span>Loading…</span>
-        </div>
-      </div>
-
-      <div class="sidebar-section">
-        <div class="sidebar-section-head">Payroll Snapshot</div>
-        <div id="payrollSnapshot">
           <span class="load-msg"><span class="spinner"></span>Loading…</span>
         </div>
       </div>
@@ -63,7 +56,7 @@ DIVISIONS.forEach(d => byDiv[d]?.sort((a, b) => a.name.localeCompare(b.name)));
         <div class="sidebar-section-head">League Page</div>
         <a class="nav-link" style="border-left:2px solid var(--accent);background:var(--accent-dim)" href={`${base}league/`}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
-          Salary Rankings &amp; Transactions →
+          Transactions &amp; Executive Moves →
         </a>
       </div>
     </div>

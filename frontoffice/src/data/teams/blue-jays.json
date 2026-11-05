@@ -1,33 +1,187 @@
 {
-  "stub": false,
+  "slug": "blue-jays",
+  "asOf": "2026-11-05",
+  "owner": "Rogers Communications",
+  "ownerSince": "2000",
   "brass": [
-    { "name": "Mark Shapiro",  "title": "President & CEO",               "since": "2015" },
-    { "name": "Ross Atkins",   "title": "EVP, Baseball Operations & GM", "since": "2015" },
-    { "name": "John Schneider","title": "Manager",                       "since": "2022" }
+    {
+      "name": "Mark Shapiro",
+      "title": "President & CEO",
+      "since": "2015"
+    },
+    {
+      "name": "Ross Atkins",
+      "title": "General Manager",
+      "since": "December 2015"
+    },
+    {
+      "name": "John Schneider",
+      "title": "Manager",
+      "since": "July 2022"
+    }
   ],
   "eraRecord": [
-    { "year": 2022, "w": 92,  "l": 70,  "note": "Wild Card; ALCS" },
-    { "year": 2023, "w": 89,  "l": 73,  "note": "Wild Card; ALDS exit" },
-    { "year": 2024, "w": 74,  "l": 88,  "note": "Missed playoffs; rebuilding" },
-    { "year": 2025, "w": 82,  "l": 80,  "note": "Near miss; Guerrero extension signed" },
-    { "year": 2026, "w": 90,  "l": 72,  "note": "Wild Card contender" }
+    {
+      "year": 2019,
+      "w": 67,
+      "l": 95,
+      "pct": ".414",
+      "finish": "4th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2020,
+      "w": 32,
+      "l": 28,
+      "pct": ".533",
+      "finish": "3rd AL East",
+      "note": "Lost AL Wild Card Series"
+    },
+    {
+      "year": 2021,
+      "w": 91,
+      "l": 71,
+      "pct": ".562",
+      "finish": "4th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2022,
+      "w": 92,
+      "l": 70,
+      "pct": ".568",
+      "finish": "2nd AL East",
+      "note": "Lost AL Wild Card Series"
+    },
+    {
+      "year": 2023,
+      "w": 89,
+      "l": 73,
+      "pct": ".549",
+      "finish": "3rd AL East",
+      "note": "Lost AL Wild Card Series"
+    },
+    {
+      "year": 2024,
+      "w": 74,
+      "l": 88,
+      "pct": ".457",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    },
+    {
+      "year": 2025,
+      "w": 94,
+      "l": 68,
+      "pct": ".580",
+      "finish": "1st AL East",
+      "note": "Lost World Series"
+    },
+    {
+      "year": 2026,
+      "w": 79,
+      "l": 83,
+      "pct": ".488",
+      "finish": "5th AL East",
+      "note": "Missed postseason"
+    }
   ],
-  "payroll": {
-    "luxuryTaxThreshold": 244,
-    "note": "Payroll ~$282M (4th highest); Guerrero 14-yr/$500M extension anchors roster",
-    "topContracts": [
-      { "name": "Vladimir Guerrero Jr.", "aav": 40.2, "through": 2039 },
-      { "name": "Dylan Cease",           "aav": 26.8, "through": 2030 },
-      { "name": "George Springer",       "aav": 25.0, "through": 2026 },
-      { "name": "Kevin Gausman",         "aav": 22.0, "through": 2027 }
-    ]
-  },
   "recentDraftClasses": [
-    { "year": 2022, "picks": [{ "round": 1, "name": "Gabriel Moreno",  "pos": "C",   "school": "HS (Venezuela)",  "status": "MLB — Traded to ARI" }] },
-    { "year": 2023, "picks": [{ "round": 1, "name": "Ricky Tiedemann", "pos": "LHP", "school": "Golden West JC",  "status": "Majors" }] },
-    { "year": 2024, "picks": [{ "round": 1, "name": "Austin Brice",    "pos": "RHP", "school": "Georgia",         "status": "Minors" }] },
-    { "year": 2025, "picks": [{ "round": 1, "name": "TBD",             "pos": "—",   "school": "—",               "status": "—" }] }
+    {
+      "year": 2022,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 23,
+          "name": "Brandon Barriera",
+          "pos": "P",
+          "status": "Minors · Mesa Solar Sox"
+        },
+        {
+          "round": "2",
+          "overall": 60,
+          "name": "Josh Kasevich",
+          "pos": "SS",
+          "status": "Minors · Buffalo Bisons"
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 20,
+          "name": "Arjun Nimmala",
+          "pos": "SS",
+          "status": "Minors · Mesa Solar Sox"
+        },
+        {
+          "round": "3",
+          "overall": 89,
+          "name": "Juaron Watts-Brown",
+          "pos": "P",
+          "status": "Minors · Norfolk Tides"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 20,
+          "name": "Trey Yesavage",
+          "pos": "P",
+          "status": "MLB debut 2025 · Toronto Blue Jays"
+        },
+        {
+          "round": "2",
+          "overall": 59,
+          "name": "Khal Stephen",
+          "pos": "P",
+          "status": "Minors · Akron RubberDucks"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 8,
+          "name": "JoJo Parker",
+          "pos": "SS",
+          "status": "Minors · Vancouver Canadians"
+        },
+        {
+          "round": "3",
+          "overall": 81,
+          "name": "Jake Cook",
+          "pos": "OF",
+          "status": "Minors · Mesa Solar Sox"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "picks": [
+        {
+          "round": "1",
+          "overall": 39,
+          "name": "Cole Carlon",
+          "pos": "P",
+          "status": "Minors · FCL Blue Jays"
+        },
+        {
+          "round": "3",
+          "overall": 103,
+          "name": "Ryan Cooney",
+          "pos": "SS",
+          "status": "Minors · Dunedin Blue Jays"
+        }
+      ]
+    }
   ],
-  "newsQuery": "Toronto Blue Jays front office Ross Atkins GM",
-  "mlbTeamPage": "bluejays"
+  "ballpark": "Rogers Centre"
 }
