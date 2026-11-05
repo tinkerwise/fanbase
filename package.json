@@ -11,7 +11,12 @@
     "smoke": "npm run build && npm run smoke:verify",
     "deploy": "bash scripts/deploy.sh",
     "feedback": "bash scripts/feedback.sh",
-    "feedback-password": "bash scripts/feedback-password.sh"
+    "feedback-password": "bash scripts/feedback-password.sh",
+    "frontoffice:dev": "npm --prefix frontoffice run dev",
+    "frontoffice:build": "npm --prefix frontoffice run build",
+    "frontoffice:smoke": "npm --prefix frontoffice run smoke",
+    "frontoffice:deploy": "npm --prefix frontoffice run deploy",
+    "frontoffice:refresh-data": "npm --prefix frontoffice run refresh-data"
   },
   "dependencies": {
     "astro": "^7.4.2"

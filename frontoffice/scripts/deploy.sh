@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-# Deploy frontoffice/ to briancsmith.org/frontoffice/ via FTP.
-# Shares the same FTP credentials and approach as Fanbase (Keychain service "fanbase-ftp").
-# Usage: npm run deploy [-- --dry-run]
+# Deploy Front Office to briancsmith.org/fanbase/frontoffice/ via FTP.
+# Lives in the Fanbase repo's frontoffice/ folder and shares its FTP
+# credentials (Keychain service "fanbase-ftp"). Fanbase's own deploy skips
+# frontoffice/ on the host, so the two sites deploy independently.
+# Reads frontoffice/.env only, never the Fanbase root .env.
+# Usage: npm run frontoffice:deploy [-- --dry-run]   (from the repo root)
+#        npm run deploy [-- --dry-run]               (from frontoffice/)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -29,7 +33,7 @@ PROMPTED=""
 [[ -n "$FTP_USERNAME" ]] || { read -rp "FTP username: " FTP_USERNAME; PROMPTED=1; }
 [[ -z "$FTP_PASSWORD" ]] && { read -rsp "FTP password: " FTP_PASSWORD; echo; PROMPTED=1; }
 
-npm run build
+npm run smoke
 
 export LFTP_PASSWORD="$FTP_PASSWORD"
 lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" <<LFTP_EOF

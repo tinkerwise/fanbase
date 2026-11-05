@@ -1,12 +1,14 @@
 {
   "name": "frontoffice",
   "version": "1.0.0",
-  "description": "MLB Front Office Intelligence — briancsmith.org/frontoffice/",
+  "description": "MLB Front Office Intelligence — briancsmith.org/fanbase/frontoffice/",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "smoke:verify": "sh -c 'test -f dist/index.html && test -f dist/404.html && test -f dist/league/index.html && test -f dist/rss-proxy.php && test -f dist/style.css && test $(ls dist/team | wc -l) -eq 30 && grep -q \"Track Record\" dist/team/orioles/index.html'",
+    "smoke": "npm run build && npm run smoke:verify",
     "deploy": "bash scripts/deploy.sh",
     "refresh-data": "node scripts/refresh-team-data.mjs"
   },

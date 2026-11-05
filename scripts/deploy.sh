@@ -63,8 +63,9 @@ npm run smoke
 # build rewrites it, so the mirror skips any file named that way.
 # feedback-data/ only exists on the host (feedback.php writes it), so the
 # mirror leaves it alone rather than deleting it. The same goes for
-# frontoffice/, a separate site with its own repo and deploy that lives
-# inside this FTP folder: without the exclude, --delete removes it.
+# frontoffice/, a separate Astro site that lives in this repo's frontoffice/
+# folder and deploys on its own (npm run frontoffice:deploy) into this FTP
+# folder: without the exclude, --delete removes it.
 # Password goes through LFTP_PASSWORD so it never appears in lftp's args.
 export LFTP_PASSWORD="$FTP_PASSWORD"
 lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" <<LFTP_EOF
