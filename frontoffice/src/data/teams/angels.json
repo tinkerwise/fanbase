@@ -2,19 +2,20 @@
   "slug": "angels",
   "asOf": "2026-11-05",
   "owner": "Arte Moreno",
-  "ownerSince": "2003",
-  "ownerNote": "Sale to Stan Kroenke's group agreed Sept. 1, 2026; awaiting owner approval.",
+  "ownerSince": 2003,
+  "ownerNote": "Agreed to sell the club to Stan Kroenke for $4 billion; the sale has not closed.",
   "brass": [
     {
       "name": "John Mozeliak",
       "title": "Interim General Manager",
       "since": "June 2026",
-      "note": "Named after Perry Minasian was fired June 26, 2026. Under contract through December; not a candidate for the permanent job."
+      "note": "Named interim GM after Perry Minasian was fired in June 2026. Won't be the full-time GM in 2027 and plans to step aside once new ownership is in place; his contract runs through December."
     },
     {
       "name": "Vacant",
       "title": "Manager",
-      "note": "Kurt Suzuki's 2027 option was declined Oct. 21, 2026. The next GM will run the search."
+      "note": "Open since Oct. 21, 2026, when the Angels declined Kurt Suzuki's 2027 option after a 100-loss season. The club is searching with Kroenke Sports & Entertainment, and the new GM will hire the next manager.",
+      "vacant": true
     }
   ],
   "eraRecord": [

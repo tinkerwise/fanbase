@@ -46,7 +46,7 @@ function esc(s: string) {
     <div class="team-hero-info">
       <div class="team-hero-name">{team.fullName}</div>
       <div class="team-hero-meta">{team.div} · {teamData.ballpark ?? ''}{teamData.owner ? ` · Owner: ${teamData.owner}` : ''}</div>
-      {teamData.ownerNote && <div class=\"team-hero-meta\">{teamData.ownerNote}</div>}
+      {teamData.ownerNote && <div class="team-hero-meta">{teamData.ownerNote}</div>}
       <div class="team-hero-badges">
         <span class="badge">{team.div}</span>
         {isStub && <span class="badge stub">Stub — partial data</span>}
@@ -70,14 +70,14 @@ function esc(s: string) {
   <section id="brass">
     <div class="section-head">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-      <h2>The Brass{asOf && <span style=\"font-size:.7rem;font-weight:400;color:var(--text-3)\"> — as of {asOf}</span>}</h2>
+      <h2>The Brass{asOf && <span style="font-size:.7rem;font-weight:400;color:var(--text-3)"> — as of {asOf}</span>}</h2>
     </div>
     {isStub ? (
       <p class="empty-msg">Front office data not yet curated for the {team.fullName}. Check back soon.</p>
     ) : (
       <div class="brass-grid">
         {brass.map((person: any) => (
-          <div class="brass-card">
+          <div class={person.vacant ? 'brass-card vacant' : 'brass-card'}>
             <div class="brass-name">{person.name}</div>
             <div class="brass-title">{person.title}</div>
             {person.since && <div class="brass-meta">Since {person.since}</div>}

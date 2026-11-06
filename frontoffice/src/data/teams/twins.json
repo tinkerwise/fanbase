@@ -1,7 +1,7 @@
 {
   "slug": "twins",
   "asOf": "2026-11-05",
-  "owner": "Tom Pohlad",
+  "owner": "Pohlad family (Tom Pohlad, controlling owner)",
   "brass": [
     {
       "name": "Jeremy Zoll",
@@ -178,5 +178,6 @@
       ]
     }
   ],
-  "ballpark": "Target Field"
+  "ballpark": "Target Field",
+  "ownerSince": 2025
 }
