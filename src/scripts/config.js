@@ -10,16 +10,8 @@ export const DIVISION_NAMES = {
 // MLB id → abbreviation ('BAL'), from teamConfig.js
 export const TEAM_ABBREV = Object.fromEntries(Object.values(TEAM_CONFIG).map(t => [t.id, t.abbr]));
 
-export const TEAM_SLUG = {
-  108: 'angels',    109: 'd-backs',      110: 'orioles',   111: 'red-sox',
-  112: 'cubs',      113: 'reds',         114: 'guardians', 115: 'rockies',
-  116: 'tigers',    117: 'astros',       118: 'royals',    119: 'dodgers',
-  120: 'nationals', 121: 'mets',         133: 'athletics', 134: 'pirates',
-  135: 'padres',    136: 'mariners',     137: 'giants',    138: 'cardinals',
-  139: 'rays',      140: 'rangers',      141: 'blue-jays', 142: 'twins',
-  143: 'phillies',  144: 'braves',       145: 'white-sox', 146: 'marlins',
-  147: 'yankees',   158: 'brewers',
-};
+// MLB id → URL slug ('orioles'), from teamConfig.js
+export { TEAM_SLUG } from './teamConfig.js';
 
 export const TEAM_PAGE = {
   108: 'angels',     109: 'dbacks',      110: 'orioles',    111: 'redsox',

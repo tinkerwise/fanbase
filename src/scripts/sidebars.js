@@ -28,6 +28,7 @@ import { extractVideoId, bindVideoClicks } from './videoTheater.js';
 import { fetchWeatherForGames, getGameWeather } from './weather.js';
 import { ensureWalkupSongsLoaded, getWalkupSongUrls } from './walkup-songs.js';
 import { WALKUP_ICON_SVG } from './scores.js';
+import { classifyTx } from './frontOfficeData.js';
 
 // ── Standings ─────────────────────────────────────────────────────
 export async function loadStandings() {
@@ -347,7 +348,10 @@ export async function loadRoster() {
 }
 
 // ── Transactions ──────────────────────────────────────────────────
-export async function loadTransactions() {
+// Home's sidebar shows two weeks. The Front Office page passes a longer
+// window and `badges`, which labels each move (Signed, Trade, DFA…): it
+// replaced the old Front Office site's "The Moves" (#38).
+export async function loadTransactions({ days = 14, limit = 12, badges = false } = {}) {
   const wrap = $('transactionsWrap');
   if (isFirstVisit()) {
     if (wrap) wrap.innerHTML = '<div class="sidebar-no-team-msg">Select a team to see their transactions.</div>';
@@ -356,7 +360,7 @@ export async function loadTransactions() {
   try {
     const end = localDateStr(0);
     const startD = new Date();
-    startD.setDate(startD.getDate() - 14);
+    startD.setDate(startD.getDate() - days);
     const start = startD.toISOString().slice(0, 10);
 
     const activeTeamId = getActiveTeamId();
@@ -367,9 +371,9 @@ export async function loadTransactions() {
 
     const txns = (data.transactions ?? [])
       .sort((a, b) => new Date(b.date || b.effectiveDate) - new Date(a.date || a.effectiveDate))
-      .slice(0, 12);
+      .slice(0, limit);
     if (!txns.length) {
-      wrap.innerHTML = '<span class="sidebar-msg">No recent transactions</span>';
+      wrap.innerHTML = `<span class="sidebar-msg">No transactions in the last ${days} days</span>`;
       return;
     }
 
@@ -383,8 +387,10 @@ export async function loadTransactions() {
       const descHtml = playerLink
         ? desc.replace(playerName, `<a class="txn-player" href="${playerLink}" target="_blank" rel="noopener">${esc(playerName)}</a>`)
         : esc(desc);
+      const kind = badges ? classifyTx(t) : null;
       return `<div class="txn-item">
         <span class="txn-date">${esc(dateStr)}</span>
+        ${kind ? `<span class="fo-tx-type fo-tx-type--${kind.cls}">${kind.label}</span>` : ''}
         <span class="txn-desc">${descHtml}</span>
       </div>`;
     }).join('');
@@ -945,5 +951,9 @@ export function loadContracts() {
     <a class="widget-link-card" href="https://www.spotrac.com/mlb/${spotracSlug}/tax/" target="_blank" rel="noopener">
       <span class="widget-link-card-label">Luxury Tax</span>
       <span class="widget-link-card-sub">Spotrac: competitive balance tax payroll ↗</span>
+    </a>
+    <a class="widget-link-card" href="https://www.baseballprospectus.com/compensation/cots/" target="_blank" rel="noopener">
+      <span class="widget-link-card-label">Contract Details</span>
+      <span class="widget-link-card-sub">Cot's Baseball Contracts ↗</span>
     </a>`;
 }

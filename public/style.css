@@ -4609,7 +4609,7 @@ html:not([data-hardball]) [data-offseason-only] { display: none !important; }
 .fo-page { max-width: 1100px; margin: 0 auto; padding: 20px 16px 32px; display: flex; flex-direction: column; gap: 16px; }
 .fo-page-title { margin: 0; font-size: 1.4rem; font-weight: 800; }
 .fo-page-sub { margin: 4px 0 0; font-size: 0.85rem; color: var(--text-2); }
-.fo-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.fo-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
 .fo-card {
   display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 14px;
   background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
@@ -4627,11 +4627,111 @@ html:not([data-hardball]) [data-offseason-only] { display: none !important; }
   padding: 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
 }
 .fo-widget .section-label { display: flex; align-items: center; gap: 6px; }
+/* Merged from the separate Front Office site (#38): hero, section tabs,
+   The Brass, Track Record, Draft History, news, and the league page */
+.fo-hero { display: flex; align-items: center; gap: 14px; }
+.fo-hero-logo { width: 56px; height: 56px; flex: none; object-fit: contain; }
+.fo-hero-text { min-width: 0; }
+.fo-back { display: inline-block; margin-bottom: 4px; font-size: 0.8rem; color: var(--accent-text); text-decoration: none; }
+.fo-back:hover { text-decoration: underline; }
+.fo-tabs {
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+  position: sticky; top: var(--header-h); z-index: 5; margin: 0 -16px; padding: 8px 16px;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.fo-tabs::-webkit-scrollbar { display: none; }
+.fo-tab {
+  flex: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-2); text-decoration: none; white-space: nowrap;
+}
+.fo-tab:hover { color: var(--text); border-color: var(--accent); }
+.fo-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fo-tab--league { margin-left: auto; color: var(--accent-text); }
+/* Jump targets clear the sticky header and tabs */
+.fo-page [id^="fo-"] { scroll-margin-top: calc(var(--header-h) + 56px); }
+.fo-section {
+  padding: 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.fo-section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.fo-section-head .fo-section-title { margin: 0; }
+.fo-section-title { margin: 0 0 10px; font-size: 1rem; font-weight: 800; }
+.fo-section-note { margin-left: 6px; font-size: 0.75rem; font-weight: 500; color: var(--text-3); }
+.fo-section .widget-link { margin-top: 10px; }
+
+.fo-brass { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.fo-brass-card {
+  display: flex; flex-direction: column; gap: 3px; padding: 12px;
+  background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius);
+}
+.fo-brass-card--vacant { border-left-style: dashed; border-left-color: var(--text-3); }
+.fo-brass-card--vacant .fo-brass-name { color: var(--text-3); font-style: italic; }
+.fo-brass-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent-text); }
+.fo-brass-name { font-size: 1.05rem; font-weight: 800; }
+.fo-brass-since { font-size: 0.78rem; color: var(--text-2); }
+.fo-brass-note { font-size: 0.78rem; line-height: 1.45; color: var(--text-2); }
+
+.fo-table-wrap { overflow-x: auto; }
+.fo-record { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.fo-record th, .fo-record td { padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.fo-record thead th { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); }
+.fo-record tbody th { font-weight: 700; }
+.fo-record .fo-num { text-align: right; font-variant-numeric: tabular-nums; }
+.fo-record .fo-win { color: var(--accent-text); font-weight: 700; }
+.fo-record-note { color: var(--text-2); }
+
+.fo-tx-type {
+  flex: none; align-self: flex-start; padding: 1px 6px; border-radius: 4px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  background: var(--surface); border: 1px solid var(--border); color: var(--text-2);
+}
+.fo-tx-type--sign, .fo-tx-type--trade { background: var(--accent-dim); border-color: transparent; color: var(--accent-text); }
+.fo-tx-type--dfa, .fo-tx-type--release { color: var(--text-3); }
+.fo-tx-logo { flex: none; width: 18px; height: 18px; object-fit: contain; }
+.fo-league-tx .txn-item { align-items: flex-start; }
+
+.fo-drafts { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.fo-draft-class { display: flex; flex-direction: column; gap: 6px; }
+.fo-draft-year { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; color: var(--text-3); }
+.fo-draft-pick { display: flex; flex-direction: column; gap: 1px; padding: 8px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.fo-draft-slot { font-size: 0.68rem; color: var(--text-3); }
+.fo-draft-name { font-weight: 700; font-size: 0.88rem; }
+.fo-draft-pos { margin-left: 4px; font-size: 0.68rem; font-weight: 600; color: var(--text-2); }
+.fo-draft-status { font-size: 0.75rem; color: var(--accent-text); }
+
+.fo-news { display: flex; flex-direction: column; }
+.fo-news-item { display: flex; flex-direction: column; gap: 3px; padding: 10px 0; border-bottom: 1px solid var(--border); color: var(--text); text-decoration: none; }
+.fo-news-item:last-child { border-bottom: 0; }
+.fo-news-title { font-weight: 700; font-size: 0.9rem; line-height: 1.35; }
+.fo-news-item:hover .fo-news-title { color: var(--accent-text); }
+.fo-news-date { font-size: 0.7rem; color: var(--text-3); }
+
+.fo-filter select {
+  min-height: 36px; padding: 4px 10px; font: inherit; font-size: 0.85rem;
+  color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.fo-directory { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; }
+.fo-dir-div-title { margin: 0 0 4px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-3); }
+.fo-dir-row {
+  display: grid; grid-template-columns: 24px 92px minmax(0, 1fr); align-items: center; gap: 10px;
+  padding: 8px 6px; border-bottom: 1px solid var(--border); border-radius: 4px; color: var(--text); text-decoration: none;
+}
+.fo-dir-row:hover { background: var(--accent-dim); }
+.fo-dir-row--mine .fo-dir-team { color: var(--accent-text); }
+.fo-dir-logo { width: 24px; height: 24px; object-fit: contain; }
+.fo-dir-team { font-weight: 700; font-size: 0.88rem; }
+.fo-dir-people { display: flex; flex-direction: column; gap: 1px; min-width: 0; font-size: 0.78rem; }
+.fo-dir-person { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fo-dir-role { display: inline-block; width: 64px; color: var(--text-3); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.fo-dir-vacant { color: var(--text-3); font-style: italic; }
+.fo-dir-empty { color: var(--text-3); }
+
 @media (max-width: 760px) {
-  .fo-cards, .fo-widgets { grid-template-columns: 1fr; }
+  .fo-cards, .fo-widgets, .fo-directory { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .fo-page { padding: 14px 12px 24px; }
+  .fo-tabs { margin: 0 -12px; padding: 8px 12px; }
+  .fo-tab--league { margin-left: 0; }
 }
 
 /* ── Cleanup (#22): offseason free agency and trades ──

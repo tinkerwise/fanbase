@@ -1,0 +1,27 @@
+import{I as e,K as t,L as n,R as r,U as i,Y as a,Z as o,et as s,q as c,s as l,tt as u,z as d}from"./utils.DaJInyY3.js";var f=e=>`https://www.mlbstatic.com/team-logos/${e}.svg`,p=`News, scores, and your roster, in your colors. You can switch any time.`,m=null,h=!1;function g(){return location.pathname.startsWith(`/fanbase/`)?location.pathname.slice(9):``}function _(e){try{n||localStorage.setItem(r,`1`),localStorage.setItem(c,String(e))}catch{}let t=new URL(location.href);t.searchParams.delete(`team`),t.searchParams.delete(`view`),location.href=t.href}function v(){let t=Object.values(u).sort((e,t)=>e.name.localeCompare(t.name));m=document.createElement(`div`),m.className=`team-picker-overlay hidden`,m.setAttribute(`role`,`dialog`),m.setAttribute(`aria-modal`,`true`),m.setAttribute(`aria-labelledby`,`teamPickerTitle`),m.innerHTML=`
+    <div class="team-picker-modal">
+      <div class="team-picker-header">
+        <div>
+          <h2 class="team-picker-title" id="teamPickerTitle">Choose Your Team</h2>
+          <p class="team-picker-sub">${p}</p>
+          ${e?`<button class="team-picker-mode" type="button" data-mode-toggle>Just looking? Browse a team without switching</button>`:``}
+        </div>
+        ${d?`<button class="team-picker-close" aria-label="Close">✕</button>`:``}
+      </div>
+      <div class="team-picker-grid">
+        ${t.map(e=>`
+          <button class="team-picker-btn${e.id===(n??d)?` active`:``}" data-team-id="${e.id}" title="${l(e.fullName)}">
+            <img class="team-picker-logo" src="${f(e.id)}"
+              alt="${l(e.name)}" width="48" height="48" loading="lazy">
+            <span class="team-picker-name">${l(e.name)}</span>
+          </button>
+        `).join(``)}
+      </div>
+    </div>`,document.body.appendChild(m),m.addEventListener(`click`,e=>{let t=e.target.closest(`.team-picker-btn`);t?h?location.href=s(Number(t.dataset.teamId),g()):_(Number(t.dataset.teamId)):e.target.closest(`[data-mode-toggle]`)?y(!h):d&&(e.target===m||e.target.closest(`.team-picker-close`))&&x()}),document.addEventListener(`keydown`,e=>{e.key===`Escape`&&d&&!m.classList.contains(`hidden`)&&x()})}function y(t){h=t,m.classList.toggle(`team-picker-overlay--browse`,t),m.querySelector(`.team-picker-title`).textContent=t?`Browse a Team`:`Choose Your Team`,m.querySelector(`.team-picker-sub`).textContent=t?`See any team's news, scores and schedule.${e?` Your team stays the ${e.name}.`:``}`:p;let n=m.querySelector(`[data-mode-toggle]`);n&&(n.textContent=t?`Make a team yours instead`:`Just looking? Browse a team without switching`)}function b({browse:e=!1}={}){m||v(),y(e),m.classList.remove(`hidden`),document.body.style.overflow=`hidden`}function x(){m?.classList.add(`hidden`),document.body.style.overflow=``}function S(e){e.classList.remove(`btn-team-picker--tooltip`),e.querySelector(`.team-picker-tooltip`)?.remove()}function C(t){if(e)return;t.classList.add(`btn-team-picker--tooltip`);let n=document.createElement(`div`);n.className=`team-picker-tooltip`,n.textContent=`Pick your team!`,t.appendChild(n);let r=e=>{t.contains(e.target)||(S(t),document.removeEventListener(`click`,r,!0))};document.addEventListener(`click`,r,!0)}function w(){let t=document.querySelector(`.site-header .header-right`);if(!t)return;let r=document.createElement(`button`);r.className=`btn-team-picker`,r.type=`button`,r.setAttribute(`aria-label`,e?`My team: ${e.fullName}. Change team`:`Pick your team`),r.title=e?`My Team: ${e.name}`:`Pick your team`,r.innerHTML=e?`<img class="team-picker-active-logo" src="${f(n)}"
+        alt="" width="20" height="20" loading="eager" onerror="this.style.display='none'">
+       <span class="team-picker-active-name">${l(e.name)}</span>`:`<span class="team-picker-active-name">Pick team</span>`,r.addEventListener(`click`,()=>{S(r),b()}),t.prepend(r),C(r)}function T(){if(!o)return;let n=new URL(location.href);n.searchParams.delete(`view`);let r=document.createElement(`div`);r.className=`view-banner`,r.setAttribute(`role`,`status`),r.innerHTML=`
+    <img class="view-banner-logo" src="${f(t)}" alt="" width="22" height="22" decoding="async">
+    <span class="view-banner-text">Viewing as the <b>${l(i.fullName)}</b></span>
+    <button class="view-banner-btn" type="button" data-browse>Other teams</button>
+    ${e?`<a class="view-banner-btn view-banner-back" href="${l(n.href)}" data-no-view>Back to ${l(e.name)}</a>`:`<button class="view-banner-btn view-banner-back" type="button" data-pick>Pick your team</button>`}
+    <button class="view-banner-close" type="button" aria-label="Dismiss" data-dismiss>✕</button>`,r.addEventListener(`click`,e=>{e.target.closest(`[data-browse]`)?b({browse:!0}):e.target.closest(`[data-pick]`)?b():e.target.closest(`[data-dismiss]`)&&r.remove()});let a=document.querySelector(`.site-header`);a?a.after(r):document.body.prepend(r)}function E(){if(!d)return;let e=i.fullName.toLowerCase().replace(/\s+/g,`-`).replace(/[^a-z0-9-]/g,``),n={abbr:i.abbr.toLowerCase(),slug:e,page:a[t],id:t};document.querySelectorAll(`[data-team-text]`).forEach(e=>{e.textContent=i[e.dataset.teamText]??e.textContent}),document.querySelectorAll(`[data-team-href]`).forEach(e=>{e.href=e.dataset.teamHref.replace(/\{(\w+)\}/g,(e,t)=>n[t]??``)}),document.querySelectorAll(`img[data-team-logo]`).forEach(e=>{e.src=f(t)})}function D(){return d?!0:(document.documentElement.classList.add(`no-team`),b(),!1)}function O(){w(),T(),E()}document.readyState===`loading`?document.addEventListener(`DOMContentLoaded`,O):O();export{D as t};

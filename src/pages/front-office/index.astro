@@ -1,24 +1,71 @@
 ---
+// The Front Office for the selected team (or the ?view= team): who runs it,
+// how it's done, its moves, money and roster, its recent drafts and news.
+// The separate Front Office site (frontoffice/) was folded in here (#38):
+// its team pages became this page, its home and league pages became
+// /front-office/league/.
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import FrontOfficeWidgets from '../../components/FrontOfficeWidgets.astro';
 import FrontOfficeLinks from '../../components/FrontOfficeLinks.astro';
+
+const base = import.meta.env.BASE_URL;
+// Section tabs: jump links, in page order
+const TABS = [
+  ['fo-brass', 'The Brass'],
+  ['fo-record', 'Track Record'],
+  ['fo-transactions', 'Transactions'],
+  ['fo-contracts', 'Payroll'],
+  ['fo-il', 'Injuries'],
+  ['fo-roster', '40-Man'],
+  ['fo-drafts', 'Draft History'],
+  ['fo-news', 'News'],
+];
 ---
 
 <Layout title="Front Office | Fanbase">
   <PageHeader current="Front Office" />
 
   <main class="fo-page">
-    <div class="fo-page-head">
-      <h1 class="fo-page-title"><span data-team-text="nick">Team</span> Front Office</h1>
-      <p class="fo-page-sub">Injuries, transactions, payroll and the 40-man roster, plus the roster, trades and draft.</p>
+    <div class="fo-hero">
+      <img class="fo-hero-logo" id="foLogo" src={`${base}logo.png`} alt="" width="56" height="56" />
+      <div class="fo-hero-text">
+        <h1 class="fo-page-title"><span data-team-text="nick">Team</span> Front Office</h1>
+        <p class="fo-page-sub" id="foMeta">The people running the club, their record, and every move, dollar and roster spot.</p>
+      </div>
     </div>
 
-    <FrontOfficeLinks variant="cards" />
+    <nav class="fo-tabs" aria-label="Front Office sections">
+      {TABS.map(([id, label]) => <a class="fo-tab" href={`#${id}`}>{label}</a>)}
+      <a class="fo-tab fo-tab--league" href={`${base}front-office/league/`}>All 30 teams →</a>
+    </nav>
+
+    <section class="fo-section" id="fo-brass" aria-labelledby="foBrassTitle">
+      <h2 class="fo-section-title" id="foBrassTitle">The Brass <span class="fo-section-note" id="foAsOf"></span></h2>
+      <div id="foBrass"><span class="sidebar-msg">Loading…</span></div>
+    </section>
+
+    <section class="fo-section" id="fo-record" aria-labelledby="foRecordTitle">
+      <h2 class="fo-section-title" id="foRecordTitle">Track Record <span class="fo-section-note" id="foRecordNote"></span></h2>
+      <div id="foRecord"><span class="sidebar-msg">Loading…</span></div>
+    </section>
 
     <div class="fo-widgets">
       <FrontOfficeWidgets />
     </div>
+
+    <section class="fo-section" id="fo-drafts" aria-labelledby="foDraftsTitle">
+      <h2 class="fo-section-title" id="foDraftsTitle">Draft History <span class="fo-section-note">top picks from the last five drafts</span></h2>
+      <div id="foDrafts"><span class="sidebar-msg">Loading…</span></div>
+      <a class="widget-link" href={`${base}draft/`}>This year's draft: picks, prospects and news →</a>
+    </section>
+
+    <section class="fo-section" id="fo-news" aria-labelledby="foNewsTitle">
+      <h2 class="fo-section-title" id="foNewsTitle">Front Office News</h2>
+      <div id="foNews"><span class="sidebar-msg">Loading…</span></div>
+    </section>
+
+    <FrontOfficeLinks variant="cards" />
   </main>
 </Layout>
 

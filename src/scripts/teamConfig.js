@@ -42,3 +42,16 @@ export const TEAM_CONFIG = {
 // Abbreviations MLB has since changed, so old ?team= / ?view= links still
 // resolve (config.js and Layout.astro's head script both check these)
 export const LEGACY_ABBR = { ARI: 109, OAK: 133 };
+
+// MLB id → URL slug: mlb.com paths, and the Front Office data files
+// (src/data/front-office/<slug>.json)
+export const TEAM_SLUG = {
+  108: 'angels',    109: 'd-backs',      110: 'orioles',   111: 'red-sox',
+  112: 'cubs',      113: 'reds',         114: 'guardians', 115: 'rockies',
+  116: 'tigers',    117: 'astros',       118: 'royals',    119: 'dodgers',
+  120: 'nationals', 121: 'mets',         133: 'athletics', 134: 'pirates',
+  135: 'padres',    136: 'mariners',     137: 'giants',    138: 'cardinals',
+  139: 'rays',      140: 'rangers',      141: 'blue-jays', 142: 'twins',
+  143: 'phillies',  144: 'braves',       145: 'white-sox', 146: 'marlins',
+  147: 'yankees',   158: 'brewers',
+};

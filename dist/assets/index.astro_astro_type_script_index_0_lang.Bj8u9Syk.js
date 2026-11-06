@@ -1,0 +1,1 @@
+import"./theme.CU5GnKc5.js";import{t as e}from"./teamPicker.DtDYhMcX.js";import{n as t,t as n}from"./feedControls.Chg8UZ3B.js";function r(){n(),e()&&(t(),document.querySelectorAll(`[data-refresh]`).forEach(e=>{e.hidden=!1,e.addEventListener(`click`,()=>t())}))}document.readyState===`loading`?document.addEventListener(`DOMContentLoaded`,r):r();

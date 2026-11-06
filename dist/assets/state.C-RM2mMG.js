@@ -1,0 +1,1 @@
+import{o as e}from"./theme.CU5GnKc5.js";var t=e(),n=t.defaultView||`list`,r={articles:[],activeCategory:`all`,activeSource:`all`,searchQuery:``,sortBy:`date`,dateRange:7,showRead:!!t.showRead,viewMode:window.innerWidth<=600?`list`:n,standings:[],activeDiv:null,gamesMap:{}};export{r as t};

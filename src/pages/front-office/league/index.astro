@@ -1,0 +1,59 @@
+---
+// League-wide front office view (#38): who runs all 30 clubs, every team's
+// transactions, and executive moves around MLB. Replaces the separate
+// Front Office site's home and league pages. Each team opens its own
+// Front Office page (as a ?view= for teams that aren't yours).
+import Layout from '../../../layouts/Layout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import { TEAM_CONFIG } from '../../../scripts/teamConfig.js';
+
+const base = import.meta.env.BASE_URL;
+const teams = Object.values(TEAM_CONFIG).sort((a, b) => a.name.localeCompare(b.name));
+---
+
+<Layout title="League Front Offices | Fanbase">
+  <PageHeader current="Front Office" />
+
+  <main class="fo-page">
+    <div class="fo-hero">
+      <div class="fo-hero-text">
+        <a class="fo-back" href={`${base}front-office/`}>← <span data-team-text="nick">Team</span> Front Office</a>
+        <h1 class="fo-page-title">League Front Offices</h1>
+        <p class="fo-page-sub">Who runs all 30 clubs, every team's moves, and executive news from around MLB.</p>
+      </div>
+    </div>
+
+    <nav class="fo-tabs" aria-label="League sections">
+      <a class="fo-tab" href="#fo-directory">Who Runs Each Club</a>
+      <a class="fo-tab" href="#fo-league-tx">Transactions</a>
+      <a class="fo-tab" href="#fo-exec-news">Executive Moves</a>
+    </nav>
+
+    <section class="fo-section" id="fo-directory" aria-labelledby="foDirTitle">
+      <h2 class="fo-section-title" id="foDirTitle">Who Runs Each Club</h2>
+      <div id="foDirectory"><span class="sidebar-msg">Loading…</span></div>
+    </section>
+
+    <section class="fo-section" id="fo-league-tx" aria-labelledby="foLeagueTxTitle">
+      <div class="fo-section-head">
+        <h2 class="fo-section-title" id="foLeagueTxTitle">Transactions <span class="fo-section-note">last 14 days</span></h2>
+        <label class="fo-filter">
+          <select id="foTxFilter" aria-label="Show transactions for">
+            <option value="">All teams</option>
+            {teams.map(t => <option value={String(t.id)}>{t.name}</option>)}
+          </select>
+        </label>
+      </div>
+      <div id="foLeagueTx"><span class="sidebar-msg">Loading…</span></div>
+    </section>
+
+    <section class="fo-section" id="fo-exec-news" aria-labelledby="foExecTitle">
+      <h2 class="fo-section-title" id="foExecTitle">Executive Moves &amp; News</h2>
+      <div id="foExecNews"><span class="sidebar-msg">Loading…</span></div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import '../../../scripts/front-office-league.js';
+</script>
