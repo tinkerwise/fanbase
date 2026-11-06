@@ -271,6 +271,11 @@ img { display: block; max-width: 100%; }
   border-radius: var(--radius);
   padding: 14px 16px;
 }
+.brass-card.vacant {
+  background: transparent;
+  border-style: dashed;
+}
+.brass-card.vacant .brass-name { color: var(--text-2); }
 .brass-name {
   font-size: 1rem;
   font-weight: 700;

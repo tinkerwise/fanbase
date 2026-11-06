@@ -10,6 +10,12 @@
       "since": "September 2021"
     },
     {
+      "name": "Vacant",
+      "title": "General Manager",
+      "vacant": true,
+      "note": "No general manager since Peter Bendix left to run the Marlins in November 2023. Neander runs baseball operations; no GM hire or search has been reported."
+    },
+    {
       "name": "Kevin Cash",
       "title": "Manager",
       "since": "December 2014"

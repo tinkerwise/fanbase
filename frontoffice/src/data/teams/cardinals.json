@@ -2,13 +2,19 @@
   "slug": "cardinals",
   "asOf": "2026-11-05",
   "owner": "William DeWitt Jr.",
-  "ownerSince": "1995",
+  "ownerSince": 1996,
   "brass": [
     {
       "name": "Chaim Bloom",
       "title": "President of Baseball Operations",
       "since": "2026 season",
       "note": "Succeeded John Mozeliak after the 2025 season."
+    },
+    {
+      "name": "Vacant",
+      "title": "General Manager",
+      "vacant": true,
+      "note": "No general manager since Bloom took over after the 2025 season and Mike Girsch moved to vice president of special projects. Bloom runs baseball operations; no GM hire or search has been reported."
     },
     {
       "name": "Oliver Marmol",

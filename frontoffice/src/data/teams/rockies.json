@@ -1,7 +1,7 @@
 {
   "slug": "rockies",
   "asOf": "2026-11-05",
-  "owner": "Dick & Charlie Monfort",
+  "owner": "Dick & Charles Monfort",
   "brass": [
     {
       "name": "Paul DePodesta",
@@ -183,5 +183,6 @@
       ]
     }
   ],
-  "ballpark": "Coors Field"
+  "ballpark": "Coors Field",
+  "ownerSince": 2005
 }

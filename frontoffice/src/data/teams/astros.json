@@ -13,7 +13,8 @@
     {
       "name": "Vacant",
       "title": "Manager",
-      "note": "Joe Espada's contract was not renewed in October 2026. Search underway."
+      "note": "Open since October 2026, when Joe Espada's contract wasn't renewed after the Wild Card Series loss. Albert Pujols is scheduled to interview this week, and Yankees bench coach Brad Ausmus is also under consideration.",
+      "vacant": true
     }
   ],
   "eraRecord": [

@@ -1,7 +1,7 @@
 {
   "slug": "mets",
   "asOf": "2026-11-05",
-  "owner": "Steve Cohen",
+  "owner": "Steve & Alex Cohen",
   "ownerSince": "2020",
   "brass": [
     {
@@ -10,10 +10,16 @@
       "since": "October 2023"
     },
     {
+      "name": "Vacant",
+      "title": "General Manager",
+      "vacant": true,
+      "note": "No general manager; President of Baseball Operations David Stearns runs baseball operations. No hire or search has been reported."
+    },
+    {
       "name": "Andy Green",
       "title": "Manager",
       "since": "June 2026",
-      "note": "Took over after Carlos Mendoza was fired; signed a multi-year deal in September 2026."
+      "note": "Took over after Carlos Mendoza was fired; signed a three-year deal through 2029 in September 2026."
     }
   ],
   "eraRecord": [
