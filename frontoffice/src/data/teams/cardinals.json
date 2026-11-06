@@ -11,6 +11,12 @@
       "note": "Succeeded John Mozeliak after the 2025 season."
     },
     {
+      "name": "Vacant",
+      "title": "General Manager",
+      "vacant": true,
+      "note": "No general manager since Bloom took over after the 2025 season and Mike Girsch moved to vice president of special projects. Bloom runs baseball operations; no GM hire or search has been reported."
+    },
+    {
       "name": "Oliver Marmol",
       "title": "Manager",
       "since": "October 2021"
