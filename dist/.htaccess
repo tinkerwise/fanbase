@@ -16,6 +16,45 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # astro.config.mjs also builds a /news/ page that forwards, as a fallback.
 RewriteRule ^news/?$ /fanbase/dugout/ [R=301,L]
 
+# The separate Front Office site (/fanbase/frontoffice/) became part of
+# Fanbase (#38): its home and league pages are the League Front Offices
+# page, and each team page is that team's Front Office page as a ?view=
+# (which leaves the visitor's own team alone). Any other old path goes to
+# the Front Office page.
+RewriteRule ^frontoffice/?$ /fanbase/front-office/league/ [R=301,L]
+RewriteRule ^frontoffice/league/?$ /fanbase/front-office/league/ [R=301,L]
+RewriteRule ^frontoffice/team/angels/?$ /fanbase/front-office/?view=laa [R=301,L]
+RewriteRule ^frontoffice/team/astros/?$ /fanbase/front-office/?view=hou [R=301,L]
+RewriteRule ^frontoffice/team/athletics/?$ /fanbase/front-office/?view=ath [R=301,L]
+RewriteRule ^frontoffice/team/blue-jays/?$ /fanbase/front-office/?view=tor [R=301,L]
+RewriteRule ^frontoffice/team/braves/?$ /fanbase/front-office/?view=atl [R=301,L]
+RewriteRule ^frontoffice/team/brewers/?$ /fanbase/front-office/?view=mil [R=301,L]
+RewriteRule ^frontoffice/team/cardinals/?$ /fanbase/front-office/?view=stl [R=301,L]
+RewriteRule ^frontoffice/team/cubs/?$ /fanbase/front-office/?view=chc [R=301,L]
+RewriteRule ^frontoffice/team/d-backs/?$ /fanbase/front-office/?view=az [R=301,L]
+RewriteRule ^frontoffice/team/dodgers/?$ /fanbase/front-office/?view=lad [R=301,L]
+RewriteRule ^frontoffice/team/giants/?$ /fanbase/front-office/?view=sf [R=301,L]
+RewriteRule ^frontoffice/team/guardians/?$ /fanbase/front-office/?view=cle [R=301,L]
+RewriteRule ^frontoffice/team/mariners/?$ /fanbase/front-office/?view=sea [R=301,L]
+RewriteRule ^frontoffice/team/marlins/?$ /fanbase/front-office/?view=mia [R=301,L]
+RewriteRule ^frontoffice/team/mets/?$ /fanbase/front-office/?view=nym [R=301,L]
+RewriteRule ^frontoffice/team/nationals/?$ /fanbase/front-office/?view=wsh [R=301,L]
+RewriteRule ^frontoffice/team/orioles/?$ /fanbase/front-office/?view=bal [R=301,L]
+RewriteRule ^frontoffice/team/padres/?$ /fanbase/front-office/?view=sd [R=301,L]
+RewriteRule ^frontoffice/team/phillies/?$ /fanbase/front-office/?view=phi [R=301,L]
+RewriteRule ^frontoffice/team/pirates/?$ /fanbase/front-office/?view=pit [R=301,L]
+RewriteRule ^frontoffice/team/rangers/?$ /fanbase/front-office/?view=tex [R=301,L]
+RewriteRule ^frontoffice/team/rays/?$ /fanbase/front-office/?view=tb [R=301,L]
+RewriteRule ^frontoffice/team/red-sox/?$ /fanbase/front-office/?view=bos [R=301,L]
+RewriteRule ^frontoffice/team/reds/?$ /fanbase/front-office/?view=cin [R=301,L]
+RewriteRule ^frontoffice/team/rockies/?$ /fanbase/front-office/?view=col [R=301,L]
+RewriteRule ^frontoffice/team/royals/?$ /fanbase/front-office/?view=kc [R=301,L]
+RewriteRule ^frontoffice/team/tigers/?$ /fanbase/front-office/?view=det [R=301,L]
+RewriteRule ^frontoffice/team/twins/?$ /fanbase/front-office/?view=min [R=301,L]
+RewriteRule ^frontoffice/team/white-sox/?$ /fanbase/front-office/?view=cws [R=301,L]
+RewriteRule ^frontoffice/team/yankees/?$ /fanbase/front-office/?view=nyy [R=301,L]
+RewriteRule ^frontoffice(/.*)?$ /fanbase/front-office/ [R=301,L]
+
 <IfModule mod_headers.c>
   # Baseline hardening for static files. PHP scripts send their own headers
   # (feedback-admin.php has a stricter CSP and X-Frame-Options DENY), so

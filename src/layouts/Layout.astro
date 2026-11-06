@@ -23,7 +23,8 @@ const pathname = Astro.url.pathname;
 // Front Office (#14) holds Trades and Draft: they're off the desktop row
 // (`desktop: false`, reached from the Front Office page and Home's sidebar
 // group) and indented under it in More (`parent`). Front Office counts as
-// the current page while on them (`covers`).
+// the current page while on them (`covers`), and on its League page
+// (/front-office/league/, #38), which is under its own URL.
 const NAV_LINKS = [
   { href: base, label: 'Home', icon: 'home', group: 'today', tab: true },
   { href: `${base}dugout/`, label: 'Dugout', icon: 'dugout', group: 'today', tab: true },

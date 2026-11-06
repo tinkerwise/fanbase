@@ -2,7 +2,8 @@
 // Front Office widgets: Injury Report, Transactions, Payroll & Contracts,
 // 40-Man Roster. sidebars.js fills them by id. Home shows them as
 // collapsible rows in its sidebar (app.js wires the toggles); the Front
-// Office page (/front-office/) shows them open.
+// Office page (/front-office/) shows them open, with ids its section tabs
+// jump to (#fo-il, #fo-transactions, …).
 interface Props {
   collapsible?: boolean;
 }
@@ -19,7 +20,7 @@ const WIDGETS = [
 ];
 ---
 {WIDGETS.map(w => (
-  <div class={`sidebar-section${collapsible ? ' collapsible collapsed' : ' fo-widget'}`} data-section={w.section}>
+  <div class={`sidebar-section${collapsible ? ' collapsible collapsed' : ' fo-widget'}`} data-section={w.section} id={collapsible ? undefined : `fo-${w.section}`}>
     <h3 class={`section-label${collapsible ? ' section-toggle' : ''}`} data-target={collapsible ? w.section : undefined}>
       <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={w.icon} />
       {w.label}

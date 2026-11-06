@@ -62,10 +62,9 @@ npm run smoke
 # iCloud Documents sync can make "name 2.ext" copies in dist/ while the
 # build rewrites it, so the mirror skips any file named that way.
 # feedback-data/ only exists on the host (feedback.php writes it), so the
-# mirror leaves it alone rather than deleting it. The same goes for
-# frontoffice/, a separate Astro site that lives in this repo's frontoffice/
-# folder and deploys on its own (npm run frontoffice:deploy) into this FTP
-# folder: without the exclude, --delete removes it.
+# mirror leaves it alone rather than deleting it. frontoffice/, the old
+# separate Front Office site, is no longer excluded: it's part of Fanbase
+# now (#38), so --delete removes it and .htaccess redirects its old URLs.
 # Password goes through LFTP_PASSWORD so it never appears in lftp's args.
 export LFTP_PASSWORD="$FTP_PASSWORD"
 lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" <<LFTP_EOF
@@ -74,7 +73,7 @@ lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" <<LFTP_EOF
   set net:timeout 30
   set net:max-retries 2
   mirror --reverse --delete --verbose $DRY_RUN \
-    --exclude-glob .ftpquota --exclude-glob .DS_Store --exclude ^feedback-data/ --exclude ^frontoffice/ \
+    --exclude-glob .ftpquota --exclude-glob .DS_Store --exclude ^feedback-data/ \
     --exclude-glob '* [0-9].*' \
     ./dist/ ${REMOTE_DEPLOY_PATH}
   quit
