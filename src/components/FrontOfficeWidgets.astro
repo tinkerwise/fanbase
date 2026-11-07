@@ -3,11 +3,13 @@
 // 40-Man Roster. sidebars.js fills them by id. Home shows them as
 // collapsible rows in its sidebar (app.js wires the toggles); the Front
 // Office page (/front-office/) shows them open, with ids its section tabs
-// jump to (#fo-il, #fo-transactions, …).
+// jump to (#fo-il, #fo-transactions, …). `only` picks some of them by
+// section, so the page can group roster widgets apart from moves and money.
 interface Props {
   collapsible?: boolean;
+  only?: string[];
 }
-const { collapsible = false } = Astro.props;
+const { collapsible = false, only } = Astro.props;
 const WIDGETS = [
   { section: 'il', label: 'Injury Report', wrap: 'ilWrap',
     icon: '<path d="M9 12h6m-3-3v6"/><circle cx="12" cy="12" r="10"/>' },
@@ -19,7 +21,7 @@ const WIDGETS = [
     icon: '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/>' },
 ];
 ---
-{WIDGETS.map(w => (
+{WIDGETS.filter(w => !only || only.includes(w.section)).map(w => (
   <div class={`sidebar-section${collapsible ? ' collapsible collapsed' : ' fo-widget'}`} data-section={w.section} id={collapsible ? undefined : `fo-${w.section}`}>
     <h3 class={`section-label${collapsible ? ' section-toggle' : ''}`} data-target={collapsible ? w.section : undefined}>
       <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={w.icon} />
