@@ -7,18 +7,15 @@ import './teamPicker.js';
 import { MLB, MY_TEAM_ID, viewUrl } from './config.js';
 import { TEAM_CONFIG } from './teamConfig.js';
 import { $, esc, localDateStr, teamLogoSrc } from './utils.js';
-import { loadAllTeamFiles, classifyTx, newestFirst, loadGoogleNews } from './frontOfficeData.js';
+import { loadAllTeamFiles, chainOfCommand, classifyTx, newestFirst, loadGoogleNews } from './frontOfficeData.js';
 
 const DIVISIONS = ['AL East', 'AL Central', 'AL West', 'NL East', 'NL Central', 'NL West'];
 
-// The brass card whose title matches, for the directory's three columns
-function role(brass, test) {
-  return brass.find(p => test(p.title.toLowerCase()));
-}
+// The directory's three columns, from the shared chain of command
 const ROLES = [
-  ['Top exec', t => /president|chief baseball|head of baseball|executive vice president/.test(t)],
-  ['GM', t => t.includes('general manager') && !t.includes('assistant')],
-  ['Manager', t => t === 'manager' || t === 'field manager'],
+  ['Top exec', c => c.president],
+  ['GM', c => c.gm],
+  ['Manager', c => c.manager],
 ];
 
 function personCell(p) {
@@ -35,12 +32,12 @@ async function loadDirectory() {
     return `<div class="fo-dir-div">
       <h3 class="fo-dir-div-title">${div}</h3>
       ${teams.map(t => {
-        const brass = files[t.id]?.brass ?? [];
+        const chain = chainOfCommand(files[t.id]);
         return `<a class="fo-dir-row${t.id === MY_TEAM_ID ? ' fo-dir-row--mine' : ''}" href="${esc(viewUrl(t.id, 'front-office/'))}">
           <img class="fo-dir-logo" src="${teamLogoSrc(t.id, 24)}" alt="" width="24" height="24" loading="lazy">
           <span class="fo-dir-team">${esc(t.name)}</span>
-          <span class="fo-dir-people">${ROLES.map(([label, test]) =>
-            `<span class="fo-dir-person"><span class="fo-dir-role">${label}</span> ${personCell(role(brass, test))}</span>`).join('')}</span>
+          <span class="fo-dir-people">${ROLES.map(([label, pick]) =>
+            `<span class="fo-dir-person"><span class="fo-dir-role">${label}</span> ${personCell(pick(chain))}</span>`).join('')}</span>
         </a>`;
       }).join('')}
     </div>`;
