@@ -1,0 +1,13 @@
+import{F as e,L as t,N as n,_ as r,et as i,s as a,t as o,tt as s}from"./utils.DaJInyY3.js";import"./theme.CU5GnKc5.js";import"./teamPicker.DtDYhMcX.js";import{a as c,i as l,n as u,r as d,s as f}from"./frontOfficeData.CgpcHL8q.js";var p=[`AL East`,`AL Central`,`AL West`,`NL East`,`NL Central`,`NL West`],m=[[`Top exec`,e=>e.president],[`GM`,e=>e.gm],[`Manager`,e=>e.manager]];function h(e){return e?e.vacant?`<span class="fo-dir-vacant">Vacant</span>`:a(e.name):`<span class="fo-dir-empty">—</span>`}async function g(){let e=o(`foDirectory`),r=await l();e.innerHTML=`<div class="fo-directory">${p.map(e=>`<div class="fo-dir-div">
+      <h3 class="fo-dir-div-title">${e}</h3>
+      ${Object.values(s).filter(t=>t.div===e).sort((e,t)=>e.name.localeCompare(t.name)).map(e=>{let o=u(r[e.id]);return`<a class="fo-dir-row${e.id===t?` fo-dir-row--mine`:``}" href="${a(i(e.id,`front-office/`))}">
+          <img class="fo-dir-logo" src="${n(e.id,24)}" alt="" width="24" height="24" loading="lazy">
+          <span class="fo-dir-team">${a(e.name)}</span>
+          <span class="fo-dir-people">${m.map(([e,t])=>`<span class="fo-dir-person"><span class="fo-dir-role">${e}</span> ${h(t(o))}</span>`).join(``)}</span>
+        </a>`}).join(``)}
+    </div>`).join(``)}</div>`}var _=[];function v(e){return[e.toTeam,e.fromTeam].map(e=>s[e?.id]).filter(Boolean)}function y(){let e=o(`foLeagueTx`),t=o(`foTxFilter`).value,r=(t?_.filter(e=>v(e).some(e=>String(e.id)===t)):_).slice(0,50);e.innerHTML=r.length?`<div class="txn-list fo-league-tx">${r.map(e=>{let t=v(e)[0],r=d(e),i=new Date(e.date||e.effectiveDate).toLocaleDateString(`en-US`,{month:`short`,day:`numeric`});return`<div class="txn-item">
+      <span class="txn-date">${a(i)}</span>
+      ${t?`<img class="fo-tx-logo" src="${n(t.id,18)}" alt="${a(t.abbr)}" title="${a(t.name)}" width="18" height="18" loading="lazy">`:``}
+      <span class="fo-tx-type fo-tx-type--${r.cls}">${r.label}</span>
+      <span class="txn-desc">${a(e.description??`Transaction`)}</span>
+    </div>`}).join(``)}</div>`:`<span class="sidebar-msg">No transactions in the last 14 days.</span>`}async function b(){let t=new Date;t.setDate(t.getDate()-14);try{let n=await fetch(`${e}/transactions?sportId=1&startDate=${t.toISOString().slice(0,10)}&endDate=${r(0)}`).then(e=>e.json()),i=new Set;_=f((n.transactions??[]).filter(e=>{let t=`${e.date}|${e.description}`;return!v(e).length||i.has(t)?!1:(i.add(t),!0)})),y()}catch{o(`foLeagueTx`).innerHTML=`<span class="sidebar-msg">Transactions unavailable. Try refreshing.</span>`}}o(`foTxFilter`).addEventListener(`change`,y),g(),b(),c(o(`foExecNews`),`MLB "general manager" OR "president of baseball operations" hired OR fired OR named`,12);

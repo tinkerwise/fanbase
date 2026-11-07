@@ -1,6 +1,8 @@
 ---
-// The Front Office for the selected team (or the ?view= team): who runs it,
-// how it's done, its moves, money and roster, its recent drafts and news.
+// The Front Office for the selected team (or the ?view= team), in groups
+// (#40): who runs it (the chain of command), how it's done, its roster and
+// pipeline, its moves and money, its news, and Front Office 101, which
+// explains how a front office works.
 // The separate Front Office site (frontoffice/) was folded in here (#38):
 // its team pages became this page, its home and league pages became
 // /front-office/league/.
@@ -8,18 +10,17 @@ import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import FrontOfficeWidgets from '../../components/FrontOfficeWidgets.astro';
 import FrontOfficeLinks from '../../components/FrontOfficeLinks.astro';
+import FrontOffice101 from '../../components/FrontOffice101.astro';
 
 const base = import.meta.env.BASE_URL;
 // Section tabs: jump links, in page order
 const TABS = [
-  ['fo-brass', 'The Brass'],
+  ['fo-brass', 'Who Runs It'],
   ['fo-record', 'Track Record'],
-  ['fo-transactions', 'Transactions'],
-  ['fo-contracts', 'Payroll'],
-  ['fo-il', 'Injuries'],
-  ['fo-roster', '40-Man'],
-  ['fo-drafts', 'Draft History'],
+  ['fo-players', 'Roster & Pipeline'],
+  ['fo-moves', 'Moves & Money'],
   ['fo-news', 'News'],
+  ['fo-learn', 'Front Office 101'],
 ];
 ---
 
@@ -41,7 +42,11 @@ const TABS = [
     </nav>
 
     <section class="fo-section" id="fo-brass" aria-labelledby="foBrassTitle">
-      <h2 class="fo-section-title" id="foBrassTitle">The Brass <span class="fo-section-note" id="foAsOf"></span></h2>
+      <div class="fo-section-head">
+        <h2 class="fo-section-title" id="foBrassTitle">Who Runs the Club <span class="fo-section-note" id="foAsOf"></span></h2>
+        <a class="fo-section-link" href="#fo-learn">New to front offices? Front Office 101 ↓</a>
+      </div>
+      <p class="fo-section-lede">From the owner down to the dugout. Each job answers to the one above it.</p>
       <div id="foBrass"><span class="sidebar-msg">Loading…</span></div>
     </section>
 
@@ -50,20 +55,37 @@ const TABS = [
       <div id="foRecord"><span class="sidebar-msg">Loading…</span></div>
     </section>
 
-    <div class="fo-widgets">
-      <FrontOfficeWidgets />
-    </div>
+    <section class="fo-group" id="fo-players" aria-labelledby="foPlayersTitle">
+      <div class="fo-group-head">
+        <h2 class="fo-group-title" id="foPlayersTitle">Roster &amp; Pipeline</h2>
+        <p class="fo-group-sub">The players the front office has to work with: today's roster, who's hurt, and who's coming up. <a href="#fo-learn-development">How player development works ↓</a></p>
+      </div>
+      <div class="fo-widgets">
+        <FrontOfficeWidgets only={['roster', 'il']} />
+      </div>
+      <section class="fo-section" id="fo-drafts" aria-labelledby="foDraftsTitle">
+        <h3 class="fo-section-title" id="foDraftsTitle">Draft History <span class="fo-section-note">top picks from the last five drafts</span></h3>
+        <div id="foDrafts"><span class="sidebar-msg">Loading…</span></div>
+        <a class="widget-link" href={`${base}draft/`}>This year's draft: picks, prospects and news →</a>
+      </section>
+    </section>
 
-    <section class="fo-section" id="fo-drafts" aria-labelledby="foDraftsTitle">
-      <h2 class="fo-section-title" id="foDraftsTitle">Draft History <span class="fo-section-note">top picks from the last five drafts</span></h2>
-      <div id="foDrafts"><span class="sidebar-msg">Loading…</span></div>
-      <a class="widget-link" href={`${base}draft/`}>This year's draft: picks, prospects and news →</a>
+    <section class="fo-group" id="fo-moves" aria-labelledby="foMovesTitle">
+      <div class="fo-group-head">
+        <h2 class="fo-group-title" id="foMovesTitle">Moves &amp; Money</h2>
+        <p class="fo-group-sub">What the front office does with it: every roster move, and what the club is paying. <a href="#fo-learn-money">Who sets the payroll ↓</a></p>
+      </div>
+      <div class="fo-widgets">
+        <FrontOfficeWidgets only={['transactions', 'contracts']} />
+      </div>
     </section>
 
     <section class="fo-section" id="fo-news" aria-labelledby="foNewsTitle">
       <h2 class="fo-section-title" id="foNewsTitle">Front Office News</h2>
       <div id="foNews"><span class="sidebar-msg">Loading…</span></div>
     </section>
+
+    <FrontOffice101 />
 
     <FrontOfficeLinks variant="cards" />
   </main>

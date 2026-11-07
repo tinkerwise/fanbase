@@ -28,6 +28,34 @@ export async function loadAllTeamFiles() {
   return Object.fromEntries(ids.map((id, i) => [id, files[i]]));
 }
 
+// ── Roles ──
+// The brass files carry titles, not roles: "President of Baseball
+// Operations & General Manager", "Chief Baseball Officer", "Interim General
+// Manager". These sort a title into the chain of command (#40).
+const isTopExec = t => /president|chief baseball|head of baseball|executive vice president/.test(t);
+const isGM = t => t.includes('general manager') && !t.includes('assistant');
+const isManager = t => t === 'manager' || t === 'field manager';
+
+/**
+ * A club's chain of command from its curated file: { owner, president, gm,
+ * manager, combined }. `combined` is one person holding both the top job and
+ * GM (then `president` and `gm` are the same card). A club with no separate
+ * president has `president` null and its GM at the top of baseball ops.
+ */
+export function chainOfCommand(file) {
+  const brass = file?.brass ?? [];
+  const find = test => brass.find(p => test(String(p.title ?? '').toLowerCase())) ?? null;
+  const president = find(isTopExec);
+  const gm = find(isGM);
+  return {
+    owner: file?.owner ? { name: file.owner, title: 'Owner', since: file.ownerSince, note: file.ownerNote } : null,
+    president,
+    gm,
+    manager: find(isManager),
+    combined: !!president && president === gm,
+  };
+}
+
 /** 'November 5, 2026' from the file's asOf ('2026-11-05'). */
 export function asOfLabel(asOf) {
   if (!asOf) return '';
