@@ -29,6 +29,7 @@ import { fetchWeatherForGames, getGameWeather } from './weather.js';
 import { ensureWalkupSongsLoaded, getWalkupSongUrls } from './walkup-songs.js';
 import { WALKUP_ICON_SVG } from './scores.js';
 import { classifyTx } from './frontOfficeData.js';
+import { gameStatus } from './scheduleGames.js';
 
 // ── Standings ─────────────────────────────────────────────────────
 export async function loadStandings() {
@@ -127,9 +128,12 @@ export async function loadOnDeck() {
     const todayGame = games.find(g => g.gameDate.startsWith(todayStr));
     const todayIsLive = todayGame?.status?.abstractGameState === 'Live';
 
+    // Still to play: not a final, and not the postponed, cancelled or
+    // suspended listing of a game (its makeup is listed separately, #42)
+    const toPlay = g => { const s = gameStatus(g).state; return s === 'scheduled' || s === 'live'; };
     const next = todayIsLive
-      ? games.find(g => !g.gameDate.startsWith(todayStr) && g.status.abstractGameState !== 'Final')
-      : games.find(g => g.status.abstractGameState !== 'Final');
+      ? games.find(g => !g.gameDate.startsWith(todayStr) && toPlay(g))
+      : games.find(toPlay);
 
     if (!next) {
       wrap.innerHTML = '<span class="sidebar-msg">No upcoming games</span>';
@@ -145,7 +149,10 @@ export async function loadOnDeck() {
 
     const gameDate = new Date(next.gameDate);
     const dateStr = gameDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-    const timeStr = gameDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const nextStatus = gameStatus(next);
+    const timeStr = nextStatus.afterGame1 ? 'After game 1'
+      : nextStatus.timeTBD ? 'Time TBD'
+      : gameDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
     const venue = next.venue?.name ?? '';
     const venueDetails = await fetchVenueDetails(next.venue?.id);
@@ -169,7 +176,7 @@ export async function loadOnDeck() {
     const gdDate = next.gameDate.slice(0, 10).replace(/-/g, '/');
     const gdUrl = `https://www.mlb.com/gameday/${awaySlug}-vs-${homeSlug}/${gdDate}/${next.gamePk}/preview`;
 
-    const upcoming = games.filter(g => g.status.abstractGameState !== 'Final');
+    const upcoming = games.filter(toPlay);
     const scheduleBoxes = upcoming.slice(0, 5).map(g => {
       const gAway = g.teams.away;
       const gHome = g.teams.home;

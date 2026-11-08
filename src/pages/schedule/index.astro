@@ -29,23 +29,32 @@ import PageHeader from '../../components/PageHeader.astro';
         <span class="sch-legend-item legend--away">✈ Away</span>
         <span class="sch-legend-item legend--live">● Live</span>
         <span class="sch-legend-item legend--preview">W 5–3 · L 2–4</span>
+        <span class="sch-legend-item legend--spring">ST Spring training</span>
+        <span class="sch-legend-item legend--off">Postponed · Cancelled</span>
+        <span class="sch-updated" id="schUpdated" aria-live="polite"></span>
       </div>
+
+      <!-- Games that moved since the last visit (#42) -->
+      <p class="sch-changes" id="schChanges" hidden></p>
 
       <!-- Calendar -->
       <div id="scheduleGrid">
         <div class="sch-loading">Loading schedule…</div>
       </div>
+      <p class="sch-empty-note" id="schEmpty" hidden></p>
 
     </div>
   </main>
 </Layout>
 
+
 <script type="module">
   import '../../scripts/theme.js';
   import { MLB, TEAM_ID, SEASON, TEAM_ABBREV } from '../../scripts/config.js';
   import { requireTeam } from '../../scripts/teamPicker.js';
-  import { esc, teamLogoSrc } from '../../scripts/utils.js';
+  import { esc } from '../../scripts/utils.js';
   import { fetchWeatherForGames, getGameWeather } from '../../scripts/weather.js';
+  import { flattenSchedule, gameStatus, isPlayedEntry, shortDay, changedSinceLastVisit } from '../../scripts/scheduleGames.js';
 
   // ── Constants ─────────────────────────────────────────────────
   const MONTHS = [
@@ -54,42 +63,52 @@ import PageHeader from '../../components/PageHeader.astro';
   ];
   const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const NATIONAL_TV = ['ESPN','ESPN2','FOX','FS1','FS2','TBS','Apple TV+','Peacock','MLBN','MLB Network'];
+  // The schedule loads when the page opens and again once a day while it
+  // stays open, so reschedules show up without a reload (#42)
+  const DAY_MS = 24 * 60 * 60 * 1000;
 
   // ── State ─────────────────────────────────────────────────────
-  let allGames = [];
-  let seriesMap = new Map(); // gamePk → { gameNum, total, isFirst, isLast }
+  let allGames = [];   // every listing, each with _day (scheduleGames.js)
+  let seriesMap = new Map(); // `${gamePk}|${_day}` → { gameNum, total, isFirst, isLast }
+  let changed = new Set();   // gamePks that moved since the last visit
   let viewMode = 'month';
   let viewDate = new Date();
+  let lastFetch = 0;
 
   // ── Date helpers ──────────────────────────────────────────────
   function dateStr(d) {
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   }
   function todayStr() { return dateStr(new Date()); }
-  function gameOfficialDate(g) { return g.officialDate || g.gameDate.slice(0, 10); }
+  const entryKey = g => `${g.gamePk}|${g._day}`;
 
   // ── Game helpers ──────────────────────────────────────────────
   function oriIsHome(g)  { return g.teams.home.team.id === TEAM_ID; }
   function oriSide(g)    { return oriIsHome(g) ? g.teams.home : g.teams.away; }
   function oppSide(g)    { return oriIsHome(g) ? g.teams.away : g.teams.home; }
   function getOpponent(g) { return oppSide(g).team; }
+  function oppAbbr(g) {
+    const opp = getOpponent(g);
+    return TEAM_ABBREV[opp.id] ?? opp.abbreviation ?? opp.name.slice(0, 3).toUpperCase();
+  }
 
-  function getResult(g) {
-    if (g.status?.abstractGameState !== 'Final') return null;
+  // A result only for a final with a score: a postponed or cancelled game is
+  // "Final" too, with no score, and used to show as "L 0–0"
+  function getResult(g, st) {
+    if (st.state !== 'final') return null;
     const ori = oriSide(g);
     const opp = oppSide(g);
     return {
-      result: g.isTie ? 'T' : (ori.isWinner ? 'W' : 'L'),
-      oriScore: ori.score ?? 0,
-      oppScore: opp.score ?? 0,
+      result: g.isTie || ori.score === opp.score ? 'T' : (ori.isWinner ? 'W' : 'L'),
+      oriScore: ori.score,
+      oppScore: opp.score,
     };
   }
 
   function oriProbable(g) {
     const p = oriSide(g).probablePitcher;
     if (!p?.fullName) return null;
-    const parts = p.fullName.trim().split(/\s+/);
-    return parts.at(-1);
+    return p.fullName.trim().split(/\s+/).at(-1);
   }
 
   function getBroadcast(g) {
@@ -101,14 +120,18 @@ import PageHeader from '../../components/PageHeader.astro';
   }
 
   // ── Series detection ──────────────────────────────────────────
+  // Regular season and postseason games actually played, one entry per game
+  // (not the postponed/suspended listings), in order
   function buildSeries(games) {
-    const sorted = [...games].sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate));
+    const sorted = games
+      .filter(g => g.gameType !== 'S' && isPlayedEntry(g))
+      .sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate));
     seriesMap = new Map();
     let group = [];
     let lastOppId = null;
 
     const finalize = grp => grp.forEach((g, i) => {
-      seriesMap.set(g.gamePk, {
+      seriesMap.set(entryKey(g), {
         gameNum: i + 1,
         total: grp.length,
         isFirst: i === 0,
@@ -119,9 +142,9 @@ import PageHeader from '../../components/PageHeader.astro';
     for (const g of sorted) {
       const oppId = getOpponent(g).id;
       if (group.length > 0) {
-        const lastDay = new Date(gameOfficialDate(group.at(-1)));
-        const thisDay = new Date(gameOfficialDate(g));
-        const diff = (thisDay - lastDay) / (1000 * 60 * 60 * 24);
+        const lastDay = new Date(group.at(-1)._day);
+        const thisDay = new Date(g._day);
+        const diff = (thisDay - lastDay) / DAY_MS;
         if (oppId === lastOppId && diff <= 2) {
           group.push(g);
           continue;
@@ -134,92 +157,167 @@ import PageHeader from '../../components/PageHeader.astro';
     if (group.length > 0) finalize(group);
   }
 
-  // ── Homestand / Road Trip stretches ───────────────────────────
-  function buildStretches(games) {
-    const sorted = [...games].sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate));
-    const stretches = [];
-    let current = null;
-    for (const g of sorted) {
-      const home = oriIsHome(g);
-      if (!current || current.home !== home) {
-        current = { home, count: 1, start: gameOfficialDate(g) };
-        stretches.push(current);
-      } else {
-        current.count++;
-      }
-      current.end = gameOfficialDate(g);
+  // ── Chip status ───────────────────────────────────────────────
+  // { html, note, title, cls }: the status line, an extra line for moved
+  // games, a plain-text description for the tooltip and screen readers, and
+  // any extra chip class
+  function chipStatus(g, st, compact) {
+    const result = getResult(g, st);
+    const why = st.reason ? ` (${st.reason})` : '';
+    const parts = { html: '', note: '', title: '', cls: '' };
+
+    switch (st.state) {
+      case 'postponed':
+        parts.cls = ' chip--off';
+        parts.html = `<span class="chip-off">${compact ? 'PPD' : 'Postponed'}</span>`;
+        parts.note = st.makeupOn
+          ? `${compact ? '→' : 'Moved to'} ${shortDay(st.makeupOn, !compact)}`
+          : (compact ? 'Makeup TBD' : 'Makeup date to be announced');
+        parts.title = `Postponed${why}. ${st.makeupOn ? `Moved to ${shortDay(st.makeupOn)}.` : 'Makeup date to be announced.'}`;
+        return parts;
+      case 'cancelled':
+        parts.cls = ' chip--off';
+        parts.html = `<span class="chip-off">${compact ? 'Canc.' : 'Cancelled'}</span>`;
+        parts.title = `Cancelled${why}.`;
+        return parts;
+      case 'suspended':
+        parts.cls = ' chip--off';
+        parts.html = `<span class="chip-off">${compact ? 'Susp.' : 'Suspended'}</span>`;
+        parts.note = st.resumesOn
+          ? `${compact ? 'Resumes' : 'Finishes'} ${shortDay(st.resumesOn, !compact)}`
+          : (compact ? 'Resume TBD' : 'Resume date to be announced');
+        parts.title = `Suspended${why}. ${st.resumesOn ? `Finishes ${shortDay(st.resumesOn)}.` : 'Resume date to be announced.'}`;
+        return parts;
     }
-    return stretches;
+
+    if (result) {
+      parts.html = `<span class="chip-result">${result.result} ${result.oriScore}–${result.oppScore}</span>`;
+      parts.title = `${result.result === 'W' ? 'Won' : result.result === 'L' ? 'Lost' : 'Tied'} ${result.oriScore}–${result.oppScore}.`;
+    } else if (st.state === 'live') {
+      parts.cls = ' chip--live';
+      const half = g.linescore?.inningHalf === 'Top' ? '▲' : '▼';
+      const inn  = g.linescore?.currentInning ?? '';
+      parts.html = `<span class="chip-live">${half}${inn}</span>`;
+      parts.title = 'In progress.';
+    } else {
+      let t;
+      if (st.afterGame1) t = compact ? 'After G1' : 'After game 1';
+      else if (st.timeTBD) t = compact ? 'TBD' : 'Time TBD';
+      else t = new Date(g.gameDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      parts.html = `<span class="chip-time">${esc(t)}</span>`;
+      parts.title = st.afterGame1 ? 'Starts after game 1.' : st.timeTBD ? 'Start time to be announced.' : `${t}.`;
+    }
+
+    if (st.movedFrom) {
+      parts.note = `${compact ? 'From' : 'Moved from'} ${shortDay(st.movedFrom, !compact)}`;
+      parts.title += ` Makeup of the game postponed on ${shortDay(st.movedFrom)}.`;
+    } else if (st.resumedFrom) {
+      parts.note = `${compact ? 'Resumed' : 'Resumed from'} ${shortDay(st.resumedFrom, !compact)}`;
+      parts.title += ` Finish of the game suspended on ${shortDay(st.resumedFrom)}.`;
+    }
+    return parts;
   }
 
   // ── Chip rendering ────────────────────────────────────────────
   function renderChip(g, compact = false) {
+    const st      = gameStatus(g);
     const opp     = getOpponent(g);
     const home    = oriIsHome(g);
-    const result  = getResult(g);
-    const state   = g.status?.abstractGameState;
-    const sd      = seriesMap.get(g.gamePk);
-    const weather = getGameWeather(g);
-    const probable  = oriProbable(g);
-    const broadcast = getBroadcast(g);
-    const abbr    = TEAM_ABBREV[opp.id] ?? (opp.abbreviation ?? opp.name.slice(0, 3).toUpperCase());
+    const played  = st.state === 'final' || st.state === 'live';
+    const off     = !isPlayedEntry(g);
+    const sd      = off ? null : seriesMap.get(entryKey(g));
+    const weather = st.state === 'scheduled' ? getGameWeather(g) : null;
+    const probable  = st.state === 'scheduled' ? oriProbable(g) : null;
+    const broadcast = off ? null : getBroadcast(g);
+    const abbr    = oppAbbr(g);
     const haStr   = home ? 'vs' : '@';
     const logoSrc = `https://www.mlbstatic.com/team-logos/${opp.id}.svg`;
     const gameUrl = `https://www.mlb.com/gameday/${g.gamePk}`;
+    const status  = chipStatus(g, st, compact);
+    const isChanged = changed.has(g.gamePk);
 
-    let chipClass = `sch-chip${home ? ' chip--home' : ''}`;
-    let statusHtml = '';
+    const chipClass = `sch-chip${home ? ' chip--home' : ''}${st.spring ? ' chip--spring' : ''}${status.cls}${isChanged ? ' chip--changed' : ''}${compact ? '' : ' sch-chip--full'}`;
+    const label = [
+      st.spring ? 'Spring training:' : '',
+      `${home ? 'vs' : 'at'} ${opp.name ?? abbr}`,
+      st.dhGame ? `(doubleheader game ${st.dhGame})` : '',
+      `on ${shortDay(g._day)}.`,
+      status.title,
+      isChanged ? 'Changed since your last visit.' : '',
+    ].filter(Boolean).join(' ');
 
-    if (result) {
-      statusHtml = `<span class="chip-result">${result.result} ${result.oriScore}–${result.oppScore}</span>`;
-    } else if (state === 'Live') {
-      chipClass += ' chip--live';
-      const half = g.linescore?.inningHalf === 'Top' ? '▲' : '▼';
-      const inn  = g.linescore?.currentInning ?? '';
-      statusHtml = `<span class="chip-live">${half}${inn}</span>`;
-    } else {
-      const t = new Date(g.gameDate).toLocaleTimeString('en-US', {
-        hour: 'numeric', minute: '2-digit',
-      });
-      statusHtml = `<span class="chip-time">${esc(t)}</span>`;
-    }
-
-    const seriesBadge = sd && sd.total > 1
-      ? `<span class="chip-series-badge" title="Game ${sd.gameNum} of ${sd.total}">G${sd.gameNum}/${sd.total}</span>`
-      : '';
-    const wxHtml = weather && !result
-      ? `<span class="chip-wx">${weather.emoji} ${weather.temp}°</span>`
-      : '';
+    const badges = [
+      st.spring ? '<span class="chip-tag chip-tag--spring">ST</span>' : '',
+      st.dhGame ? `<span class="chip-tag" title="Doubleheader game ${st.dhGame}">DH${st.dhGame}</span>` : '',
+    ].join('');
+    const noteHtml = status.note ? `<div class="chip-note">${esc(status.note)}</div>` : '';
+    const wxHtml = weather ? `<span class="chip-wx">${weather.emoji} ${weather.temp}°</span>` : '';
 
     if (compact) {
-      return `<a class="${chipClass}" href="${esc(gameUrl)}" target="_blank" rel="noopener noreferrer">
+      const seriesBadge = sd && sd.total > 1
+        ? `<span class="chip-series-badge" title="Game ${sd.gameNum} of ${sd.total}">G${sd.gameNum}/${sd.total}</span>`
+        : '';
+      return `<a class="${chipClass}" href="${esc(gameUrl)}" target="_blank" rel="noopener noreferrer" title="${esc(label)}" aria-label="${esc(label)}">
         <div class="chip-row1">
-          <img class="chip-logo" src="${esc(logoSrc)}" alt="${esc(abbr)}" width="18" height="18" loading="lazy" decoding="async">
+          <img class="chip-logo" src="${esc(logoSrc)}" alt="" width="18" height="18" loading="lazy" decoding="async">
           <span class="chip-ha">${haStr}</span>
           <span class="chip-abbr">${esc(abbr)}</span>
-          ${seriesBadge}
+          ${badges}${seriesBadge}
         </div>
-        <div class="chip-row2">${statusHtml}${wxHtml}</div>
+        <div class="chip-row2">${status.html}${wxHtml}</div>
+        ${noteHtml}
       </a>`;
     }
 
     // Full chip for week view
-    const seriesInfo  = sd && sd.total > 1 ? `<span class="chip-series-info">Game ${sd.gameNum} of ${sd.total}</span>` : '';
-    const probHtml    = probable && !result ? `<span class="chip-probable">${esc(probable)}</span>` : '';
-    const bcastHtml   = broadcast ? `<span class="chip-broadcast">${esc(broadcast)}</span>` : '';
-    const oppName     = opp.name ?? abbr;
+    const seriesInfo = sd && sd.total > 1 ? `<span class="chip-series-info">Game ${sd.gameNum} of ${sd.total}</span>` : '';
+    const springInfo = st.spring ? '<span class="chip-series-info">Spring training</span>' : '';
+    const dhInfo     = st.dhGame ? `<span class="chip-series-info">Doubleheader, game ${st.dhGame}</span>` : '';
+    const probHtml   = probable ? `<span class="chip-probable">${esc(probable)}</span>` : '';
+    const bcastHtml  = broadcast ? `<span class="chip-broadcast">${esc(broadcast)}</span>` : '';
+    const reasonHtml = off && st.reason ? `<span class="chip-series-info">${esc(st.reason)}</span>` : '';
 
-    return `<a class="${chipClass} sch-chip--full" href="${esc(gameUrl)}" target="_blank" rel="noopener noreferrer">
+    return `<a class="${chipClass}" href="${esc(gameUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(label)}">
       <div class="chip-full-header">
-        <img class="chip-logo" src="${esc(logoSrc)}" alt="${esc(abbr)}" width="24" height="24" loading="lazy" decoding="async">
+        <img class="chip-logo" src="${esc(logoSrc)}" alt="" width="24" height="24" loading="lazy" decoding="async">
         <div class="chip-full-matchup">
-          <span class="chip-full-ha">${haStr} ${esc(oppName)}</span>
-          ${seriesInfo}
+          <span class="chip-full-ha">${haStr} ${esc(opp.name ?? abbr)}</span>
+          ${springInfo}${seriesInfo}${dhInfo}
         </div>
       </div>
-      <div class="chip-full-status">${statusHtml}${wxHtml}</div>
+      <div class="chip-full-status">${status.html}${wxHtml}</div>
+      ${noteHtml}${reasonHtml ? `<div class="chip-full-meta">${reasonHtml}</div>` : ''}
       ${probHtml || bcastHtml ? `<div class="chip-full-meta">${probHtml}${bcastHtml}</div>` : ''}
     </a>`;
+  }
+
+  // Listings for one day: games in start order, the played game before a
+  // postponement listed the same day
+  function gamesOn(key) {
+    return allGames
+      .filter(g => g._day === key)
+      .sort((a, b) => (isPlayedEntry(b) - isPlayedEntry(a)) || (new Date(a.gameDate) - new Date(b.gameDate)) || ((a.gameNumber ?? 1) - (b.gameNumber ?? 1)));
+  }
+
+  // ── Empty stretch note ────────────────────────────────────────
+  // No games in view (the off-season): point to the next one
+  function renderEmptyNote(fromKey, toKey, what) {
+    const note = document.getElementById('schEmpty');
+    const inView = allGames.some(g => g._day >= fromKey && g._day <= toKey);
+    if (inView || !allGames.length) {
+      note.hidden = true;
+      return;
+    }
+    const next = allGames.filter(g => g._day > toKey && isPlayedEntry(g)).sort((a, b) => a._day.localeCompare(b._day))[0];
+    const d = next ? new Date(`${next._day}T12:00:00`) : null;
+    note.innerHTML = next
+      ? `No games ${esc(what)}. Next: ${esc(gameStatus(next).spring ? 'spring training, ' : '')}${oriIsHome(next) ? 'vs' : '@'} ${esc(oppAbbr(next))} on ${esc(d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }))}. <button type="button" class="sch-today-btn" id="schJump">Go to ${esc(MONTHS[d.getMonth()])}</button>`
+      : `No games ${esc(what)}. The next schedule hasn't been released yet.`;
+    note.hidden = false;
+    document.getElementById('schJump')?.addEventListener('click', () => {
+      viewDate = d;
+      render();
+    });
   }
 
   // ── Month view ────────────────────────────────────────────────
@@ -227,43 +325,29 @@ import PageHeader from '../../components/PageHeader.astro';
     const year  = viewDate.getFullYear();
     const month = viewDate.getMonth();
     document.getElementById('schTitle').textContent = `${MONTHS[month]} ${year}`;
+    const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
 
-    const monthGames = allGames.filter(g => {
-      const d = new Date(g.gameDate);
-      return d.getFullYear() === year && d.getMonth() === month;
-    });
-
-    const byDate = {};
-    for (const g of monthGames) {
-      const key = gameOfficialDate(g);
-      (byDate[key] = byDate[key] ?? []).push(g);
-    }
-
-    const today      = todayStr();
-    const firstDow   = new Date(year, month, 1).getDay();
-    const daysInMo   = new Date(year, month + 1, 0).getDate();
-
-    // Build series label index: for first game of a series, show the opponent label above
-    // (only in month view for visual grouping)
+    // First game of a series gets the opponent label above it
     const seriesFirstByDate = {};
-    for (const g of monthGames) {
-      const sd = seriesMap.get(g.gamePk);
+    for (const g of allGames) {
+      if (!g._day.startsWith(prefix)) continue;
+      const sd = seriesMap.get(entryKey(g));
       if (sd?.isFirst && sd.total > 1) {
-        const key = gameOfficialDate(g);
-        const opp = getOpponent(g);
-        const abbr = TEAM_ABBREV[opp.id] ?? opp.abbreviation ?? opp.name.slice(0,3).toUpperCase();
-        const haStr = oriIsHome(g) ? 'vs' : '@';
-        seriesFirstByDate[key] = `${haStr} ${abbr} (${sd.total}-game series)`;
+        seriesFirstByDate[g._day] = `${oriIsHome(g) ? 'vs' : '@'} ${oppAbbr(g)} (${sd.total}-game series)`;
       }
     }
+
+    const today    = todayStr();
+    const firstDow = new Date(year, month, 1).getDay();
+    const daysInMo = new Date(year, month + 1, 0).getDate();
 
     let html = '<div class="cal-grid">';
     for (const d of DAYS_SHORT) html += `<div class="cal-hdr">${d}</div>`;
     for (let i = 0; i < firstDow; i++) html += '<div class="cal-cell cal-cell--empty"></div>';
 
     for (let day = 1; day <= daysInMo; day++) {
-      const key   = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      const games = byDate[key] ?? [];
+      const key   = `${prefix}-${String(day).padStart(2,'0')}`;
+      const games = gamesOn(key);
       const isToday = key === today;
       const seriesLabel = seriesFirstByDate[key]
         ? `<span class="cal-series-label">${esc(seriesFirstByDate[key])}</span>`
@@ -278,6 +362,7 @@ import PageHeader from '../../components/PageHeader.astro';
 
     html += '</div>';
     document.getElementById('scheduleGrid').innerHTML = html;
+    renderEmptyNote(`${prefix}-01`, `${prefix}-${String(daysInMo).padStart(2,'0')}`, `in ${MONTHS[month]}`);
   }
 
   // ── Week view ─────────────────────────────────────────────────
@@ -306,16 +391,13 @@ import PageHeader from '../../components/PageHeader.astro';
     for (const d of weekDays) {
       const key      = dateStr(d);
       const isToday  = key === today;
-      const dayGames = allGames.filter(g => gameOfficialDate(g) === key);
+      const dayGames = gamesOn(key);
       const dayName  = d.toLocaleDateString('en-US', { weekday: 'short' });
       const dayNum   = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-      // Determine homestand/road context for this day
-      let stretchLabel = '';
-      if (dayGames.length) {
-        const isHome = oriIsHome(dayGames[0]);
-        stretchLabel = isHome ? '🏟 Home' : '✈ Away';
-      }
+      // Home or away that day, from the game actually played
+      const lead = dayGames.find(isPlayedEntry);
+      const stretchLabel = lead ? (oriIsHome(lead) ? '🏟 Home' : '✈ Away') : '';
 
       html += `<div class="week-col${isToday ? ' week-col--today' : ''}">
         <div class="week-col-hdr">
@@ -334,6 +416,7 @@ import PageHeader from '../../components/PageHeader.astro';
 
     html += '</div>';
     document.getElementById('scheduleGrid').innerHTML = html;
+    renderEmptyNote(dateStr(weekDays[0]), dateStr(weekDays[6]), 'this week');
   }
 
   // ── Render + Navigation ───────────────────────────────────────
@@ -343,13 +426,13 @@ import PageHeader from '../../components/PageHeader.astro';
   }
 
   document.getElementById('prevBtn').addEventListener('click', () => {
-    if (viewMode === 'month') viewDate.setMonth(viewDate.getMonth() - 1);
+    if (viewMode === 'month') viewDate.setMonth(viewDate.getMonth() - 1, 1);
     else viewDate.setDate(viewDate.getDate() - 7);
     render();
   });
 
   document.getElementById('nextBtn').addEventListener('click', () => {
-    if (viewMode === 'month') viewDate.setMonth(viewDate.getMonth() + 1);
+    if (viewMode === 'month') viewDate.setMonth(viewDate.getMonth() + 1, 1);
     else viewDate.setDate(viewDate.getDate() + 7);
     render();
   });
@@ -368,32 +451,88 @@ import PageHeader from '../../components/PageHeader.astro';
     });
   });
 
+  // ── Changes + freshness ───────────────────────────────────────
+  // Games that moved since the last visit, each a button to its month
+  function renderChanges() {
+    const el = document.getElementById('schChanges');
+    const games = [...changed].map(pk => {
+      const listings = allGames.filter(g => g.gamePk === pk);
+      return listings.find(isPlayedEntry) ?? listings[0];
+    }).filter(Boolean).sort((a, b) => a._day.localeCompare(b._day));
+    if (!games.length) {
+      el.hidden = true;
+      return;
+    }
+    const shown = games.slice(0, 4);
+    el.innerHTML = `Changed since your last visit: ${shown.map((g, i) => {
+      const st = gameStatus(g);
+      const what = st.state === 'postponed' ? 'postponed'
+        : st.state === 'cancelled' ? 'cancelled'
+        : `now ${shortDay(g._day)}${st.timeTBD ? '' : `, ${new Date(g.gameDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`}`;
+      return `<button type="button" class="sch-change-link" data-i="${i}">${oriIsHome(g) ? 'vs' : '@'} ${esc(oppAbbr(g))} ${esc(what)}</button>`;
+    }).join(' · ')}${games.length > shown.length ? ` and ${games.length - shown.length} more, outlined on the calendar` : ''}.`;
+    el.querySelectorAll('.sch-change-link').forEach(btn => btn.addEventListener('click', () => {
+      viewDate = new Date(`${shown[Number(btn.dataset.i)]._day}T12:00:00`);
+      render();
+    }));
+    el.hidden = false;
+  }
+
+  function renderUpdated() {
+    const t = new Date(lastFetch).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    document.getElementById('schUpdated').textContent = `Updated ${t}`;
+  }
+
   // ── Load ──────────────────────────────────────────────────────
+  // This season and the next: next year's spring training and opener show
+  // up as soon as MLB releases them
+  async function fetchSeason(season) {
+    const url = `${MLB}/schedule?sportId=1&teamId=${TEAM_ID}&season=${season}`
+      + `&gameType=S,R,F,D,L,W`
+      + `&hydrate=team,linescore,decisions,probablePitcher(note),broadcasts(all),venue`
+      + `&startDate=${season}-01-01&endDate=${season}-12-31`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`schedule ${season}: ${res.status}`);
+    return flattenSchedule(await res.json());
+  }
+
   async function loadSchedule() {
     const grid = document.getElementById('scheduleGrid');
     try {
-      const url = `${MLB}/schedule?sportId=1&teamId=${TEAM_ID}&season=${SEASON}`
-        + `&gameType=R,F,D,L,W`
-        + `&hydrate=team,linescore,decisions,probablePitcher(note),broadcasts(all),venue`
-        + `&startDate=${SEASON}-01-01&endDate=${SEASON}-12-31`;
-      const data = await fetch(url).then(r => r.json());
-      allGames = (data.dates ?? []).flatMap(d => d.games);
+      const [current, next] = await Promise.allSettled([fetchSeason(SEASON), fetchSeason(SEASON + 1)]);
+      if (current.status !== 'fulfilled') throw current.reason;
+      allGames = [...current.value, ...(next.status === 'fulfilled' ? next.value : [])];
+      lastFetch = Date.now();
       buildSeries(allGames);
+      changed = changedSinceLastVisit(TEAM_ID, allGames);
 
-      // Fetch weather for upcoming games within the next 10 days
+      // Weather for scheduled games in the next 10 days
       const now     = Date.now();
-      const tenDays = 10 * 24 * 60 * 60 * 1000;
+      const tenDays = 10 * DAY_MS;
       const upcoming = allGames.filter(g => {
         const t = new Date(g.gameDate).getTime();
-        return t > now - 86400000 && t < now + tenDays && g.status?.abstractGameState !== 'Final';
+        return t > now - DAY_MS && t < now + tenDays && gameStatus(g).state === 'scheduled';
       });
-      if (upcoming.length) await fetchWeatherForGames(upcoming);
+      if (upcoming.length) await fetchWeatherForGames(upcoming).catch(() => {});
 
       render();
+      renderChanges();
+      renderUpdated();
     } catch {
-      grid.innerHTML = '<div class="sch-msg">Schedule unavailable — please try again later.</div>';
+      // A failed daily refresh keeps the schedule already on screen
+      if (!allGames.length) grid.innerHTML = '<div class="sch-msg">Schedule unavailable — please try again later.</div>';
     }
   }
 
-  if (requireTeam()) loadSchedule();
+  // Once a day while the page stays open, and on coming back to a tab
+  // that's been in the background past that
+  const refreshIfStale = () => {
+    if (!document.hidden && lastFetch && Date.now() - lastFetch >= DAY_MS) loadSchedule();
+  };
+
+  if (requireTeam()) {
+    loadSchedule();
+    setInterval(refreshIfStale, 60 * 60 * 1000);
+    document.addEventListener('visibilitychange', refreshIfStale);
+  }
 </script>

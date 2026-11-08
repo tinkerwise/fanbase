@@ -3105,6 +3105,42 @@ a.il-name:hover { color: var(--accent); }
 .legend--away    { background: var(--surface); color: var(--text-3); }
 .legend--live    { background: rgba(var(--accent-rgb), 0.12); border-color: rgba(var(--accent-rgb), 0.4); color: var(--accent); }
 .legend--preview { background: var(--surface); color: var(--text-2); }
+.legend--spring  { background: var(--surface); color: var(--text-3); border-style: dashed; }
+.legend--off     { background: var(--surface); color: var(--text-3); text-decoration: line-through; }
+.sch-updated     { font-size: 0.65rem; color: var(--text-3); margin-left: auto; align-self: center; }
+
+/* ── Reschedules (#42) ────────────────────────────────────────── */
+.sch-changes {
+  font-size: 0.78rem;
+  color: var(--text-2);
+  margin: 0 0 12px;
+  padding: 6px 10px;
+  border-left: 3px solid var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+  border-radius: 3px;
+}
+.sch-empty-note {
+  font-size: 0.85rem;
+  color: var(--text-2);
+  text-align: center;
+  margin: 14px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.sch-empty-note[hidden], .sch-changes[hidden] { display: none; }
+.sch-change-link {
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 
 /* ── Month calendar grid ──────────────────────────────────────── */
 .cal-grid {
@@ -3201,6 +3237,26 @@ a.il-name:hover { color: var(--accent); }
 .chip-time  { font-size: 0.6rem;  color: var(--text-3); }
 .chip-live  { font-size: 0.62rem; color: var(--accent); font-weight: 600; }
 .chip-wx    { font-size: 0.62rem; color: var(--text-3); margin-left: auto; }
+.chip-off   { font-size: 0.6rem; color: var(--text-3); text-decoration: line-through; text-transform: uppercase; letter-spacing: 0.03em; }
+.chip-note  { font-size: 0.58rem; color: var(--text-3); font-style: italic; line-height: 1.2; }
+.chip-tag {
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: var(--text-3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+.chip-tag--spring { border-style: dashed; }
+.chip--spring { border-style: dashed; }
+.chip--spring:not(:hover) { opacity: 0.85; }
+.chip--off { background: transparent !important; border-style: dashed; }
+.chip--off:not(:hover) { opacity: 0.7; }
+.chip--off .chip-logo { filter: grayscale(1); }
+.chip--changed { outline: 2px solid var(--accent); outline-offset: -1px; }
+.sch-chip--full .chip-off { font-size: 0.72rem; }
+.sch-chip--full .chip-note { font-size: 0.68rem; }
 
 /* ── Game chip: full (week view) ──────────────────────────────── */
 .sch-chip--full {
