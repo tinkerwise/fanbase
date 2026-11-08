@@ -413,6 +413,7 @@
       }
     },
     {
+      "id": "rule5-protection",
       "date": "2026-11-17",
       "title": "Rule 5 protection deadline",
       "detail": "6 p.m. ET: teams add prospects to the 40-man roster to protect them from the Rule 5 Draft.",
@@ -452,6 +453,7 @@
       "laborRisk": true
     },
     {
+      "id": "rule5-draft",
       "date": "2026-12-09",
       "title": "Rule 5 Draft",
       "detail": "Scheduled for the last day of the Winter Meetings. The major-league phase was canceled during the 2021-22 lockout.",
@@ -473,6 +475,7 @@
       "laborRisk": true
     },
     {
+      "id": "intl-signing",
       "date": "2027-01-15",
       "title": "International signing period opens",
       "detail": "Teams can sign international amateur players. The next CBA could change the timing and rules.",

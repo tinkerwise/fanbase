@@ -598,5 +598,40 @@
         }
       ]
     }
+  },
+  "winter": {
+    "_readme": "Links for the Draft page's winter section (#17, #18). Dates come from the key dates in cleanup.json (ids rule5-protection, rule5-draft, intl-signing); results come live from MLB Stats API transactions.",
+    "rule5": {
+      "links": [
+        {
+          "label": "Rule 5 Draft explained — MLB.com glossary",
+          "url": "https://www.mlb.com/glossary/transactions/rule-5-draft"
+        },
+        {
+          "label": "Rule 5 Draft — MiLB.com",
+          "url": "https://www.milb.com/events/rule-5-draft"
+        },
+        {
+          "label": "A history of the Rule 5 Draft — MLB.com",
+          "url": "https://mlb.com/news/complete-history-of-the-mlb-rule-5-draft-c210225288"
+        }
+      ]
+    },
+    "intl": {
+      "links": [
+        {
+          "label": "2026 international bonus pools for each team — Baseball America",
+          "url": "https://www.baseballamerica.com/stories/2026-international-signing-bonus-pools-for-each-mlb-team/"
+        },
+        {
+          "label": "Each club's top international prospect (2026) — MLB.com",
+          "url": "https://www.mlb.com/news/each-team-s-top-international-prospect-2026"
+        },
+        {
+          "label": "2026 signing day: where the top prospects went — MLB.com",
+          "url": "https://www.mlb.com/news/mlb-international-prospects-signing-day-2026"
+        }
+      ]
+    }
   }
 }

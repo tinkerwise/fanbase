@@ -17,6 +17,7 @@ import { requireTeam } from './teamPicker.js';
 import { esc, safeUrl, cleanFeedText, extractThumbnail, renderNewsThumbCard, teamLogoSrc, storyByline, mixSources } from './utils.js';
 import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { loadHardball, offseasonWindow, localDate } from './season.js';
+import { findIntlSignings } from './intlSignings.js';
 
 const $ = id => document.getElementById(id);
 const asOfParam = new URLSearchParams(location.search).get('asOf');
@@ -24,8 +25,6 @@ const AS_OF = /^\d{4}-\d{2}-\d{2}$/.test(asOfParam ?? '') ? asOfParam : null;
 const NOW = AS_OF ? new Date(`${AS_OF}T12:00:00`) : new Date();
 const TODAY = localDate(NOW);
 const PAGE_SIZE = 25;
-// Players born here go through the draft, not the international market
-const DRAFT_COUNTRIES = new Set(['USA', 'Canada', 'Puerto Rico']);
 const HOT_STOVE_RE = /\b(sign(s|ed|ing)?|re-sign|trade[sd]?|trading|deal|agree[sd]?|interest(ed)?|pursu\w*|target\w*|linked|rumou?rs?|free agen\w*|acquir\w*|offer\w*|non-tender\w*|extension|claim\w*|DFA|designated)\b/i;
 const BLOCK_RE = /\b(trade[sd]?|trading|shop\w*|on the block|available|deal|swap|move)\b/i;
 
@@ -288,7 +287,6 @@ function renderTrades(moves, win) {
 async function buildMoves(transactions) {
   const seen = new Set();
   const moves = [];
-  const intlCandidates = [];
   for (const t of transactions) {
     const to = t.toTeam?.id;
     const from = t.fromTeam?.id;
@@ -304,25 +302,14 @@ async function buildMoves(transactions) {
       moves.push({ kind: 'waiver', date: t.date, text: desc, mine: true });
     } else if ((t.typeCode === 'R5' || t.typeCode === 'R5M') && (to === TEAM_ID || from === TEAM_ID)) {
       moves.push({ kind: 'rule5', date: t.date, text: desc, mine: true });
-    } else if (t.typeCode === 'SFA' && to === TEAM_ID && /minor league/i.test(desc) && t.person?.id) {
-      intlCandidates.push(t);
     }
   }
-  // International amateurs: young minor-league signees born outside the
-  // draft countries (one /people call for the team's signings)
-  if (intlCandidates.length) {
-    try {
-      const ids = [...new Set(intlCandidates.map(t => t.person.id))].slice(0, 300);
-      const people = await getJson(`${MLB}/people?personIds=${ids.join(',')}&fields=people,id,currentAge,birthCountry`);
-      const info = new Map((people.people ?? []).map(p => [p.id, p]));
-      for (const t of intlCandidates) {
-        const p = info.get(t.person.id);
-        if (p && p.currentAge <= 19 && p.birthCountry && !DRAFT_COUNTRIES.has(p.birthCountry)) {
-          moves.push({ kind: 'intl', date: t.date, text: `${t.description} (${p.birthCountry}, age ${p.currentAge})`, mine: true });
-        }
-      }
-    } catch { /* leave international signings out */ }
-  }
+  // International amateurs (intlSignings.js)
+  try {
+    for (const { t, person: p } of await findIntlSignings(transactions, TEAM_ID)) {
+      moves.push({ kind: 'intl', date: t.date, text: `${t.description} (${p.birthCountry}, age ${p.currentAge})`, mine: true });
+    }
+  } catch { /* leave international signings out */ }
   return moves.sort((a, b) => b.date.localeCompare(a.date));
 }
 

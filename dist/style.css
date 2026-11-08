@@ -4181,6 +4181,53 @@ a.il-name:hover { color: var(--accent); }
 }
 .prospect-board-status a { color: var(--orange); text-decoration: none; font-weight: 600; }
 .prospect-board-status a:hover { text-decoration: underline; }
+/* ── Draft: winter drafts (#17, #18) ──────────────────────────── */
+.dw {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg, 14px);
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--orange-dim) 0%, var(--card) 55%);
+}
+.dw[hidden], .draft-july-head[hidden] { display: none; }
+.dw-head { margin-bottom: 14px; }
+.dw-kicker { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-text, var(--accent)); }
+.dw-lead { font-size: 0.88rem; color: var(--text-2); margin: 4px 0 0; }
+.dw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.dw-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-width: 0;
+}
+.dw-card-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+.dw-card-title { font-size: 0.92rem; font-weight: 700; color: var(--text); margin: 0; }
+.dw-card-when { font-size: 0.74rem; color: var(--text-3); }
+.dw-card--done .dw-card-when { text-decoration: none; }
+.dw-text { font-size: 0.82rem; line-height: 1.45; color: var(--text-2); margin: 0 0 8px; }
+.dw-text:last-child { margin-bottom: 0; }
+.dw-note { font-size: 0.76rem; color: var(--text-3); margin-top: 8px; }
+.dw-count a, .dw-source, .dw-text a { color: var(--accent-text, var(--accent)); }
+.dw-sub { font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); margin: 10px 0 4px; }
+.dw-sub:first-child { margin-top: 0; }
+.dw-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.dw-list li { font-size: 0.85rem; color: var(--text); line-height: 1.35; }
+.dw-list a { color: var(--text); font-weight: 600; text-decoration: none; }
+.dw-list a:hover { color: var(--accent-text, var(--accent)); text-decoration: underline; }
+.dw-pos { display: inline-block; min-width: 2.2em; font-size: 0.7rem; font-weight: 700; color: var(--text-3); }
+.dw-meta { display: block; font-size: 0.72rem; color: var(--text-3); padding-left: 2.6em; }
+.dw-empty { font-size: 0.82rem; color: var(--text-3); margin: 0; }
+.dw-more { margin-top: 6px; }
+.dw-more summary { font-size: 0.78rem; font-weight: 600; color: var(--accent-text, var(--accent)); cursor: pointer; margin-bottom: 6px; }
+.dw-links { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; margin-top: 14px; font-size: 0.78rem; }
+.dw-links-label { font-weight: 700; color: var(--text-3); }
+.dw-links a { color: var(--accent-text, var(--accent)); }
+.dw .fo-news-item { padding: 7px 0; }
+.dw .fo-news-title { font-size: 0.82rem; }
+.draft-july-head { font-size: 1rem; font-weight: 700; color: var(--text); margin: 6px 0 10px; }
+.draft-july-head span { font-weight: 400; color: var(--text-3); margin-left: 6px; }
+
 .draft-hero {
   position: relative;
   display: flex;
