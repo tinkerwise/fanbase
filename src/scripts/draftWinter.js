@@ -10,8 +10,9 @@
 // - The international signing period (then through February): it opens
 //   January 15. Signings are live from /transactions (intlSignings.js).
 //
-// Dates are the key dates in public/cleanup.json (ids rule5-protection,
-// rule5-draft, intl-signing), the same list Cleanup shows. Links live under
+// Dates are the key dates in public/key-dates.json (ids
+// rule5-protection-YYYY, rule5-draft-YYYY, intl-signing-YYYY), shared with
+// every other calendar (keyDates.js). Links live under
 // `winter` in public/draft-picks.json.
 //
 // ?asOf=YYYY-MM-DD previews another day (last December, say). A past cycle
@@ -23,6 +24,7 @@ import { esc, safeUrl, mlbPlayerUrl } from './utils.js';
 import { localDate } from './season.js';
 import { findIntlSignings } from './intlSignings.js';
 import { loadGoogleNews } from './frontOfficeData.js';
+import { keyDatesById, keyDateNote } from './keyDates.js';
 
 const $ = id => document.getElementById(id);
 const BASE = import.meta.env.BASE_URL;
@@ -64,15 +66,6 @@ function cycleYear() {
   return null;
 }
 
-async function curatedDates() {
-  try {
-    const data = await getJson(`${BASE}cleanup.json`);
-    return Object.fromEntries((data.keyDates ?? []).filter(k => k.id && k.date).map(k => [k.id, k]));
-  } catch {
-    return {};
-  }
-}
-
 // The team's transactions over a stretch (they include moves from the team,
 // like players taken from it in the Rule 5 Draft)
 async function teamTransactions(start, end) {
@@ -84,10 +77,10 @@ async function teamTransactions(start, end) {
 async function winterPlan() {
   const y = cycleYear();
   if (!y) return null;
-  const curated = await curatedDates();
+  const curated = await keyDatesById();
   const inCycle = (k, year) => (k?.date?.startsWith(`${year}-`) ? k : null);
-  const protection = inCycle(curated['rule5-protection'], y);
-  const rule5Curated = inCycle(curated['rule5-draft'], y);
+  const protection = inCycle(curated[`rule5-protection-${y}`], y);
+  const rule5Curated = inCycle(curated[`rule5-draft-${y}`], y);
   let rule5 = rule5Curated?.date ?? null;
   // A past cycle: the draft happened the day its picks were filed
   if (!rule5 && TODAY > `${y}-12-01`) {
@@ -96,12 +89,12 @@ async function winterPlan() {
       rule5 = (league.transactions ?? []).find(t => t.typeCode === 'R5')?.date?.slice(0, 10) ?? null;
     } catch { /* no date: say December */ }
   }
-  const intlCurated = inCycle(curated['intl-signing'], y + 1);
+  const intlCurated = inCycle(curated[`intl-signing-${y + 1}`], y + 1);
   const intl = intlCurated?.date ?? `${y + 1}-01-15`;
 
   const rule5Over = rule5 ? TODAY > addDays(rule5, RESULTS_DAYS) : TODAY > `${y}-12-20`;
-  if (!rule5Over) return { phase: 'rule5', year: y, protection, rule5, rule5Source: rule5Curated?.source };
-  if (TODAY <= `${y + 1}-02-28`) return { phase: 'intl', year: y, intl, intlSource: intlCurated?.source };
+  if (!rule5Over) return { phase: 'rule5', year: y, protection, rule5, rule5Entry: rule5Curated, rule5Source: rule5Curated?.source };
+  if (TODAY <= `${y + 1}-02-28`) return { phase: 'intl', year: y, intl, intlEntry: intlCurated, intlSource: intlCurated?.source };
   return null;
 }
 
@@ -144,6 +137,12 @@ function linksHtml(links = []) {
   if (!safe.length) return '';
   return `<div class="dw-links"><span class="dw-links-label">Read more</span>${safe.map(l =>
     `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div>`;
+}
+
+// 'Moved from Dec 8' or 'Canceled' after a date, when it changed (#42)
+function noteHtml(entry) {
+  const note = keyDateNote(entry);
+  return note ? ` · <strong class="dw-card-note">${esc(note)}</strong>` : '';
 }
 
 function sourceHtml(source) {
@@ -189,7 +188,7 @@ async function renderRule5(plan, links) {
     protectBody += `<p class="dw-text dw-count"><strong>${count} of 40</strong> spots filled on the ${esc(nick)}' 40-man roster${count < 40 ? `, room for ${40 - count} more` : ', full'}. <a href="${BASE}front-office/#fo-players">See the roster</a></p>`;
   }
   const protectWhen = pDate
-    ? `${esc(fmtDay(pDate))}${protection.detail?.match(/^\d.*?ET/) ? `, ${esc(protection.detail.match(/^\d.*?ET/)[0])}` : ''} · ${esc(whenText(pDate))}${sourceHtml(protection.source)}`
+    ? `${esc(fmtDay(pDate))}${protection.detail?.match(/^\d.*?ET/) ? `, ${esc(protection.detail.match(/^\d.*?ET/)[0])}` : ''} · ${esc(whenText(pDate))}${noteHtml(protection)}${sourceHtml(protection.source)}`
     : 'Late November';
 
   // 2. The draft
@@ -209,7 +208,7 @@ async function renderRule5(plan, links) {
       <p class="dw-text">A major league pick has to stay on his new team's big-league roster all season, or be offered back to his old club. A Triple-A phase follows, with no such rule.</p>`;
   }
   const draftWhen = rule5
-    ? `${esc(fmtDay(rule5))} · ${esc(whenText(rule5))}${sourceHtml(plan.rule5Source)}`
+    ? `${esc(fmtDay(rule5))} · ${esc(whenText(rule5))}${noteHtml(plan.rule5Entry)}${sourceHtml(plan.rule5Source)}`
     : 'December';
 
   return {
@@ -260,7 +259,7 @@ async function renderIntl(plan, links) {
       ? `The signing period opened ${esc(whenText(intl))}.`
       : 'How clubs add amateur talent from around the world.',
     cards: [
-      card(open ? `${nick} signings` : 'Signing day', `${esc(fmtDay(intl))} · ${esc(whenText(intl))}${sourceHtml(plan.intlSource)}`, signBody),
+      card(open ? `${nick} signings` : 'Signing day', `${esc(fmtDay(intl))} · ${esc(whenText(intl))}${noteHtml(plan.intlEntry)}${sourceHtml(plan.intlSource)}`, signBody),
       card('How it works', '', about),
       card(`${nick} international news`, '', '<div id="dwNews"><span class="sidebar-msg">Loading…</span></div>'),
     ],

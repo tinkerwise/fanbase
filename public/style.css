@@ -3107,6 +3107,7 @@ a.il-name:hover { color: var(--accent); }
 .legend--preview { background: var(--surface); color: var(--text-2); }
 .legend--spring  { background: var(--surface); color: var(--text-3); border-style: dashed; }
 .legend--off     { background: var(--surface); color: var(--text-3); text-decoration: line-through; }
+.legend--key     { background: var(--surface); color: var(--accent-text, var(--accent)); }
 .sch-updated     { font-size: 0.65rem; color: var(--text-3); margin-left: auto; align-self: center; }
 
 /* ── Reschedules (#42) ────────────────────────────────────────── */
@@ -3255,6 +3256,31 @@ a.il-name:hover { color: var(--accent); }
 .chip--off:not(:hover) { opacity: 0.7; }
 .chip--off .chip-logo { filter: grayscale(1); }
 .chip--changed { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+/* Key dates on the calendar (#42) */
+.cal-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 3px;
+  font-size: 0.6rem;
+  line-height: 1.25;
+  color: var(--accent-text, var(--accent));
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.cal-key-star { flex-shrink: 0; }
+.cal-key-title { min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
+.cal-key-extra { flex-basis: 100%; font-weight: 400; font-style: italic; color: var(--text-3); padding-left: 1.1em; }
+.cal-key--off .cal-key-title { text-decoration: line-through; color: var(--text-3); }
+.cal-key--full {
+  font-size: 0.72rem;
+  padding: 5px 7px;
+  border: 1px dashed rgba(var(--accent-rgb), 0.4);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+.cal-key--full .cal-key-extra { font-size: 0.66rem; }
 .sch-chip--full .chip-off { font-size: 0.72rem; }
 .sch-chip--full .chip-note { font-size: 0.68rem; }
 
@@ -4655,6 +4681,9 @@ html:not([data-hardball]) [data-offseason-only] { display: none !important; }
 .hb-event-body { display: flex; flex-direction: column; gap: 2px; }
 .hb-event-title { font-weight: 700; font-size: 0.9rem; }
 .hb-event-tag { margin-left: 6px; padding: 1px 6px; border-radius: 999px; font-size: 0.66rem; font-weight: 800; text-transform: uppercase; background: var(--accent-dim); color: var(--accent-text); vertical-align: 1px; }
+.hb-event-tag--note { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); }
+.hb-event--off .hb-event-date, .hb-event--off .hb-event-title { text-decoration: line-through; text-decoration-color: var(--text-3); }
+.hb-event--off .hb-event-tag { text-decoration: none; display: inline-block; }
 .hb-event-detail { font-size: 0.82rem; color: var(--text-2); line-height: 1.45; }
 .hb-event-source { font-size: 0.72rem; }
 
@@ -5036,12 +5065,12 @@ html:not([data-offseason]) [data-cleanup-only] { display: none !important; }
 .cu-need--soft { color: var(--text-2); }
 .cu-tag { display: inline-block; flex: none; padding: 1px 7px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.02em; color: var(--text-2); }
 .cu-tag--lost { background: rgba(220, 38, 38, 0.1); border-color: transparent; color: #b91c1c; }
-.cu-tag--risk { background: rgba(217, 119, 6, 0.12); border-color: transparent; color: #b45309; }
 .cu-tag--trade { background: var(--accent-dim); border-color: transparent; color: var(--accent-text); }
 :root:not([data-theme="light"]) .cu-tag--lost { color: #f87171; }
-:root:not([data-theme="light"]) .cu-tag--risk { color: #fbbf24; }
 
 .cu-dates { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.cu-tag--note { background: var(--surface); color: var(--text-2); }
+.cu-date--off .cu-date-when, .cu-date--off .cu-date-title > :not(.cu-tag) { text-decoration: line-through; }
 .cu-date { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; }
 .cu-date--past { opacity: 0.55; }
 .cu-date-when { font-size: 0.78rem; font-weight: 800; color: var(--accent-text); }

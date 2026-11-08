@@ -31,6 +31,7 @@ import PageHeader from '../../components/PageHeader.astro';
         <span class="sch-legend-item legend--preview">W 5–3 · L 2–4</span>
         <span class="sch-legend-item legend--spring">ST Spring training</span>
         <span class="sch-legend-item legend--off">Postponed · Cancelled</span>
+        <span class="sch-legend-item legend--key">★ Key date</span>
         <span class="sch-updated" id="schUpdated" aria-live="polite"></span>
       </div>
 
@@ -55,6 +56,7 @@ import PageHeader from '../../components/PageHeader.astro';
   import { esc } from '../../scripts/utils.js';
   import { fetchWeatherForGames, getGameWeather } from '../../scripts/weather.js';
   import { flattenSchedule, gameStatus, isPlayedEntry, shortDay, changedSinceLastVisit } from '../../scripts/scheduleGames.js';
+  import { keyDatesFor, keyDateNote, isOff } from '../../scripts/keyDates.js';
 
   // ── Constants ─────────────────────────────────────────────────
   const MONTHS = [
@@ -74,6 +76,7 @@ import PageHeader from '../../components/PageHeader.astro';
   let viewMode = 'month';
   let viewDate = new Date();
   let lastFetch = 0;
+  let keysByDay = {};  // YYYY-MM-DD → key dates starting that day (key-dates.json)
 
   // ── Date helpers ──────────────────────────────────────────────
   function dateStr(d) {
@@ -81,6 +84,30 @@ import PageHeader from '../../components/PageHeader.astro';
   }
   function todayStr() { return dateStr(new Date()); }
   const entryKey = g => `${g.gamePk}|${g._day}`;
+
+  // ── Key dates (#42) ───────────────────────────────────────────
+  // Baseball's calendar alongside the games: Rule 5 Draft, international
+  // signing day, Opening Day… (key-dates.json, tag schedule). A stretch
+  // like the Winter Meetings is marked on its first day.
+  function indexKeyDates(entries) {
+    keysByDay = {};
+    for (const e of entries) {
+      if (!e.date) continue;
+      (keysByDay[e.date] ??= []).push(e);
+    }
+  }
+
+  function keyMarkers(key, full = false) {
+    return (keysByDay[key] ?? []).map(e => {
+      const note = keyDateNote(e);
+      const range = e.dateEnd ? `through ${shortDay(e.dateEnd, false)}` : '';
+      const tip = [e.title, range && `(${range})`, note && `· ${note}`, e.detail && `— ${e.detail}`].filter(Boolean).join(' ');
+      const extra = [range, note].filter(Boolean).join(' · ');
+      return `<span class="cal-key${isOff(e) ? ' cal-key--off' : ''}${full ? ' cal-key--full' : ''}" title="${esc(tip)}">
+        <span class="cal-key-star" aria-hidden="true">★</span><span class="cal-key-title">${esc(e.title)}</span>${extra && (full || note) ? `<span class="cal-key-extra">${esc(full ? extra : note)}</span>` : ''}
+      </span>`;
+    }).join('');
+  }
 
   // ── Game helpers ──────────────────────────────────────────────
   function oriIsHome(g)  { return g.teams.home.team.id === TEAM_ID; }
@@ -355,6 +382,7 @@ import PageHeader from '../../components/PageHeader.astro';
 
       html += `<div class="cal-cell${isToday ? ' cal-cell--today' : ''}${games.length ? ' cal-cell--game' : ''}">
         <span class="cal-day">${day}</span>
+        ${keyMarkers(key)}
         ${seriesLabel}
         ${games.map(g => renderChip(g, true)).join('')}
       </div>`;
@@ -406,9 +434,10 @@ import PageHeader from '../../components/PageHeader.astro';
           ${stretchLabel ? `<span class="week-stretch-label">${stretchLabel}</span>` : ''}
         </div>
         <div class="week-col-body">
+          ${keyMarkers(key, true)}
           ${dayGames.length
             ? dayGames.map(g => renderChip(g, false)).join('')
-            : '<span class="week-empty">—</span>'
+            : (keysByDay[key] ? '' : '<span class="week-empty">—</span>')
           }
         </div>
       </div>`;
@@ -499,7 +528,8 @@ import PageHeader from '../../components/PageHeader.astro';
   async function loadSchedule() {
     const grid = document.getElementById('scheduleGrid');
     try {
-      const [current, next] = await Promise.allSettled([fetchSeason(SEASON), fetchSeason(SEASON + 1)]);
+      const [current, next, keys] = await Promise.allSettled([fetchSeason(SEASON), fetchSeason(SEASON + 1), keyDatesFor('schedule')]);
+      indexKeyDates(keys.status === 'fulfilled' ? keys.value : []);
       if (current.status !== 'fulfilled') throw current.reason;
       allGames = [...current.value, ...(next.status === 'fulfilled' ? next.value : [])];
       lastFetch = Date.now();

@@ -1,5 +1,5 @@
 {
-  "_readme": "Content for /hardball/ (issue #20), the MLB/MLBPA labor page. Hand-curated: update lastUpdated whenever you edit. Every position needs a source (url) and the date it was reported, and is worded as that side stated it: no editorializing. status.code is one of talks | expired | lockout | tentative | ratified; expired and lockout keep Hardball prominent in the nav and on Home whatever the calendar says. visibility: auto (offseason from MLB's season dates, plus expired/lockout) | show | hide. Timeline items with key: true count down on the page when they're upcoming. The news section is automatic: labor keywords over the league-wide feeds plus newsSources (direct RSS feeds and Google News search RSS, whose titles end in \" - Publisher\": titleHasSource moves that into the source label).",
+  "_readme": "Content for /hardball/ (issue #20), the MLB/MLBPA labor page. Hand-curated: update lastUpdated whenever you edit. Every position needs a source (url) and the date it was reported, and is worded as that side stated it: no editorializing. status.code is one of talks | expired | lockout | tentative | ratified; expired and lockout keep Hardball prominent in the nav and on Home whatever the calendar says. visibility: auto (offseason from MLB's season dates, plus expired/lockout) | show | hide. Timeline items with key: true count down on the page when they're upcoming. The news section is automatic: labor keywords over the league-wide feeds plus newsSources (direct RSS feeds and Google News search RSS, whose titles end in \" - Publisher\": titleHasSource moves that into the source label). Upcoming key dates (CBA expires, spring training, Opening Day) come from key-dates.json (tag hardball) and are merged into the timeline (season.js loadHardball, #42); timeline here holds what's happened.",
   "lastUpdated": "2026-10-28",
   "visibility": "auto",
   "status": {
@@ -363,33 +363,6 @@
       "source": {
         "label": "CNBC",
         "url": "https://www.cnbc.com/2026/10/08/major-league-baseball-proposes-shorter-season-amid-salary-cap-push.html"
-      }
-    },
-    {
-      "date": "2026-12-01",
-      "time": "23:59",
-      "key": true,
-      "title": "CBA expires",
-      "detail": "11:59 p.m. ET. The old terms can stay in place while talks go on, but either side can act: owners can lock out the players, or players can strike.",
-      "source": {
-        "label": "CBS Sports timeline",
-        "url": "https://www.cbssports.com/mlb/news/mlb-cba-negotiations-timeline-2026/"
-      }
-    },
-    {
-      "date": "2027-02-19",
-      "key": true,
-      "title": "Spring training scheduled to open",
-      "detail": "Camps open on schedule only if there's a deal or no work stoppage."
-    },
-    {
-      "date": "2027-03-25",
-      "key": true,
-      "title": "Opening Day scheduled",
-      "detail": "Reporting has pointed to mid-March as the point where a delay to the season becomes likely without a deal.",
-      "source": {
-        "label": "CBS Sports: state of labor",
-        "url": "https://www.cbssports.com/mlb/news/mlbs-state-of-labor-what-to-know-about-2026-cba-including-odds-of-salary-cap-international-draft-lockout"
       }
     }
   ],
