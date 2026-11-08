@@ -2,6 +2,7 @@
 import './theme.js';
 import { MLB, SEASON, TEAM_ID, TEAM_ABBR, TEAM_NICK, TEAM_ABBREV } from './config.js';
 import { requireTeam } from './teamPicker.js';
+import { loadWinterDrafts } from './draftWinter.js';
 import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { $, esc, relativeDate, cleanFeedText, savantUrl, mlbPlayerUrl, fetchPlayerIdMap, lookupPlayerId, searchPlayerId, teamLogoSrc, extractThumbnail, renderNewsThumbCard, fetchOgImage, playerNameOrLookup, resolveNameLookups, stripAccents } from './utils.js';
 
@@ -605,6 +606,7 @@ function setupAccordion() {
 
 setupAccordion();
 if (requireTeam()) {
+  loadWinterDrafts();
   loadPicks();
   loadDraftNews();
 }

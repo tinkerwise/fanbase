@@ -23,6 +23,11 @@ const base = import.meta.env.BASE_URL;
           <span class="event-updated" id="draftUpdated"></span>
         </div>
 
+        <!-- Rule 5 Draft (Nov-Dec) or international signing period (Dec-Feb),
+             when one is next: draftWinter.js (#17, #18) -->
+        <section class="dw" id="draftWinter" aria-live="polite" hidden></section>
+        <h2 class="draft-july-head" id="draftJulyHead" hidden>The MLB Draft <span>July</span></h2>
+
         <section class="draft-hero" id="draftHero">
           <div class="draft-hero-diamond" aria-hidden="true">
             <svg viewBox="0 0 200 200" fill="none">
