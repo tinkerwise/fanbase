@@ -1,0 +1,1 @@
+import{U as e,z as t}from"./utils.DaJInyY3.js";import"./theme.CU5GnKc5.js";import"./teamPicker.DtDYhMcX.js";import{i as n,n as r,s as i}from"./frontOfficeData.DxZPLl-i.js";t&&i(e.id).then(t=>{t&&n(e,r(t))});

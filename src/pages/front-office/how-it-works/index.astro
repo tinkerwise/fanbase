@@ -1,8 +1,13 @@
 ---
-// Front Office 101 (#40): how a baseball front office is organized and how
-// its jobs fit together, for fans. Static; front-office.js fills the
-// [data-fo-person] lines with the selected club's people. The chain of
-// command's "How this job works" links open these lessons by id.
+// How a Front Office Works (#43): how a baseball front office is organized
+// and how its jobs fit together, for fans. It was "Front Office 101" at the
+// bottom of the Front Office page (#40); popovers there (foLearn.js) give a
+// short answer and link to these sections by id. Static, except that
+// front-office-learn.js names the selected club's people where a section
+// talks about them ([data-fo-person]).
+import Layout from '../../../layouts/Layout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+
 const base = import.meta.env.BASE_URL;
 
 // A typical baseball operations department, under the GM
@@ -16,44 +21,69 @@ const DEPARTMENTS = [
   { name: 'Sports science & medical', what: 'Trainers, strength coaches and doctors who keep players on the field.', learn: 'fo-learn-development' },
   { name: 'Baseball administration', what: 'Contracts, roster rules, arbitration and the payroll math.', learn: 'fo-learn-rules' },
 ];
+
+// Section tabs: jump links, in page order
+const TABS = [
+  ['fo-learn-org', 'The Org Chart'],
+  ['fo-learn-gm', 'The GM'],
+  ['fo-learn-president', 'President vs. GM'],
+  ['fo-learn-scouting', 'Scouting & Analytics'],
+  ['fo-learn-development', 'Player Development'],
+  ['fo-learn-manager', 'The Manager'],
+  ['fo-learn-money', 'Payroll'],
+  ['fo-learn-calendar', 'The Year'],
+  ['fo-learn-rules', 'The Rules'],
+];
 ---
 
-<section class="fo-section fo-learn" id="fo-learn" aria-labelledby="foLearnTitle">
-  <p class="fo-learn-kicker">Front Office 101</p>
-  <h2 class="fo-learn-title" id="foLearnTitle">How a front office works</h2>
-  <p class="fo-learn-lede">
-    The names above are the top of a much bigger operation. Behind them are scouts, analysts, coaches and
-    trainers, all feeding one question: how does this club win, now and later? Here's how it fits together.
-  </p>
+<Layout title="How a Front Office Works | Fanbase">
+  <PageHeader current="Front Office" />
 
-  <figure class="fo-org" aria-labelledby="foOrgCaption">
-    <figcaption class="fo-org-caption" id="foOrgCaption">A typical baseball operations department</figcaption>
-    <div class="fo-org-top">
-      <div class="fo-org-row">
-        <a class="fo-org-box fo-org-box--lead" href="#fo-learn-money"><strong>Ownership</strong><span>Sets the budget</span></a>
-        <div class="fo-org-box fo-org-box--side"><strong>Business operations</strong><span>Tickets, broadcasts, sponsors. A separate side of the club.</span></div>
+  <main class="fo-page fo-learn-page">
+    <div class="fo-hero">
+      <div class="fo-hero-text">
+        <a class="fo-back" href={`${base}front-office/`}>← <span data-team-text="nick">Team</span> Front Office</a>
+        <h1 class="fo-page-title">How a Front Office Works</h1>
+        <p class="fo-page-sub">
+          A front office is far bigger than the few names at the top. Scouts, analysts, coaches and trainers
+          all feed one question: how does this club win, now and later? Here's how it fits together.
+        </p>
       </div>
-      <a class="fo-org-box fo-org-box--lead" href="#fo-learn-president"><strong>President of Baseball Operations</strong><span>Strategy and the final call</span></a>
-      <a class="fo-org-box fo-org-box--lead" href="#fo-learn-gm"><strong>General Manager</strong><span>Builds the roster</span></a>
-      <div class="fo-org-box"><strong>Assistant GMs</strong><span>Each runs a group of the departments below</span></div>
     </div>
-    <ul class="fo-org-depts">
-      {DEPARTMENTS.map(d => (
-        <li><a class="fo-org-dept" href={`#${d.learn}`}><strong>{d.name}</strong><span>{d.what}</span></a></li>
-      ))}
-    </ul>
-    <p class="fo-org-note">
-      Business operations (tickets, broadcasts, sponsors) is a separate side of the club with its own president.
-      Every club draws its chart a little differently: some give one person two titles, some add layers, some
-      leave a job open while they search. Departments have grown fast, and many clubs now employ dozens of
-      analysts, coaches and scouts beyond the few people named on this page.
-    </p>
-  </figure>
 
-  <h3 class="fo-learn-subtitle">The big questions</h3>
-  <div class="fo-lessons">
-    <details class="fo-lesson" id="fo-learn-gm" open>
-      <summary>What does a GM actually do?</summary>
+    <nav class="fo-tabs" aria-label="How a Front Office Works sections">
+      {TABS.map(([id, label]) => <a class="fo-tab" href={`#${id}`}>{label}</a>)}
+    </nav>
+
+    <section class="fo-section" id="fo-learn-org" aria-labelledby="fo-learn-org-title">
+      <h2 class="fo-lesson-title" id="fo-learn-org-title">The org chart</h2>
+      <figure class="fo-org" aria-labelledby="foOrgCaption">
+        <figcaption class="fo-org-caption" id="foOrgCaption">A typical baseball operations department</figcaption>
+        <div class="fo-org-top">
+          <div class="fo-org-row">
+            <a class="fo-org-box fo-org-box--lead" href="#fo-learn-money"><strong>Ownership</strong><span>Sets the budget</span></a>
+            <div class="fo-org-box fo-org-box--side"><strong>Business operations</strong><span>Tickets, broadcasts, sponsors. A separate side of the club.</span></div>
+          </div>
+          <a class="fo-org-box fo-org-box--lead" href="#fo-learn-president"><strong>President of Baseball Operations</strong><span>Strategy and the final call</span></a>
+          <a class="fo-org-box fo-org-box--lead" href="#fo-learn-gm"><strong>General Manager</strong><span>Builds the roster</span></a>
+          <div class="fo-org-box"><strong>Assistant GMs</strong><span>Each runs a group of the departments below</span></div>
+        </div>
+        <ul class="fo-org-depts">
+          {DEPARTMENTS.map(d => (
+            <li><a class="fo-org-dept" href={`#${d.learn}`}><strong>{d.name}</strong><span>{d.what}</span></a></li>
+          ))}
+        </ul>
+        <p class="fo-org-note">
+          Business operations (tickets, broadcasts, sponsors) is a separate side of the club with its own president.
+          Every club draws its chart a little differently: some give one person two titles, some add layers, some
+          leave a job open while they search. Departments have grown fast, and many clubs now employ dozens of
+          analysts, coaches and scouts beyond the few people named on the Front Office page.
+        </p>
+      </figure>
+    </section>
+
+    <section class="fo-section fo-lesson" id="fo-learn-gm" aria-labelledby="fo-learn-gm-title">
+      <h2 class="fo-lesson-title" id="fo-learn-gm-title">What does a GM actually do?</h2>
       <div class="fo-lesson-body">
         <p>The GM is the club's roster architect, and most of the job is conversation: with other GMs about trades, with agents about contracts, and with their own staff about who to go after.</p>
         <ul>
@@ -65,10 +95,10 @@ const DEPARTMENTS = [
         <p>Where there's a president of baseball operations above the GM, the GM usually handles more of the daily dealmaking while the president owns the long-term plan and the final call.</p>
         <p class="fo-lesson-club" data-fo-person="gm" hidden></p>
       </div>
-    </details>
+    </section>
 
-    <details class="fo-lesson" id="fo-learn-president">
-      <summary>President vs. GM: why have both?</summary>
+    <section class="fo-section fo-lesson" id="fo-learn-president" aria-labelledby="fo-learn-president-title">
+      <h2 class="fo-lesson-title" id="fo-learn-president-title">President vs. GM: why have both?</h2>
       <div class="fo-lesson-body">
         <p>A generation ago the GM was almost always the top baseball job. Today most clubs put a president of baseball operations above the GM.</p>
         <ul>
@@ -79,19 +109,19 @@ const DEPARTMENTS = [
         <p>The titles vary. Some clubs give one person both jobs, and some call the top job "chief baseball officer." A club can also run for a while with a president and no GM while it searches, the way the Orioles did before hiring Jared Banner in 2026.</p>
         <p class="fo-lesson-club" data-fo-person="president" hidden></p>
       </div>
-    </details>
+    </section>
 
-    <details class="fo-lesson" id="fo-learn-scouting">
-      <summary>Scouting vs. analytics: rivals or partners?</summary>
+    <section class="fo-section fo-lesson" id="fo-learn-scouting" aria-labelledby="fo-learn-scouting-title">
+      <h2 class="fo-lesson-title" id="fo-learn-scouting-title">Scouting vs. analytics: rivals or partners?</h2>
       <div class="fo-lesson-body">
         <p><strong>Scouts</strong> watch players in person and judge what's hard to measure: how a swing works, whether a pitcher can repeat his delivery, how a player handles failure. <strong>Analysts</strong> work from data such as pitch tracking, batted balls and biomechanics, and build models that project how a player will perform.</p>
         <p>The old <em>Moneyball</em> story cast them as rivals. Today nearly every club blends the two: scouts carry radar guns, video and data, analysts lean on scouting reports for what the numbers miss, and big decisions weigh both.</p>
         <p>They still shine in different places. Data is strongest on players with long track records. Scouting matters most for teenagers and amateurs who have little data at all, which is why the draft and international signings still depend so heavily on scouts.</p>
       </div>
-    </details>
+    </section>
 
-    <details class="fo-lesson" id="fo-learn-development">
-      <summary>Where player development fits</summary>
+    <section class="fo-section fo-lesson" id="fo-learn-development" aria-labelledby="fo-learn-development-title">
+      <h2 class="fo-lesson-title" id="fo-learn-development-title">Where player development fits</h2>
       <div class="fo-lesson-body">
         <p>Most of a club's future big leaguers come through its farm system: draft picks, international signings and prospects acquired in trades. Player development is the department that turns them into major leaguers.</p>
         <ul>
@@ -100,22 +130,22 @@ const DEPARTMENTS = [
           <li><strong>Health and strength.</strong> Sports science staff manage workloads and recovery, especially for young pitchers.</li>
         </ul>
         <p>This is where scouting and analytics pay off, or don't: what they see in a player only matters if development can build on it. Strong development is one of the main ways lower-payroll clubs keep up. A club that turns mid-round picks into big leaguers has to buy less in free agency.</p>
-        <p>See this club's recent top picks under <a href="#fo-drafts">Draft History</a>.</p>
+        <p>See this club's recent top picks under <a href={`${base}front-office/#fo-drafts`}>Draft History</a>.</p>
       </div>
-    </details>
+    </section>
 
-    <details class="fo-lesson" id="fo-learn-manager">
-      <summary>What the manager does now</summary>
+    <section class="fo-section fo-lesson" id="fo-learn-manager" aria-labelledby="fo-learn-manager-title">
+      <h2 class="fo-lesson-title" id="fo-learn-manager-title">What the manager does now</h2>
       <div class="fo-lesson-body">
         <p>The manager runs the team on the field: lineups, pitching changes, defensive positioning and the clubhouse. Much of that is now planned with the front office before the game, with matchups and bullpen plans built from the analytics staff's work.</p>
         <p>So the modern manager is above all a communicator. They translate the front office's plans for players, hold a 26-man clubhouse together across 162 games, and face the media every day.</p>
         <p>The president or GM usually hires the manager, and the manager is usually the first to go when a season goes wrong.</p>
         <p class="fo-lesson-club" data-fo-person="manager" hidden></p>
       </div>
-    </details>
+    </section>
 
-    <details class="fo-lesson" id="fo-learn-money">
-      <summary>Who sets the payroll?</summary>
+    <section class="fo-section fo-lesson" id="fo-learn-money" aria-labelledby="fo-learn-money-title">
+      <h2 class="fo-lesson-title" id="fo-learn-money-title">Who sets the payroll?</h2>
       <div class="fo-lesson-body">
         <p>The owner decides how much the club can spend. The front office decides how to spend it.</p>
         <ul>
@@ -124,13 +154,13 @@ const DEPARTMENTS = [
           <li><strong>No salary cap.</strong> MLB doesn't have one, which is why payrolls vary so widely.</li>
           <li><strong>The luxury tax.</strong> The competitive balance tax charges clubs on payroll above a set threshold, at higher rates for going further over and for going over repeatedly. Many clubs treat that line as a soft cap.</li>
         </ul>
-        <p>This club's salaries and contracts are linked under <a href="#fo-contracts">Payroll &amp; Contracts</a>.</p>
+        <p>This club's salaries and contracts are linked under <a href={`${base}front-office/#fo-contracts`}>Payroll &amp; Contracts</a>.</p>
         <p class="fo-lesson-club" data-fo-person="owner" hidden></p>
       </div>
-    </details>
+    </section>
 
-    <details class="fo-lesson" id="fo-learn-calendar">
-      <summary>A front office's year</summary>
+    <section class="fo-section fo-lesson" id="fo-learn-calendar" aria-labelledby="fo-learn-calendar-title">
+      <h2 class="fo-lesson-title" id="fo-learn-calendar-title">A front office's year</h2>
       <div class="fo-lesson-body">
         <ol class="fo-calendar">
           <li><strong>After the World Series</strong> Free agency opens. Clubs decide on contract options and trim their 40-man rosters.</li>
@@ -142,12 +172,12 @@ const DEPARTMENTS = [
           <li><strong>July</strong> The amateur draft during All-Star week, then the trade deadline at the end of the month, when clubs decide whether to buy or sell.</li>
           <li><strong>September–October</strong> Rosters expand to 28 for September, then the playoffs, and the planning for next year starts again.</li>
         </ol>
-        <p>Follow this club's moves under <a href="#fo-transactions">Transactions</a>.</p>
+        <p>Follow this club's moves under <a href={`${base}front-office/#fo-transactions`}>Transactions</a>.</p>
       </div>
-    </details>
+    </section>
 
-    <details class="fo-lesson" id="fo-learn-rules">
-      <summary>The rules they work within</summary>
+    <section class="fo-section fo-lesson" id="fo-learn-rules" aria-labelledby="fo-learn-rules-title">
+      <h2 class="fo-lesson-title" id="fo-learn-rules-title">The rules they work within</h2>
       <div class="fo-lesson-body">
         <dl class="fo-glossary">
           <dt>40-man roster</dt>
@@ -158,6 +188,8 @@ const DEPARTMENTS = [
           <dd>Taking a player off the 40-man. Within a week the club trades him, releases him or puts him on waivers, where any club can claim him; if nobody does, he can be sent outright to the minors.</dd>
           <dt>Rule 5 Draft</dt>
           <dd>Each December, clubs can take other clubs' minor leaguers who've been in pro ball four or five years without being added to a 40-man roster. A pick has to stay in the majors all season or be offered back.</dd>
+          <dt>Injured list</dt>
+          <dd>A hurt player goes on the 10-day injured list (15 days for pitchers) and the club can call up a replacement. The 60-day list also takes him off the 40-man roster, freeing a spot.</dd>
           <dt>Service time</dt>
           <dd>Days on the active roster or the major league injured list. 172 days make a year.</dd>
           <dt>Arbitration</dt>
@@ -165,23 +197,14 @@ const DEPARTMENTS = [
           <dt>Free agency</dt>
           <dd>After six years of service a player can sign with any club.</dd>
         </dl>
-        <p>See this club's roster under <a href="#fo-roster">40-Man Roster</a>.</p>
+        <p>See this club's roster under <a href={`${base}front-office/#fo-roster`}>40-Man Roster</a>.</p>
       </div>
-    </details>
-  </div>
+    </section>
 
-  <p class="fo-learn-more"><a href={`${base}front-office/league/`}>Compare how all 30 clubs are set up →</a></p>
-</section>
+    <p class="fo-learn-more"><a href={`${base}front-office/league/`}>Compare how all 30 clubs are set up →</a></p>
+  </main>
+</Layout>
 
 <script>
-  // A link to a lesson (#fo-learn-gm) opens it before the jump
-  function openLesson() {
-    const el = location.hash.startsWith('#fo-learn-') ? document.querySelector(location.hash) : null;
-    if (el instanceof HTMLDetailsElement) {
-      el.open = true;
-      el.scrollIntoView();
-    }
-  }
-  window.addEventListener('hashchange', openLesson);
-  openLesson();
+  import '../../../scripts/front-office-learn.js';
 </script>

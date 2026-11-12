@@ -5,19 +5,24 @@
 // Office page (/front-office/) shows them open, with ids its section tabs
 // jump to (#fo-il, #fo-transactions, …). `only` picks some of them by
 // section, so the page can group roster widgets apart from moves and money.
+// `learn` adds an ⓘ by each heading that opens its How a Front Office Works
+// popover (#43; the page renders the popovers, FoLearnPopovers.astro).
+import { learnButton } from '../scripts/foLearn.js';
+
 interface Props {
   collapsible?: boolean;
   only?: string[];
+  learn?: boolean;
 }
-const { collapsible = false, only } = Astro.props;
+const { collapsible = false, only, learn = false } = Astro.props;
 const WIDGETS = [
-  { section: 'il', label: 'Injury Report', wrap: 'ilWrap',
+  { section: 'il', label: 'Injury Report', wrap: 'ilWrap', learn: 'il',
     icon: '<path d="M9 12h6m-3-3v6"/><circle cx="12" cy="12" r="10"/>' },
-  { section: 'transactions', label: 'Transactions', wrap: 'transactionsWrap',
+  { section: 'transactions', label: 'Transactions', wrap: 'transactionsWrap', learn: 'moves',
     icon: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>' },
-  { section: 'contracts', label: 'Payroll & Contracts', wrap: 'contractsWrap',
+  { section: 'contracts', label: 'Payroll & Contracts', wrap: 'contractsWrap', learn: 'contracts',
     icon: '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>' },
-  { section: 'roster', label: '40-Man Roster', wrap: 'rosterWrap',
+  { section: 'roster', label: '40-Man Roster', wrap: 'rosterWrap', learn: 'roster',
     icon: '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/>' },
 ];
 ---
@@ -26,6 +31,7 @@ const WIDGETS = [
     <h3 class={`section-label${collapsible ? ' section-toggle' : ''}`} data-target={collapsible ? w.section : undefined}>
       <svg class="section-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={w.icon} />
       {w.label}
+      {learn && !collapsible && <Fragment set:html={learnButton(w.learn)} />}
       {collapsible && <svg class="section-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>}
     </h3>
     <div class="section-body" id={w.wrap}>
