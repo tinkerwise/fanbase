@@ -11,7 +11,7 @@
 // and next: spring training games, Opening Day, the All-Star Game, the end
 // of the regular season and the postseason. The API only says where a date
 // is now, so when one moves this records the old date in the entry's
-// `history`; the pages then show "moved from…". Hand-curated entries (Rule 5
+// `history` (pages show only the current date). Hand-curated entries (Rule 5
 // Draft, Winter Meetings, international signing…) are left alone: they are
 // edited by hand from the news.
 //
