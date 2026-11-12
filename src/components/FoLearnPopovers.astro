@@ -1,0 +1,87 @@
+---
+// The Front Office page's popovers (#43): one per topic in foLearn.js, each
+// a short answer and a link into the Front Office Explainer. Buttons with
+// popovertarget="fo-pop-<key>" open them (learnButton()). Native popovers
+// close on Escape, an outside click or tap, or the ✕.
+import { LEARN_TOPICS, LEARN_PATH, popId } from '../scripts/foLearn.js';
+
+const base = import.meta.env.BASE_URL;
+---
+
+{Object.entries(LEARN_TOPICS).map(([key, t]) => (
+  <div class="fo-pop" id={popId(key)} popover aria-labelledby={`${popId(key)}-title`}>
+    <div class="fo-pop-head">
+      <h3 class="fo-pop-title" id={`${popId(key)}-title`}>{t.title}</h3>
+      <button type="button" class="fo-pop-close" popovertarget={popId(key)} popovertargetaction="hide" aria-label="Close">✕</button>
+    </div>
+    <p class="fo-pop-text">{t.short}</p>
+    <a class="fo-pop-more" href={`${base}${LEARN_PATH}#${t.section}`}>Learn more in the Front Office Explainer →</a>
+  </div>
+))}
+
+<script>
+  // Places an open popover under the button that opened it (above it when
+  // there's no room) and keeps it there. Phones show it as a sheet along
+  // the bottom (CSS).
+  const PHONE = matchMedia('(max-width: 600px)');
+  let invoker: HTMLElement | null = null;
+
+  // Browsers without popovers: the button goes straight to the section
+  const supported = typeof HTMLElement !== 'undefined' && 'popover' in HTMLElement.prototype;
+
+  document.addEventListener('click', e => {
+    const btn = (e.target as Element).closest?.('[popovertarget]') as HTMLElement | null;
+    if (!btn || btn.classList.contains('fo-pop-close')) return;
+    invoker = btn;
+    if (!supported) {
+      const more = document.getElementById(btn.getAttribute('popovertarget') ?? '')?.querySelector('a.fo-pop-more') as HTMLAnchorElement | null;
+      if (more) location.href = more.href;
+    }
+  }, true);
+
+  // The button each open popover belongs to
+  const opener = new WeakMap<HTMLElement, HTMLElement>();
+
+  function place(pop: HTMLElement) {
+    const btn = opener.get(pop);
+    if (PHONE.matches || !btn) {
+      pop.style.removeProperty('top');
+      pop.style.removeProperty('left');
+      return;
+    }
+    const r = btn.getBoundingClientRect();
+    // Its button scrolled out of sight (off screen or under the sticky
+    // section tabs): nothing left to point at
+    const covered = document.querySelector('.fo-tabs')?.getBoundingClientRect().bottom ?? 0;
+    if (r.bottom < covered || r.top > innerHeight) {
+      pop.hidePopover();
+      return;
+    }
+    const w = pop.offsetWidth;
+    const h = pop.offsetHeight;
+    const left = Math.min(Math.max(8, r.left), innerWidth - w - 8);
+    let top = r.bottom + 6;
+    if (top + h > innerHeight - 8) top = Math.max(8, r.top - h - 6);
+    pop.style.left = `${left}px`;
+    pop.style.top = `${top}px`;
+  }
+
+  // Hidden until placed, so it doesn't flash in the middle of the screen
+  document.querySelectorAll<HTMLElement>('.fo-pop').forEach(pop => {
+    pop.addEventListener('beforetoggle', e => {
+      if ((e as ToggleEvent).newState !== 'open') return;
+      if (invoker) opener.set(pop, invoker);
+      if (!PHONE.matches) pop.style.visibility = 'hidden';
+    });
+    pop.addEventListener('toggle', e => {
+      if ((e as ToggleEvent).newState !== 'open') return;
+      place(pop);
+      pop.style.removeProperty('visibility');
+    });
+  });
+
+  // Stays with its button as the page scrolls or resizes
+  const replace = () => document.querySelectorAll<HTMLElement>('.fo-pop:popover-open').forEach(place);
+  addEventListener('scroll', replace, { passive: true });
+  addEventListener('resize', replace);
+</script>

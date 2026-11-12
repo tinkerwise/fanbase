@@ -1,8 +1,9 @@
 ---
 // The Front Office for the selected team (or the ?view= team), in groups
 // (#40): who runs it (the chain of command), how it's done, its roster and
-// pipeline, its moves and money, its news, and Front Office 101, which
-// explains how a front office works.
+// pipeline, its moves and money, and its news. How a front office works is
+// its own page, /front-office/explainer/ (#43); popovers here give short
+// answers and link into it (FoLearnPopovers.astro).
 // The separate Front Office site (frontoffice/) was folded in here (#38):
 // its team pages became this page, its home and league pages became
 // /front-office/league/.
@@ -10,7 +11,8 @@ import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import FrontOfficeWidgets from '../../components/FrontOfficeWidgets.astro';
 import FrontOfficeLinks from '../../components/FrontOfficeLinks.astro';
-import FrontOffice101 from '../../components/FrontOffice101.astro';
+import FoLearnPopovers from '../../components/FoLearnPopovers.astro';
+import { LEARN_PATH, learnButton } from '../../scripts/foLearn.js';
 
 const base = import.meta.env.BASE_URL;
 // Section tabs: jump links, in page order
@@ -20,7 +22,6 @@ const TABS = [
   ['fo-players', 'Roster & Pipeline'],
   ['fo-moves', 'Moves & Money'],
   ['fo-news', 'News'],
-  ['fo-learn', 'Front Office 101'],
 ];
 ---
 
@@ -38,13 +39,14 @@ const TABS = [
 
     <nav class="fo-tabs" aria-label="Front Office sections">
       {TABS.map(([id, label]) => <a class="fo-tab" href={`#${id}`}>{label}</a>)}
+      <a class="fo-tab fo-tab--learn" href={`${base}${LEARN_PATH}`}>Explainer →</a>
       <a class="fo-tab fo-tab--league" href={`${base}front-office/league/`}>All 30 teams →</a>
     </nav>
 
     <section class="fo-section" id="fo-brass" aria-labelledby="foBrassTitle">
       <div class="fo-section-head">
         <h2 class="fo-section-title" id="foBrassTitle">Who Runs the Club <span class="fo-section-note" id="foAsOf"></span></h2>
-        <a class="fo-section-link" href="#fo-learn">New to front offices? Front Office 101 ↓</a>
+        <a class="fo-section-link" href={`${base}${LEARN_PATH}`}>New to front offices? Read the explainer →</a>
       </div>
       <p class="fo-section-lede">From the owner down to the dugout. Each job answers to the one above it.</p>
       <div id="foBrass"><span class="sidebar-msg">Loading…</span></div>
@@ -58,13 +60,13 @@ const TABS = [
     <section class="fo-group" id="fo-players" aria-labelledby="foPlayersTitle">
       <div class="fo-group-head">
         <h2 class="fo-group-title" id="foPlayersTitle">Roster &amp; Pipeline</h2>
-        <p class="fo-group-sub">The players the front office has to work with: today's roster, who's hurt, and who's coming up. <a href="#fo-learn-development">How player development works ↓</a></p>
+        <p class="fo-group-sub">The players the front office has to work with: today's roster, who's hurt, and who's coming up. <Fragment set:html={learnButton('development', 'How player development works')} /></p>
       </div>
       <div class="fo-widgets">
-        <FrontOfficeWidgets only={['roster', 'il']} />
+        <FrontOfficeWidgets only={['roster', 'il']} learn />
       </div>
       <section class="fo-section" id="fo-drafts" aria-labelledby="foDraftsTitle">
-        <h3 class="fo-section-title" id="foDraftsTitle">Draft History <span class="fo-section-note">top picks from the last five drafts</span></h3>
+        <h3 class="fo-section-title" id="foDraftsTitle">Draft History <Fragment set:html={learnButton('scouting')} /> <span class="fo-section-note">top picks from the last five drafts</span></h3>
         <div id="foDrafts"><span class="sidebar-msg">Loading…</span></div>
         <a class="widget-link" href={`${base}draft/`}>This year's draft: picks, prospects and news →</a>
       </section>
@@ -73,23 +75,33 @@ const TABS = [
     <section class="fo-group" id="fo-moves" aria-labelledby="foMovesTitle">
       <div class="fo-group-head">
         <h2 class="fo-group-title" id="foMovesTitle">Moves &amp; Money</h2>
-        <p class="fo-group-sub">What the front office does with it: every roster move, and what the club is paying. <a href="#fo-learn-money">Who sets the payroll ↓</a></p>
+        <p class="fo-group-sub">What the front office does with it: every roster move, and what the club is paying. <Fragment set:html={learnButton('owner', 'Who sets the payroll')} /></p>
       </div>
       <div class="fo-widgets">
-        <FrontOfficeWidgets only={['transactions', 'contracts']} />
+        <FrontOfficeWidgets only={['transactions', 'contracts']} learn />
       </div>
     </section>
 
     <section class="fo-section" id="fo-news" aria-labelledby="foNewsTitle">
-      <h2 class="fo-section-title" id="foNewsTitle">Front Office News</h2>
+      <h2 class="fo-section-title" id="foNewsTitle">Front Office News <Fragment set:html={learnButton('calendar')} /></h2>
       <div id="foNews"><span class="sidebar-msg">Loading…</span></div>
     </section>
 
-    <FrontOffice101 />
-
     <FrontOfficeLinks variant="cards" />
   </main>
+  <FoLearnPopovers />
 </Layout>
+
+<script>
+  // Old links into Front Office 101 (#fo-learn-gm) go to the new page
+  const hash = location.hash;
+  if (hash === '#fo-learn' || hash.startsWith('#fo-learn-')) {
+    const learn = new URL(`${import.meta.env.BASE_URL}front-office/explainer/`, location.href);
+    learn.search = location.search;
+    if (hash !== '#fo-learn') learn.hash = hash;
+    location.replace(learn.href);
+  }
+</script>
 
 <script>
   import '../../scripts/front-office.js';

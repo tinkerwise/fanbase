@@ -1,6 +1,7 @@
 // ── Front Office data ─────────────────────────────────────────────
-// Shared by the Front Office page (front-office.js) and its league page
-// (front-office-league.js): the curated team files, transaction labels and
+// Shared by the Front Office page (front-office.js), its league page
+// (front-office-league.js) and the Front Office Explainer
+// (front-office-learn.js): the curated team files, transaction labels and
 // Google News lists. These came from the separate Front Office site (#38).
 //
 // src/data/front-office/<slug>.json, one per team: owner, the brass
@@ -54,6 +55,25 @@ export function chainOfCommand(file) {
     manager: find(isManager),
     combined: !!president && president === gm,
   };
+}
+
+/**
+ * Front Office Explainer (#43) names the club's people where a section
+ * talks about them: fills each [data-fo-person="owner|president|gm|manager"]
+ * with "For the Orioles: Mike Elias." and hides the ones with nobody.
+ */
+export function fillClubPeople(team, chain) {
+  const names = {
+    owner: chain.owner?.name,
+    president: chain.president && !chain.president.vacant ? chain.president.name : null,
+    gm: chain.gm && !chain.gm.vacant ? chain.gm.name : null,
+    manager: chain.manager && !chain.manager.vacant ? chain.manager.name : null,
+  };
+  document.querySelectorAll('[data-fo-person]').forEach(el => {
+    const name = names[el.dataset.foPerson];
+    el.hidden = !name;
+    if (name) el.textContent = `For the ${team.name}: ${name}.`;
+  });
 }
 
 /** 'November 5, 2026' from the file's asOf ('2026-11-05'). */

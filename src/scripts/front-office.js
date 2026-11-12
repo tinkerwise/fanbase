@@ -2,15 +2,17 @@
 // The selected team's front office (#38): its chain of command (owner →
 // president → GM → manager, #40) and track record from its curated file
 // (frontOfficeData.js), Home's four team widgets, open (sidebars.js), its
-// last five drafts and front office news. Front Office 101 is static
-// (FrontOffice101.astro); this only fills in the club's names there. Links
-// to Roster, Trades, Draft and the league page are FrontOfficeLinks.astro.
+// last five drafts and front office news. Each job in the chain opens a
+// popover (foLearn.js, #43) that links into the Front Office Explainer
+// (/front-office/explainer/). Links to Roster, Trades, Draft and the
+// league page are FrontOfficeLinks.astro.
 import './theme.js';
 import { requireTeam } from './teamPicker.js';
 import { TEAM } from './config.js';
 import { $, esc, teamLogoSrc } from './utils.js';
 import { loadInjuryReport, loadTransactions, loadContracts, loadRoster } from './sidebars.js';
 import { loadTeamFile, asOfLabel, chainOfCommand, loadGoogleNews } from './frontOfficeData.js';
+import { learnButton } from './foLearn.js';
 
 function renderHero(team, file) {
   const logo = $('foLogo');
@@ -23,40 +25,40 @@ function renderHero(team, file) {
   if (meta) $('foMeta').textContent = meta;
 }
 
-// What each rung of the chain does, in a sentence, and the Front Office 101
-// lesson that goes deeper (FrontOffice101.astro)
+// What each rung of the chain does, in a sentence, and the popover topic
+// (foLearn.js) that goes deeper
 const RUNGS = {
   owner: {
     label: 'Ownership',
     does: 'Owns the club. Sets the budget, signs off on the biggest contracts and hires the top baseball executive.',
-    learn: 'fo-learn-money',
+    learn: 'owner',
   },
   // Generic: the card shows the club's own title (President, Chief Baseball
   // Officer, President & CEO)
   president: {
     label: 'Head of Baseball Operations',
     does: 'Runs the whole baseball side. Sets the long-term plan, makes the final call on major trades and signings, and hires the GM and manager.',
-    learn: 'fo-learn-president',
+    learn: 'president',
   },
   combined: {
     label: 'President & General Manager',
     does: 'Holds both jobs: sets the long-term plan and also builds the roster day to day, working the phones on trades and contracts.',
-    learn: 'fo-learn-president',
+    learn: 'president',
   },
   gm: {
     label: 'General Manager',
     does: 'Builds the roster day to day: works the phones on trades, negotiates contracts and pulls together scouting, analytics and player development.',
-    learn: 'fo-learn-gm',
+    learn: 'gm',
   },
   topGm: {
     label: 'General Manager',
     does: 'The top baseball executive here, reporting straight to ownership. Sets the plan and builds the roster: trades, contracts, scouting, analytics and player development.',
-    learn: 'fo-learn-gm',
+    learn: 'gm',
   },
   manager: {
     label: 'Manager',
     does: 'Runs the team on the field: lineups, pitching changes and the clubhouse, with a staff of coaches. Works from the front office\'s plans and data.',
-    learn: 'fo-learn-manager',
+    learn: 'manager',
   },
 };
 
@@ -77,7 +79,7 @@ function rung(key, person, gap) {
     <div class="fo-rung-role">
       <span class="fo-rung-label">${esc(r.label)}</span>
       <p class="fo-rung-does">${esc(r.does)}</p>
-      <a class="fo-rung-learn" href="#${r.learn}">How this job works ↓</a>
+      ${learnButton(r.learn, 'How this job works')}
     </div>
     <div class="fo-rung-people">${person ? personCard(person) : `<p class="fo-rung-gap">${esc(gap)}</p>`}</div>
   </li>`;
@@ -109,19 +111,6 @@ function renderChain(team, file) {
   const others = (file?.brass ?? []).filter(p => !placed.has(p));
   wrap.innerHTML = `<ol class="fo-chain">${rungs.join('')}</ol>`
     + (others.length ? `<div class="fo-brass fo-brass--others">${others.map(personCard).join('')}</div>` : '');
-
-  // Front Office 101 names this club's people where a lesson talks about them
-  const names = {
-    owner: chain.owner?.name,
-    president: chain.president && !chain.president.vacant ? chain.president.name : null,
-    gm: chain.gm && !chain.gm.vacant ? chain.gm.name : null,
-    manager: chain.manager && !chain.manager.vacant ? chain.manager.name : null,
-  };
-  document.querySelectorAll('[data-fo-person]').forEach(el => {
-    const name = names[el.dataset.foPerson];
-    el.hidden = !name;
-    if (name) el.textContent = `For the ${team.name}: ${name}.`;
-  });
 }
 
 function renderRecord(file) {
