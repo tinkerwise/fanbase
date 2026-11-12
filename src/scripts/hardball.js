@@ -79,10 +79,12 @@ function renderTimeline(data) {
   const items = [...(data.timeline ?? [])].sort((a, b) => a.date.localeCompare(b.date));
   $('hbTimeline').innerHTML = items.map(t => {
     const upcoming = t.date > today;
-    return `<li class="hb-event${upcoming ? ' hb-event--upcoming' : ''}${t.key ? ' hb-event--key' : ''}">
+    // A key date that moved or was called off says so (key-dates.json, #42)
+    const tag = t.note ? `<span class="hb-event-tag hb-event-tag--note">${esc(t.note)}</span>` : (upcoming ? '<span class="hb-event-tag">Upcoming</span>' : '');
+    return `<li class="hb-event${upcoming ? ' hb-event--upcoming' : ''}${t.key ? ' hb-event--key' : ''}${t.off ? ' hb-event--off' : ''}">
       <time class="hb-event-date" datetime="${esc(t.date)}">${esc(formatDate(t.date))}</time>
       <div class="hb-event-body">
-        <span class="hb-event-title">${esc(t.title)}${upcoming ? ' <span class="hb-event-tag">Upcoming</span>' : ''}</span>
+        <span class="hb-event-title">${esc(t.title)}${tag ? ` ${tag}` : ''}</span>
         ${t.detail ? `<span class="hb-event-detail">${esc(t.detail)}</span>` : ''}
         ${t.source && safeUrl(t.source.url) ? `<a class="hb-event-source" href="${esc(safeUrl(t.source.url))}" target="_blank" rel="noopener">${esc(t.source.label)}</a>` : ''}
       </div>

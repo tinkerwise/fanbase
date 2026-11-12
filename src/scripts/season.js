@@ -10,6 +10,7 @@
 // alone: <html data-offseason> shows its [data-cleanup-only] nav entries.
 // Every page loads this (Layout.astro).
 import { MLB } from './config.js';
+import { keyDatesFor, keyDateNote, isOff } from './keyDates.js';
 
 const PROMINENT_KEY = 'fb_hardball';
 const OFFSEASON_KEY = 'fb_offseason';
@@ -18,10 +19,34 @@ const DAY = 24 * 3600 * 1000;
 
 let hardballLoad = null;
 
-/** public/hardball.json, fetched once per page */
+/**
+ * public/hardball.json, fetched once per page, with its timeline joined by
+ * the key dates tagged `hardball` in key-dates.json (#42): CBA expiry,
+ * spring training, Opening Day. Those come in as `key` items, which count
+ * down, carrying `note` ('Moved from Mar 20', 'Canceled'…) and `off` when
+ * they won't happen on their date.
+ */
 export function loadHardball() {
-  hardballLoad ??= fetch(`${import.meta.env.BASE_URL}hardball.json`)
-    .then(r => (r.ok ? r.json() : Promise.reject(new Error(`hardball.json ${r.status}`))));
+  hardballLoad ??= Promise.all([
+    fetch(`${import.meta.env.BASE_URL}hardball.json`)
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error(`hardball.json ${r.status}`)))),
+    keyDatesFor('hardball'),
+  ]).then(([data, keys]) => ({
+    ...data,
+    timeline: [
+      ...(data.timeline ?? []),
+      ...keys.filter(k => k.date).map(k => ({
+        date: k.date,
+        ...(k.time ? { time: k.time } : {}),
+        key: true,
+        title: k.title,
+        detail: k.hardballDetail ?? k.detail,
+        source: k.hardballSource ?? k.source,
+        note: keyDateNote(k),
+        off: isOff(k),
+      })),
+    ],
+  }));
   return hardballLoad;
 }
 
@@ -105,7 +130,7 @@ function keyDateTime(item) {
 /** The next upcoming key date in hardball.json's timeline: { item, at, days } */
 export function nextKeyDate(data, now = new Date()) {
   const upcoming = (data?.timeline ?? [])
-    .filter(t => t.key)
+    .filter(t => t.key && !t.off)
     .map(item => ({ item, at: keyDateTime(item) }))
     .filter(t => t.at > now)
     .sort((a, b) => a.at - b.at)[0];

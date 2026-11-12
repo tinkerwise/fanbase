@@ -5,7 +5,8 @@
 // signings that /people tells apart as international by age and birth
 // country), and the depth chart (team needs). Hand-curated in
 // public/cleanup.json: the free-agent ranking, contract dollars once
-// reported, optional team-need notes, and key dates, all sourced. Hardball
+// reported and optional team-need notes, all sourced; key dates come from
+// public/key-dates.json, shared with every calendar (#42). Hardball
 // (#20) supplies the labor status: a lockout freezes major-league moves.
 //
 // ?asOf=YYYY-MM-DD previews another day (last offseason, say) so the page
@@ -18,6 +19,7 @@ import { esc, safeUrl, cleanFeedText, extractThumbnail, renderNewsThumbCard, tea
 import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { loadHardball, offseasonWindow, localDate } from './season.js';
 import { findIntlSignings } from './intlSignings.js';
+import { keyDatesFor, keyDateNote, isOff } from './keyDates.js';
 
 const $ = id => document.getElementById(id);
 const asOfParam = new URLSearchParams(location.search).get('asOf');
@@ -360,19 +362,21 @@ async function renderRumors(roster, newsSources = []) {
 }
 
 // ── Key dates ─────────────────────────────────────────────────────
-function renderDates(cleanup, hardball) {
-  const freeze = ['lockout', 'expired'].includes(hardball?.status?.code);
-  const dates = [...(cleanup.keyDates ?? [])].sort((a, b) => (a.date ?? a.sort).localeCompare(b.date ?? b.sort));
-  $('cuDates').innerHTML = dates.map(d => {
+// From key-dates.json (tag cleanup), shared with the other calendars (#42).
+// A date that moved or was called off says so; there's no "at risk" flag.
+function renderDates(dates) {
+  const sorted = [...dates].sort((a, b) => (a.date ?? a.sort).localeCompare(b.date ?? b.sort));
+  $('cuDates').innerHTML = sorted.map(d => {
     const when = d.dateText ?? (d.dateEnd ? `${fmtDate(d.date)}–${fmtDate(d.dateEnd)}` : fmtDate(d.date));
     const last = d.dateEnd ?? d.date ?? d.sort;
     const past = last < TODAY;
     const teamNote = past ? '' : d.teamNotes?.[TEAM_ID];
-    const title = d.hardball ? `<a href="${import.meta.env.BASE_URL}hardball/">${esc(d.title)}</a>` : esc(d.title);
-    return `<li class="cu-date${past ? ' cu-date--past' : ''}">
+    const title = d.link === 'hardball' ? `<a href="${import.meta.env.BASE_URL}hardball/">${esc(d.title)}</a>` : `<span>${esc(d.title)}</span>`;
+    const note = keyDateNote(d);
+    return `<li class="cu-date${past ? ' cu-date--past' : ''}${isOff(d) ? ' cu-date--off' : ''}">
       <span class="cu-date-when">${esc(when)}</span>
       <span class="cu-date-body">
-        <span class="cu-date-title">${title}${d.laborRisk && !past ? ` <span class="cu-tag cu-tag--risk">${freeze ? 'On hold' : 'Lockout risk'}</span>` : ''}</span>
+        <span class="cu-date-title">${title}${note ? ` <span class="cu-tag cu-tag--note">${esc(note)}</span>` : ''}</span>
         ${d.detail ? `<span class="cu-date-detail">${esc(d.detail)}</span>` : ''}
         ${teamNote ? `<span class="cu-date-detail cu-date-note">${esc(teamNote)}</span>` : ''}
       </span>
@@ -404,7 +408,7 @@ async function init() {
   const seasonLabel = AS_OF || !cleanup.season ? `${win.season}-${String(win.season + 1).slice(2)}` : cleanup.season;
   $('cuSeason').textContent = `${seasonLabel} offseason${AS_OF ? ` · previewing ${fmtDate(AS_OF, { year: 'numeric' })}` : ''}`;
   renderLabor(hardball, win);
-  renderDates(cleanup, hardball);
+  renderDates(await keyDatesFor('cleanup'));
 
   const faByName = new Map(faList.map(f => [norm(f.player?.fullName), f]));
   if (cleanupR.status === 'fulfilled') renderFreeAgents(cleanup, faByName, faList, win);
