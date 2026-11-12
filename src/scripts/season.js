@@ -8,13 +8,13 @@
 // Layout.astro's head script can apply it before first paint next time.
 // Cleanup (#22), the offseason free-agency page, follows the calendar
 // alone: <html data-offseason> shows its [data-cleanup-only] nav entries.
-// Every page loads this (Layout.astro).
-import { MLB } from './config.js';
+// Every page loads this (Layout.astro). MLB's season dates come from
+// seasonDates.js, which caches them and re-checks once a week.
 import { keyDatesFor, keyDateNote, isOff } from './keyDates.js';
+import { loadSeasonDates } from './seasonDates.js';
 
 const PROMINENT_KEY = 'fb_hardball';
 const OFFSEASON_KEY = 'fb_offseason';
-const DATES_KEY = 'fb_season_dates';
 const DAY = 24 * 3600 * 1000;
 
 let hardballLoad = null;
@@ -50,20 +50,11 @@ export function loadHardball() {
   return hardballLoad;
 }
 
-function readJson(key) {
-  try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
-}
-
-// Opening Day and the last day of the postseason for `year`, cached a day
+// Opening Day and the last day of the postseason for `year`
 async function seasonDates(year) {
-  const cached = readJson(`${DATES_KEY}_${year}`);
-  if (cached?.year === year && Date.now() - cached.at < DAY) return cached;
-  const data = await fetch(`${MLB}/seasons/${year}?sportId=1`).then(r => r.json());
-  const s = data.seasons?.[0];
+  const s = await loadSeasonDates(year);
   if (!s?.regularSeasonStartDate || !s?.postSeasonEndDate) throw new Error('No season dates');
-  const dates = { year, start: s.regularSeasonStartDate, end: s.postSeasonEndDate, at: Date.now() };
-  try { localStorage.setItem(`${DATES_KEY}_${year}`, JSON.stringify(dates)); } catch { /* storage blocked */ }
-  return dates;
+  return { year, start: s.regularSeasonStartDate, end: s.postSeasonEndDate };
 }
 
 /** YYYY-MM-DD for `now` in local time (toISOString is UTC, a day ahead on US evenings) */
