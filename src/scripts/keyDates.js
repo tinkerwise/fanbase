@@ -7,7 +7,7 @@
 // MLB's season dates (spring training, Opening Day, All-Star Game, end of
 // the regular season, postseason) are kept current on the site itself:
 // each page merges in what the Stats API says now (seasonDates.js, cached
-// and re-checked often in the offseason, rarely in season). A date in the
+// and re-checked once a week). A date in the
 // file is the one first announced; if MLB's differs, the page shows the new
 // date and "Moved from" the old one. A season MLB has scheduled but the
 // file doesn't list yet is added, and entries well past drop off.

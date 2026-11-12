@@ -9,8 +9,7 @@
 // Cleanup (#22), the offseason free-agency page, follows the calendar
 // alone: <html data-offseason> shows its [data-cleanup-only] nav entries.
 // Every page loads this (Layout.astro). MLB's season dates come from
-// seasonDates.js, which caches them and re-checks often in the offseason
-// and rarely during the season.
+// seasonDates.js, which caches them and re-checks once a week.
 import { keyDatesFor, keyDateNote, isOff } from './keyDates.js';
 import { loadSeasonDates } from './seasonDates.js';
 
