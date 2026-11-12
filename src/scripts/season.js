@@ -23,7 +23,7 @@ let hardballLoad = null;
  * public/hardball.json, fetched once per page, with its timeline joined by
  * the key dates tagged `hardball` in key-dates.json (#42): CBA expiry,
  * spring training, Opening Day. Those come in as `key` items, which count
- * down, carrying `note` ('Moved from Mar 20', 'Canceled'…) and `off` when
+ * down, carrying `note` ('Canceled', 'Postponed') and `off` when
  * they won't happen on their date.
  */
 export function loadHardball() {

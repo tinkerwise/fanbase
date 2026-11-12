@@ -17,5 +17,5 @@ export const SEASON_DATES_SOURCE = {
   url: 'https://statsapi.mlb.com/api/v1/seasons?sportId=1',
 };
 
-/** Entries more than this many days past are dropped. */
-export const PRUNE_DAYS = 45;
+/** Entries more than this many days past drop off (two weeks, per Brian). */
+export const PRUNE_DAYS = 14;

@@ -5107,3 +5107,8 @@ html:not([data-offseason]) [data-cleanup-only] { display: none !important; }
   .cu-date { grid-template-columns: 72px minmax(0, 1fr); }
   .cu-filters .pill { min-height: 36px; }
 }
+
+/* Under each key-dates list (#42): the dates are kept current, so a moved
+   date just shows its new day, with no inline marker */
+.key-dates-foot { margin-top: 10px; }
+.sch-footnote { margin: 10px 0 0; font-size: 0.76rem; color: var(--text-3); line-height: 1.5; }

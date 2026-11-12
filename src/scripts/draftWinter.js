@@ -139,7 +139,7 @@ function linksHtml(links = []) {
     `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div>`;
 }
 
-// 'Moved from Dec 8' or 'Canceled' after a date, when it changed (#42)
+// 'Canceled' or 'Postponed' after a date, when that happened (#42)
 function noteHtml(entry) {
   const note = keyDateNote(entry);
   return note ? ` · <strong class="dw-card-note">${esc(note)}</strong>` : '';

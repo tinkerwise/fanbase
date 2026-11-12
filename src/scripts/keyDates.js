@@ -7,13 +7,15 @@
 // MLB's season dates (spring training, Opening Day, All-Star Game, end of
 // the regular season, postseason) are kept current on the site itself:
 // each page merges in what the Stats API says now (seasonDates.js, cached
-// and re-checked once a week). A date in the
-// file is the one first announced; if MLB's differs, the page shows the new
-// date and "Moved from" the old one. A season MLB has scheduled but the
-// file doesn't list yet is added, and entries well past drop off.
+// and re-checked once a week). A date in the file is the one first
+// announced; if MLB's differs, the page shows MLB's date. A season MLB has
+// scheduled but the file doesn't list yet is added, and entries more than
+// two weeks past drop off.
 //
-// A date that moved keeps the old one in `history`, and `status` says when
-// one was postponed or canceled, so every calendar can say so the same way.
+// A date that moved keeps the old one in `history`, but pages show only the
+// current date (Brian: no inline change markers; a footnote under each list
+// says the dates are kept current). `status` says when one was postponed or
+// canceled, and every calendar says so the same way.
 import { loadSeasonDates } from './seasonDates.js';
 import { SEASON_DATE_KINDS, SEASON_DATES_SOURCE, PRUNE_DAYS } from './seasonDateKinds.js';
 
@@ -48,7 +50,7 @@ export function mergeSeasonDates(entries, seasons, today = ymd(new Date())) {
         continue;
       }
       if (entry.date === date && (!dateEnd || entry.dateEnd === dateEnd)) continue;
-      // MLB moved it: the file's date becomes where it moved from
+      // MLB moved it: keep the file's date in history
       entry.history = [...(entry.history ?? []), {
         ...(entry.date ? { date: entry.date } : {}),
         ...(entry.dateEnd ? { dateEnd: entry.dateEnd } : {}),
@@ -101,24 +103,16 @@ export async function keyDatesById() {
   return Object.fromEntries((await loadKeyDates()).map(e => [e.id, e]));
 }
 
-const md = ymd => {
-  const [y, m, d] = ymd.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-};
-
-/** Where a moved date used to be: 'Mar 20' (or a range), else null. */
-export function movedFrom(entry) {
-  const last = entry?.history?.at(-1);
-  if (!last?.date) return null;
-  return last.dateEnd ? `${md(last.date)}–${md(last.dateEnd)}` : md(last.date);
-}
-
-/** 'Canceled', 'Postponed', 'Moved from Mar 20' or '' for an entry. */
+/**
+ * 'Canceled' or 'Postponed' when that's what happened, else ''. A date that
+ * moved just shows its new date: Brian wants no inline change markers, and
+ * each list's footnote says the dates are kept current. The old date stays
+ * in `history`.
+ */
 export function keyDateNote(entry) {
   if (entry?.status === 'canceled') return 'Canceled';
   if (entry?.status === 'postponed') return 'Postponed';
-  const from = movedFrom(entry);
-  return from ? `Moved from ${from}` : '';
+  return '';
 }
 
 /** True if the entry won't happen on its date. */
