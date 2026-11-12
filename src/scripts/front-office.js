@@ -3,8 +3,8 @@
 // president → GM → manager, #40) and track record from its curated file
 // (frontOfficeData.js), Home's four team widgets, open (sidebars.js), its
 // last five drafts and front office news. Each job in the chain opens a
-// popover (foLearn.js, #43) that links into How a Front Office Works
-// (/front-office/how-it-works/). Links to Roster, Trades, Draft and the
+// popover (foLearn.js, #43) that links into the Front Office Explainer
+// (/front-office/explainer/). Links to Roster, Trades, Draft and the
 // league page are FrontOfficeLinks.astro.
 import './theme.js';
 import { requireTeam } from './teamPicker.js';

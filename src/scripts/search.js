@@ -18,7 +18,7 @@ const PAGES = [
   ['Dugout', 'dugout/', 'news articles stories headlines feed'],
   ['Schedule', 'schedule/', 'games calendar record'],
   ['Front Office', 'front-office/', 'injury report il transactions moves payroll contracts luxury tax salary 40-man roster gm general manager president owner brass executives track record draft history who runs chain of command'],
-  ['How a Front Office Works', 'front-office/how-it-works/', 'learn how a front office works front office 101 explained org chart gm general manager president of baseball operations scouting analytics player development manager payroll budget luxury tax calendar rules 40-man roster options dfa designated for assignment rule 5 injured list service time arbitration free agency'],
+  ['Front Office Explainer', 'front-office/explainer/', 'explainer learn how a front office works front office 101 explained org chart gm general manager president of baseball operations scouting analytics player development manager payroll budget luxury tax calendar rules 40-man roster options dfa designated for assignment rule 5 injured list service time arbitration free agency'],
   ['League Front Offices', 'front-office/league/', 'gm general managers presidents executives all teams league transactions executive moves hired fired'],
   ['Roster', 'depth-chart/', 'depth chart lineup rotation bullpen injured list il'],
   ['Around the Horn', 'around-the-horn/', 'league news stories'],

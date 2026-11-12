@@ -1,6 +1,6 @@
 // ── Front Office data ─────────────────────────────────────────────
 // Shared by the Front Office page (front-office.js), its league page
-// (front-office-league.js) and How a Front Office Works
+// (front-office-league.js) and the Front Office Explainer
 // (front-office-learn.js): the curated team files, transaction labels and
 // Google News lists. These came from the separate Front Office site (#38).
 //
@@ -58,7 +58,7 @@ export function chainOfCommand(file) {
 }
 
 /**
- * How a Front Office Works (#43) names the club's people where a section
+ * Front Office Explainer (#43) names the club's people where a section
  * talks about them: fills each [data-fo-person="owner|president|gm|manager"]
  * with "For the Orioles: Mike Elias." and hides the ones with nobody.
  */

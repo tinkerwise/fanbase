@@ -4813,7 +4813,7 @@ html:not([data-hardball]) [data-offseason-only] { display: none !important; }
 .fo-brass--others { margin-top: 14px; }
 
 /* Popovers on the Front Office page (#43, FoLearnPopovers.astro): a short
-   answer and a link into How a Front Office Works. Placed under their
+   answer and a link into the Front Office Explainer. Placed under their
    button by script; a sheet along the bottom on phones. */
 .fo-pop-btn {
   padding: 0; border: 0; background: none; font: inherit; font-weight: 600;
@@ -4858,7 +4858,7 @@ html:not([data-hardball]) [data-offseason-only] { display: none !important; }
   }
 }
 
-/* How a Front Office Works (#43, /front-office/how-it-works/): the org
+/* Front Office Explainer (#43, /front-office/explainer/): the org
    chart, then one section per question */
 .fo-lesson-title { margin: 0 0 10px; font-size: 1.05rem; font-weight: 800; }
 .fo-learn-more { margin: 0; font-size: 0.85rem; }

@@ -2,7 +2,7 @@
 // The Front Office for the selected team (or the ?view= team), in groups
 // (#40): who runs it (the chain of command), how it's done, its roster and
 // pipeline, its moves and money, and its news. How a front office works is
-// its own page, /front-office/how-it-works/ (#43); popovers here give short
+// its own page, /front-office/explainer/ (#43); popovers here give short
 // answers and link into it (FoLearnPopovers.astro).
 // The separate Front Office site (frontoffice/) was folded in here (#38):
 // its team pages became this page, its home and league pages became
@@ -39,14 +39,14 @@ const TABS = [
 
     <nav class="fo-tabs" aria-label="Front Office sections">
       {TABS.map(([id, label]) => <a class="fo-tab" href={`#${id}`}>{label}</a>)}
-      <a class="fo-tab fo-tab--learn" href={`${base}${LEARN_PATH}`}>How It Works →</a>
+      <a class="fo-tab fo-tab--learn" href={`${base}${LEARN_PATH}`}>Explainer →</a>
       <a class="fo-tab fo-tab--league" href={`${base}front-office/league/`}>All 30 teams →</a>
     </nav>
 
     <section class="fo-section" id="fo-brass" aria-labelledby="foBrassTitle">
       <div class="fo-section-head">
         <h2 class="fo-section-title" id="foBrassTitle">Who Runs the Club <span class="fo-section-note" id="foAsOf"></span></h2>
-        <a class="fo-section-link" href={`${base}${LEARN_PATH}`}>New to front offices? How it works →</a>
+        <a class="fo-section-link" href={`${base}${LEARN_PATH}`}>New to front offices? Read the explainer →</a>
       </div>
       <p class="fo-section-lede">From the owner down to the dugout. Each job answers to the one above it.</p>
       <div id="foBrass"><span class="sidebar-msg">Loading…</span></div>
@@ -96,7 +96,7 @@ const TABS = [
   // Old links into Front Office 101 (#fo-learn-gm) go to the new page
   const hash = location.hash;
   if (hash === '#fo-learn' || hash.startsWith('#fo-learn-')) {
-    const learn = new URL(`${import.meta.env.BASE_URL}front-office/how-it-works/`, location.href);
+    const learn = new URL(`${import.meta.env.BASE_URL}front-office/explainer/`, location.href);
     learn.search = location.search;
     if (hash !== '#fo-learn') learn.hash = hash;
     location.replace(learn.href);

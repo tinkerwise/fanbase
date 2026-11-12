@@ -1,14 +1,14 @@
-// ── How a Front Office Works: popovers (#43) ──────────────────────
+// ── Front Office Explainer: popovers (#43) ──────────────────────
 // The explainer that used to sit at the bottom of the Front Office page
-// ("Front Office 101", #40) is its own page now: /front-office/how-it-works/.
+// ("Front Office 101", #40) is its own page now: /front-office/explainer/.
 // On the Front Office page, each job in the chain of command and each
 // widget heading opens a short popover from this list, with a link to the
 // section of that page that goes deeper. FoLearnPopovers.astro renders
 // them; front-office.js and FrontOfficeWidgets.astro add the buttons.
 
-export const LEARN_PATH = 'front-office/how-it-works/';
+export const LEARN_PATH = 'front-office/explainer/';
 
-// key → { section: id on the How It Works page, title, short }
+// key → { section: id on the Front Office Explainer page, title, short }
 export const LEARN_TOPICS = {
   owner: {
     section: 'fo-learn-money',

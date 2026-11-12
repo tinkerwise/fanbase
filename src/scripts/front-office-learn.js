@@ -1,5 +1,5 @@
-// ── How a Front Office Works ──────────────────────────────────────
-// /front-office/how-it-works/ (#43). The page is static and works without a
+// ── Front Office Explainer ──────────────────────────────────────
+// /front-office/explainer/ (#43). The page is static and works without a
 // team; once one is picked (or ?view= shows one), the sections about the
 // owner, president, GM and manager name that club's people.
 import './theme.js';

@@ -1,6 +1,6 @@
 ---
 // The Front Office page's popovers (#43): one per topic in foLearn.js, each
-// a short answer and a link into How a Front Office Works. Buttons with
+// a short answer and a link into the Front Office Explainer. Buttons with
 // popovertarget="fo-pop-<key>" open them (learnButton()). Native popovers
 // close on Escape, an outside click or tap, or the ✕.
 import { LEARN_TOPICS, LEARN_PATH, popId } from '../scripts/foLearn.js';
@@ -15,7 +15,7 @@ const base = import.meta.env.BASE_URL;
       <button type="button" class="fo-pop-close" popovertarget={popId(key)} popovertargetaction="hide" aria-label="Close">✕</button>
     </div>
     <p class="fo-pop-text">{t.short}</p>
-    <a class="fo-pop-more" href={`${base}${LEARN_PATH}#${t.section}`}>Learn more in How a Front Office Works →</a>
+    <a class="fo-pop-more" href={`${base}${LEARN_PATH}#${t.section}`}>Learn more in the Front Office Explainer →</a>
   </div>
 ))}
 

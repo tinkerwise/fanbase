@@ -1,5 +1,5 @@
 ---
-// How a Front Office Works (#43): how a baseball front office is organized
+// Front Office Explainer (#43): how a baseball front office is organized
 // and how its jobs fit together, for fans. It was "Front Office 101" at the
 // bottom of the Front Office page (#40); popovers there (foLearn.js) give a
 // short answer and link to these sections by id. Static, except that
@@ -36,14 +36,14 @@ const TABS = [
 ];
 ---
 
-<Layout title="How a Front Office Works | Fanbase">
+<Layout title="Front Office Explainer | Fanbase">
   <PageHeader current="Front Office" />
 
   <main class="fo-page fo-learn-page">
     <div class="fo-hero">
       <div class="fo-hero-text">
         <a class="fo-back" href={`${base}front-office/`}>← <span data-team-text="nick">Team</span> Front Office</a>
-        <h1 class="fo-page-title">How a Front Office Works</h1>
+        <h1 class="fo-page-title">Front Office Explainer</h1>
         <p class="fo-page-sub">
           A front office is far bigger than the few names at the top. Scouts, analysts, coaches and trainers
           all feed one question: how does this club win, now and later? Here's how it fits together.
@@ -51,7 +51,7 @@ const TABS = [
       </div>
     </div>
 
-    <nav class="fo-tabs" aria-label="How a Front Office Works sections">
+    <nav class="fo-tabs" aria-label="Front Office Explainer sections">
       {TABS.map(([id, label]) => <a class="fo-tab" href={`#${id}`}>{label}</a>)}
     </nav>
 
