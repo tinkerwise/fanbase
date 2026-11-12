@@ -2,20 +2,92 @@
 // public/key-dates.json is the one list of baseball's key dates that every
 // calendar reads: Schedule (markers, tag `schedule`), Cleanup (`cleanup`),
 // Hardball's timeline (`hardball`, merged in by season.js) and the Draft
-// page (`draft`). MLB's season dates in it are refreshed daily from the
-// Stats API (npm run refresh-key-dates); the rest are hand-curated.
+// page (`draft`). Most entries are hand-curated with a source.
+//
+// MLB's season dates (spring training, Opening Day, All-Star Game, end of
+// the regular season, postseason) are kept current on the site itself:
+// each page merges in what the Stats API says now (seasonDates.js, cached
+// and re-checked often in the offseason, rarely in season). A date in the
+// file is the one first announced; if MLB's differs, the page shows the new
+// date and "Moved from" the old one. A season MLB has scheduled but the
+// file doesn't list yet is added, and entries well past drop off.
 //
 // A date that moved keeps the old one in `history`, and `status` says when
 // one was postponed or canceled, so every calendar can say so the same way.
+import { loadSeasonDates } from './seasonDates.js';
+import { SEASON_DATE_KINDS, SEASON_DATES_SOURCE, PRUNE_DAYS } from './seasonDateKinds.js';
 
 let load = null;
 
-/** Every entry, fetched once per page. Empty if the file can't load. */
+function ymd(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+const lastDay = e => e.dateEnd ?? e.date ?? e.sort;
+
+/**
+ * `entries` with MLB's current season dates for `seasons` ({ year: season
+ * record or null }) merged in, and entries more than PRUNE_DAYS past
+ * dropped. Doesn't change `entries`.
+ */
+export function mergeSeasonDates(entries, seasons, today = ymd(new Date())) {
+  const out = entries.map(e => ({ ...e }));
+  for (const [year, season] of Object.entries(seasons)) {
+    if (!season) continue;
+    for (const k of SEASON_DATE_KINDS) {
+      const date = season[k.field];
+      if (!date) continue;
+      const dateEnd = k.endField ? season[k.endField] : undefined;
+      const id = `${k.kind}-${year}`;
+      const entry = out.find(e => e.id === id);
+      if (!entry) {
+        // Only dates still ahead are worth adding
+        if ((dateEnd ?? date) >= today) {
+          out.push({ id, from: 'api', date, ...(dateEnd ? { dateEnd } : {}), title: k.title, detail: '', tags: k.tags, source: SEASON_DATES_SOURCE });
+        }
+        continue;
+      }
+      if (entry.date === date && (!dateEnd || entry.dateEnd === dateEnd)) continue;
+      // MLB moved it: the file's date becomes where it moved from
+      entry.history = [...(entry.history ?? []), {
+        ...(entry.date ? { date: entry.date } : {}),
+        ...(entry.dateEnd ? { dateEnd: entry.dateEnd } : {}),
+        source: SEASON_DATES_SOURCE.label,
+      }].filter(h => h.date);
+      entry.date = date;
+      if (dateEnd) entry.dateEnd = dateEnd;
+      delete entry.dateText;
+      delete entry.sort;
+      entry.source = SEASON_DATES_SOURCE;
+      // Notes written for the old date ("The season opener is March 24…")
+      // would contradict the new one
+      entry.detail = '';
+      delete entry.hardballDetail;
+      delete entry.hardballSource;
+    }
+  }
+  const [y, m, d] = today.split('-').map(Number);
+  const cutoff = ymd(new Date(y, m - 1, d - PRUNE_DAYS));
+  return out
+    .filter(e => !lastDay(e) || lastDay(e) >= cutoff)
+    .sort((a, b) => (a.date ?? a.sort ?? '').localeCompare(b.date ?? b.sort ?? ''));
+}
+
+/**
+ * Every entry, fetched once per page: the file with MLB's current season
+ * dates for this year and next merged in. If the Stats API can't be reached
+ * (and nothing is cached), the file's dates stand. Empty if the file can't
+ * load.
+ */
 export function loadKeyDates() {
-  load ??= fetch(`${import.meta.env.BASE_URL}key-dates.json`)
-    .then(r => (r.ok ? r.json() : Promise.reject(new Error(`key-dates.json ${r.status}`))))
-    .then(d => d.dates ?? [])
-    .catch(() => []);
+  const year = new Date().getFullYear();
+  load ??= Promise.all([
+    fetch(`${import.meta.env.BASE_URL}key-dates.json`)
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error(`key-dates.json ${r.status}`))))
+      .then(d => d.dates ?? [])
+      .catch(() => []),
+    ...[year, year + 1].map(y => loadSeasonDates(y).catch(() => null)),
+  ]).then(([dates, cur, next]) => mergeSeasonDates(dates, { [year]: cur, [year + 1]: next }));
   return load;
 }
 

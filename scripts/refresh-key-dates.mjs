@@ -1,26 +1,30 @@
 #!/usr/bin/env node
 // ── npm run refresh-key-dates (#42) ───────────────────────────────
-// Keeps public/key-dates.json current: the one list of baseball's key
+// Optional upkeep for public/key-dates.json, the one list of baseball's key
 // dates that every calendar reads (Schedule, Cleanup, Hardball, Draft).
+// The site already merges MLB's current season dates in live
+// (src/scripts/keyDates.js), so nothing needs to run on a schedule. This
+// writes the same changes into the file itself: handy before a deploy, so
+// the file's fallback dates stay current if the Stats API goes dark.
 //
 // Season dates come from the MLB Stats API (/seasons/{year}) for this year
 // and next: spring training games, Opening Day, the All-Star Game, the end
 // of the regular season and the postseason. The API only says where a date
 // is now, so when one moves this records the old date in the entry's
 // `history`; the pages then show "moved from…". Hand-curated entries (Rule 5
-// Draft, Winter Meetings, international signing…) are left alone: the daily
-// task checks the news for those and edits them by hand.
+// Draft, Winter Meetings, international signing…) are left alone: they are
+// edited by hand from the news.
 //
 // Entries whose last day is more than PRUNE_DAYS ago are dropped.
 //
 // Prints what changed and writes the file only when something did, so
-// `git diff --quiet public/key-dates.json` tells the daily task whether
-// there's anything to deploy. `--dry-run` prints without writing.
+// `git diff --quiet public/key-dates.json` tells whether there's
+// anything to commit. `--dry-run` prints without writing.
 import { readFile, writeFile } from 'node:fs/promises';
+import { SEASON_DATE_KINDS, SEASON_DATES_SOURCE, PRUNE_DAYS } from '../src/scripts/seasonDateKinds.js';
 
 const FILE = new URL('../public/key-dates.json', import.meta.url);
 const MLB = 'https://statsapi.mlb.com/api/v1';
-const PRUNE_DAYS = 45;
 const DRY = process.argv.includes('--dry-run');
 
 const today = (() => {
@@ -33,16 +37,8 @@ function addDays(ymd, n) {
   return t.toISOString().slice(0, 10);
 }
 
-// What each API season date becomes. `tags` are the pages that show it;
-// detail text for a new entry can be edited by hand afterwards and is kept.
-const SEASON_DATES = [
-  { kind: 'spring-start', field: 'springStartDate', title: 'Spring training games begin', tags: ['cleanup', 'hardball', 'schedule'] },
-  { kind: 'opening-day', field: 'regularSeasonStartDate', title: 'Opening Day', tags: ['cleanup', 'hardball', 'schedule'] },
-  { kind: 'all-star', field: 'allStarDate', title: 'All-Star Game', tags: ['schedule'] },
-  { kind: 'season-end', field: 'regularSeasonEndDate', title: 'Regular season ends', tags: ['schedule'] },
-  { kind: 'postseason', field: 'postSeasonStartDate', endField: 'postSeasonEndDate', title: 'Postseason', tags: ['schedule'] },
-];
-const API_SOURCE = { label: 'MLB Stats API: season dates', url: 'https://statsapi.mlb.com/api/v1/seasons?sportId=1' };
+const SEASON_DATES = SEASON_DATE_KINDS;
+const API_SOURCE = SEASON_DATES_SOURCE;
 
 async function seasonDates(year) {
   const res = await fetch(`${MLB}/seasons/${year}?sportId=1`);
