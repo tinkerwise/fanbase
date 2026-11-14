@@ -25,21 +25,22 @@ const pathname = Astro.url.pathname;
 // group) and indented under it in More (`parent`). Front Office counts as
 // the current page while on them (`covers`), and on its League page
 // (/front-office/league/, #38), which is under its own URL.
+// `description` is the one-sentence hover text (title) on each link (#50).
 const NAV_LINKS = [
   { href: base, label: 'Home', icon: 'home', group: 'today', tab: true },
-  { href: `${base}dugout/`, label: 'Dugout', icon: 'dugout', group: 'today', tab: true },
-  { href: `${base}schedule/`, label: 'Schedule', icon: 'schedule', group: 'team', tab: true },
-  { href: `${base}depth-chart/`, label: 'Roster', icon: 'roster', group: 'team', tab: true },
-  { href: `${base}front-office/`, label: 'Front Office', icon: 'frontOffice', group: 'team', covers: [`${base}trades/`, `${base}draft/`] },
+  { href: `${base}dugout/`, label: 'Dugout', description: "All of your team's latest news and stories in one feed.", icon: 'dugout', group: 'today', tab: true },
+  { href: `${base}schedule/`, label: 'Schedule', description: "Your team's full game calendar, results and record.", icon: 'schedule', group: 'team', tab: true },
+  { href: `${base}depth-chart/`, label: 'Roster', description: "The depth chart: lineup, rotation, bullpen and injured list.", icon: 'roster', group: 'team', tab: true },
+  { href: `${base}front-office/`, label: 'Front Office', description: "Who runs the club, plus injuries, transactions, payroll, trades and the draft.", icon: 'frontOffice', group: 'team', covers: [`${base}trades/`, `${base}draft/`] },
   { href: `${base}trades/`, label: 'Trades', icon: 'trades', group: 'team', desktop: false, parent: 'Front Office' },
   { href: `${base}draft/`, label: 'Draft', icon: 'draft', group: 'team', desktop: false, parent: 'Front Office' },
   // Hardball (#20), the labor page: only in the offseason or during a
   // lockout (season.js sets <html data-hardball>); the URL always works
-  { href: `${base}hardball/`, label: 'Hardball', icon: 'hardball', group: 'league', offseason: true },
+  { href: `${base}hardball/`, label: 'Hardball', description: "Labor news on the collective bargaining agreement, lockouts and negotiations.", icon: 'hardball', group: 'league', offseason: true },
   // Cleanup (#22), offseason free agency and trades: shown from the end of
   // the postseason to Opening Day (season.js sets <html data-offseason>)
-  { href: `${base}cleanup/`, label: 'Cleanup', icon: 'cleanup', group: 'league', cleanup: true },
-  { href: `${base}postseason/`, label: 'Postseason', icon: 'postseason', group: 'league' },
+  { href: `${base}cleanup/`, label: 'Cleanup', description: "Offseason free agency, signings, trades and rumors.", icon: 'cleanup', group: 'league', cleanup: true },
+  { href: `${base}postseason/`, label: 'Postseason', description: "The playoff bracket and news from the Wild Card round through the World Series.", icon: 'postseason', group: 'league' },
 ];
 // 24x24 stroke icons (Tailgate's set, so the two sites match)
 const NAV_ICONS: Record<string, string> = {
@@ -211,6 +212,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
             href={link.href}
             data-offseason-only={link.offseason ? '' : undefined}
             data-cleanup-only={link.cleanup ? '' : undefined}
+            title={link.description}
             class={`site-nav-link${isActiveSection(link) ? ' site-nav-link--active' : ''}`}
             aria-current={isActiveLink(link.href) ? 'page' : isActiveSection(link) ? 'true' : undefined}
           >
@@ -223,7 +225,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
     <!-- Phones and tablets: bottom tab bar; More opens a sheet with the rest -->
     <nav class="tab-bar" aria-label="Site navigation">
       {TAB_LINKS.map(link => (
-        <a href={link.href} class={`tab-bar-link${isActiveLink(link.href) ? ' tab-bar-link--active' : ''}`} aria-current={isActiveLink(link.href) ? 'page' : undefined}>
+        <a href={link.href} title={link.description} class={`tab-bar-link${isActiveLink(link.href) ? ' tab-bar-link--active' : ''}`} aria-current={isActiveLink(link.href) ? 'page' : undefined}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS[link.icon]} />
           <span>{link.label}</span>
         </a>
@@ -238,7 +240,7 @@ const styleVersion = Math.floor(statSync(stylePath).mtimeMs);
       <div class="more-sheet-panel" role="dialog" aria-modal="true" aria-label="More">
         <span class="more-sheet-grip" aria-hidden="true"></span>
         {MORE_LINKS.map(link => (
-          <a href={link.href} data-offseason-only={link.offseason ? '' : undefined} data-cleanup-only={link.cleanup ? '' : undefined} class={`more-sheet-link${link.parent ? ' more-sheet-link--sub' : ''}${isActiveLink(link.href) ? ' more-sheet-link--active' : ''}`} aria-current={isActiveLink(link.href) ? 'page' : undefined}>
+          <a href={link.href} title={link.description} data-offseason-only={link.offseason ? '' : undefined} data-cleanup-only={link.cleanup ? '' : undefined} class={`more-sheet-link${link.parent ? ' more-sheet-link--sub' : ''}${isActiveLink(link.href) ? ' more-sheet-link--active' : ''}`} aria-current={isActiveLink(link.href) ? 'page' : undefined}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={NAV_ICONS[link.icon]} />
             {link.label}
           </a>
