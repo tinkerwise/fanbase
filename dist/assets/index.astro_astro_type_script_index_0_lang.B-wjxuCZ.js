@@ -46,18 +46,20 @@ import{F as e,G as t,H as n,J as r,K as i,N as a,O as o,V as s,_ as c,c as l,i a
     </div>
     ${n.games.map(ye).join(``)}
     <a class="postseason-detail-more" href="https://www.mlb.com/postseason" target="_blank" rel="noopener">More on MLB.com Postseason ↗</a>
-  </div>`,t.querySelector(`.ps-detail-close`).addEventListener(`click`,()=>{S.selectedSeries=null,z(),B()}),e&&t.scrollIntoView({behavior:`smooth`,block:`nearest`})):t.innerHTML=``}function V(e){return`${e.getFullYear()}-${String(e.getMonth()+1).padStart(2,`0`)}-${String(e.getDate()).padStart(2,`0`)}`}function be(e){let t=S.series.get(T(e.gameType,e.teams.away.team.id,e.teams.home.team.id)),{stateClass:n,statusInner:r,isPreviewLike:o,isFinal:s}=m(e),c=[e.teams.away.team.id,e.teams.home.team.id].includes(i),l=t=>{let n=e.teams[t],r=e.teams[t===`away`?`home`:`away`],i=s&&n.score>r.score,c=s&&n.score<r.score,l=n.probablePitcher,u=o&&l?`<span class="postseason-game-sub">${f(l.fullName)}</span>`:``;return`<div class="postseason-game-team${i?` postseason-game-team--win`:``}${c?` postseason-game-team--lose`:``}">
-      <span class="postseason-seed">${D(n.team.id)??``}</span>
+  </div>`,t.querySelector(`.postseason-detail-close`).addEventListener(`click`,()=>{S.selectedSeries=null,z(),B()}),e&&t.scrollIntoView({behavior:`smooth`,block:`nearest`})):t.innerHTML=``}function V(e){return`${e.getFullYear()}-${String(e.getMonth()+1).padStart(2,`0`)}-${String(e.getDate()).padStart(2,`0`)}`}function be(e){let t=S.series.get(T(e.gameType,e.teams.away.team.id,e.teams.home.team.id)),{stateClass:n,statusInner:r,isPreviewLike:o,isFinal:s}=m(e),c=[e.teams.away.team.id,e.teams.home.team.id].includes(i),l=t=>{let n=e.teams[t],r=e.teams[t===`away`?`home`:`away`],i=s&&n.score>r.score,c=s&&n.score<r.score,l=n.probablePitcher,u=o&&l?`<span class="postseason-game-sub">${f(l.fullName)}</span>`:``;return`<div class="postseason-game-team postseason-game-team--${t}${i?` postseason-game-team--win`:``}${c?` postseason-game-team--lose`:``}">
       <img class="postseason-logo" src="${f(a(n.team.id,22))}" alt="" width="22" height="22" loading="lazy">
-      <span class="postseason-game-name">${f(S.teamNames[n.team.id]?.teamName??x(n.team.id))}${u}</span>
+      <span class="postseason-game-name"><span class="postseason-game-name-text">${D(n.team.id)?`<span class="postseason-seed">${D(n.team.id)}</span> `:``}${f(S.teamNames[n.team.id]?.teamName??x(n.team.id))}</span>${u}</span>
       <span class="postseason-game-score">${o?``:n.score??0}</span>
     </div>`},u=N(e);return`<a class="postseason-game${c?` postseason-game--my-team`:``} postseason-game--${n}" href="${f(M(e))}" target="_blank" rel="noopener">
     <div class="postseason-game-kicker">
-      <span>${f([A(t)||_[e.gameType].label,j(e)].filter(Boolean).join(` · `))}</span>
-      <span>${t?f(k(t)):``}</span>
+      <span class="postseason-game-round">${f([A(t)||_[e.gameType].label,j(e)].filter(Boolean).join(` · `))}</span>
+      ${t?`<span class="postseason-game-series">${f(k(t))}</span>`:``}
     </div>
-    ${l(`away`)}
-    ${l(`home`)}
+    <div class="postseason-game-matchup">
+      ${l(`away`)}
+      <span class="postseason-game-at" aria-hidden="true">${o?`@`:`–`}</span>
+      ${l(`home`)}
+    </div>
     <div class="postseason-game-foot">
       <span class="postseason-status--${n}">${n===`live`?`<span class="live-dot" aria-hidden="true"></span>`:``}${r}</span>
       ${u?`<span class="postseason-game-tv">${f(u)}</span>`:``}
@@ -74,7 +76,7 @@ import{F as e,G as t,H as n,J as r,K as i,N as a,O as o,V as s,_ as c,c as l,i a
     ${s}
     <div class="postseason-spot-body">
       <div class="event-spotlight-kicker">${f(r)}</div>
-      <div class="postseason-spot-line">Watching from home this October</div>
+      <div class="postseason-spot-line">Did not qualify for the postseason</div>
       <div class="postseason-spot-sub">Finished ${o.wins}–${o.losses}${c}</div>
       <a class="postseason-spot-link" href="/fanbase/schedule/">Season results →</a>
     </div>
@@ -106,7 +108,23 @@ import{F as e,G as t,H as n,J as r,K as i,N as a,O as o,V as s,_ as c,c as l,i a
       <span class="video-title">${f(e.title)}</span>
     </div>
   </div>`}async function Me(){let e=p(`psMedia`);if(!e)return;let t=(S.config.videos??[]).map(e=>({...e,label:e.label??`Pinned`,videoId:e.videoId??h(e.url??``)})),n=(await Promise.all(Oe.map(Ae))).flat(),r=[...t,...n];r.length?(e.innerHTML=`<div class="media-list">${r.map(je).join(``)}</div>
-    <a class="widget-link" href="https://www.mlb.com/postseason" target="_blank" rel="noopener">More postseason video ↗</a>`,se(e,`.media-item--video`)):e.innerHTML=`<span class="sidebar-msg">Unavailable</span>`}var Ne=[{year:2025,result:`Dodgers def. Blue Jays 4–3`,mvp:`Yoshinobu Yamamoto`},{year:2024,result:`Dodgers def. Yankees 4–1`,mvp:`Freddie Freeman`},{year:2023,result:`Rangers def. Diamondbacks 4–1`,mvp:`Corey Seager`},{year:2022,result:`Astros def. Phillies 4–2`,mvp:`Jeremy Peña`},{year:2021,result:`Braves def. Astros 4–2`,mvp:`Jorge Soler`},{year:2020,result:`Dodgers def. Rays 4–2`,mvp:`Corey Seager`}],J={110:[{year:2024,result:`Lost AL Wild Card Series to Royals 0–2`},{year:2023,result:`Lost ALDS to Rangers 0–3 (101-win AL East champs)`},{year:2016,result:`Lost AL Wild Card Game at Toronto`},{year:2014,result:`Swept Tigers in ALDS; lost ALCS to Royals 0–4`},{year:1983,result:`World Series champions over the Phillies 4–1`},{year:1970,result:`World Series champions over the Reds 4–1`},{year:1966,result:`World Series champions, swept the Dodgers 4–0`}]};function Pe(){let e=p(`psHistory`);if(!e)return;let t=e=>`<div class="event-history-item">
+    <a class="widget-link" href="https://www.mlb.com/postseason" target="_blank" rel="noopener">More postseason video ↗</a>`,se(e,`.media-item--video`)):e.innerHTML=`<span class="sidebar-msg">Unavailable</span>`}function Ne(){let e=p(`psAwards`);if(!e)return;let t=S.config?.awards;if(!t?.major?.length&&!t?.allMlb){e.innerHTML=`<span class="sidebar-msg">Awards are announced in November</span>`;return}let n=e=>{if(!e?.name)return`<span class="postseason-award-tbd">TBA</span>`;let t=e.team?`<img class="event-team-logo" src="${f(a(e.team,16))}" alt="" width="16" height="16" loading="lazy">`:``,n=e.team&&b(e.team)?` <span class="postseason-award-team">${f(x(e.team))}</span>`:``;return`${t}<span class="postseason-award-name">${f(e.name)}${n}</span>`},r=e=>e?.team===i?` postseason-row--my-team`:``,o=(t.major??[]).map(e=>{let t=e.mlb?[`<div class="postseason-award-line${r(e.mlb)}">${n(e.mlb)}</div>`]:[`al`,`nl`].map(t=>`<div class="postseason-award-line${r(e[t])}">
+          <span class="postseason-award-lg">${t.toUpperCase()}</span>${n(e[t])}
+        </div>`);return`<div class="postseason-award">
+      <div class="postseason-award-label">${f(e.label)}</div>
+      ${t.join(``)}
+    </div>`}).join(``),s=(e,t)=>t?.length?`<details class="postseason-allmlb">
+      <summary>${f(e)}</summary>
+      ${t.map(e=>`<div class="postseason-award-line${r(e)}">
+        <span class="postseason-award-lg">${f(e.pos)}</span>${n(e)}
+      </div>`).join(``)}
+    </details>`:``;e.innerHTML=`
+    ${o}
+    ${t.allMlb?`<div class="roster-group-label">All-MLB Team</div>
+      ${s(`First Team`,t.allMlb.first)}
+      ${s(`Second Team`,t.allMlb.second)}`:``}
+    <a class="widget-link" href="https://www.mlb.com/awards" target="_blank" rel="noopener">All MLB awards ↗</a>
+  `}var Pe=[{year:2026,result:`Brewers def. Rays 4–1`,mvp:`William Contreras`},{year:2025,result:`Dodgers def. Blue Jays 4–3`,mvp:`Yoshinobu Yamamoto`},{year:2024,result:`Dodgers def. Yankees 4–1`,mvp:`Freddie Freeman`},{year:2023,result:`Rangers def. Diamondbacks 4–1`,mvp:`Corey Seager`},{year:2022,result:`Astros def. Phillies 4–2`,mvp:`Jeremy Peña`},{year:2021,result:`Braves def. Astros 4–2`,mvp:`Jorge Soler`},{year:2020,result:`Dodgers def. Rays 4–2`,mvp:`Corey Seager`}],J={110:[{year:2024,result:`Lost AL Wild Card Series to Royals 0–2`},{year:2023,result:`Lost ALDS to Rangers 0–3 (101-win AL East champs)`},{year:2016,result:`Lost AL Wild Card Game at Toronto`},{year:2014,result:`Swept Tigers in ALDS; lost ALCS to Royals 0–4`},{year:1983,result:`World Series champions over the Phillies 4–1`},{year:1970,result:`World Series champions over the Reds 4–1`},{year:1966,result:`World Series champions, swept the Dodgers 4–0`}]};function Fe(){let e=p(`psHistory`);if(!e)return;let t=e=>`<div class="event-history-item">
     <span class="event-history-year">${e.year}</span>
     <div class="event-history-body">
       <div class="event-history-result">${f(e.result)}</div>
@@ -114,7 +132,7 @@ import{F as e,G as t,H as n,J as r,K as i,N as a,O as o,V as s,_ as c,c as l,i a
     </div>
   </div>`;e.innerHTML=`
     <div class="roster-group-label">Recent World Series</div>
-    ${Ne.map(t).join(``)}
+    ${Pe.map(t).join(``)}
     ${J[i]?`<div class="roster-group-label">${f(r)} in October</div>
     ${J[i].map(t).join(``)}`:``}
-  `}function Fe(){document.querySelectorAll(`.section-toggle`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.closest(`.sidebar-section`),n=t.closest(`.sidebar`),r=t.classList.contains(`collapsed`);n?.querySelectorAll(`.sidebar-section.collapsible`).forEach(e=>{e!==t&&e.classList.add(`collapsed`)}),t.classList.toggle(`collapsed`,!r)})})}var Y=null;function X(){clearTimeout(Y);let e=S.games.some(e=>e.status?.abstractGameState===`Live`);Y=setTimeout(Q,e||S.loadFailed?6e4:6e5)}function Z(e){S.loadFailed=e===null,e!==null&&(S.games=e,S.series=fe(e))}async function Q(){let[e,t]=await Promise.all([w(),S.seeds?S.seeds:E()]);Z(e),S.seeds=t,$(),X()}function $(){Se(),xe(),z(),B(),Ce();let e=p(`psUpdated`);e&&!S.loadFailed&&(e.textContent=`Updated ${new Date().toLocaleTimeString(`en-US`,{hour:`numeric`,minute:`2-digit`})}`)}async function Ie(){Fe(),Pe();try{S.config=await fetch(`/fanbase/postseason.json`).then(e=>e.json())}catch{S.config={}}let[e,t]=await Promise.all([w(),E()]);Z(e),S.seeds=t,$(),X(),Ee(),we(),Me(),document.addEventListener(`visibilitychange`,()=>{document.visibilityState===`visible`&&Q()})}oe()&&Ie();
+  `}function Ie(){document.querySelectorAll(`.section-toggle`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.closest(`.sidebar-section`),n=t.closest(`.sidebar`),r=t.classList.contains(`collapsed`);n?.querySelectorAll(`.sidebar-section.collapsible`).forEach(e=>{e!==t&&e.classList.add(`collapsed`)}),t.classList.toggle(`collapsed`,!r)})})}var Y=null;function X(){clearTimeout(Y);let e=S.games.some(e=>e.status?.abstractGameState===`Live`);Y=setTimeout(Q,e||S.loadFailed?6e4:6e5)}function Z(e){S.loadFailed=e===null,e!==null&&(S.games=e,S.series=fe(e))}async function Q(){let[e,t]=await Promise.all([w(),S.seeds?S.seeds:E()]);Z(e),S.seeds=t,$(),X()}function $(){Se(),xe(),z(),B(),Ce();let e=p(`psUpdated`);e&&!S.loadFailed&&(e.textContent=`Updated ${new Date().toLocaleTimeString(`en-US`,{hour:`numeric`,minute:`2-digit`})}`)}async function Le(){Ie(),Fe();try{S.config=await fetch(`/fanbase/postseason.json`).then(e=>e.json())}catch{S.config={}}let[e,t]=await Promise.all([w(),E()]);Z(e),S.seeds=t,$(),Ne(),X(),Ee(),we(),Me(),document.addEventListener(`visibilitychange`,()=>{document.visibilityState===`visible`&&Q()})}oe()&&Le();

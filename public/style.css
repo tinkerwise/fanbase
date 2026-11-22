@@ -4371,16 +4371,43 @@ a.il-name:hover { color: var(--accent); }
 .postseason-logo { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
 .postseason-logo-blank { width: 18px; height: 18px; border-radius: 50%; background: var(--surface); border: 1px dashed var(--border-light); flex-shrink: 0; }
 
-.postseason-games { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-top: 10px; }
-.postseason-game-kicker { display: flex; justify-content: space-between; gap: 8px; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); }
+.postseason-games { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.postseason-game {
+  display: grid; grid-template-columns: minmax(120px, 170px) minmax(0, 1fr) minmax(110px, 150px); align-items: center; gap: 14px;
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card);
+  color: var(--text); text-decoration: none; transition: border-color 0.15s, background 0.15s;
+}
+.postseason-game:hover { border-color: var(--orange); background: var(--orange-dim); }
+.postseason-game--my-team { border-color: color-mix(in srgb, var(--orange) 50%, var(--border) 50%); }
+.postseason-game-kicker { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); }
+.postseason-game-series { color: var(--orange); text-transform: none; letter-spacing: 0; font-size: 0.7rem; }
+.postseason-game-matchup { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; min-width: 0; }
+.postseason-game-team { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.postseason-game-team--home { flex-direction: row-reverse; text-align: right; }
+.postseason-game-team--lose { opacity: 0.6; }
 .postseason-game-team .postseason-logo { width: 22px; height: 22px; }
 .postseason-game-name { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: 0.86rem; font-weight: 600; }
-.postseason-game-sub { font-size: 0.66rem; font-weight: 400; color: var(--text-3); }
-.postseason-game-score { font-size: 1.05rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.postseason-game-name-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.postseason-game-name .postseason-seed { display: inline; width: auto; margin-right: 2px; }
+.postseason-game-sub { font-size: 0.66rem; font-weight: 400; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.postseason-game-score { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; min-width: 1ch; }
 .postseason-game-team--win .postseason-game-score { color: var(--orange); }
-.postseason-game-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.7rem; color: var(--text-2); border-top: 1px solid var(--border); padding-top: 6px; }
+.postseason-game-at { font-size: 0.8rem; color: var(--text-3); }
+.postseason-game-foot { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 0.7rem; color: var(--text-2); text-align: right; }
 .postseason-game-foot .postseason-status--live { display: inline-flex; align-items: center; gap: 6px; }
 .postseason-game-tv { color: var(--text-3); white-space: nowrap; }
+.postseason-award { padding: 7px 0; border-bottom: 1px solid var(--border); }
+.postseason-award:last-of-type { border-bottom: none; }
+.postseason-award-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); margin-bottom: 3px; }
+.postseason-award-line { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: 0.76rem; color: var(--text); min-width: 0; }
+.postseason-award-lg { width: 22px; flex-shrink: 0; font-size: 0.62rem; font-weight: 700; color: var(--orange); }
+.postseason-award-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.postseason-award-team { font-size: 0.66rem; color: var(--text-3); }
+.postseason-award-tbd { color: var(--text-3); font-style: italic; }
+.postseason-allmlb { border-bottom: 1px solid var(--border); padding: 4px 0; }
+.postseason-allmlb summary { cursor: pointer; font-size: 0.76rem; font-weight: 600; color: var(--text); padding: 3px 0; }
+.postseason-allmlb summary:hover { color: var(--orange); }
+.postseason-allmlb[open] summary { margin-bottom: 3px; }
 .postseason-bracket { display: grid; grid-template-columns: minmax(0, 1fr) 104px minmax(0, 1fr); gap: 8px; margin-top: 10px; align-items: stretch; }
 .postseason-league { min-width: 0; display: flex; flex-direction: column; }
 .postseason-league-head { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); padding-bottom: 6px; border-bottom: 2px solid var(--orange); margin-bottom: 8px; }
@@ -4455,7 +4482,9 @@ a.il-name:hover { color: var(--accent); }
   .postseason-detail-game { grid-template-columns: 52px minmax(0, 1fr) auto; }
   .postseason-detail-tv { display: none; }
   .postseason-box-wrap { padding-left: 12px; }
-  .postseason-games { grid-template-columns: 1fr; }
+  .postseason-game { grid-template-columns: 1fr; gap: 8px; padding: 10px 12px; }
+  .postseason-game-kicker { flex-direction: row; justify-content: space-between; }
+  .postseason-game-foot { flex-direction: row; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 6px; }
 }
 
 /* ── 404 (src/pages/404.astro) ── */

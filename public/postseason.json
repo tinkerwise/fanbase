@@ -1,6 +1,219 @@
 {
-  "_readme": "Optional overrides for /postseason/. The bracket, scores and schedule all come live from the MLB Stats API — only fill these in if MLB's data is wrong or you want to pin videos. seeds: { \"AL\": [seed1..seed6 team ids], \"NL\": [...] }. videos: [{ \"title\": \"...\", \"url\": \"https://www.youtube.com/watch?v=...\" }].",
-  "lastUpdated": "2026-09-29",
+  "_readme": "Optional overrides for /postseason/. The bracket, scores and schedule all come live from the MLB Stats API — only fill these in if MLB's data is wrong or you want to pin videos. seeds: { \"AL\": [seed1..seed6 team ids], \"NL\": [...] }. videos: [{ \"title\": \"...\", \"url\": \"https://www.youtube.com/watch?v=...\" }]. awards: { season, major: [{ label, al: { name, team }, nl: { name, team } } or { label, mlb: { name, team } }], allMlb: { first: [{ pos, name, team }], second: [...] } } — team is an MLB team id and may be left out.",
+  "lastUpdated": "2026-11-22",
   "seeds": {},
-  "videos": []
+  "videos": [],
+  "awards": {
+    "season": 2026,
+    "major": [
+      {
+        "label": "World Series MVP",
+        "mlb": {
+          "name": "William Contreras",
+          "team": 158
+        }
+      },
+      {
+        "label": "Most Valuable Player",
+        "al": {
+          "name": "Yordan Alvarez",
+          "team": 117
+        },
+        "nl": {
+          "name": "Pete Crow-Armstrong",
+          "team": 112
+        }
+      },
+      {
+        "label": "Cy Young",
+        "al": {
+          "name": "Cam Schlittler",
+          "team": 147
+        },
+        "nl": {
+          "name": "Jacob Misiorowski",
+          "team": 158
+        }
+      },
+      {
+        "label": "Rookie of the Year",
+        "al": {
+          "name": "Kevin McGonigle",
+          "team": 116
+        },
+        "nl": {
+          "name": "Sal Stewart",
+          "team": 113
+        }
+      },
+      {
+        "label": "Manager of the Year",
+        "al": {
+          "name": "Will Venable",
+          "team": 145
+        },
+        "nl": {
+          "name": "Pat Murphy",
+          "team": 158
+        }
+      }
+    ],
+    "allMlb": {
+      "first": [
+        {
+          "pos": "C",
+          "name": "Gabriel Moreno",
+          "team": 109
+        },
+        {
+          "pos": "1B",
+          "name": "Pete Alonso",
+          "team": 110
+        },
+        {
+          "pos": "2B",
+          "name": "Brice Turang",
+          "team": 158
+        },
+        {
+          "pos": "SS",
+          "name": "Bobby Witt Jr.",
+          "team": 118
+        },
+        {
+          "pos": "3B",
+          "name": "Junior Caminero",
+          "team": 139
+        },
+        {
+          "pos": "OF",
+          "name": "Pete Crow-Armstrong",
+          "team": 112
+        },
+        {
+          "pos": "OF",
+          "name": "Fernando Tatis Jr.",
+          "team": 135
+        },
+        {
+          "pos": "OF",
+          "name": "Jackson Chourio",
+          "team": 158
+        },
+        {
+          "pos": "DH",
+          "name": "Yordan Alvarez",
+          "team": 117
+        },
+        {
+          "pos": "SP",
+          "name": "Jacob Misiorowski",
+          "team": 158
+        },
+        {
+          "pos": "SP",
+          "name": "Cam Schlittler",
+          "team": 147
+        },
+        {
+          "pos": "SP",
+          "name": "Dylan Cease"
+        },
+        {
+          "pos": "SP",
+          "name": "Chris Sale"
+        },
+        {
+          "pos": "SP",
+          "name": "Cristopher Sánchez"
+        },
+        {
+          "pos": "RP",
+          "name": "Mason Miller",
+          "team": 135
+        },
+        {
+          "pos": "RP",
+          "name": "Louis Varland",
+          "team": 141
+        }
+      ],
+      "second": [
+        {
+          "pos": "C",
+          "name": "William Contreras",
+          "team": 158
+        },
+        {
+          "pos": "1B",
+          "name": "Willson Contreras",
+          "team": 111
+        },
+        {
+          "pos": "2B",
+          "name": "Brandon Lowe",
+          "team": 134
+        },
+        {
+          "pos": "SS",
+          "name": "Elly De La Cruz",
+          "team": 113
+        },
+        {
+          "pos": "3B",
+          "name": "Alex Bregman",
+          "team": 112
+        },
+        {
+          "pos": "OF",
+          "name": "James Wood"
+        },
+        {
+          "pos": "OF",
+          "name": "Randy Arozarena"
+        },
+        {
+          "pos": "OF",
+          "name": "Jordan Walker"
+        },
+        {
+          "pos": "DH",
+          "name": "Ben Rice",
+          "team": 147
+        },
+        {
+          "pos": "SP",
+          "name": "Yoshinobu Yamamoto",
+          "team": 119
+        },
+        {
+          "pos": "SP",
+          "name": "Tarik Skubal",
+          "team": 116
+        },
+        {
+          "pos": "SP",
+          "name": "Drew Rasmussen",
+          "team": 139
+        },
+        {
+          "pos": "SP",
+          "name": "Sonny Gray"
+        },
+        {
+          "pos": "SP",
+          "name": "Jesús Luzardo"
+        },
+        {
+          "pos": "RP",
+          "name": "Bryan Baker",
+          "team": 139
+        },
+        {
+          "pos": "RP",
+          "name": "Cade Smith"
+        }
+      ]
+    }
+  }
 }

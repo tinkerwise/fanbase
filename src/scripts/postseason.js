@@ -441,7 +441,7 @@ function renderSeriesDetail(scroll = false) {
     ${s.games.map(renderGameLine).join('')}
     <a class="postseason-detail-more" href="https://www.mlb.com/postseason" target="_blank" rel="noopener">More on MLB.com Postseason ↗</a>
   </div>`;
-  el.querySelector('.ps-detail-close').addEventListener('click', () => {
+  el.querySelector('.postseason-detail-close').addEventListener('click', () => {
     state.selectedSeries = null;
     renderBracket();
     renderSeriesDetail();
@@ -458,30 +458,32 @@ function renderGameCard(g) {
   const s = state.series.get(seriesKey(g.gameType, g.teams.away.team.id, g.teams.home.team.id));
   const { stateClass, statusInner, isPreviewLike, isFinal } = getScoreChipStatus(g);
   const hasMine = [g.teams.away.team.id, g.teams.home.team.id].includes(TEAM_ID);
-  const row = side => {
-    const t = g.teams[side];
-    const other = g.teams[side === 'away' ? 'home' : 'away'];
+  // One horizontal scoreboard line: away team on the left, home team
+  // mirrored on the right, scores meeting in the middle.
+  const side = key => {
+    const t = g.teams[key];
+    const other = g.teams[key === 'away' ? 'home' : 'away'];
     const win = isFinal && t.score > other.score;
     const lose = isFinal && t.score < other.score;
     const pp = t.probablePitcher;
-    const sub = isPreviewLike && pp
-      ? `<span class="postseason-game-sub">${esc(pp.fullName)}</span>`
-      : '';
-    return `<div class="postseason-game-team${win ? ' postseason-game-team--win' : ''}${lose ? ' postseason-game-team--lose' : ''}">
-      <span class="postseason-seed">${seedOf(t.team.id) ?? ''}</span>
+    const sub = isPreviewLike && pp ? `<span class="postseason-game-sub">${esc(pp.fullName)}</span>` : '';
+    return `<div class="postseason-game-team postseason-game-team--${key}${win ? ' postseason-game-team--win' : ''}${lose ? ' postseason-game-team--lose' : ''}">
       <img class="postseason-logo" src="${esc(teamLogoSrc(t.team.id, 22))}" alt="" width="22" height="22" loading="lazy">
-      <span class="postseason-game-name">${esc(state.teamNames[t.team.id]?.teamName ?? abbr(t.team.id))}${sub}</span>
+      <span class="postseason-game-name"><span class="postseason-game-name-text">${seedOf(t.team.id) ? `<span class="postseason-seed">${seedOf(t.team.id)}</span> ` : ''}${esc(state.teamNames[t.team.id]?.teamName ?? abbr(t.team.id))}</span>${sub}</span>
       <span class="postseason-game-score">${isPreviewLike ? '' : (t.score ?? 0)}</span>
     </div>`;
   };
   const tv = broadcastText(g);
   return `<a class="postseason-game${hasMine ? ' postseason-game--my-team' : ''} postseason-game--${stateClass}" href="${esc(gamedayUrl(g))}" target="_blank" rel="noopener">
     <div class="postseason-game-kicker">
-      <span>${esc([roundLabel(s) || ROUNDS[g.gameType].label, gameNumberLabel(g)].filter(Boolean).join(' · '))}</span>
-      <span>${s ? esc(seriesStatusText(s)) : ''}</span>
+      <span class="postseason-game-round">${esc([roundLabel(s) || ROUNDS[g.gameType].label, gameNumberLabel(g)].filter(Boolean).join(' · '))}</span>
+      ${s ? `<span class="postseason-game-series">${esc(seriesStatusText(s))}</span>` : ''}
     </div>
-    ${row('away')}
-    ${row('home')}
+    <div class="postseason-game-matchup">
+      ${side('away')}
+      <span class="postseason-game-at" aria-hidden="true">${isPreviewLike ? '@' : '–'}</span>
+      ${side('home')}
+    </div>
     <div class="postseason-game-foot">
       <span class="postseason-status--${stateClass}">${stateClass === 'live' ? '<span class="live-dot" aria-hidden="true"></span>' : ''}${statusInner}</span>
       ${tv ? `<span class="postseason-game-tv">${esc(tv)}</span>` : ''}
@@ -581,7 +583,7 @@ function renderSpotlight() {
     ${logo}
     <div class="postseason-spot-body">
       <div class="event-spotlight-kicker">${esc(TEAM_NICK)}</div>
-      <div class="postseason-spot-line">Watching from home this October</div>
+      <div class="postseason-spot-line">Did not qualify for the postseason</div>
       <div class="postseason-spot-sub">Finished ${rec.wins}–${rec.losses}${gb}</div>
       <a class="postseason-spot-link" href="${import.meta.env.BASE_URL}schedule/">Season results →</a>
     </div>
@@ -820,8 +822,53 @@ async function loadMedia() {
   bindVideoClicks(wrap, '.media-item--video');
 }
 
+// ── Awards ────────────────────────────────────────────────────────
+// Season awards come from public/postseason.json (`awards`), so winners
+// can be added or corrected without a code change. Team is an MLB id.
+function renderAwards() {
+  const el = $('psAwards');
+  if (!el) return;
+  const aw = state.config?.awards;
+  if (!aw?.major?.length && !aw?.allMlb) {
+    el.innerHTML = '<span class="sidebar-msg">Awards are announced in November</span>';
+    return;
+  }
+  const who = w => {
+    if (!w?.name) return '<span class="postseason-award-tbd">TBA</span>';
+    const logo = w.team ? `<img class="event-team-logo" src="${esc(teamLogoSrc(w.team, 16))}" alt="" width="16" height="16" loading="lazy">` : '';
+    const team = w.team && isRealTeam(w.team) ? ` <span class="postseason-award-team">${esc(abbr(w.team))}</span>` : '';
+    return `${logo}<span class="postseason-award-name">${esc(w.name)}${team}</span>`;
+  };
+  const mine = w => (w?.team === TEAM_ID ? ' postseason-row--my-team' : '');
+  const major = (aw.major ?? []).map(a => {
+    const lines = a.mlb
+      ? [`<div class="postseason-award-line${mine(a.mlb)}">${who(a.mlb)}</div>`]
+      : ['al', 'nl'].map(lg => `<div class="postseason-award-line${mine(a[lg])}">
+          <span class="postseason-award-lg">${lg.toUpperCase()}</span>${who(a[lg])}
+        </div>`);
+    return `<div class="postseason-award">
+      <div class="postseason-award-label">${esc(a.label)}</div>
+      ${lines.join('')}
+    </div>`;
+  }).join('');
+  const team = (title, list) => list?.length ? `<details class="postseason-allmlb">
+      <summary>${esc(title)}</summary>
+      ${list.map(p => `<div class="postseason-award-line${mine(p)}">
+        <span class="postseason-award-lg">${esc(p.pos)}</span>${who(p)}
+      </div>`).join('')}
+    </details>` : '';
+  el.innerHTML = `
+    ${major}
+    ${aw.allMlb ? `<div class="roster-group-label">All-MLB Team</div>
+      ${team('First Team', aw.allMlb.first)}
+      ${team('Second Team', aw.allMlb.second)}` : ''}
+    <a class="widget-link" href="https://www.mlb.com/awards" target="_blank" rel="noopener">All MLB awards ↗</a>
+  `;
+}
+
 // ── History ───────────────────────────────────────────────────────
 const WS_HISTORY = [
+  { year: 2026, result: 'Brewers def. Rays 4–1', mvp: 'William Contreras' },
   { year: 2025, result: 'Dodgers def. Blue Jays 4–3', mvp: 'Yoshinobu Yamamoto' },
   { year: 2024, result: 'Dodgers def. Yankees 4–1', mvp: 'Freddie Freeman' },
   { year: 2023, result: 'Rangers def. Diamondbacks 4–1', mvp: 'Corey Seager' },
@@ -927,6 +974,7 @@ async function init() {
   applyGames(games);
   state.seeds = seeds;
   renderAll();
+  renderAwards();
   scheduleRefresh();
 
   loadNews();
