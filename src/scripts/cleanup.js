@@ -316,13 +316,17 @@ async function buildMoves(transactions) {
 }
 
 // ── Rumors and On the Block ───────────────────────────────────────
+const RUMOR_WAIT_MS = 8000;
 async function renderRumors(roster, newsSources = []) {
   try {
     const sources = [
       ...await loadFeedSources(),
       ...newsSources.map(s => ({ ...s, url: s.url.replace('{team}', encodeURIComponent(TEAM.fullName)) })),
     ];
-    const results = await Promise.allSettled(sources.map(async s => ({ source: s, data: await fetchFeedItems(s) })));
+    // A slow feed (some take 30+ seconds through the proxy) shouldn't hold
+    // up the rest: show what's in after RUMOR_WAIT_MS
+    const withinWait = p => Promise.race([p, new Promise((_, reject) => setTimeout(() => reject(new Error('slow feed')), RUMOR_WAIT_MS))]);
+    const results = await Promise.allSettled(sources.map(async s => ({ source: s, data: await withinWait(fetchFeedItems(s)) })));
     const teamRe = new RegExp(`\\b(${[TEAM.name, TEAM.city, TEAM.fullName].filter(Boolean).map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b`, 'i');
     const seen = new Set();
     const stories = [];
@@ -363,10 +367,16 @@ async function renderRumors(roster, newsSources = []) {
 
 // ── Key dates ─────────────────────────────────────────────────────
 // From key-dates.json (tag cleanup), shared with the other calendars (#42).
-// A date that moved or was called off says so; there's no "at risk" flag.
+// A date that was called off says so; there's no "at risk" flag. Upcoming
+// dates come first; ones that passed in the last two weeks (they drop off
+// after that, keyDates.js) follow, dimmed, so the list doesn't open on
+// dates that are already over.
 function renderDates(dates) {
-  const sorted = [...dates].sort((a, b) => (a.date ?? a.sort).localeCompare(b.date ?? b.sort));
-  $('cuDates').innerHTML = sorted.map(d => {
+  const lastOf = d => d.dateEnd ?? d.date ?? d.sort;
+  const byDate = (a, b) => (a.date ?? a.sort).localeCompare(b.date ?? b.sort);
+  const upcoming = dates.filter(d => lastOf(d) >= TODAY).sort(byDate);
+  const passed = dates.filter(d => lastOf(d) < TODAY).sort(byDate);
+  const item = d => {
     const when = d.dateText ?? (d.dateEnd ? `${fmtDate(d.date)}–${fmtDate(d.dateEnd)}` : fmtDate(d.date));
     const last = d.dateEnd ?? d.date ?? d.sort;
     const past = last < TODAY;
@@ -381,7 +391,9 @@ function renderDates(dates) {
         ${teamNote ? `<span class="cu-date-detail cu-date-note">${esc(teamNote)}</span>` : ''}
       </span>
     </li>`;
-  }).join('');
+  };
+  $('cuDates').innerHTML = upcoming.map(item).join('')
+    + (passed.length ? `<li class="cu-dates-passed">Recently passed</li>${passed.map(item).join('')}` : '');
 }
 
 // ── Init ──────────────────────────────────────────────────────────

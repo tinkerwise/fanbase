@@ -5073,6 +5073,7 @@ html:not([data-offseason]) [data-cleanup-only] { display: none !important; }
 .cu-date--off .cu-date-when, .cu-date--off .cu-date-title > :not(.cu-tag) { text-decoration: line-through; }
 .cu-date { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; }
 .cu-date--past { opacity: 0.55; }
+.cu-dates-passed { margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
 .cu-date-when { font-size: 0.78rem; font-weight: 800; color: var(--accent-text); }
 .cu-date-body { display: flex; flex-direction: column; gap: 2px; }
 .cu-date-title { font-weight: 700; font-size: 0.88rem; }
