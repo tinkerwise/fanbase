@@ -5073,6 +5073,15 @@ html:not([data-offseason]) [data-cleanup-only] { display: none !important; }
 .cu-date--off .cu-date-when, .cu-date--off .cu-date-title > :not(.cu-tag) { text-decoration: line-through; }
 .cu-date { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; }
 .cu-date--past { opacity: 0.55; }
+/* Teams linked to a player in reporting (rumorLinks.js) */
+.cu-linked { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.cu-linked--inline { display: inline-flex; margin: 0 0 0 4px; vertical-align: middle; }
+.cu-linked[hidden] { display: none; }
+.cu-linked-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-3); margin-right: 2px; }
+.cu-linked-label--deal { color: var(--accent-text); }
+.cu-linked-team { display: inline-flex; border-radius: 4px; }
+.cu-linked-team img { width: 18px; height: 18px; object-fit: contain; }
+.cu-linked-team:hover, .cu-linked-team:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .cu-dates-passed { margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
 .cu-date-when { font-size: 0.78rem; font-weight: 800; color: var(--accent-text); }
 .cu-date-body { display: flex; flex-direction: column; gap: 2px; }

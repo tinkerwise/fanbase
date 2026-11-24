@@ -20,6 +20,7 @@ import { loadFeedSources, fetchFeedItems } from './feedSources.js';
 import { loadHardball, offseasonWindow, localDate } from './season.js';
 import { findIntlSignings } from './intlSignings.js';
 import { keyDatesFor, keyDateNote, isOff } from './keyDates.js';
+import { findRumorLinks, newsSearchSources, playerKey, MAX_LINKED, LINK_DAYS } from './rumorLinks.js';
 
 const $ = id => document.getElementById(id);
 const asOfParam = new URLSearchParams(location.search).get('asOf');
@@ -104,6 +105,38 @@ function renderLabor(hardball, win) {
   el.hidden = !html;
 }
 
+// ── Teams linked in reporting (rumorLinks.js) ─────────────────────
+// Players to look for (key → { name, past }), filled as the lists render,
+// and what the news turned up, filled once Rumors has its stories.
+const linkTargets = new Map();
+let linksByKey = new Map();
+
+function track(name, pastTeams) {
+  const key = playerKey(name);
+  if (key && !linkTargets.has(key)) linkTargets.set(key, { name, past: new Set(pastTeams) });
+  return key;
+}
+
+// A reported deal (MLB hasn't made it official yet) stands alone; other
+// clubs' interest is moot once a player has agreed somewhere
+function linksHtml(key) {
+  const all = linksByKey.get(key) ?? [];
+  const deals = all.filter(l => l.deal);
+  const links = (deals.length ? deals : all).slice(0, MAX_LINKED);
+  if (!links.length) return '';
+  return `<span class="cu-linked-label${deals.length ? ' cu-linked-label--deal' : ''}">${deals.length ? 'Reported deal' : 'Linked'}</span>${links.map(l => {
+    const tip = `${teamName(l.teamId)}: ${l.story.title}${l.story.sourceName ? ` (${l.story.sourceName})` : ''}`;
+    return `<a class="cu-linked-team" href="${esc(safeUrl(l.story.link))}" target="_blank" rel="noopener" title="${esc(tip)}"><img src="${esc(teamLogoSrc(l.teamId, 18))}" alt="${esc(teamName(l.teamId))}" width="18" height="18" loading="lazy"></a>`;
+  }).join('')}`;
+}
+
+function fillLinks() {
+  document.querySelectorAll('[data-links-for]').forEach(el => {
+    el.innerHTML = linksHtml(el.dataset.linksFor);
+    el.hidden = !el.innerHTML;
+  });
+}
+
 // ── Key free agents ───────────────────────────────────────────────
 let faFilter = 'all';
 
@@ -133,6 +166,7 @@ function renderFaList(players) {
       <span class="cu-fa-main">
         <span class="cu-fa-name">${esc(p.name)}</span>
         <span class="cu-fa-meta">${esc([p.pos, p.age ? `age ${p.age}` : '', p.from].filter(Boolean).join(' · '))}</span>
+        ${p.linkKey ? `<span class="cu-linked" data-links-for="${esc(p.linkKey)}"${linksHtml(p.linkKey) ? '' : ' hidden'}>${linksHtml(p.linkKey)}</span>` : ''}
       </span>
       <span class="cu-status cu-status--${p.status.tone}">
         ${p.status.team ? logo(p.status.team) : ''}<span>${esc(p.status.text)}${p.status.terms ? `<span class="cu-status-terms">${esc(p.status.terms)}</span>` : ''}</span>
@@ -145,7 +179,10 @@ function renderFreeAgents(cleanup, faByName, faList, win) {
     const fa = faByName.get(norm(p.name));
     const teams = p.teams?.length ? p.teams : (fa?.originalTeam?.id ? [fa.originalTeam.id] : []);
     const from = p.from || teams.map(teamName).join(' and ');
-    return { ...p, teams, from, mine: teams.includes(TEAM_ID), groups: posGroups(p.pos), status: faStatus({ ...p, teams }, fa, win) };
+    const status = faStatus({ ...p, teams }, fa, win);
+    // Only players still on the market get linked teams
+    const linkKey = status.tone === 'signed' ? null : track(p.name, teams);
+    return { ...p, teams, from, mine: teams.includes(TEAM_ID), groups: posGroups(p.pos), status, linkKey };
   });
   renderFaList(players);
   $('cuFaFilters').addEventListener('click', e => {
@@ -173,7 +210,8 @@ function renderFreeAgents(cleanup, faByName, faList, win) {
       const to = f.newTeam?.id;
       const c = classify(f.notes);
       const state = to === TEAM_ID ? `re-signed · ${c.label}` : to ? `signed with ${teamName(to)}` : 'available';
-      return `<li><strong>${esc(f.player?.fullName)}</strong> <span class="cu-dim">${esc(f.position?.abbreviation ?? '')}</span> · ${esc(state)}</li>`;
+      const key = to ? null : track(f.player?.fullName ?? '', [TEAM_ID]);
+      return `<li><strong>${esc(f.player?.fullName)}</strong> <span class="cu-dim">${esc(f.position?.abbreviation ?? '')}</span> · ${esc(state)}${key ? ` <span class="cu-linked cu-linked--inline" data-links-for="${esc(key)}" hidden></span>` : ''}</li>`;
     }),
     ...rankedMine.map(p => `<li><strong>${esc(p.name)}</strong> <span class="cu-dim">${esc(p.pos)} · No. ${p.rank}</span> · ${esc(p.status.text)}</li>`),
   ];
@@ -319,9 +357,18 @@ async function buildMoves(transactions) {
 const RUMOR_WAIT_MS = 8000;
 async function renderRumors(roster, newsSources = []) {
   try {
+    // The team's 40-man players can be linked too (On the Block), leaving
+    // out this club itself
+    for (const p of roster) if (p.person?.fullName) track(p.person.fullName, [TEAM_ID]);
+    // The free agents being tracked get targeted news searches; the 40-man
+    // relies on the team's feeds
+    const rosterKeys = new Set(roster.map(p => playerKey(p.person?.fullName ?? '')));
+    const searchNames = [...linkTargets.values()].filter(t => !rosterKeys.has(playerKey(t.name))).map(t => t.name);
+    const linkSources = newsSearchSources(searchNames);
     const sources = [
       ...await loadFeedSources(),
       ...newsSources.map(s => ({ ...s, url: s.url.replace('{team}', encodeURIComponent(TEAM.fullName)) })),
+      ...linkSources,
     ];
     // A slow feed (some take 30+ seconds through the proxy) shouldn't hold
     // up the rest: show what's in after RUMOR_WAIT_MS
@@ -330,11 +377,16 @@ async function renderRumors(roster, newsSources = []) {
     const teamRe = new RegExp(`\\b(${[TEAM.name, TEAM.city, TEAM.fullName].filter(Boolean).map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b`, 'i');
     const seen = new Set();
     const stories = [];
+    const allStories = [];
+    const searchIds = new Set(linkSources.map(s => s.id));
     for (const r of results) {
       if (r.status !== 'fulfilled') continue;
       const teamSource = r.value.source.teamFeed || r.value.source.teamId === TEAM_ID;
       for (const item of r.value.data.items ?? []) {
         const { title, sourceName } = storyByline(r.value.source, item.title);
+        allStories.push({ title, description: item.description, link: safeUrl(item.link), pubDate: item.pubDate, sourceName });
+        // The name searches feed the logos, not the Rumors list
+        if (searchIds.has(r.value.source.id)) continue;
         const text = `${title} ${cleanFeedText(item.description ?? '')}`;
         const link = safeUrl(item.link);
         if (!link || seen.has(link) || !HOT_STOVE_RE.test(title) || !(teamSource || teamRe.test(text))) continue;
@@ -342,6 +394,9 @@ async function renderRumors(roster, newsSources = []) {
         stories.push({ title, text, link, pubDate: item.pubDate, sourceName, thumbnail: extractThumbnail(item) });
       }
     }
+    linksByKey = findRumorLinks(allStories, [...linkTargets].map(([key, t]) => ({ key, past: t.past })), NOW);
+    fillLinks();
+
     $('cuRumors').innerHTML = stories.length
       ? mixSources(stories, 10).map(renderNewsThumbCard).join('')
       : '<span class="sidebar-msg">No hot stove headlines about the team right now.</span>';
@@ -357,7 +412,7 @@ async function renderRumors(roster, newsSources = []) {
     $('cuOnBlock').innerHTML = block.size ? `
       <h3 class="cu-sub">On the Block</h3>
       <ul class="cu-block-list">${[...block].map(([name, b]) => `
-        <li><a href="${esc(b.link)}" target="_blank" rel="noopener" title="${esc(b.title)}"><strong>${esc(name)}</strong> <span class="cu-dim">${esc(b.pos)}</span></a></li>`).join('')}
+        <li><a href="${esc(b.link)}" target="_blank" rel="noopener" title="${esc(b.title)}"><strong>${esc(name)}</strong> <span class="cu-dim">${esc(b.pos)}</span></a>${linksHtml(playerKey(name)) ? ` <span class="cu-linked cu-linked--inline">${linksHtml(playerKey(name))}</span>` : ''}</li>`).join('')}
       </ul>
       <p class="cu-note">${esc(TEAM.name)} players named in trade headlines. A mention isn't a confirmation.</p>` : '';
   } catch {
@@ -427,7 +482,7 @@ async function init() {
   else $('cuFaList').innerHTML = '<li class="sidebar-msg">The free-agent list is unavailable right now.</li>';
   const src = cleanup.rankings?.source;
   $('cuFaSource').innerHTML = src && safeUrl(src.url)
-    ? `Ranking: <a href="${esc(safeUrl(src.url))}" target="_blank" rel="noopener">${esc(src.label)}</a>, ${esc(fmtDate(src.date, { year: 'numeric' }))}. Status from MLB's free-agent list.` : '';
+    ? `Ranking: <a href="${esc(safeUrl(src.url))}" target="_blank" rel="noopener">${esc(src.label)}</a>, ${esc(fmtDate(src.date, { year: 'numeric' }))}. Status from MLB's free-agent list. Linked: teams named with the player in signing and trade reporting from the last ${LINK_DAYS} days; tap a logo for the story. A link isn't a deal. Reported deal: the news reports an agreement that MLB hasn't made official yet.` : '';
 
   renderNeeds(cleanup, depthR.value?.roster ?? null, faList);
 
